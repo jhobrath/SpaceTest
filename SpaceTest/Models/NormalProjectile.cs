@@ -1,0 +1,24 @@
+using Raylib_cs;
+
+namespace GalagaFighter.Models
+{
+    public class NormalProjectile : Projectile
+    {
+        public NormalProjectile(Rectangle rect, float speed, Player owner) 
+            : base(rect, speed, owner) 
+        {
+            sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Normal, (int)rect.Width, (int)rect.Height);
+        }
+
+        public override void OnHit(Player target, Game game)
+        {
+            target.Health -= Damage;
+            game.PlayHitSound();
+        }
+
+        public override Color GetColor()
+        {
+            return speed > 0 ? Color.Yellow : Color.Magenta;
+        }
+    }
+}

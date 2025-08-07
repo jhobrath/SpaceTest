@@ -22,7 +22,10 @@ namespace GalagaFighter.Models
         private readonly Texture2D shipSprite;
         private readonly float scaleFactor;
 
-        // Base speeds that will be scaled by screen resolution
+        // Extracted helper - first step in modular refactor
+        private readonly PlayerMovementHelper movementHelper;
+        private readonly PlayerRenderingHelper renderingHelper;
+
         private readonly float baseSpeed;
         private readonly float projectileSpeed;
         private const float slowdownFactor = 3.0f;
@@ -43,12 +46,14 @@ namespace GalagaFighter.Models
             this.isPlayer1 = isPlayer1;
             scaleFactor = scale;
             
-            // Scale movement and projectile speeds based on screen resolution
-            baseSpeed = 250f * scaleFactor;        // Increased base speed, scaled by resolution
-            projectileSpeed = 400f * scaleFactor;  // Increased projectile speed, scaled by resolution
+            baseSpeed = 16f * scaleFactor;
+            projectileSpeed = 17f * scaleFactor;
             
-            // Generate the ship sprite at actual rectangle size for better fullscreen appearance
             shipSprite = SpriteGenerator.CreatePlayerShip(isPlayer1, (int)rect.Width, (int)rect.Height);
+
+            // Initialize helper classes
+            movementHelper = new PlayerMovementHelper(baseSpeed, upKey, downKey);
+            renderingHelper = new PlayerRenderingHelper(shipSprite, isPlayer1, scaleFactor);
         }
 
         public override void Update(Game game)
@@ -64,56 +69,12 @@ namespace GalagaFighter.Models
             if (SlowTimer > 0) SlowTimer -= frameTime;
             if (IceShotTimer > 0) IceShotTimer -= frameTime;
 
-            HandleMovement(frameTime, game);
+            // Use movement helper
+            Rect = movementHelper.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
+                SlowTimer > 0, frameTime, game.GetGameObjects(), this);
+            
             HandleShooting(game);
             HandleCollisions(game);
-        }
-
-        private void HandleMovement(float frameTime, Game game)
-        {
-            Rectangle newRect = Rect;
-
-            if (Raylib.IsKeyDown(upKey))
-            {
-                UpHeldDuration += frameTime;
-                float currentSpeed = (baseSpeed / (1 + UpHeldDuration * slowdownFactor)) * (SlowTimer > 0 ? 0.5f : 1.0f);
-                newRect.Y -= currentSpeed;
-            }
-            else
-            {
-                UpHeldDuration = 0f;
-            }
-
-            if (Raylib.IsKeyDown(downKey))
-            {
-                DownHeldDuration += frameTime;
-                float currentSpeed = (baseSpeed / (1 + DownHeldDuration * slowdownFactor)) * (SlowTimer > 0 ? 0.5f : 1.0f);
-                newRect.Y += currentSpeed;
-            }
-            else
-            {
-                DownHeldDuration = 0f;
-            }
-
-            // Check if the new position would collide with any walls
-            bool canMove = true;
-            foreach (var obj in game.GetGameObjects())
-            {
-                if (obj is Projectile projectile && projectile.Owner != this && projectile.BlocksMovement)
-                {
-                    if (Raylib.CheckCollisionRecs(newRect, projectile.Rect))
-                    {
-                        canMove = false;
-                        break;
-                    }
-                }
-            }
-
-            // Only update position if movement is allowed
-            if (canMove)
-            {
-                Rect = newRect;
-            }
         }
 
         private void HandleShooting(Game game)
@@ -133,9 +94,9 @@ namespace GalagaFighter.Models
                 if (HasWall)
                 {
                     type = ProjectileType.Wall;
-                    int wallWidth = (int)(150 * scaleFactor);  // Scaled wall width
-                    int wallHeight = (int)(15 * scaleFactor);  // Scaled wall height
-                    int wallOffset = (int)(Rect.Width * 0.6f); // Position relative to ship size
+                    int wallWidth = (int)(150 * scaleFactor);
+                    int wallHeight = (int)(15 * scaleFactor);
+                    int wallOffset = (int)(Rect.Width * 0.6f);
                     
                     rect = new Rectangle(
                         shipCenterX + (isPlayer1 ? wallOffset : -wallOffset - wallWidth), 
@@ -146,7 +107,7 @@ namespace GalagaFighter.Models
                 else if (IceShotTimer > 0)
                 {
                     type = ProjectileType.Ice;
-                    int iceSize = (int)(30 * scaleFactor);     // Scaled ice projectile
+                    int iceSize = (int)(30 * scaleFactor);
                     int iceOffset = (int)(Rect.Width * 0.6f);
                     
                     rect = new Rectangle(
@@ -157,8 +118,8 @@ namespace GalagaFighter.Models
                 else
                 {
                     type = ProjectileType.Normal;
-                    int bulletWidth = (int)(30 * scaleFactor);  // Scaled normal bullet (doubled)
-                    int bulletHeight = (int)(15 * scaleFactor); // Scaled normal bullet (doubled)
+                    int bulletWidth = (int)(30 * scaleFactor);
+                    int bulletHeight = (int)(15 * scaleFactor);
                     int bulletOffset = (int)(Rect.Width * 0.6f);
                     
                     rect = new Rectangle(
@@ -168,8 +129,6 @@ namespace GalagaFighter.Models
                 }
                 
                 game.AddGameObject(ProjectileFactory.Create(type, rect, speed, this));
-                
-                // Play shoot sound
                 game.PlayShootSound();
             }
         }
@@ -178,15 +137,12 @@ namespace GalagaFighter.Models
         {
             var gameObjects = game.GetGameObjects().ToList();
             
-            // Check for collisions with this player's body
             foreach (var obj in gameObjects)
             {
                 if (Raylib.CheckCollisionRecs(Rect, obj.Rect))
                 {
-                    // Did we get hit by a projectile that isn't ours?
                     if (obj is Projectile projectile && projectile.Owner != this)
                     {
-                        // Let the projectile handle its own hit behavior
                         projectile.OnHit(this, game);
                         
                         if (projectile.DestroyOnHit)
@@ -197,7 +153,6 @@ namespace GalagaFighter.Models
                 }
             }
 
-            // Check for collisions between this player's projectiles and other objects
             var myProjectiles = gameObjects.OfType<Projectile>().Where(p => p.Owner == this).ToList();
             foreach (var myProjectile in myProjectiles)
             {
@@ -207,18 +162,7 @@ namespace GalagaFighter.Models
                     {
                         if (obj is PowerUp powerUp)
                         {
-                            if (powerUp.Type == PowerUpType.FireRate)
-                            {
-                                FireRate *= 0.8f;
-                            }
-                            else if (powerUp.Type == PowerUpType.IceShot)
-                            {
-                                IceShotTimer = 10.0f;
-                            }
-                            else if (powerUp.Type == PowerUpType.Wall)
-                            {
-                                HasWall = true;
-                            }
+                            ApplyPowerUpEffect(powerUp.Type);
                             powerUp.IsActive = false;
                             myProjectile.IsActive = false;
                             game.PlayPowerUpSound();
@@ -229,61 +173,163 @@ namespace GalagaFighter.Models
             }
         }
 
-        public override void Draw()
+        private void ApplyPowerUpEffect(PowerUpType type)
         {
-            // Calculate rotation and position for proper ship orientation
-            float rotation = isPlayer1 ? 90f : -90f; // Player 1 faces right, Player 2 faces left
-            Vector2 origin = new Vector2(shipSprite.Width / 2, shipSprite.Height / 2);
-            Vector2 position = new Vector2(Rect.X + Rect.Width / 2, Rect.Y + Rect.Height / 2);
-            
-            // Draw the ship sprite with rotation
-            Raylib.DrawTextureEx(shipSprite, position, rotation, 1.0f, Color.White);
-            
-            // Add a tint overlay if slowed (also needs rotation)
-            if (SlowTimer > 0)
+            switch (type)
             {
-                Raylib.DrawTextureEx(shipSprite, position, rotation, 1.0f, new Color(0, 0, 255, 100)); // Blue tint
-            }
-            
-            // Add engine trail effect when moving
-            if (Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey))
-            {
-                DrawEngineTrail();
+                case PowerUpType.FireRate:
+                    FireRate *= 0.8f;
+                    break;
+                case PowerUpType.IceShot:
+                    IceShotTimer = 10.0f;
+                    break;
+                case PowerUpType.Wall:
+                    HasWall = true;
+                    break;
             }
         }
-        
-        private void DrawEngineTrail()
+
+        public override void Draw()
         {
-            // Engine trail positions need to account for ship rotation and larger size
-            // Player 1 faces right (90°), so engine trail comes from the back (left side)
-            // Player 2 faces left (-90°), so engine trail comes from the back (right side)
-            
-            int trailX, trailY;
-            
-            if (isPlayer1)
+            bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
+            renderingHelper.DrawPlayer(Rect, SlowTimer > 0, isMoving);
+        }
+
+        // Clean interface methods for projectiles
+        public void TakeDamage(int damage)
+        {
+            Health -= damage;
+        }
+
+        public void ApplySlowEffect(float duration)
+        {
+            SlowTimer = duration;
+        }
+    }
+
+    // Helper class for movement logic
+    public class PlayerMovementHelper
+    {
+        private readonly float baseSpeed;
+        private readonly KeyboardKey upKey;
+        private readonly KeyboardKey downKey;
+        private const float slowdownFactor = 3.0f;
+
+        public PlayerMovementHelper(float baseSpeed, KeyboardKey upKey, KeyboardKey downKey)
+        {
+            this.baseSpeed = baseSpeed;
+            this.upKey = upKey;
+            this.downKey = downKey;
+        }
+
+        public Rectangle HandleMovement(Rectangle currentRect, ref float upHeldDuration, ref float downHeldDuration, 
+            bool isSlowed, float frameTime, List<GameObject> gameObjects, Player player)
+        {
+            Rectangle newRect = currentRect;
+
+            if (Raylib.IsKeyDown(upKey))
             {
-                // Player 1 faces right, engine trail from left side
-                trailX = (int)Rect.X - 10; // Adjusted for larger ship
-                trailY = (int)(Rect.Y + Rect.Height / 2);
+                upHeldDuration += frameTime;
+                float currentSpeed = (baseSpeed / (1 + upHeldDuration * slowdownFactor)) * (isSlowed ? 0.5f : 1.0f);
+                newRect.Y -= currentSpeed;
             }
             else
             {
-                // Player 2 faces left, engine trail from right side
-                trailX = (int)(Rect.X + Rect.Width + 5); // Adjusted for larger ship
-                trailY = (int)(Rect.Y + Rect.Height / 2);
+                upHeldDuration = 0f;
+            }
+
+            if (Raylib.IsKeyDown(downKey))
+            {
+                downHeldDuration += frameTime;
+                float currentSpeed = (baseSpeed / (1 + downHeldDuration * slowdownFactor)) * (isSlowed ? 0.5f : 1.0f);
+                newRect.Y += currentSpeed;
+            }
+            else
+            {
+                downHeldDuration = 0f;
+            }
+
+            // Check for wall collisions
+            foreach (var obj in gameObjects)
+            {
+                if (obj is Projectile projectile && projectile.Owner != player && projectile.BlocksMovement)
+                {
+                    if (Raylib.CheckCollisionRecs(newRect, projectile.Rect))
+                    {
+                        return currentRect; // Block movement
+                    }
+                }
+            }
+
+            return newRect;
+        }
+    }
+
+    // Helper class for rendering
+    public class PlayerRenderingHelper
+    {
+        private readonly Texture2D shipSprite;
+        private readonly bool isPlayer1;
+        private readonly float scaleFactor;
+
+        public PlayerRenderingHelper(Texture2D shipSprite, bool isPlayer1, float scaleFactor)
+        {
+            this.shipSprite = shipSprite;
+            this.isPlayer1 = isPlayer1;
+            this.scaleFactor = scaleFactor;
+        }
+
+        public void DrawPlayer(Rectangle playerRect, bool isSlowed, bool isMoving)
+        {
+            DrawShip(playerRect, isSlowed);
+            
+            if (isMoving)
+            {
+                DrawEngineTrail(playerRect);
+            }
+        }
+
+        private void DrawShip(Rectangle playerRect, bool isSlowed)
+        {
+            float rotation = isPlayer1 ? 90f : -90f;
+            Vector2 position = new Vector2(playerRect.X + playerRect.Width / 2, playerRect.Y + playerRect.Height / 2);
+            
+            Raylib.DrawTextureEx(shipSprite, position, rotation, 1.0f, Color.White);
+            
+            if (isSlowed)
+            {
+                Raylib.DrawTextureEx(shipSprite, position, rotation, 1.0f, new Color(0, 0, 255, 100));
+            }
+        }
+
+        private void DrawEngineTrail(Rectangle playerRect)
+        {
+            int trailX, trailY;
+            int trailOffset = (int)(15 * scaleFactor);
+            
+            if (isPlayer1)
+            {
+                trailX = (int)playerRect.X - trailOffset;
+                trailY = (int)(playerRect.Y + playerRect.Height / 2);
+            }
+            else
+            {
+                trailX = (int)(playerRect.X + playerRect.Width + trailOffset / 2);
+                trailY = (int)(playerRect.Y + playerRect.Height / 2);
             }
             
-            Color trailColor = new Color(255, 150, 0, 150); // Orange with transparency
+            Color trailColor = new Color(255, 150, 0, 150);
             
-            // Make engine trails larger for bigger ships
-            for (int i = 0; i < 5; i++) // More trail particles
+            int particleCount = (int)(7 * scaleFactor);
+            int maxRadius = (int)(6 * scaleFactor);
+            int spacing = (int)(4 * scaleFactor);
+            
+            for (int i = 0; i < particleCount; i++)
             {
-                int offset = i * (isPlayer1 ? -3 : 3); // Larger spacing
-                int radius = 4 - i; // Larger trail particles
-                if (radius > 0)
-                {
-                    Raylib.DrawCircle(trailX + offset, trailY, radius, trailColor);
-                }
+                int offset = i * (isPlayer1 ? -spacing : spacing);
+                int radius = Math.Max(1, maxRadius - i);
+                
+                Raylib.DrawCircle(trailX + offset, trailY, radius, trailColor);
             }
         }
     }

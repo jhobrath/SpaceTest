@@ -324,8 +324,19 @@ namespace GalagaFighter
             int powerUpTypeIndex = random.Next(0, 3);
             PowerUpType type = (PowerUpType)powerUpTypeIndex;
             int screenWidth = Raylib.GetScreenWidth();
-            Rectangle rect = new Rectangle(random.Next(100, screenWidth - 100), -20, 20, 20);
-            gameObjects.Add(new PowerUp(rect, type, 2.0f));
+            int screenHeight = Raylib.GetScreenHeight();
+            
+            // Scale power-up size based on screen resolution
+            float uniformScale = Math.Min(screenWidth / 1920f, screenHeight / 1080f);
+            int powerUpSize = (int)(30 * uniformScale); // Scaled from 20 to 30 base size
+            
+            Rectangle rect = new Rectangle(
+                random.Next(100, screenWidth - 100), 
+                -powerUpSize, 
+                powerUpSize, 
+                powerUpSize);
+                
+            gameObjects.Add(new PowerUp(rect, type, 2f * uniformScale)); // Back to reasonable fall speed
         }
 
         private void DrawUI()
@@ -333,17 +344,25 @@ namespace GalagaFighter
             int screenWidth = Raylib.GetScreenWidth();
             int screenHeight = Raylib.GetScreenHeight();
             
-            Raylib.DrawText($"P1 Health: {player1.Health}", 10, 10, 20, Color.White);
-            Raylib.DrawText($"P2 Health: {player2.Health}", screenWidth - 200, 10, 20, Color.White);
+            // Scale UI text based on screen resolution
+            float uniformScale = Math.Min(screenWidth / 1920f, screenHeight / 1080f);
+            int healthTextSize = (int)(24 * uniformScale);  // Scaled from 20
+            int controlTextSize = (int)(20 * uniformScale); // Scaled from 16
+            int winnerTextSize = (int)(50 * uniformScale);  // Scaled from 40
+            
+            int margin = (int)(15 * uniformScale);
+            
+            Raylib.DrawText($"P1 Health: {player1.Health}", margin, margin, healthTextSize, Color.White);
+            Raylib.DrawText($"P2 Health: {player2.Health}", screenWidth - (int)(250 * uniformScale), margin, healthTextSize, Color.White);
 
             // Draw controls info
-            Raylib.DrawText("F11 - Toggle Fullscreen | ESC - Exit", 10, screenHeight - 30, 16, Color.LightGray);
+            Raylib.DrawText("F11 - Toggle Fullscreen | ESC - Exit", margin, screenHeight - (int)(40 * uniformScale), controlTextSize, Color.LightGray);
 
             if (player1.Health <= 0 || player2.Health <= 0)
             {
                 string winner = player1.Health > 0 ? "Player 1 Wins!" : "Player 2 Wins!";
-                Vector2 textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), winner, 40, 1);
-                Raylib.DrawText(winner, (int)(screenWidth / 2 - textSize.X / 2), (int)(screenHeight / 2 - textSize.Y / 2), 40, Color.Gold);
+                Vector2 textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), winner, winnerTextSize, 1);
+                Raylib.DrawText(winner, (int)(screenWidth / 2 - textSize.X / 2), (int)(screenHeight / 2 - textSize.Y / 2), winnerTextSize, Color.Gold);
             }
         }
         

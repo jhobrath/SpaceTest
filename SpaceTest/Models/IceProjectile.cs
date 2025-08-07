@@ -14,7 +14,7 @@ namespace GalagaFighter.Models
 
         public override void OnHit(Player target, Game game)
         {
-            target.SlowTimer = 5.0f; // Apply slow effect
+            target.ApplySlowEffect(5.0f); // Use new method instead of direct property access
             Owner.IceShotTimer = 0;  // Remove ice shot from owner
             game.PlayIceHitSound();
         }

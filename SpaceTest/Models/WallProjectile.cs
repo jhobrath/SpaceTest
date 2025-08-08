@@ -48,7 +48,7 @@ namespace GalagaFighter.Models
             // Use the generated sprite (which works!)
             if (sprite.Id > 0)
             {
-                Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, new Color(255, 255, 255, (int)(255 * alpha)));
+                Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, new Color(255, 255, 255, Math.Max(0, (int)(255 * alpha))));
             }
             else
             {

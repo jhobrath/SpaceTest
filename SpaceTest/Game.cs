@@ -103,6 +103,12 @@ namespace GalagaFighter
             {
                 Raylib.ClearWindowState(ConfigFlags.FullscreenMode);
             }
+
+            if(Raylib.IsKeyPressed(KeyboardKey.Space))
+            {
+                InitializePlayers();
+                InitializeGameObjects();
+            }
         }
 
         private void UpdateGameObjects()

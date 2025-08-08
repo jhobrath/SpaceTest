@@ -38,7 +38,7 @@ namespace GalagaFighter.Models.Players
             shipSprite = Raylib.LoadTexture(spritePath);
 
             // Initialize components
-            float baseSpeed = 16f * scale;
+            float baseSpeed = 20f * scale;
             float projectileSpeed = 17f * scale;
             float effectiveFireRate = fireRate * (float)Math.Pow(0.8f, 5);
 
@@ -167,7 +167,7 @@ namespace GalagaFighter.Models.Players
             bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
             bool isSlowed = stats.IceEffectCount > 0;
             renderer.DrawPlayer(Rect, isSlowed, isMoving);
-            renderer.DrawDebugBounds(Rect);
+            //renderer.DrawDebugBounds(Rect);
         }
 
         // Interface methods for other classes

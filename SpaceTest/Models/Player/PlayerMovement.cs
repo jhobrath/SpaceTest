@@ -8,7 +8,7 @@ namespace GalagaFighter.Models.Players
         private readonly float baseSpeed;
         private readonly KeyboardKey upKey;
         private readonly KeyboardKey downKey;
-        private const float slowdownFactor = 3.0f;
+        private const float slowdownFactor = 2.0f;
         public float Speed { get; set; }
 
         public PlayerMovement(float baseSpeed, KeyboardKey upKey, KeyboardKey downKey)

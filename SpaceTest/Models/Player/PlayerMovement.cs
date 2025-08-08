@@ -9,6 +9,7 @@ namespace GalagaFighter.Models.Players
         private readonly KeyboardKey upKey;
         private readonly KeyboardKey downKey;
         private const float slowdownFactor = 3.0f;
+        public float Speed { get; set; }
 
         public PlayerMovement(float baseSpeed, KeyboardKey upKey, KeyboardKey downKey)
         {
@@ -25,8 +26,8 @@ namespace GalagaFighter.Models.Players
             if (Raylib.IsKeyDown(upKey))
             {
                 upHeldDuration += frameTime;
-                float currentSpeed = (baseSpeed / (1 + upHeldDuration * slowdownFactor)) * slowIntensity;
-                newRect.Y -= currentSpeed;
+                Speed = -(baseSpeed / (1 + upHeldDuration * slowdownFactor)) * slowIntensity;
+                newRect.Y += Speed;
             }
             else
             {
@@ -36,12 +37,17 @@ namespace GalagaFighter.Models.Players
             if (Raylib.IsKeyDown(downKey))
             {
                 downHeldDuration += frameTime;
-                float currentSpeed = (baseSpeed / (1 + downHeldDuration * slowdownFactor)) * slowIntensity;
-                newRect.Y += currentSpeed;
+                Speed = (baseSpeed / (1 + downHeldDuration * slowdownFactor)) * slowIntensity;
+                newRect.Y += Speed;
             }
             else
             {
                 downHeldDuration = 0f;
+            }
+
+            if(!Raylib.IsKeyDown(downKey) && !Raylib.IsKeyDown(upKey))
+            {
+                Speed = 0f;
             }
 
             // Check for wall collisions

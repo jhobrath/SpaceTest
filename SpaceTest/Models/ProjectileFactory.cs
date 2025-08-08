@@ -1,11 +1,12 @@
 using Raylib_cs;
 using GalagaFighter.Models.Players;
+using System.Numerics;
 
 namespace GalagaFighter.Models
 {
     public static class ProjectileFactory
     {
-        public static Projectile Create(ProjectileType type, Rectangle rect, float speed, Player owner)
+        public static Projectile Create(ProjectileType type, Rectangle rect, Vector2 speed, Player owner)
         {
             return type switch
             {

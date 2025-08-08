@@ -1,11 +1,12 @@
-using Raylib_cs;
 using GalagaFighter.Models.Players;
+using Raylib_cs;
+using System.Numerics;
 
 namespace GalagaFighter.Models
 {
     public class IceProjectile : Projectile
     {
-        public IceProjectile(Rectangle rect, float speed, Player owner) 
+        public IceProjectile(Rectangle rect, Vector2 speed, Player owner) 
             : base(rect, speed, owner) 
         {
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Ice, (int)rect.Width, (int)rect.Height);

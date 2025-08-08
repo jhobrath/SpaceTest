@@ -8,7 +8,7 @@ namespace GalagaFighter.Models
     {
         public bool IsStuck = false;
 
-        public WallProjectile(Rectangle rect, float speed, Player owner)
+        public WallProjectile(Rectangle rect, Vector2 speed, Player owner)
             : base(rect, speed, owner)
         {
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Wall, (int)rect.Width, (int)rect.Height);
@@ -40,7 +40,7 @@ namespace GalagaFighter.Models
             }
 
             if(!IsStuck)
-                Rect.X += Speed;
+                Rect.X += Speed.X;
         }
 
         public override void Draw()

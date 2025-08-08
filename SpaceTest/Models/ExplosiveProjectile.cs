@@ -9,7 +9,7 @@ namespace GalagaFighter.Models
     {
         private const int ExplosionRadius = 50;
 
-        public ExplosiveProjectile(Rectangle rect, float speed, Player owner)
+        public ExplosiveProjectile(Rectangle rect, Vector2 speed, Player owner)
             : base(rect, speed, owner)
         {
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Explosive, (int)rect.Width, (int)rect.Height);

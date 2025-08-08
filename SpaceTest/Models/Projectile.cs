@@ -1,11 +1,12 @@
 using Raylib_cs;
 using GalagaFighter.Models.Players;
+using System.Numerics;
 
 namespace GalagaFighter.Models
 {
     public abstract class Projectile : GameObject
     {
-        public float Speed { get; }
+        public Vector2 Speed { get; }
         public Player Owner { get; }
         public bool DestroyOnHit { get; protected set; } = true;
         public bool BlocksMovement { get; protected set; } = false;
@@ -13,7 +14,7 @@ namespace GalagaFighter.Models
 
         protected Texture2D sprite;
 
-        protected Projectile(Rectangle rect, float speed, Player owner) : base(rect)
+        protected Projectile(Rectangle rect, Vector2 speed, Player owner) : base(rect)
         {
             Speed = speed;
             Owner = owner;
@@ -22,7 +23,8 @@ namespace GalagaFighter.Models
 
         public override void Update(Game game)
         {
-            Rect.X += Speed;
+            Rect.X += Speed.X;
+            Rect.Y += Speed.Y;
             if (Rect.X < -Rect.Width || Rect.X > Raylib.GetScreenWidth())
             {
                 IsActive = false;

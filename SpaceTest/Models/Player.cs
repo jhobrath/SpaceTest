@@ -80,7 +80,7 @@ namespace GalagaFighter.Models.Players
 
             ProjectileType type;
             Rectangle rect;
-            float speed = combat.GetProjectileSpeed();
+            Vector2 speed = new Vector2(combat.GetProjectileSpeed(), Math.Min(3, Math.Max(-3, this.movement.Speed*.3333f)));
             _useLeftEngine = !_useLeftEngine; // Alternate between left and right engines
 
             if (stats.HasWall)
@@ -124,7 +124,6 @@ namespace GalagaFighter.Models.Players
                 {
                     if (!wall.IsStuck && (wall.Rect.X <= 0 || wall.Rect.X + wall.Rect.Width >= Raylib.GetRenderWidth()))
                     {
-                        
                         wall.OnHit(this, game);
                     }
                 }

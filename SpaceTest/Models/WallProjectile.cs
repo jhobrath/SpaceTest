@@ -1,10 +1,13 @@
 using Raylib_cs;
 using GalagaFighter.Models.Players;
+using System.Numerics;
 
 namespace GalagaFighter.Models
 {
     public class WallProjectile : Projectile
     {
+        public bool IsStuck = false;
+
         public WallProjectile(Rectangle rect, float speed, Player owner)
             : base(rect, speed, owner)
         {
@@ -14,7 +17,7 @@ namespace GalagaFighter.Models
         }
 
         private float alpha = 1.0f;
-        private float lifeTime = 5.0f;
+        private float lifeTime = 10.0f;
         private const float fadeStartTime = 3.0f;
 
         public override int Damage => 0;
@@ -35,6 +38,9 @@ namespace GalagaFighter.Models
             {
                 IsActive = false;
             }
+
+            if(!IsStuck)
+                Rect.X += Speed;
         }
 
         public override void Draw()
@@ -55,8 +61,10 @@ namespace GalagaFighter.Models
 
         public override void OnHit(Player target, Game game)
         {
-            // Wall projectiles don't do anything on hit
-            game.PlayWallStickSound();
+            if(!IsStuck)
+                game.PlayWallStickSound();
+
+            IsStuck = true;
         }
 
         public override Color GetColor()

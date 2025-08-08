@@ -120,6 +120,15 @@ namespace GalagaFighter.Models.Players
             
             foreach (var obj in gameObjects)
             {
+                if(obj is WallProjectile wall)
+                {
+                    if (!wall.IsStuck && (wall.Rect.X <= 0 || wall.Rect.X + wall.Rect.Width >= Raylib.GetRenderWidth()))
+                    {
+                        
+                        wall.OnHit(this, game);
+                    }
+                }
+
                 if (Raylib.CheckCollisionRecs(Rect, obj.Rect))
                 {
                     if (obj is Projectile projectile && projectile.Owner != this)

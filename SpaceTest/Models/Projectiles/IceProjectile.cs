@@ -3,6 +3,7 @@ using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
 using Raylib_cs;
 using System.Numerics;
+using GalagaFighter.Models.PowerUps;
 
 namespace SpaceTest.Models.Projectiles
 {
@@ -18,8 +19,9 @@ namespace SpaceTest.Models.Projectiles
 
         public override void OnHit(Player target, Game game)
         {
-            target.ApplySlowEffect(5.0f);
-            Owner.IceShotTimer = 0;  // Remove ice shot from owner
+            // Add a FrozenEffect to the target
+            target.Stats.AddEffect(target, new FrozenEffect(target));
+
             game.PlayIceHitSound();
         }
 

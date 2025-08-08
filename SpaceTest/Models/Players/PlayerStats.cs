@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using GalagaFighter.Models.PowerUps;
 
 namespace GalagaFighter.Models.Players
 {
@@ -7,66 +8,68 @@ namespace GalagaFighter.Models.Players
     {
         public int Health { get; private set; }
         public int MaxBullets { get; private set; }
-        public float FireRateMultiplier { get; private set; } 
+        public float FireRateMultiplier { get; private set; }
         private const int baseBulletCapacity = 8;
-        private const int bulletsPerPowerUp = 2;
-        private const int bulletMaxWithoutFireMultiplier = 10;
-        
-        private List<float> iceEffectTimers = new List<float>();
-        private const float iceEffectDuration = 5.0f;
-        private const float maxSlowFactor = 0.1f;
 
-        public float IceShotTimer { get; private set; }
-        public float SlowTimer { get; private set; }
-        public bool HasWall { get; private set; }
+        private Player _player;
+
+        private readonly List<PowerUpEffect> activeEffects = new List<PowerUpEffect>();
 
         public PlayerStats()
         {
             Health = 100;
             MaxBullets = baseBulletCapacity;
             FireRateMultiplier = 1;
-            IceShotTimer = 0;
-            SlowTimer = 0;
-            HasWall = false;
+        }
+
+        public PlayerStats(Player player)
+        {
+            Health = 100;
+            MaxBullets = baseBulletCapacity;
+            FireRateMultiplier = 1;
+            // Always add default shooting effect
+            activeEffects.Add(new DefaultShootEffect(player));
+
+            _player = player;
         }
 
         public void UpdateEffects(float frameTime)
         {
-            if (IceShotTimer > 0) IceShotTimer -= frameTime;
-
-            // Update ice effect timers
-            for (int i = iceEffectTimers.Count - 1; i >= 0; i--)
+            for (int i = activeEffects.Count - 1; i >= 0; i--)
             {
-                iceEffectTimers[i] -= frameTime;
-                if (iceEffectTimers[i] <= 0)
+                var effect = activeEffects[i];
+                effect.OnUpdate(frameTime);
+                if (effect.ShouldDeactivate())
                 {
-                    iceEffectTimers.RemoveAt(i);
+                    effect.OnDeactivate();
+                    activeEffects.RemoveAt(i);
                 }
             }
 
-            // Update SlowTimer for backward compatibility
-            SlowTimer = iceEffectTimers.Count > 0 ? iceEffectTimers.Max() : 0;
-        }
-
-        public float CalculateSlowIntensity()
-        {
-            if (iceEffectTimers.Count == 0) return 1.0f;
-
-            float slowPerEffect = 0.3f;
-            float totalSlow = iceEffectTimers.Count * slowPerEffect;
-            float clampedSlow = Math.Min(totalSlow, 1.0f - maxSlowFactor);
-
-            return 1.0f - clampedSlow;
-        }
-
-        public void ApplySlowEffect(float duration)
-        {
-            iceEffectTimers.Add(duration);
-            
-            if (iceEffectTimers.Count > 3)
+            if(activeEffects.All(x => x is not ProjectileEffect))
             {
-                iceEffectTimers.Remove(iceEffectTimers.Min());
+                // Ensure there's always a default shooting effect
+                activeEffects.Add(new DefaultShootEffect(_player));
             }
+        }
+
+        public void AddEffect(Player player, PowerUpEffect effect)
+        {
+            if (effect is ProjectileEffect)
+                activeEffects.RemoveAll(x => x is ProjectileEffect);
+
+            activeEffects.Add(effect);
+            effect.OnActivate();
+        }
+
+        public int GetActiveEffectCount<T>() where T : PowerUpEffect
+        {
+            return activeEffects.Count(e => e is T);
+        }
+
+        public T GetFirstEffect<T>() where T : PowerUpEffect
+        {
+            return activeEffects.OfType<T>().FirstOrDefault();
         }
 
         public void TakeDamage(int damage)
@@ -74,33 +77,23 @@ namespace GalagaFighter.Models.Players
             Health -= damage;
         }
 
-        public void ApplyPowerUpEffect(PowerUpType type)
+        // Methods for PowerUpEffects to use
+        public void ModifyFireRate(float multiplier)
         {
-            switch (type)
-            {
-                case PowerUpType.FireRate:
-                    FireRateMultiplier *= .93f;
-                    break;
-                case PowerUpType.IceShot:
-                    IceShotTimer = 10.0f;
-                    break;
-                case PowerUpType.Wall:
-                    HasWall = true;
-                    break;
-            }
+            FireRateMultiplier *= multiplier;
         }
 
-        public void ConsumeWall()
+        public void AddBullets(int amount)
         {
-            HasWall = false;
+            MaxBullets += amount;
         }
 
-        public void ResetIceShotTimer()
+        // For effects to query if player is currently affected
+        public bool HasEffect<T>() where T : PowerUpEffect
         {
-            IceShotTimer = 0;
+            return activeEffects.Any(e => e is T);
         }
 
-        public int IceEffectCount => iceEffectTimers.Count;
-        public float CurrentSlowIntensity => 1.0f - CalculateSlowIntensity();
+        public IEnumerable<PowerUpEffect> GetActiveEffects() => activeEffects;
     }
 }

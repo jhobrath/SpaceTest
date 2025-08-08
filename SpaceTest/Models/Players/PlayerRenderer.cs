@@ -19,7 +19,7 @@ namespace GalagaFighter.Models.Players
         public void DrawPlayer(Rectangle playerRect, bool isSlowed, bool isMoving)
         {
             DrawShip(playerRect, isSlowed);
-            
+
             if (isMoving)
             {
                 DrawEngineTrail(playerRect);
@@ -33,14 +33,14 @@ namespace GalagaFighter.Models.Players
             var yOffset = isPlayer1 ? 0 : playerRect.Height;
             Vector2 position = new Vector2(playerRect.X + xOffset, playerRect.Y + yOffset);
             var scale = playerRect.Width / shipSprite.Width;
-            
-            Raylib.DrawTextureEx(shipSprite, position, rotation, scale, Color.White);
-            
 
-            if (isSlowed)
-            {
-                Raylib.DrawTextureEx(shipSprite, position, rotation, scale, new Color(0, 0, 255, 100));
-            }
+            Raylib.DrawTextureEx(shipSprite, position, rotation, scale, Color.White);
+
+
+            //if (isSlowed)
+            //{
+            //    Raylib.DrawTextureEx(shipSprite, position, rotation, scale, new Color(0, 0, 255, 100));
+            //}
         }
 
         private void DrawEngineTrail(Rectangle playerRect)

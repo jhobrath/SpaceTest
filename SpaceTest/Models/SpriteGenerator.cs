@@ -180,10 +180,10 @@ namespace GalagaFighter.Models
             return renderTexture.Texture;
         }
         
-        public static Texture2D CreatePowerUpSprite(PowerUpType type, int size = 20)
+        public static Texture2D CreatePowerUpSprite(PowerUpType type, int width = 20, int height = 20)
         {
-            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(size, size);
-            
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(width, height);
+
             Raylib.BeginTextureMode(renderTexture);
             Raylib.ClearBackground(Color.Blank);
             
@@ -196,9 +196,9 @@ namespace GalagaFighter.Models
             };
             
             // Draw a rotating diamond shape
-            Vector2 center = new Vector2(size / 2, size / 2);
-            float radius = size / 3;
-            
+            Vector2 center = new Vector2(width / 2, height / 2);
+            float radius = width / 3;
+
             Vector2[] points = new Vector2[4]
             {
                 new Vector2(center.X, center.Y - radius),     // Top

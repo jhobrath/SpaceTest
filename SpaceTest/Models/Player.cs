@@ -17,7 +17,7 @@ namespace GalagaFighter.Models.Players
 
         private readonly PlayerMovement movement;
         private readonly PlayerRenderer renderer;
-        private readonly PlayerStats stats;
+        public readonly PlayerStats Stats;
         private readonly PlayerCombat combat;
 
         private float UpHeldDuration;
@@ -45,7 +45,7 @@ namespace GalagaFighter.Models.Players
 
             movement = new PlayerMovement(baseSpeed, up, down);
             renderer = new PlayerRenderer(shipSprite, isPlayer1, scale);
-            stats = new PlayerStats();
+            Stats = new PlayerStats(this);
             combat = new PlayerCombat(isPlayer1, projectileSpeed, scale, effectiveFireRate);
 
             UpHeldDuration = 0f;
@@ -54,7 +54,7 @@ namespace GalagaFighter.Models.Players
 
         public override void Update(Game game)
         {
-            if (stats.Health <= 0)
+            if (Stats.Health <= 0)
             {
                 IsActive = false;
                 return;
@@ -62,10 +62,14 @@ namespace GalagaFighter.Models.Players
 
             float frameTime = Raylib.GetFrameTime();
             combat.UpdateTimer(frameTime);
-            stats.UpdateEffects(frameTime);
+            Stats.UpdateEffects(frameTime);
 
-            // Update position
-            float slowIntensity = stats.CalculateSlowIntensity();
+            // Use FrozenEffect for slow intensity
+            float slowIntensity = 1.0f;
+            var frozen = Stats.GetFirstEffect<GalagaFighter.Models.PowerUps.FrozenEffect>();
+            if (frozen != null)
+                slowIntensity = frozen.GetSlowMultiplier();
+
             Rect = movement.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
                 slowIntensity, frameTime, game.GetGameObjects(), this);
             
@@ -75,46 +79,54 @@ namespace GalagaFighter.Models.Players
 
         private void HandleShooting(Game game)
         {
-            var activeBulletCount = GetActiveBulletCount(game.GetGameObjects());
-            if (!combat.CanFire(Raylib.IsKeyDown(shootKey), stats))
-                return;
-
-            ProjectileType type;
-            Rectangle rect;
-            Vector2 speed = new Vector2(combat.GetProjectileSpeed(), Math.Min(3, Math.Max(-3, this.movement.Speed*.3333f)));
-            _useLeftEngine = !_useLeftEngine; // Alternate between left and right engines
-
-            if (stats.HasWall)
+            if (Raylib.IsKeyDown(shootKey))
             {
-                combat.ResetFireTimer();
-                type = ProjectileType.Wall;
-                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 150 * scaleFactor, 15 * scaleFactor, _useLeftEngine);
-                rect = combat.GetProjectileRect(type, spawn);
-                stats.ConsumeWall();
+                foreach (var effect in Stats.GetActiveEffects())
+                {
+                    effect.OnShoot(game);
+                }
             }
-            else if (stats.IceShotTimer > 0)
-            {
-                combat.ResetFireTimer();
-                type = ProjectileType.Ice;
-                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 40 * scaleFactor, 20 * scaleFactor, _useLeftEngine);
-                rect = combat.GetProjectileRect(type, spawn);
-            }
-            else
-            {
-                combat.ResetFireTimer();
-                type = ProjectileType.Normal;
-                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 30 * scaleFactor, 15 * scaleFactor, _useLeftEngine);
-                rect = combat.GetProjectileRect(type, spawn);
-            }
+        }
 
-            game.AddGameObject(ProjectileFactory.Create(type, rect, speed, this));
-            game.PlayShootSound();
+        // Helper methods for effects to access internals
+        public PlayerCombat GetCombat() => combat;
+        public PlayerMovement GetMovement() => movement;
+        public float GetScaleFactor() => scaleFactor;
+        public KeyboardKey GetShootKey() => shootKey;
+        public bool ToggleEngine() { _useLeftEngine = !_useLeftEngine; return _useLeftEngine; }
+
+        public override void Draw()
+        {
+            bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
+            var frozen = Stats.GetFirstEffect<GalagaFighter.Models.PowerUps.FrozenEffect>();
+            bool isSlowed = frozen != null;
+            //float blueAlpha = isSlowed ? frozen.GetBlueAlpha() : 0f;
+            renderer.DrawPlayer(Rect, isSlowed, isMoving);
+        }
+
+        // Interface methods for other classes
+        public void TakeDamage(int damage) => Stats.TakeDamage(damage);
+        // No more ApplySlowEffect on Stats; handled by FrozenEffect
+        public void ApplySlowEffect(float duration)
+        {
+            Stats.AddEffect(this, new GalagaFighter.Models.PowerUps.FrozenEffect(this, duration));
+        }
+        public void ApplySlowEffect() => ApplySlowEffect(5.0f);
+        
+        // Properties
+        public int Health => Stats.Health;
+        public int MaxBullets => Stats.MaxBullets;
+        public int GetActiveBulletCount(List<GameObject> gameObjects)
+        {
+            return gameObjects
+                .OfType<Projectile>()
+                .Where(p => p.Owner == this && p is NormalProjectile)
+                .Count();
         }
 
         private void HandleCollisions(Game game)
         {
             var gameObjects = game.GetGameObjects();
-            
             foreach (var obj in gameObjects)
             {
                 if(obj is WallProjectile wall)
@@ -124,13 +136,11 @@ namespace GalagaFighter.Models.Players
                         wall.OnHit(this, game);
                     }
                 }
-
                 if (Raylib.CheckCollisionRecs(Rect, obj.Rect))
                 {
                     if (obj is Projectile projectile && projectile.Owner != this)
                     {
                         projectile.OnHit(this, game);
-                        
                         if (projectile.DestroyOnHit)
                         {
                             projectile.IsActive = false;
@@ -138,7 +148,6 @@ namespace GalagaFighter.Models.Players
                     }
                 }
             }
-
             var myProjectiles = gameObjects.OfType<Projectile>().Where(p => p.Owner == this).ToList();
             foreach (var myProjectile in myProjectiles)
             {
@@ -148,7 +157,11 @@ namespace GalagaFighter.Models.Players
                     {
                         if (obj is PowerUp powerUp)
                         {
-                            stats.ApplyPowerUpEffect(powerUp.Type);
+                            var effect = powerUp.CreateEffect(this);
+                            if (effect != null)
+                            {
+                                Stats.AddEffect(this, effect);
+                            }
                             powerUp.IsActive = false;
                             myProjectile.IsActive = false;
                             game.PlayPowerUpSound();
@@ -157,37 +170,6 @@ namespace GalagaFighter.Models.Players
                     }
                 }
             }
-        }
-
-        public override void Draw()
-        {
-            bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
-            bool isSlowed = stats.IceEffectCount > 0;
-            renderer.DrawPlayer(Rect, isSlowed, isMoving);
-            //renderer.DrawDebugBounds(Rect);
-        }
-
-        // Interface methods for other classes
-        public void TakeDamage(int damage) => stats.TakeDamage(damage);
-        public void ApplySlowEffect(float duration) => stats.ApplySlowEffect(duration);
-        public void ApplySlowEffect() => stats.ApplySlowEffect(5.0f);
-        
-        // Properties
-        public int Health => stats.Health;
-        public int MaxBullets => stats.MaxBullets;
-        public float IceShotTimer
-        {
-            get => stats.IceShotTimer;
-            set => stats.ResetIceShotTimer();
-        }
-        public int IceEffectCount => stats.IceEffectCount;
-        public float CurrentSlowIntensity => stats.CurrentSlowIntensity;
-        public int GetActiveBulletCount(List<GameObject> gameObjects)
-        {
-            return gameObjects
-                .OfType<Projectile>()
-                .Where(p => p.Owner == this && p is NormalProjectile)
-                .Count();
         }
     }
 }

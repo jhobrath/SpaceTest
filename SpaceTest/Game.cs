@@ -128,7 +128,7 @@ namespace GalagaFighter
 
         private void SpawnPowerUps()
         {
-            if (random.Next(0, 60 * 5) == 1)
+            if (random.Next(0, 20 * 5) == 1)
             {
                 int powerUpTypeIndex = random.Next(0, 3);
                 PowerUpType type = (PowerUpType)powerUpTypeIndex;
@@ -200,19 +200,8 @@ namespace GalagaFighter
 
             // Ice effect status display
             int iceStatusY = bulletStatusY + (int)(25 * uniformScale);
-            
-            if (player1.IceEffectCount > 0)
-            {
-                string iceStatus = $"P1 Frozen: {player1.IceEffectCount}x ({player1.CurrentSlowIntensity:P0} slow)";
-                Raylib.DrawText(iceStatus, margin, iceStatusY, statusTextSize, Color.SkyBlue);
-            }
-
-            if (player2.IceEffectCount > 0)
-            {
-                string iceStatus = $"P2 Frozen: {player2.IceEffectCount}x ({player2.CurrentSlowIntensity:P0} slow)";
-                Vector2 textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), iceStatus, statusTextSize, 1);
-                Raylib.DrawText(iceStatus, screenWidth - (int)(250 * uniformScale), iceStatusY, statusTextSize, Color.SkyBlue);
-            }
+            // Remove display of IceEffectCount and CurrentSlowIntensity
+            // If you want to show frozen status, query effects directly from player.Stats
 
             // Controls
             Raylib.DrawText("F11 - Toggle Fullscreen | ESC - Exit", margin, screenHeight - (int)(40 * uniformScale), controlTextSize, Color.LightGray);

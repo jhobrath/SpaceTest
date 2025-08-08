@@ -1,28 +1,30 @@
 using Raylib_cs;
-using GalagaFighter.Models;
+using GalagaFighter.Models.Players;
+using GalagaFighter.Models.PowerUps;
 using System;
 using System.Numerics;
+using GalagaFighter.Models;
 
 namespace GalagaFighter
 {
     public class PowerUp : GameObject
     {
-        public PowerUpType Type;
-        private readonly float fallSpeed;
+        private readonly PowerUpType type;
+        private readonly float speed;
         private readonly Texture2D sprite;
 
         public PowerUp(Rectangle rect, PowerUpType type, float speed) : base(rect)
         {
-            Type = type;
-            fallSpeed = speed;
-            sprite = SpriteGenerator.CreatePowerUpSprite(type, (int)rect.Width);
+            this.type = type;
+            this.speed = speed;
+            IsActive = true;
+            sprite = SpriteGenerator.CreatePowerUpSprite(type, (int)rect.Width, (int)rect.Height);
         }
 
         public override void Update(Game game)
         {
-            Rect.Y += fallSpeed;
-            int screenHeight = Raylib.GetScreenHeight();
-            if (Rect.Y > screenHeight)
+            Rect.Y += speed;
+            if (Rect.Y > Raylib.GetScreenHeight())
             {
                 IsActive = false;
             }
@@ -40,7 +42,7 @@ namespace GalagaFighter
                 Raylib.DrawTextureEx(sprite, position, rotation, 1.0f, Color.White);
                 
                 // Add a subtle glow effect
-                Color glowColor = Type switch
+                Color glowColor = type switch
                 {
                     PowerUpType.FireRate => new Color(255, 255, 255, 50), // White for bullet capacity
                     PowerUpType.IceShot => new Color(0, 100, 255, 50),
@@ -54,7 +56,7 @@ namespace GalagaFighter
             else
             {
                 // Fallback to original color rectangle
-                Color color = Type switch
+                Color color = type switch
                 {
                     PowerUpType.FireRate => Color.White, // White for bullet capacity
                     PowerUpType.IceShot => Color.Blue,
@@ -62,6 +64,26 @@ namespace GalagaFighter
                     _ => Color.Black
                 };
                 Raylib.DrawRectangleRec(Rect, color);
+            }
+        }
+
+        public PowerUpEffect CreateEffect(Player player)
+        {
+            return type switch
+            {
+                PowerUpType.FireRate => new FireRateEffect(player),
+                PowerUpType.IceShot => new IceShotEffect(player),
+                PowerUpType.Wall => new WallEffect(player),
+                _ => null
+            };
+        }
+
+        public void OnCollected(Player player)
+        {
+            var effect = CreateEffect(player);
+            if (effect != null)
+            {
+                player.Stats.AddEffect(player, effect);
             }
         }
     }

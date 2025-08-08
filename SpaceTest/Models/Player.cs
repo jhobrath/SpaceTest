@@ -2,6 +2,7 @@ using Raylib_cs;
 using System.Numerics;
 using System.Linq;
 using GalagaFighter.Models.Players;
+using SpaceTest.Models.Projectiles;
 
 namespace GalagaFighter.Models.Players
 {
@@ -75,7 +76,7 @@ namespace GalagaFighter.Models.Players
         private void HandleShooting(Game game)
         {
             var activeBulletCount = GetActiveBulletCount(game.GetGameObjects());
-            if (!combat.CanFire(Raylib.IsKeyDown(shootKey), stats, activeBulletCount))
+            if (!combat.CanFire(Raylib.IsKeyDown(shootKey), stats))
                 return;
 
             ProjectileType type;
@@ -100,10 +101,6 @@ namespace GalagaFighter.Models.Players
             }
             else
             {
-                int activeBullets = GetActiveBulletCount(game.GetGameObjects());
-                if (activeBullets >= stats.MaxBullets)
-                    return;
-
                 combat.ResetFireTimer();
                 type = ProjectileType.Normal;
                 Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 30 * scaleFactor, 15 * scaleFactor, _useLeftEngine);

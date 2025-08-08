@@ -1,8 +1,10 @@
 using Raylib_cs;
 using GalagaFighter.Models.Players;
 using System.Numerics;
+using GalagaFighter;
+using GalagaFighter.Models;
 
-namespace GalagaFighter.Models
+namespace SpaceTest.Models.Projectiles
 {
     public class WallProjectile : Projectile
     {

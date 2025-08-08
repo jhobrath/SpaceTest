@@ -1,6 +1,7 @@
 using Raylib_cs;
 using GalagaFighter.Models.Players;
 using System.Numerics;
+using SpaceTest.Models.Projectiles;
 
 namespace GalagaFighter.Models
 {

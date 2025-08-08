@@ -1,8 +1,10 @@
+using GalagaFighter;
+using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
 using Raylib_cs;
 using System.Numerics;
 
-namespace GalagaFighter.Models
+namespace SpaceTest.Models.Projectiles
 {
     public class NormalProjectile : Projectile
     {

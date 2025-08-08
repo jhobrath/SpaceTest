@@ -47,7 +47,7 @@ namespace GalagaFighter.Models.Players
             }
         }
 
-        public bool CanFire(bool keyPressed, PlayerStats stats, int activeBullets)
+        public bool CanFire(bool keyPressed, PlayerStats stats)
         {
             return keyPressed && FireTimer >= fireRate * stats.FireRateMultiplier;
         }

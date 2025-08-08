@@ -78,10 +78,8 @@ namespace GalagaFighter.Models.Players
         {
             switch (type)
             {
-                case PowerUpType.BulletCapacity:
-                    MaxBullets += bulletsPerPowerUp;
-                    if (MaxBullets > bulletMaxWithoutFireMultiplier)
-                        FireRateMultiplier *= .93f;
+                case PowerUpType.FireRate:
+                    FireRateMultiplier *= .93f;
                     break;
                 case PowerUpType.IceShot:
                     IceShotTimer = 10.0f;

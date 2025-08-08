@@ -189,7 +189,7 @@ namespace GalagaFighter.Models
             
             Color baseColor = type switch
             {
-                PowerUpType.BulletCapacity => Color.White,  // Changed from FireRate to BulletCapacity
+                PowerUpType.FireRate => Color.White,  // Changed from FireRate to BulletCapacity
                 PowerUpType.IceShot => Color.Blue,
                 PowerUpType.Wall => Color.Brown,
                 _ => Color.Gray
@@ -220,7 +220,7 @@ namespace GalagaFighter.Models
             // Add type-specific symbol
             switch (type)
             {
-                case PowerUpType.BulletCapacity:  // Changed from FireRate, and "F" to "B"
+                case PowerUpType.FireRate: 
                     Raylib.DrawText("B", (int)center.X - 3, (int)center.Y - 4, 8, Color.Black);
                     break;
                 case PowerUpType.IceShot:

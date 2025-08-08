@@ -1,11 +1,10 @@
 using GalagaFighter.Models.Players;
-using SpaceTest.Models.Projectiles;
-using Raylib_cs;
-using System.Numerics;
+using GalagaFighter;
+using GalagaFighter.Models;
 
-namespace GalagaFighter.Models.PowerUps
+namespace GalagaFighter.Models.Effects
 {
-    public abstract class PowerUpEffect
+    public abstract class PlayerEffect
     {
         protected readonly Player Player;
         protected bool IsActive;
@@ -13,7 +12,7 @@ namespace GalagaFighter.Models.PowerUps
         // Projectile effect configuration
         protected virtual ProjectileType ProjectileType { get; } = ProjectileType.Normal;
 
-        protected PowerUpEffect(Player player)
+        protected PlayerEffect(Player player)
         {
             Player = player;
             IsActive = true;

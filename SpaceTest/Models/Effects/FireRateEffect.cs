@@ -1,8 +1,8 @@
 using GalagaFighter.Models.Players;
 
-namespace GalagaFighter.Models.PowerUps
+namespace GalagaFighter.Models.Effects
 {
-    public class FireRateEffect : PowerUpEffect
+    public class FireRateEffect : PlayerEffect
     {
         private readonly float multiplier = 0.93f; // 7% faster fire rate
 

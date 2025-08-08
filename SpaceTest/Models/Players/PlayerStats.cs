@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using GalagaFighter.Models.PowerUps;
+using GalagaFighter.Models.Effects;
 
 namespace GalagaFighter.Models.Players
 {
@@ -13,7 +13,7 @@ namespace GalagaFighter.Models.Players
 
         private Player _player;
 
-        private readonly List<PowerUpEffect> activeEffects = new List<PowerUpEffect>();
+        private readonly List<PlayerEffect> activeEffects = new List<PlayerEffect>();
 
         public PlayerStats()
         {
@@ -53,7 +53,7 @@ namespace GalagaFighter.Models.Players
             }
         }
 
-        public void AddEffect(Player player, PowerUpEffect effect)
+        public void AddEffect(Player player, PlayerEffect effect)
         {
             if (effect is ProjectileEffect)
                 activeEffects.RemoveAll(x => x is ProjectileEffect);
@@ -62,12 +62,12 @@ namespace GalagaFighter.Models.Players
             effect.OnActivate();
         }
 
-        public int GetActiveEffectCount<T>() where T : PowerUpEffect
+        public int GetActiveEffectCount<T>() where T : PlayerEffect
         {
             return activeEffects.Count(e => e is T);
         }
 
-        public T GetFirstEffect<T>() where T : PowerUpEffect
+        public T GetFirstEffect<T>() where T : PlayerEffect
         {
             return activeEffects.OfType<T>().FirstOrDefault();
         }
@@ -89,11 +89,11 @@ namespace GalagaFighter.Models.Players
         }
 
         // For effects to query if player is currently affected
-        public bool HasEffect<T>() where T : PowerUpEffect
+        public bool HasEffect<T>() where T : PlayerEffect
         {
             return activeEffects.Any(e => e is T);
         }
 
-        public IEnumerable<PowerUpEffect> GetActiveEffects() => activeEffects;
+        public IEnumerable<PlayerEffect> GetActiveEffects() => activeEffects;
     }
 }

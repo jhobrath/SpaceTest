@@ -1,9 +1,9 @@
 using GalagaFighter.Models.Players;
 using Raylib_cs;
 
-namespace GalagaFighter.Models.PowerUps
+namespace GalagaFighter.Models.Effects
 {
-    public class FrozenEffect : PowerUpEffect
+    public class FrozenEffect : PlayerEffect
     {
         private float remainingTime;
         private readonly float slowPerEffect;
@@ -41,7 +41,7 @@ namespace GalagaFighter.Models.PowerUps
             // Each frozen effect stacks
             int count = Player.Stats.GetActiveEffectCount<FrozenEffect>();
             float totalSlow = count * slowPerEffect;
-            float clampedSlow = System.Math.Min(totalSlow, 1.0f - maxSlowFactor);
+            float clampedSlow = Math.Min(totalSlow, 1.0f - maxSlowFactor);
             return 1.0f - clampedSlow;
         }
 

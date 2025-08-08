@@ -4,6 +4,7 @@ using GalagaFighter.Models.Players;
 using Raylib_cs;
 using System.Numerics;
 using GalagaFighter.Models.PowerUps;
+using GalagaFighter.Models.Effects;
 
 namespace SpaceTest.Models.Projectiles
 {

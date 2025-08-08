@@ -1,7 +1,6 @@
 ﻿using GalagaFighter;
 using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
-using GalagaFighter.Models.PowerUps;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -10,9 +9,9 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Models.PowerUps
+namespace GalagaFighter.Models.Effects
 {
-    public class ProjectileEffect : PowerUpEffect
+    public class ProjectileEffect : PlayerEffect
     {
         public ProjectileEffect(Player player) : base(player)
         {

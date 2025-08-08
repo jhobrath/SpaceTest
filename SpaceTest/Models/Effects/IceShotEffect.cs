@@ -1,6 +1,7 @@
+using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
 
-namespace GalagaFighter.Models.PowerUps
+namespace GalagaFighter.Models.Effects
 {
     public class IceShotEffect : ProjectileEffect
     {

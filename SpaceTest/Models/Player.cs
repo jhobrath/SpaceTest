@@ -1,8 +1,7 @@
 using Raylib_cs;
-using System.Numerics;
-using System.Linq;
-using GalagaFighter.Models.Players;
 using SpaceTest.Models.Projectiles;
+using GalagaFighter.Models.Effects;
+using GalagaFighter.Models.PowerUps;
 
 namespace GalagaFighter.Models.Players
 {
@@ -66,7 +65,7 @@ namespace GalagaFighter.Models.Players
 
             // Use FrozenEffect for slow intensity
             float slowIntensity = 1.0f;
-            var frozen = Stats.GetFirstEffect<GalagaFighter.Models.PowerUps.FrozenEffect>();
+            var frozen = Stats.GetFirstEffect<FrozenEffect>();
             if (frozen != null)
                 slowIntensity = frozen.GetSlowMultiplier();
 
@@ -98,7 +97,7 @@ namespace GalagaFighter.Models.Players
         public override void Draw()
         {
             bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
-            var frozen = Stats.GetFirstEffect<GalagaFighter.Models.PowerUps.FrozenEffect>();
+            var frozen = Stats.GetFirstEffect<FrozenEffect>();
             bool isSlowed = frozen != null;
             //float blueAlpha = isSlowed ? frozen.GetBlueAlpha() : 0f;
             renderer.DrawPlayer(Rect, isSlowed, isMoving);
@@ -109,7 +108,7 @@ namespace GalagaFighter.Models.Players
         // No more ApplySlowEffect on Stats; handled by FrozenEffect
         public void ApplySlowEffect(float duration)
         {
-            Stats.AddEffect(this, new GalagaFighter.Models.PowerUps.FrozenEffect(this, duration));
+            Stats.AddEffect(this, new FrozenEffect(this, duration));
         }
         public void ApplySlowEffect() => ApplySlowEffect(5.0f);
         

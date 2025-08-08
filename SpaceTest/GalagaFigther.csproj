@@ -10,6 +10,21 @@
   <ItemGroup>
     <None Remove="Sprites\Player1.png" />
     <None Remove="Sprites\Player2.png" />
+    <None Remove="Sprites\Powerups\beam.png" />
+    <None Remove="Sprites\Powerups\bomb.png" />
+    <None Remove="Sprites\Powerups\boomerang.png" />
+    <None Remove="Sprites\Powerups\burn.png" />
+    <None Remove="Sprites\Powerups\confuse.png" />
+    <None Remove="Sprites\Powerups\firerate.png" />
+    <None Remove="Sprites\Powerups\force-field.png" />
+    <None Remove="Sprites\Powerups\ice.png" />
+    <None Remove="Sprites\Powerups\lightning.png" />
+    <None Remove="Sprites\Powerups\ninja.png" />
+    <None Remove="Sprites\Powerups\poison.png" />
+    <None Remove="Sprites\Powerups\reflect.png" />
+    <None Remove="Sprites\Powerups\vanish.png" />
+    <None Remove="Sprites\Powerups\wall.png" />
+    <None Remove="Sprites\Powerups\wind.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +32,51 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Player2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\beam.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\bomb.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\boomerang.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\burn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\confuse.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\firerate.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\force-field.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\ice.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\lightning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\ninja.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\poison.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\reflect.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\vanish.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\wall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\wind.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

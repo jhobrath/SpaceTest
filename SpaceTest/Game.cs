@@ -5,6 +5,7 @@ using GalagaFighter.Services;
 using System.Numerics;
 using System.Collections.Generic;
 using System;
+using GalagaFighter.Models.PowerUps;
 
 namespace GalagaFighter
 {
@@ -132,19 +133,24 @@ namespace GalagaFighter
             {
                 int powerUpTypeIndex = random.Next(0, 3);
                 PowerUpType type = (PowerUpType)powerUpTypeIndex;
-                
                 int screenWidth = Raylib.GetScreenWidth();
                 int screenHeight = Raylib.GetScreenHeight();
                 float uniformScale = Math.Min(screenWidth / 1920f, screenHeight / 1080f);
                 int powerUpSize = (int)(30 * uniformScale);
-                
                 Rectangle rect = new Rectangle(
-                    random.Next(100, screenWidth - 100), 
-                    -powerUpSize, 
-                    powerUpSize, 
+                    random.Next(100, screenWidth - 100),
+                    -powerUpSize,
+                    powerUpSize,
                     powerUpSize);
-                    
-                gameObjects.Add(new PowerUp(rect, type, 2f * uniformScale));
+                PowerUp powerUp = type switch
+                {
+                    PowerUpType.FireRate => new GalagaFighter.Models.PowerUps.FireRatePowerUp(rect, 2f * uniformScale),
+                    PowerUpType.IceShot => new GalagaFighter.Models.PowerUps.IceShotPowerUp(rect, 2f * uniformScale),
+                    PowerUpType.Wall => new GalagaFighter.Models.PowerUps.WallPowerUp(rect, 2f * uniformScale),
+                    _ => null
+                };
+                if (powerUp != null)
+                    gameObjects.Add(powerUp);
             }
         }
 

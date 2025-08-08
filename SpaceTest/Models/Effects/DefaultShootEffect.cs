@@ -1,7 +1,8 @@
+using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
 using SpaceTest.Models.Projectiles;
 
-namespace GalagaFighter.Models.PowerUps
+namespace GalagaFighter.Models.Effects
 {
     public class DefaultShootEffect : ProjectileEffect
     {

@@ -1,4 +1,5 @@
 using Raylib_cs;
+using GalagaFighter.Models.Players;
 using System.Numerics;
 using System;
 
@@ -8,18 +9,18 @@ namespace GalagaFighter.Models
     {
         private const int ExplosionRadius = 50;
 
-        public ExplosiveProjectile(Rectangle rect, float speed, Player owner) 
-            : base(rect, speed, owner) 
+        public ExplosiveProjectile(Rectangle rect, float speed, Player owner)
+            : base(rect, speed, owner)
         {
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Explosive, (int)rect.Width, (int)rect.Height);
         }
 
-        public override int Damage => 25; // More damage than normal
+        public override int Damage => 50; // Increased damage for explosive projectile
 
         public override void OnHit(Player target, Game game)
         {
-            // Deal damage to the direct target
-            target.Health -= Damage;
+            // Deal damage to the target
+            target.TakeDamage(Damage);
             
             // Create area of effect damage to all nearby objects
             foreach (var obj in game.GetGameObjects())
@@ -33,7 +34,7 @@ namespace GalagaFighter.Models
                     
                     if (distance <= ExplosionRadius)
                     {
-                        otherPlayer.Health -= Damage / 2; // Half damage to nearby players
+                        otherPlayer.TakeDamage(Damage / 2); // Half damage to nearby players
                     }
                 }
             }

@@ -1,4 +1,5 @@
 using Raylib_cs;
+using GalagaFighter.Models.Players;
 
 namespace GalagaFighter.Models
 {
@@ -9,10 +10,10 @@ namespace GalagaFighter.Models
             return type switch
             {
                 ProjectileType.Normal => new NormalProjectile(rect, speed, owner),
+                ProjectileType.Explosive => new ExplosiveProjectile(rect, speed, owner),
                 ProjectileType.Ice => new IceProjectile(rect, speed, owner),
                 ProjectileType.Wall => new WallProjectile(rect, speed, owner),
-                ProjectileType.Explosive => new ExplosiveProjectile(rect, speed, owner),
-                _ => new NormalProjectile(rect, speed, owner)
+                _ => new NormalProjectile(rect, speed, owner),
             };
         }
     }

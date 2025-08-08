@@ -1,58 +1,48 @@
 using Raylib_cs;
+using GalagaFighter.Models.Players;
 
 namespace GalagaFighter.Models
 {
     public abstract class Projectile : GameObject
     {
-        public Player Owner { get; protected set; }
-        protected readonly float speed;
+        public float Speed { get; }
+        public Player Owner { get; }
+        public bool DestroyOnHit { get; protected set; } = true;
+        public bool BlocksMovement { get; protected set; } = false;
+        public abstract int Damage { get; }
+
         protected Texture2D sprite;
 
         protected Projectile(Rectangle rect, float speed, Player owner) : base(rect)
         {
-            this.speed = speed;
+            Speed = speed;
             Owner = owner;
+            IsActive = true;
         }
 
-        // Virtual methods that can be overridden by specific projectile types
-        public virtual void OnHit(Player target, Game game) { }
-        public virtual bool BlocksMovement => false;
-        public virtual int Damage => 10;
-        public virtual bool DestroyOnHit => true;
-        
         public override void Update(Game game)
         {
-            UpdateMovement(game);
-            CheckBounds(game);
-        }
-
-        protected virtual void UpdateMovement(Game game)
-        {
-            Rect.X += speed;
-        }
-
-        protected virtual void CheckBounds(Game game)
-        {
-            int screenWidth = Raylib.GetScreenWidth();
-            if (Rect.X > screenWidth || Rect.X < 0)
+            Rect.X += Speed;
+            if (Rect.X < -Rect.Width || Rect.X > Raylib.GetScreenWidth())
             {
                 IsActive = false;
             }
         }
 
+        public abstract void OnHit(Player target, Game game);
+
+        public abstract Color GetColor();
+
         public override void Draw()
         {
-            if (sprite.Id > 0) // Check if sprite is valid
+            if (sprite.Id > 0)
             {
                 Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
             }
             else
             {
-                // Fallback to color rectangle if sprite failed to load
                 Raylib.DrawRectangleRec(Rect, GetColor());
             }
         }
-
-        public abstract Color GetColor();
     }
 }

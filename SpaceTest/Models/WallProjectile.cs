@@ -1,63 +1,67 @@
 using Raylib_cs;
+using GalagaFighter.Models.Players;
 
 namespace GalagaFighter.Models
 {
     public class WallProjectile : Projectile
     {
-        private bool isStuck = false;
-        private float stuckTimer = 10.0f;
-
-        public WallProjectile(Rectangle rect, float speed, Player owner) 
-            : base(rect, speed, owner) 
+        public WallProjectile(Rectangle rect, float speed, Player owner)
+            : base(rect, speed, owner)
         {
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Wall, (int)rect.Width, (int)rect.Height);
+            DestroyOnHit = false;
+            BlocksMovement = true;
         }
 
-        public override bool BlocksMovement => isStuck;
-        public override bool DestroyOnHit => false; // Walls don't get destroyed when touched
-        public override int Damage => 0; // Walls don't do damage
+        private float alpha = 1.0f;
+        private float lifeTime = 5.0f;
+        private const float fadeStartTime = 3.0f;
 
-        protected override void UpdateMovement(Game game)
+        public override int Damage => 0;
+
+        public override void Update(Game game)
         {
-            if (!isStuck)
+            // Don't move, just count down lifetime
+            lifeTime -= Raylib.GetFrameTime();
+
+            // Start fading after 3 seconds
+            if (lifeTime <= fadeStartTime)
             {
-                Rect.X += speed;
-                
-                int screenWidth = Raylib.GetScreenWidth();
-                
-                // Check if wall has reached the edge
-                if (Rect.X <= 0 || Rect.X >= screenWidth - Rect.Width)
-                {
-                    isStuck = true;
-                    // Snap to edge
-                    Rect.X = (Rect.X <= 0) ? 0 : screenWidth - Rect.Width;
-                    game.PlayWallStickSound();
-                }
+                alpha = lifeTime / fadeStartTime;
+            }
+
+            // Destroy when lifetime is up
+            if (lifeTime <= 0)
+            {
+                IsActive = false;
+            }
+        }
+
+        public override void Draw()
+        {
+            // Use the generated sprite (which works!)
+            if (sprite.Id > 0)
+            {
+                Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, new Color(255, 255, 255, (int)(255 * alpha)));
             }
             else
             {
-                stuckTimer -= Raylib.GetFrameTime();
-                if (stuckTimer <= 0)
-                {
-                    IsActive = false;
-                }
+                // Fallback to simple rectangle if sprite fails
+                Color wallColor = GetColor();
+                wallColor = new Color(Color.Gray.R, Color.Gray.G, Color.Gray.B, (byte)(255 * alpha));
+                Raylib.DrawRectangleRec(Rect, wallColor);
             }
-        }
-
-        protected override void CheckBounds(Game game)
-        {
-            // Wall projectiles don't get destroyed by normal bounds checking
-            // They handle their own lifecycle in UpdateMovement
         }
 
         public override void OnHit(Player target, Game game)
         {
-            // Walls don't have hit effects, they just block movement
+            // Wall projectiles don't do anything on hit
+            game.PlayWallStickSound();
         }
 
         public override Color GetColor()
         {
-            return Color.Brown;
+            return Color.Gray;
         }
     }
 }

@@ -1,20 +1,12 @@
 using Raylib_cs;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
+using System.Linq;
+using GalagaFighter.Models.Players;
 
-namespace GalagaFighter.Models
+namespace GalagaFighter.Models.Players
 {
     public class Player : GameObject
     {
-        public int Health;
-        public float UpHeldDuration;
-        public float DownHeldDuration;
-        public float FireRate;
-        public float FireTimer;
-        public float IceShotTimer;
-        public float SlowTimer;
-        public bool HasWall;
         private readonly KeyboardKey upKey;
         private readonly KeyboardKey downKey;
         private readonly KeyboardKey shootKey;
@@ -22,56 +14,57 @@ namespace GalagaFighter.Models
         private readonly Texture2D shipSprite;
         private readonly float scaleFactor;
 
-        // Extracted helper - first step in modular refactor
-        private readonly PlayerMovementHelper movementHelper;
-        private readonly PlayerRenderingHelper renderingHelper;
+        private readonly PlayerMovement movement;
+        private readonly PlayerRenderer renderer;
+        private readonly PlayerStats stats;
+        private readonly PlayerCombat combat;
 
-        private readonly float baseSpeed;
-        private readonly float projectileSpeed;
-        private const float slowdownFactor = 3.0f;
+        private float UpHeldDuration;
+        private float DownHeldDuration;
 
-        public Player(Rectangle rect, float fireRate, KeyboardKey up, KeyboardKey down, KeyboardKey shoot, bool isPlayer1, float scale) : base(rect)
+        public Player(Rectangle rect, float fireRate, KeyboardKey up, KeyboardKey down, KeyboardKey shoot, bool isPlayer1, float scale) 
+            : base(rect)
         {
-            Health = 100;
+            this.isPlayer1 = isPlayer1;
+            this.shootKey = shoot;
+            this.scaleFactor = scale;
+            this.upKey = up;
+            this.downKey = down;
+            
+            // Load sprite
+            string spritePath = isPlayer1 ? "Sprites/Player1.png" : "Sprites/Player2.png";
+            shipSprite = Raylib.LoadTexture(spritePath);
+
+            // Initialize components
+            float baseSpeed = 16f * scale;
+            float projectileSpeed = 17f * scale;
+            float effectiveFireRate = fireRate * (float)Math.Pow(0.8f, 5);
+
+            movement = new PlayerMovement(baseSpeed, up, down);
+            renderer = new PlayerRenderer(shipSprite, isPlayer1, scale);
+            stats = new PlayerStats();
+            combat = new PlayerCombat(isPlayer1, projectileSpeed, scale, effectiveFireRate);
+
             UpHeldDuration = 0f;
             DownHeldDuration = 0f;
-            FireRate = fireRate;
-            FireTimer = 0;
-            IceShotTimer = 0;
-            SlowTimer = 0;
-            HasWall = false;
-            upKey = up;
-            downKey = down;
-            shootKey = shoot;
-            this.isPlayer1 = isPlayer1;
-            scaleFactor = scale;
-            
-            baseSpeed = 16f * scaleFactor;
-            projectileSpeed = 17f * scaleFactor;
-            
-            shipSprite = SpriteGenerator.CreatePlayerShip(isPlayer1, (int)rect.Width, (int)rect.Height);
-
-            // Initialize helper classes
-            movementHelper = new PlayerMovementHelper(baseSpeed, upKey, downKey);
-            renderingHelper = new PlayerRenderingHelper(shipSprite, isPlayer1, scaleFactor);
         }
 
         public override void Update(Game game)
         {
-            if (Health <= 0)
+            if (stats.Health <= 0)
             {
                 IsActive = false;
                 return;
             }
 
             float frameTime = Raylib.GetFrameTime();
-            FireTimer += frameTime;
-            if (SlowTimer > 0) SlowTimer -= frameTime;
-            if (IceShotTimer > 0) IceShotTimer -= frameTime;
+            combat.UpdateTimer(frameTime);
+            stats.UpdateEffects(frameTime);
 
-            // Use movement helper
-            Rect = movementHelper.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
-                SlowTimer > 0, frameTime, game.GetGameObjects(), this);
+            // Update position
+            float slowIntensity = stats.CalculateSlowIntensity();
+            Rect = movement.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
+                slowIntensity, frameTime, game.GetGameObjects(), this);
             
             HandleShooting(game);
             HandleCollisions(game);
@@ -79,63 +72,47 @@ namespace GalagaFighter.Models
 
         private void HandleShooting(Game game)
         {
-            if (Raylib.IsKeyDown(shootKey) && FireTimer >= FireRate)
+            if (!combat.CanFire(Raylib.IsKeyDown(shootKey), stats, GetActiveBulletCount(game.GetGameObjects())))
+                return;
+
+            ProjectileType type;
+            Rectangle rect;
+            float speed = combat.GetProjectileSpeed();
+
+            if (stats.HasWall)
             {
-                FireTimer = 0;
-
-                ProjectileType type;
-                Rectangle rect;
-                float speed = isPlayer1 ? projectileSpeed : -projectileSpeed;
-
-                // Scale projectile sizes and positions based on ship scale
-                int shipCenterX = (int)(Rect.X + Rect.Width / 2);
-                int shipCenterY = (int)(Rect.Y + Rect.Height / 2);
-
-                if (HasWall)
-                {
-                    type = ProjectileType.Wall;
-                    int wallWidth = (int)(150 * scaleFactor);
-                    int wallHeight = (int)(15 * scaleFactor);
-                    int wallOffset = (int)(Rect.Width * 0.6f);
-                    
-                    rect = new Rectangle(
-                        shipCenterX + (isPlayer1 ? wallOffset : -wallOffset - wallWidth), 
-                        shipCenterY - wallHeight / 2, 
-                        wallWidth, wallHeight);
-                    HasWall = false;
-                }
-                else if (IceShotTimer > 0)
-                {
-                    type = ProjectileType.Ice;
-                    int iceSize = (int)(30 * scaleFactor);
-                    int iceOffset = (int)(Rect.Width * 0.6f);
-                    
-                    rect = new Rectangle(
-                        shipCenterX + (isPlayer1 ? iceOffset : -iceOffset - iceSize), 
-                        shipCenterY - iceSize / 2, 
-                        iceSize, iceSize);
-                }
-                else
-                {
-                    type = ProjectileType.Normal;
-                    int bulletWidth = (int)(30 * scaleFactor);
-                    int bulletHeight = (int)(15 * scaleFactor);
-                    int bulletOffset = (int)(Rect.Width * 0.6f);
-                    
-                    rect = new Rectangle(
-                        shipCenterX + (isPlayer1 ? bulletOffset : -bulletOffset - bulletWidth), 
-                        shipCenterY - bulletHeight / 2, 
-                        bulletWidth, bulletHeight);
-                }
-                
-                game.AddGameObject(ProjectileFactory.Create(type, rect, speed, this));
-                game.PlayShootSound();
+                combat.ResetFireTimer();
+                type = ProjectileType.Wall;
+                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 150 * scaleFactor, 15 * scaleFactor);
+                rect = combat.GetProjectileRect(type, spawn);
+                stats.ConsumeWall();
             }
+            else if (stats.IceShotTimer > 0)
+            {
+                combat.ResetFireTimer();
+                type = ProjectileType.Ice;
+                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 40 * scaleFactor, 20 * scaleFactor);
+                rect = combat.GetProjectileRect(type, spawn);
+            }
+            else
+            {
+                int activeBullets = GetActiveBulletCount(game.GetGameObjects());
+                if (activeBullets >= stats.MaxBullets)
+                    return;
+
+                combat.ResetFireTimer();
+                type = ProjectileType.Normal;
+                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 30 * scaleFactor, 15 * scaleFactor);
+                rect = combat.GetProjectileRect(type, spawn);
+            }
+
+            game.AddGameObject(ProjectileFactory.Create(type, rect, speed, this));
+            game.PlayShootSound();
         }
 
         private void HandleCollisions(Game game)
         {
-            var gameObjects = game.GetGameObjects().ToList();
+            var gameObjects = game.GetGameObjects();
             
             foreach (var obj in gameObjects)
             {
@@ -162,7 +139,7 @@ namespace GalagaFighter.Models
                     {
                         if (obj is PowerUp powerUp)
                         {
-                            ApplyPowerUpEffect(powerUp.Type);
+                            stats.ApplyPowerUpEffect(powerUp.Type);
                             powerUp.IsActive = false;
                             myProjectile.IsActive = false;
                             game.PlayPowerUpSound();
@@ -173,164 +150,35 @@ namespace GalagaFighter.Models
             }
         }
 
-        private void ApplyPowerUpEffect(PowerUpType type)
-        {
-            switch (type)
-            {
-                case PowerUpType.FireRate:
-                    FireRate *= 0.8f;
-                    break;
-                case PowerUpType.IceShot:
-                    IceShotTimer = 10.0f;
-                    break;
-                case PowerUpType.Wall:
-                    HasWall = true;
-                    break;
-            }
-        }
-
         public override void Draw()
         {
             bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
-            renderingHelper.DrawPlayer(Rect, SlowTimer > 0, isMoving);
+            bool isSlowed = stats.IceEffectCount > 0;
+            renderer.DrawPlayer(Rect, isSlowed, isMoving);
+            renderer.DrawDebugBounds(Rect);
         }
 
-        // Clean interface methods for projectiles
-        public void TakeDamage(int damage)
+        // Interface methods for other classes
+        public void TakeDamage(int damage) => stats.TakeDamage(damage);
+        public void ApplySlowEffect(float duration) => stats.ApplySlowEffect(duration);
+        public void ApplySlowEffect() => stats.ApplySlowEffect(5.0f);
+        
+        // Properties
+        public int Health => stats.Health;
+        public int MaxBullets => stats.MaxBullets;
+        public float IceShotTimer
         {
-            Health -= damage;
+            get => stats.IceShotTimer;
+            set => stats.ResetIceShotTimer();
         }
-
-        public void ApplySlowEffect(float duration)
+        public int IceEffectCount => stats.IceEffectCount;
+        public float CurrentSlowIntensity => stats.CurrentSlowIntensity;
+        public int GetActiveBulletCount(List<GameObject> gameObjects)
         {
-            SlowTimer = duration;
-        }
-    }
-
-    // Helper class for movement logic
-    public class PlayerMovementHelper
-    {
-        private readonly float baseSpeed;
-        private readonly KeyboardKey upKey;
-        private readonly KeyboardKey downKey;
-        private const float slowdownFactor = 3.0f;
-
-        public PlayerMovementHelper(float baseSpeed, KeyboardKey upKey, KeyboardKey downKey)
-        {
-            this.baseSpeed = baseSpeed;
-            this.upKey = upKey;
-            this.downKey = downKey;
-        }
-
-        public Rectangle HandleMovement(Rectangle currentRect, ref float upHeldDuration, ref float downHeldDuration, 
-            bool isSlowed, float frameTime, List<GameObject> gameObjects, Player player)
-        {
-            Rectangle newRect = currentRect;
-
-            if (Raylib.IsKeyDown(upKey))
-            {
-                upHeldDuration += frameTime;
-                float currentSpeed = (baseSpeed / (1 + upHeldDuration * slowdownFactor)) * (isSlowed ? 0.5f : 1.0f);
-                newRect.Y -= currentSpeed;
-            }
-            else
-            {
-                upHeldDuration = 0f;
-            }
-
-            if (Raylib.IsKeyDown(downKey))
-            {
-                downHeldDuration += frameTime;
-                float currentSpeed = (baseSpeed / (1 + downHeldDuration * slowdownFactor)) * (isSlowed ? 0.5f : 1.0f);
-                newRect.Y += currentSpeed;
-            }
-            else
-            {
-                downHeldDuration = 0f;
-            }
-
-            // Check for wall collisions
-            foreach (var obj in gameObjects)
-            {
-                if (obj is Projectile projectile && projectile.Owner != player && projectile.BlocksMovement)
-                {
-                    if (Raylib.CheckCollisionRecs(newRect, projectile.Rect))
-                    {
-                        return currentRect; // Block movement
-                    }
-                }
-            }
-
-            return newRect;
-        }
-    }
-
-    // Helper class for rendering
-    public class PlayerRenderingHelper
-    {
-        private readonly Texture2D shipSprite;
-        private readonly bool isPlayer1;
-        private readonly float scaleFactor;
-
-        public PlayerRenderingHelper(Texture2D shipSprite, bool isPlayer1, float scaleFactor)
-        {
-            this.shipSprite = shipSprite;
-            this.isPlayer1 = isPlayer1;
-            this.scaleFactor = scaleFactor;
-        }
-
-        public void DrawPlayer(Rectangle playerRect, bool isSlowed, bool isMoving)
-        {
-            DrawShip(playerRect, isSlowed);
-            
-            if (isMoving)
-            {
-                DrawEngineTrail(playerRect);
-            }
-        }
-
-        private void DrawShip(Rectangle playerRect, bool isSlowed)
-        {
-            float rotation = isPlayer1 ? 90f : -90f;
-            Vector2 position = new Vector2(playerRect.X + playerRect.Width / 2, playerRect.Y + playerRect.Height / 2);
-            
-            Raylib.DrawTextureEx(shipSprite, position, rotation, 1.0f, Color.White);
-            
-            if (isSlowed)
-            {
-                Raylib.DrawTextureEx(shipSprite, position, rotation, 1.0f, new Color(0, 0, 255, 100));
-            }
-        }
-
-        private void DrawEngineTrail(Rectangle playerRect)
-        {
-            int trailX, trailY;
-            int trailOffset = (int)(15 * scaleFactor);
-            
-            if (isPlayer1)
-            {
-                trailX = (int)playerRect.X - trailOffset;
-                trailY = (int)(playerRect.Y + playerRect.Height / 2);
-            }
-            else
-            {
-                trailX = (int)(playerRect.X + playerRect.Width + trailOffset / 2);
-                trailY = (int)(playerRect.Y + playerRect.Height / 2);
-            }
-            
-            Color trailColor = new Color(255, 150, 0, 150);
-            
-            int particleCount = (int)(7 * scaleFactor);
-            int maxRadius = (int)(6 * scaleFactor);
-            int spacing = (int)(4 * scaleFactor);
-            
-            for (int i = 0; i < particleCount; i++)
-            {
-                int offset = i * (isPlayer1 ? -spacing : spacing);
-                int radius = Math.Max(1, maxRadius - i);
-                
-                Raylib.DrawCircle(trailX + offset, trailY, radius, trailColor);
-            }
+            return gameObjects
+                .OfType<Projectile>()
+                .Where(p => p.Owner == this && p is NormalProjectile)
+                .Count();
         }
     }
 }

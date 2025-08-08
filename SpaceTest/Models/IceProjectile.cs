@@ -1,4 +1,5 @@
 using Raylib_cs;
+using GalagaFighter.Models.Players;
 
 namespace GalagaFighter.Models
 {
@@ -14,7 +15,7 @@ namespace GalagaFighter.Models
 
         public override void OnHit(Player target, Game game)
         {
-            target.ApplySlowEffect(5.0f); // Use new method instead of direct property access
+            target.ApplySlowEffect(5.0f);
             Owner.IceShotTimer = 0;  // Remove ice shot from owner
             game.PlayIceHitSound();
         }
@@ -22,6 +23,20 @@ namespace GalagaFighter.Models
         public override Color GetColor()
         {
             return Color.SkyBlue;
+        }
+
+        public override void Draw()
+        {
+            // Use the generated sprite (which works!)
+            if (sprite.Id > 0)
+            {
+                Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
+            }
+            else
+            {
+                // Fallback to simple rectangle if sprite fails
+                Raylib.DrawRectangleRec(Rect, Color.SkyBlue);
+            }
         }
     }
 }

@@ -42,7 +42,7 @@ namespace GalagaFighter
                 // Add a subtle glow effect
                 Color glowColor = Type switch
                 {
-                    PowerUpType.FireRate => new Color(255, 255, 255, 50),
+                    PowerUpType.BulletCapacity => new Color(255, 255, 255, 50), // White for bullet capacity
                     PowerUpType.IceShot => new Color(0, 100, 255, 50),
                     PowerUpType.Wall => new Color(139, 69, 19, 50),
                     _ => new Color(128, 128, 128, 50)
@@ -56,7 +56,7 @@ namespace GalagaFighter
                 // Fallback to original color rectangle
                 Color color = Type switch
                 {
-                    PowerUpType.FireRate => Color.White,
+                    PowerUpType.BulletCapacity => Color.White, // White for bullet capacity
                     PowerUpType.IceShot => Color.Blue,
                     PowerUpType.Wall => Color.Brown,
                     _ => Color.Black

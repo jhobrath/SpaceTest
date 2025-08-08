@@ -81,20 +81,80 @@ namespace GalagaFighter.Models
                     break;
                     
                 case ProjectileType.Ice:
-                    // Crystalline ice shard - keep original scaling logic
-                    Raylib.DrawRectangle(2, 2, width - 4, height - 4, Color.SkyBlue);
-                    Raylib.DrawTriangle(
-                        new Vector2(0, height / 2),
-                        new Vector2(4, 2),
-                        new Vector2(4, height - 2),
+                    // Six-sided horizontally stretched diamond using rectangles
+                    float centerX = width / 2f;
+                    float centerY = height / 2f;
+                    
+                    // Main body - horizontal rectangle (wider part of diamond)
+                    float mainWidth = width * 0.7f;
+                    float mainHeight = height * 0.5f;
+                    Raylib.DrawRectangle(
+                        (int)(centerX - mainWidth / 2), 
+                        (int)(centerY - mainHeight / 2), 
+                        (int)mainWidth, 
+                        (int)mainHeight, 
                         Color.SkyBlue
                     );
-                    Raylib.DrawTriangle(
-                        new Vector2(width, height / 2),
-                        new Vector2(width - 4, 2),
-                        new Vector2(width - 4, height - 2),
-                        Color.White
+                    
+                    // Top and bottom diamond points
+                    float pointWidth = width * 0.4f;
+                    float pointHeight = height * 0.3f;
+                    
+                    // Top point
+                    Raylib.DrawRectangle(
+                        (int)(centerX - pointWidth / 2), 
+                        (int)(centerY - height * 0.4f), 
+                        (int)pointWidth, 
+                        (int)pointHeight, 
+                        Color.SkyBlue
                     );
+                    
+                    // Bottom point
+                    Raylib.DrawRectangle(
+                        (int)(centerX - pointWidth / 2), 
+                        (int)(centerY + height * 0.2f), 
+                        (int)pointWidth, 
+                        (int)pointHeight, 
+                        Color.SkyBlue
+                    );
+                    
+                    // Left and right extended points for horizontal stretch
+                    float sideWidth = width * 0.25f;
+                    float sideHeight = height * 0.3f;
+                    
+                    // Left extension
+                    Raylib.DrawRectangle(
+                        (int)(centerX - width * 0.45f), 
+                        (int)(centerY - sideHeight / 2), 
+                        (int)sideWidth, 
+                        (int)sideHeight, 
+                        Color.SkyBlue
+                    );
+                    
+                    // Right extension
+                    Raylib.DrawRectangle(
+                        (int)(centerX + width * 0.25f), 
+                        (int)(centerY - sideHeight / 2), 
+                        (int)sideWidth, 
+                        (int)sideHeight, 
+                        Color.SkyBlue
+                    );
+                    
+                    // Add blue outline for definition
+                    Raylib.DrawRectangleLines(
+                        (int)(centerX - mainWidth / 2), 
+                        (int)(centerY - mainHeight / 2), 
+                        (int)mainWidth, 
+                        (int)mainHeight, 
+                        Color.Blue
+                    );
+                    
+                    // Add white sparkle points for ice crystal effect
+                    int sparkleRadius = Math.Max(1, (int)(Math.Min(width, height) * 0.08f));
+                    Raylib.DrawCircle((int)(centerX - width * 0.4f), (int)centerY, sparkleRadius, Color.White); // Left
+                    Raylib.DrawCircle((int)(centerX + width * 0.4f), (int)centerY, sparkleRadius, Color.White); // Right
+                    Raylib.DrawCircle((int)centerX, (int)(centerY - height * 0.35f), sparkleRadius, Color.White); // Top
+                    
                     break;
                     
                 case ProjectileType.Wall:
@@ -129,7 +189,7 @@ namespace GalagaFighter.Models
             
             Color baseColor = type switch
             {
-                PowerUpType.FireRate => Color.White,
+                PowerUpType.BulletCapacity => Color.White,  // Changed from FireRate to BulletCapacity
                 PowerUpType.IceShot => Color.Blue,
                 PowerUpType.Wall => Color.Brown,
                 _ => Color.Gray
@@ -160,8 +220,8 @@ namespace GalagaFighter.Models
             // Add type-specific symbol
             switch (type)
             {
-                case PowerUpType.FireRate:
-                    Raylib.DrawText("F", (int)center.X - 3, (int)center.Y - 4, 8, Color.Black);
+                case PowerUpType.BulletCapacity:  // Changed from FireRate, and "F" to "B"
+                    Raylib.DrawText("B", (int)center.X - 3, (int)center.Y - 4, 8, Color.Black);
                     break;
                 case PowerUpType.IceShot:
                     Raylib.DrawText("I", (int)center.X - 2, (int)center.Y - 4, 8, Color.Black);

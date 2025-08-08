@@ -27,7 +27,7 @@ The sprite system generates visual assets procedurally using Raylib's drawing fu
 
 ### **?? Projectiles**
 - **Normal**: Yellow bullet with white tip (20x10 pixels - doubled from original 10x5)
-- **Ice**: Crystalline blue shard with white highlights (20x20 pixels - original size)
+- **Ice**: Six-sided horizontally elongated diamond crystal with crystalline highlights (20x20 pixels - original size)
 - **Wall**: Brown brick pattern with maroon borders (100x10 pixels - original size)
 - **Explosive**: Orange/red explosive with pulsing glow effect (original size)
 

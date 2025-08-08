@@ -26,10 +26,11 @@ namespace GalagaFighter.Models.Players
             FireTimer += frameTime;
         }
 
-        public Vector2 GetProjectileSpawnPoint(Rectangle playerRect, float projectileWidth, float projectileHeight)
+        public Vector2 GetProjectileSpawnPoint(Rectangle playerRect, float projectileWidth, float projectileHeight, bool isLeftEngine)
         {
+
             float shipCenterX = playerRect.X + playerRect.Width / 2f;
-            float shipCenterY = playerRect.Y + playerRect.Height / 2f;
+            float shipCenterY = playerRect.Y + playerRect.Height / 2f + (isLeftEngine ? -1 : 1)*playerRect.Height/4;
             float offset = (playerRect.Width > playerRect.Height ? playerRect.Width : playerRect.Height) * 0.5f;
             
             if (isPlayer1)
@@ -48,7 +49,7 @@ namespace GalagaFighter.Models.Players
 
         public bool CanFire(bool keyPressed, PlayerStats stats, int activeBullets)
         {
-            return keyPressed && FireTimer >= fireRate;
+            return keyPressed && FireTimer >= fireRate * stats.FireRateMultiplier;
         }
 
         public Rectangle GetProjectileRect(ProjectileType type, Vector2 spawnPoint)

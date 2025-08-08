@@ -7,8 +7,10 @@ namespace GalagaFighter.Models.Players
     {
         public int Health { get; private set; }
         public int MaxBullets { get; private set; }
+        public float FireRateMultiplier { get; private set; } 
         private const int baseBulletCapacity = 8;
         private const int bulletsPerPowerUp = 2;
+        private const int bulletMaxWithoutFireMultiplier = 10;
         
         private List<float> iceEffectTimers = new List<float>();
         private const float iceEffectDuration = 5.0f;
@@ -22,6 +24,7 @@ namespace GalagaFighter.Models.Players
         {
             Health = 100;
             MaxBullets = baseBulletCapacity;
+            FireRateMultiplier = 1;
             IceShotTimer = 0;
             SlowTimer = 0;
             HasWall = false;
@@ -77,6 +80,8 @@ namespace GalagaFighter.Models.Players
             {
                 case PowerUpType.BulletCapacity:
                     MaxBullets += bulletsPerPowerUp;
+                    if (MaxBullets > bulletMaxWithoutFireMultiplier)
+                        FireRateMultiplier *= .93f;
                     break;
                 case PowerUpType.IceShot:
                     IceShotTimer = 10.0f;

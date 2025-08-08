@@ -22,6 +22,8 @@ namespace GalagaFighter.Models.Players
         private float UpHeldDuration;
         private float DownHeldDuration;
 
+        public bool _useLeftEngine;
+
         public Player(Rectangle rect, float fireRate, KeyboardKey up, KeyboardKey down, KeyboardKey shoot, bool isPlayer1, float scale) 
             : base(rect)
         {
@@ -72,18 +74,20 @@ namespace GalagaFighter.Models.Players
 
         private void HandleShooting(Game game)
         {
-            if (!combat.CanFire(Raylib.IsKeyDown(shootKey), stats, GetActiveBulletCount(game.GetGameObjects())))
+            var activeBulletCount = GetActiveBulletCount(game.GetGameObjects());
+            if (!combat.CanFire(Raylib.IsKeyDown(shootKey), stats, activeBulletCount))
                 return;
 
             ProjectileType type;
             Rectangle rect;
             float speed = combat.GetProjectileSpeed();
+            _useLeftEngine = !_useLeftEngine; // Alternate between left and right engines
 
             if (stats.HasWall)
             {
                 combat.ResetFireTimer();
                 type = ProjectileType.Wall;
-                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 150 * scaleFactor, 15 * scaleFactor);
+                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 150 * scaleFactor, 15 * scaleFactor, _useLeftEngine);
                 rect = combat.GetProjectileRect(type, spawn);
                 stats.ConsumeWall();
             }
@@ -91,7 +95,7 @@ namespace GalagaFighter.Models.Players
             {
                 combat.ResetFireTimer();
                 type = ProjectileType.Ice;
-                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 40 * scaleFactor, 20 * scaleFactor);
+                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 40 * scaleFactor, 20 * scaleFactor, _useLeftEngine);
                 rect = combat.GetProjectileRect(type, spawn);
             }
             else
@@ -102,7 +106,7 @@ namespace GalagaFighter.Models.Players
 
                 combat.ResetFireTimer();
                 type = ProjectileType.Normal;
-                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 30 * scaleFactor, 15 * scaleFactor);
+                Vector2 spawn = combat.GetProjectileSpawnPoint(Rect, 30 * scaleFactor, 15 * scaleFactor, _useLeftEngine);
                 rect = combat.GetProjectileRect(type, spawn);
             }
 

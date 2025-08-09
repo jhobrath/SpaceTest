@@ -3,6 +3,7 @@ using GalagaFighter.Models.Players;
 using System.Numerics;
 using GalagaFighter;
 using GalagaFighter.Models;
+using GalagaFigther.Models.Projectiles;
 
 namespace SpaceTest.Models.Projectiles
 {
@@ -63,10 +64,8 @@ namespace SpaceTest.Models.Projectiles
 
         public override void OnHit(Player target, Game game)
         {
-            if(!IsStuck)
-                game.PlayWallStickSound();
-
             IsStuck = true;
+            base.OnHit(target, game);
         }
 
         public override Color GetColor()

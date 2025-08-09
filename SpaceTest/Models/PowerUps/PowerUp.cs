@@ -11,7 +11,6 @@ namespace GalagaFighter.Models.PowerUps
     {
         protected readonly float speed;
         protected readonly Texture2D sprite;
-        public abstract PowerUpType Type { get; }
         protected  float _rotation = 0f;
 
         protected PowerUp(Rectangle rect, float speed, Texture2D sprite) : base(rect)

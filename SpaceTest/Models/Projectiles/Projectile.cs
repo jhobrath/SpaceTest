@@ -1,8 +1,11 @@
-using Raylib_cs;
+using GalagaFighter;
+using GalagaFighter.Models;
+using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.Players;
+using Raylib_cs;
 using System.Numerics;
 
-namespace GalagaFighter.Models
+namespace GalagaFigther.Models.Projectiles
 {
     public abstract class Projectile : GameObject
     {
@@ -31,9 +34,25 @@ namespace GalagaFighter.Models
             }
         }
 
-        public abstract void OnHit(Player target, Game game);
+        public virtual void OnHit(Player target, Game game)
+        {
+            target.TakeDamage(Damage);
+
+            var effects = GetEffects(target);   
+            foreach(var effect in effects)
+                target.Stats.AddEffect(target, effect);
+
+            PlaySound(game);
+        }
+
+        public virtual void PlaySound(Game game) =>
+            game.PlayHitSound();
 
         public abstract Color GetColor();
+
+        public virtual List<PlayerEffect> GetEffects(Player target) {
+            return new List<PlayerEffect>();
+        }
 
         public override void Draw()
         {

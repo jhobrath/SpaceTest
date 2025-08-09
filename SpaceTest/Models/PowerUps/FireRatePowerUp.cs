@@ -6,7 +6,6 @@ namespace GalagaFighter.Models.PowerUps
 {
     public class FireRatePowerUp : PowerUp
     {
-        public override PowerUpType Type => PowerUpType.FireRate;
         public FireRatePowerUp(Rectangle rect, float speed)
             : base(rect, speed, Raylib.LoadTexture("Sprites/PowerUps/firerate.png"))
         {

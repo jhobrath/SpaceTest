@@ -2,6 +2,7 @@ using Raylib_cs;
 using SpaceTest.Models.Projectiles;
 using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.PowerUps;
+using GalagaFigther.Models.Projectiles;
 
 namespace GalagaFighter.Models.Players
 {

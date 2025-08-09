@@ -1,3 +1,4 @@
+using GalagaFighter.Models.PowerUps;
 using Raylib_cs;
 using System;
 using System.Numerics;
@@ -180,23 +181,28 @@ namespace GalagaFighter.Models
             return renderTexture.Texture;
         }
         
-        public static Texture2D CreatePowerUpSprite(PowerUpType type, int width = 20, int height = 20)
+        public static Texture2D CreatePowerUpSprite<T>(T powerUpType, int width = 20, int height = 20)
+            where T : PowerUp
         {
             RenderTexture2D renderTexture = Raylib.LoadRenderTexture(width, height);
 
             Raylib.BeginTextureMode(renderTexture);
             Raylib.ClearBackground(Color.Blank);
-            
-            Color baseColor = type switch
-            {
-                PowerUpType.FireRate => Color.White,  // Changed from FireRate to BulletCapacity
-                PowerUpType.IceShot => Color.Blue,
-                PowerUpType.Wall => Color.Brown,
-                _ => Color.Gray
-            };
-            
-            // Draw a rotating diamond shape
-            Vector2 center = new Vector2(width / 2, height / 2);
+
+            Color baseColor = Color.White;
+            if (typeof(T) == typeof(FireRatePowerUp))
+                baseColor = Color.White;
+            else if (typeof(T) == typeof(IceShotPowerUp))
+                baseColor = Color.Blue;
+            else if (typeof(T) == typeof(WallPowerUp))
+                baseColor = Color.Brown;
+            else if (typeof(T) == typeof(NinjaPowerUp))
+                baseColor = Color.DarkGray;
+            else
+                baseColor = Color.White;
+
+                // Draw a rotating diamond shape
+                Vector2 center = new Vector2(width / 2, height / 2);
             float radius = width / 3;
 
             Vector2[] points = new Vector2[4]
@@ -218,18 +224,18 @@ namespace GalagaFighter.Models
             Raylib.DrawCircle((int)center.X, (int)center.Y, radius / 2, Color.White);
             
             // Add type-specific symbol
-            switch (type)
-            {
-                case PowerUpType.FireRate: 
-                    Raylib.DrawText("B", (int)center.X - 3, (int)center.Y - 4, 8, Color.Black);
-                    break;
-                case PowerUpType.IceShot:
-                    Raylib.DrawText("I", (int)center.X - 2, (int)center.Y - 4, 8, Color.Black);
-                    break;
-                case PowerUpType.Wall:
-                    Raylib.DrawText("W", (int)center.X - 4, (int)center.Y - 4, 8, Color.Black);
-                    break;
-            }
+            //switch (type)
+            //{
+            //    case PowerUpFactory.FireRate: 
+            //        Raylib.DrawText("B", (int)center.X - 3, (int)center.Y - 4, 8, Color.Black);
+            //        break;
+            //    case PowerUpFactory.IceShot:
+            //        Raylib.DrawText("I", (int)center.X - 2, (int)center.Y - 4, 8, Color.Black);
+            //        break;
+            //    case PowerUpFactory.Wall:
+            //        Raylib.DrawText("W", (int)center.X - 4, (int)center.Y - 4, 8, Color.Black);
+            //        break;
+            //}
             
             Raylib.EndTextureMode();
             return renderTexture.Texture;

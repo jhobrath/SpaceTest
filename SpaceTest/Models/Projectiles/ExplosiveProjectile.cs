@@ -4,6 +4,7 @@ using System.Numerics;
 using System;
 using GalagaFighter;
 using GalagaFighter.Models;
+using GalagaFigther.Models.Projectiles;
 
 namespace SpaceTest.Models.Projectiles
 {

@@ -6,7 +6,6 @@ namespace GalagaFighter.Models.PowerUps
 {
     public class NinjaPowerUp : PowerUp
     {
-        public override PowerUpType Type => PowerUpType.Ninja;
         public NinjaPowerUp(Rectangle rect, float speed)
             : base(rect, speed, Raylib.LoadTexture("Sprites/PowerUps/ninja.png"))
         {

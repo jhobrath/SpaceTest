@@ -3,6 +3,7 @@ using GalagaFighter.Models.Players;
 using System.Numerics;
 using SpaceTest.Models.Projectiles;
 using GalagaFighter.Models.Effects;
+using GalagaFigther.Models.Projectiles;
 
 namespace GalagaFighter.Models
 {

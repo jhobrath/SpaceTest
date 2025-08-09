@@ -5,6 +5,7 @@ using Raylib_cs;
 using System.Numerics;
 using GalagaFighter.Models.PowerUps;
 using GalagaFighter.Models.Effects;
+using GalagaFigther.Models.Projectiles;
 
 namespace SpaceTest.Models.Projectiles
 {
@@ -18,11 +19,13 @@ namespace SpaceTest.Models.Projectiles
 
         public override int Damage => 0; // Ice projectiles don't do damage
 
-        public override void OnHit(Player target, Game game)
+        public override List<PlayerEffect> GetEffects(Player target)
         {
-            // Add a FrozenEffect to the target
-            target.Stats.AddEffect(target, new FrozenEffect(target));
-
+            return new List<PlayerEffect> { new FrozenEffect(target) };
+        } 
+        
+        public override void PlaySound(Game game)
+        {
             game.PlayIceHitSound();
         }
 

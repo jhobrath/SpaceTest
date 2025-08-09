@@ -1,10 +1,9 @@
 using GalagaFighter;
 using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
+using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using System.Numerics;
-using GalagaFighter.Models.PowerUps;
-using GalagaFighter.Models.Effects;
 
 namespace SpaceTest.Models.Projectiles
 {
@@ -21,11 +20,6 @@ namespace SpaceTest.Models.Projectiles
         }
 
         public override int Damage => 20; // Ninja do double damage
-
-        public override void OnHit(Player target, Game game)
-        {
-            game.PlayHitSound();
-        }
 
         public override Color GetColor()
         {

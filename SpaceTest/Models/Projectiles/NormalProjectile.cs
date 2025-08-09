@@ -1,6 +1,7 @@
 using GalagaFighter;
 using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
+using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using System.Numerics;
 
@@ -15,12 +16,6 @@ namespace SpaceTest.Models.Projectiles
         }
 
         public override int Damage => 20;
-
-        public override void OnHit(Player target, Game game)
-        {
-            target.TakeDamage(Damage);
-            game.PlayHitSound();
-        }
 
         public override Color GetColor()
         {

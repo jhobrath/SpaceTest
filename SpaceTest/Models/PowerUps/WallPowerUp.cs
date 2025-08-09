@@ -6,7 +6,6 @@ namespace GalagaFighter.Models.PowerUps
 {
     public class WallPowerUp : PowerUp
     {
-        public override PowerUpType Type => PowerUpType.Wall;
         public WallPowerUp(Rectangle rect, float speed)
             : base(rect, speed, Raylib.LoadTexture("Sprites/PowerUps/wall.png"))
         {

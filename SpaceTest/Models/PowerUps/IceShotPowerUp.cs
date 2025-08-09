@@ -6,7 +6,6 @@ namespace GalagaFighter.Models.PowerUps
 {
     public class IceShotPowerUp : PowerUp
     {
-        public override PowerUpType Type => PowerUpType.IceShot;
         public IceShotPowerUp(Rectangle rect, float speed)
             : base(rect, speed, Raylib.LoadTexture("Sprites/PowerUps/ice.png"))
         {

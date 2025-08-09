@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Models.Effects
 {
-    public class ProjectileEffect : PlayerEffect
+    public abstract class ProjectileEffect : PlayerEffect
     {
         public ProjectileEffect(Player player) : base(player)
         {
@@ -29,10 +29,13 @@ namespace GalagaFighter.Models.Effects
             combat.ResetFireTimer();
             var scaleFactor = Player.GetScaleFactor();
             var _useLeftEngine = Player.ToggleEngine();
-            var rect = combat.GetProjectileRect(ProjectileType,
-                combat.GetProjectileSpawnPoint(Player.Rect, ProjectileWidth * scaleFactor, ProjectileHeight * scaleFactor, _useLeftEngine));
+
+            var spawnPoint = combat.GetProjectileSpawnPoint(Player.Rect, ProjectileWidth * scaleFactor, ProjectileHeight * scaleFactor, _useLeftEngine);
+            var rect = new Rectangle(spawnPoint.X, spawnPoint.Y, ProjectileWidth * scaleFactor, ProjectileHeight * scaleFactor);
             var speed = new Vector2(combat.GetProjectileSpeed(), Math.Min(3, Math.Max(-3, Player.GetMovement().Speed * .3333f)));
-            game.AddGameObject(ProjectileFactory.Create(ProjectileType, rect, speed, Player));
+            var projectile = ProjectileFactory.Create(this, rect, speed, Player);
+            game.AddGameObject(projectile);
+
             game.PlayShootSound();
             if (OneTimeUse) 
                 IsActive = false;

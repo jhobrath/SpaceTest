@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Linq;
 using Raylib_cs;
+using GalagaFighter.Models.Effects;
 
 namespace GalagaFighter.Models.Players
 {
@@ -28,7 +29,6 @@ namespace GalagaFighter.Models.Players
 
         public Vector2 GetProjectileSpawnPoint(Rectangle playerRect, float projectileWidth, float projectileHeight, bool isLeftEngine)
         {
-
             float shipCenterX = playerRect.X + playerRect.Width / 2f;
             float shipCenterY = playerRect.Y + playerRect.Height / 2f + (isLeftEngine ? -1 : 1)*playerRect.Height/4;
             float offset = (playerRect.Width > playerRect.Height ? playerRect.Width : playerRect.Height) * 0.5f;
@@ -50,28 +50,6 @@ namespace GalagaFighter.Models.Players
         public bool CanFire(bool keyPressed, PlayerStats stats)
         {
             return keyPressed && FireTimer >= fireRate * stats.FireRateMultiplier;
-        }
-
-        public Rectangle GetProjectileRect(ProjectileType type, Vector2 spawnPoint)
-        {
-            int width, height;
-            switch (type)
-            {
-                case ProjectileType.Wall:
-                    width = (int)(150 * scaleFactor);
-                    height = (int)(15 * scaleFactor);
-                    break;
-                case ProjectileType.Ice:
-                    width = (int)(40 * scaleFactor);
-                    height = (int)(20 * scaleFactor);
-                    break;
-                default: // Normal
-                    width = (int)(30 * scaleFactor);
-                    height = (int)(15 * scaleFactor);
-                    break;
-            }
-
-            return new Rectangle(spawnPoint.X, spawnPoint.Y, width, height);
         }
 
         public float GetProjectileSpeed()

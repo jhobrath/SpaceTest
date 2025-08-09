@@ -1,5 +1,7 @@
-using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
+using SpaceTest.Models.Projectiles;
+using System.Drawing;
+using System.Numerics;
 
 namespace GalagaFighter.Models.Effects
 {
@@ -9,18 +11,18 @@ namespace GalagaFighter.Models.Effects
         private float remainingTime;
         private bool wasActive;
 
-        public IceShotEffect(Player player) : base(player) 
+        public IceShotEffect(Player player) : base(player)
         {
             remainingTime = duration;
         }
 
-        protected override ProjectileType ProjectileType => ProjectileType.Ice;
         protected override int ProjectileWidth => 40;
         protected override int ProjectileHeight => 20;
         protected override bool OneTimeUse => false;
 
         public override void OnActivate()
         {
+            wasActive = true;
         }
 
         public override void OnUpdate(float frameTime)

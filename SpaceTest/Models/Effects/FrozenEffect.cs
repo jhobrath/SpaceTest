@@ -45,7 +45,15 @@ namespace GalagaFighter.Models.Effects
             return 1.0f - clampedSlow;
         }
 
-        public bool ShouldTintBlue() => true;
-        public float GetBlueAlpha() => blueAlpha;
+        public override void ModifyShip(Player player, ref float speed, ref Color color)
+        {
+            speed *= GetSlowMultiplier();
+            // Apply blue tint (alpha is a blend, not replace)
+            color = new Color(
+                (byte)(color.R * (1 - blueAlpha)),
+                (byte)(color.G * (1 - blueAlpha)),
+                (byte)(color.B + (255 - color.B) * blueAlpha),
+                color.A);
+        }
     }
 }

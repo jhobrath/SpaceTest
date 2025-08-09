@@ -59,11 +59,11 @@ namespace GalagaFighter
 
             player1 = new Player(
                 new Rectangle(playerMargin, actualHeight / 2 - shipHeight / 2, shipWidth, shipHeight), 
-                0.7f, KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, true, uniformScale);
+                1.2f, KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, true, uniformScale);
             
             player2 = new Player(
                 new Rectangle(actualWidth - playerMargin - shipWidth, actualHeight / 2 - shipHeight / 2, shipWidth, shipHeight), 
-                0.7f, KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, false, uniformScale);
+                1.2f, KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, false, uniformScale);
         }
 
         private void InitializeGameObjects()

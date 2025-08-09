@@ -131,7 +131,7 @@ namespace GalagaFighter
         {
             if (random.Next(0, 20 * 5) == 1)
             {
-                int powerUpTypeIndex = random.Next(0, 3);
+                int powerUpTypeIndex = random.Next(0, 4);
                 PowerUpType type = (PowerUpType)powerUpTypeIndex;
                 int screenWidth = Raylib.GetScreenWidth();
                 int screenHeight = Raylib.GetScreenHeight();
@@ -147,6 +147,7 @@ namespace GalagaFighter
                     PowerUpType.FireRate => new GalagaFighter.Models.PowerUps.FireRatePowerUp(rect, 2f * uniformScale),
                     PowerUpType.IceShot => new GalagaFighter.Models.PowerUps.IceShotPowerUp(rect, 2f * uniformScale),
                     PowerUpType.Wall => new GalagaFighter.Models.PowerUps.WallPowerUp(rect, 2f * uniformScale),
+                    PowerUpType.Ninja => new GalagaFighter.Models.PowerUps.NinjaPowerUp(rect, 2f * uniformScale),
                     _ => null
                 };
                 if (powerUp != null)

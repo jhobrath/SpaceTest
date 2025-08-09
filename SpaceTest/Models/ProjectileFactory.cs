@@ -14,7 +14,9 @@ namespace GalagaFighter.Models
                 return new IceProjectile(rect, speed, owner);
             if (effect is WallEffect)
                 return new WallProjectile(rect, speed, owner);
-            
+            if (effect is NinjaShotEffect)
+                return new NinjaProjectile(rect, speed, owner);
+
             return new NormalProjectile(rect, speed, owner);
         }
     }

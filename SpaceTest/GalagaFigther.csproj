@@ -25,6 +25,7 @@
     <None Remove="Sprites\Powerups\vanish.png" />
     <None Remove="Sprites\Powerups\wall.png" />
     <None Remove="Sprites\Powerups\wind.png" />
+    <None Remove="Sprites\Projectiles\ninja.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,6 +78,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\wind.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Projectiles\ninja.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

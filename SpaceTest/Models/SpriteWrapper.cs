@@ -70,17 +70,23 @@ namespace GalagaFighter.Models
                         Color.White);
                     break;
                 case SpriteMode.Animation:
-                    float frameWidth = Texture.Width / (float)FrameCount;
-                    Rectangle source = new Rectangle(frameWidth * _currentFrame, 0, frameWidth, Texture.Height);
-                    Raylib.DrawTexturePro(
-                        Texture,
-                        source,
-                        new Rectangle(position.X, position.Y, width, height),
-                        new Vector2(width / 2f, height / 2f),
-                        rotation,
-                        Color.White);
+                    DrawAnimated(position, rotation, width, height);
                     break;
             }
+        }
+
+        public void DrawAnimated(Vector2 position, float rotation, float width, float height, int? frame = null)
+        {
+            frame = frame ?? _currentFrame;
+            float frameWidth = Texture.Width / (float)FrameCount;
+            Rectangle source = new Rectangle(frameWidth * frame.Value, 0, frameWidth, Texture.Height);
+            Raylib.DrawTexturePro(
+                Texture,
+                source,
+                new Rectangle(position.X, position.Y, width, height),
+                new Vector2(width / 2f, height / 2f),
+                rotation,
+                Color.White);
         }
     }
 }

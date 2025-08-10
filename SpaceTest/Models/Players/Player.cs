@@ -11,7 +11,7 @@ namespace GalagaFighter.Models.Players
         private readonly KeyboardKey upKey;
         private readonly KeyboardKey downKey;
         private readonly KeyboardKey shootKey;
-        private readonly bool isPlayer1;
+        public readonly bool IsPlayer1;
         private readonly Texture2D shipSprite;
         private readonly float scaleFactor;
 
@@ -28,7 +28,7 @@ namespace GalagaFighter.Models.Players
         public Player(Rectangle rect, float fireRate, KeyboardKey up, KeyboardKey down, KeyboardKey shoot, bool isPlayer1, float scale) 
             : base(rect)
         {
-            this.isPlayer1 = isPlayer1;
+            this.IsPlayer1 = isPlayer1;
             this.shootKey = shoot;
             this.scaleFactor = scale;
             this.upKey = up;
@@ -64,11 +64,10 @@ namespace GalagaFighter.Models.Players
             combat.UpdateTimer(frameTime);
             Stats.UpdateEffects(frameTime);
 
-            // Use FrozenEffect for slow intensity
+            // Aggregate all active effects' SpeedMultiplier
             float slowIntensity = 1.0f;
-            var frozen = Stats.GetFirstEffect<FrozenEffect>();
-            if (frozen != null)
-                slowIntensity = frozen.GetSlowMultiplier();
+            foreach (var effect in Stats.GetActiveEffects())
+                slowIntensity *= effect.SpeedMultiplier;
 
             Rect = movement.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
                 slowIntensity, frameTime, game.GetGameObjects(), this);

@@ -20,6 +20,11 @@ namespace GalagaFighter.Models.Effects
         public bool ShouldDeactivate() => !IsActive;
 
         // Allow effects to modify ship properties (speed, color, etc.)
-        public virtual void ModifyShip(Player player, ref float speed, ref Color color) { }
+        public virtual void ModifyPlayer(Player player, ref float speed, ref Color color) { }
+
+        // Speed multiplier for stacking movement effects
+        public virtual float SpeedMultiplier => 1.0f;
+
+        protected virtual float Duration => 5f;
     }
 }

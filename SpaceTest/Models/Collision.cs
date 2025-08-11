@@ -10,14 +10,16 @@ namespace GalagaFigther.Models
         private int _frame = 0;
         private int _frameCount = 0;
         private SpriteWrapper spriteWrapper;
+        private Vector2 _speed;
 
-        public Collision(Rectangle rect, int frameCount, bool useRight = false, bool useBottom = false)
+        public Collision(Rectangle rect, int frameCount, Vector2 speed, bool useRight = false, bool useBottom = false)
             : base(rect)
         {
             var size = Math.Max(20, rect.Height);
             var rectX = Rect.X + (useRight ? (rect.Width - rect.Width/2) : -(size/2));
             var rectY = Rect.Y + (useBottom ? (rect.Height + rect.Height/2) : -(size/2));
-            
+
+            _speed = speed;
             Rect = new Rectangle(rectX, rectY, Math.Max(50, rect.Height), Math.Max(50, rect.Height));
             _frameCount = frameCount;
 
@@ -49,6 +51,12 @@ namespace GalagaFigther.Models
 
         public override void Update(Game game)
         {
+            _speed.X = _speed.X * .75f;
+            _speed.Y = _speed.Y * .75f;
+
+            var frameTime = Raylib.GetFrameTime();
+            Rect.X += _speed.X;
+            Rect.Y += _speed.Y;
         }
     }
 }

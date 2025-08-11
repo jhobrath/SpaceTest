@@ -1,7 +1,4 @@
 using GalagaFighter.Models.Players;
-using Raylib_cs;
-using SpaceTest.Models.Projectiles;
-using System.Numerics;
 
 namespace GalagaFighter.Models.Effects
 {

@@ -1,5 +1,4 @@
 using GalagaFighter.Models.Players;
-using Raylib_cs;
 
 namespace GalagaFighter.Models.Effects
 {
@@ -8,23 +7,35 @@ namespace GalagaFighter.Models.Effects
         protected readonly Player Player;
         public bool IsActive { get; protected set; } = true;
 
-        protected PlayerEffect(Player player)
-        {
-            Player = player;
-        }
-
-        public virtual void OnActivate() { }
-        public virtual void OnUpdate(float frameTime) { }
-        public virtual void OnDeactivate() { }
-        public virtual void OnShoot(Game game) { }
-        public bool ShouldDeactivate() => !IsActive;
-
-        // Allow effects to modify ship properties (speed, color, etc.)
-        public virtual void ModifyPlayer(Player player, ref float speed, ref Color color) { }
+        private float _remainingTime = 0f;
 
         // Speed multiplier for stacking movement effects
         public virtual float SpeedMultiplier => 1.0f;
 
-        protected virtual float Duration => 5f;
+        protected virtual float Duration => 0f;
+
+        protected PlayerEffect(Player player)
+        {
+            Player = player;
+            _remainingTime = Duration;
+        }
+
+        public virtual void OnActivate() { }
+        public virtual void OnUpdate(float frameTime) 
+        {
+            if (Duration != 0f)
+            {
+                _remainingTime -= frameTime;
+                if (_remainingTime <= 0)
+                    IsActive = false;
+            }
+        }
+        public virtual void OnDeactivate() { }
+        public virtual void OnShoot(Game game) { }
+        public bool ShouldDeactivate() => !IsActive;
+
+        public virtual void ModifyPlayerRendering(PlayerRendering playerRendering)
+        {
+        }
     }
 }

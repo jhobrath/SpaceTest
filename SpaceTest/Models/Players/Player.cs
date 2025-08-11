@@ -4,6 +4,7 @@ using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.PowerUps;
 using GalagaFigther.Models.Projectiles;
 using GalagaFigther.Models;
+using System.Numerics;
 
 namespace GalagaFighter.Models.Players
 {
@@ -66,12 +67,12 @@ namespace GalagaFighter.Models.Players
             Stats.UpdateEffects(frameTime);
 
             // Aggregate all active effects' SpeedMultiplier
-            float slowIntensity = 1.0f;
+            float speedMultiplier = 1.0f;
             foreach (var effect in Stats.GetActiveEffects())
-                slowIntensity *= effect.SpeedMultiplier;
+                speedMultiplier *= effect.SpeedMultiplier;
 
             Rect = movement.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
-                slowIntensity, frameTime, game.GetGameObjects(), this);
+                speedMultiplier, frameTime, game.GetGameObjects(), this);
             
             HandleShooting(game);
             HandleCollisions(game);
@@ -100,18 +101,28 @@ namespace GalagaFighter.Models.Players
             bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
             var frozen = Stats.GetFirstEffect<FrozenEffect>();
             bool isSlowed = frozen != null;
-            //float blueAlpha = isSlowed ? frozen.GetBlueAlpha() : 0f;
-            renderer.DrawPlayer(Rect, isSlowed, isMoving);
+
+            var skew = new Vector2 { X = 0f, Y = 0f };
+            if (UpHeldDuration > 0) skew = new Vector2(.5f, .5f);
+            else if (DownHeldDuration > 0) skew = new Vector2(0, -.25f);
+
+            var playerRendering = new PlayerRendering
+            {
+                Scale = Rect.Width / shipSprite.Width,
+                Color = Color.White,
+                Rotation = IsPlayer1 ? 90f : -90f,
+                Skew = skew
+            };
+
+            foreach (var effect in Stats.GetActiveEffects())
+                effect.ModifyPlayerRendering(playerRendering);
+
+            renderer.DrawPlayer(Rect, playerRendering, isMoving);
         }
 
         // Interface methods for other classes
         public void TakeDamage(int damage) => Stats.TakeDamage(damage);
-        // No more ApplySlowEffect on Stats; handled by FrozenEffect
-        public void ApplySlowEffect(float duration)
-        {
-            Stats.AddEffect(this, new FrozenEffect(this, duration));
-        }
-        public void ApplySlowEffect() => ApplySlowEffect(5.0f);
+
         
         // Properties
         public int Health => Stats.Health;
@@ -142,7 +153,7 @@ namespace GalagaFighter.Models.Players
                     if (obj is Projectile projectile && projectile.Owner != this)
                     {
                         projectile.OnHit(this, game);
-                        collisions.Add(new Collision(projectile.Rect, 7, useRight: !IsPlayer1));
+                        collisions.Add(new Collision(projectile.Rect, 20, projectile.Speed, useRight: !IsPlayer1));
                         if (projectile.DestroyOnHit)
                         {
                             projectile.IsActive = false;

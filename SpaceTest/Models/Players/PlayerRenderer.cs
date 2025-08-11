@@ -16,9 +16,9 @@ namespace GalagaFighter.Models.Players
             this.scaleFactor = scaleFactor;
         }
 
-        public void DrawPlayer(Rectangle playerRect, bool isSlowed, bool isMoving)
+        public void DrawPlayer(Rectangle playerRect, PlayerRendering playerRendering, bool isMoving)
         {
-            DrawShip(playerRect, isSlowed);
+            DrawShip(playerRect, playerRendering);
 
             if (isMoving)
             {
@@ -26,21 +26,17 @@ namespace GalagaFighter.Models.Players
             }
         }
 
-        private void DrawShip(Rectangle playerRect, bool isSlowed)
+        private void DrawShip(Rectangle playerRect, PlayerRendering playerRendering)
         {
-            float rotation = isPlayer1 ? 90f : -90f;
             var xOffset = isPlayer1 ? playerRect.Width : 0;
             var yOffset = isPlayer1 ? 0 : playerRect.Height;
             Vector2 position = new Vector2(playerRect.X + xOffset, playerRect.Y + yOffset);
-            var scale = playerRect.Width / shipSprite.Width;
+            var rotation = playerRendering.Rotation;
+            var scale = playerRendering.Scale;
 
-            Raylib.DrawTextureEx(shipSprite, position, rotation, scale, Color.White);
+            // --- In your game's main loop ---
+            Raylib.DrawTextureEx(shipSprite, position, rotation, scale, playerRendering.Color);
 
-
-            //if (isSlowed)
-            //{
-            //    Raylib.DrawTextureEx(shipSprite, position, rotation, scale, new Color(0, 0, 255, 100));
-            //}
         }
 
         private void DrawEngineTrail(Rectangle playerRect)
@@ -85,5 +81,13 @@ namespace GalagaFighter.Models.Players
             Rectangle spriteBounds = new Rectangle(spriteX, spriteY, rect.Width, rect.Height);
             Raylib.DrawRectangleLinesEx(spriteBounds, 2, Color.Green);
         }
+    }
+
+    public class PlayerRendering
+    {
+        public float Scale { get; set; }
+        public Color Color { get; set; }
+        public float Rotation { get; set; }
+        public Vector2 Skew { get; set; }
     }
 }

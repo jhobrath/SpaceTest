@@ -5,46 +5,26 @@ namespace GalagaFighter.Models.Effects
 {
     public class FrozenEffect : PlayerEffect
     {
-        private float remainingTime;
-        private readonly float slowPerEffect;
-        private readonly float blueAlpha;
+        private readonly float slowPerEffect = 0.3f;
+        private readonly float blueAlpha = .4f;
 
-        public FrozenEffect(Player player, float duration = 5.0f, float slowPerEffect = 0.3f, float maxSlowFactor = 0.1f, float blueAlpha = 0.4f)
+        protected override float Duration => 5.0f;
+
+        public FrozenEffect(Player player)
             : base(player)
         {
-            this.slowPerEffect = slowPerEffect;
-            this.blueAlpha = blueAlpha;
-            remainingTime = duration;
-        }
-
-        public override void OnActivate()
-        {
-            // No-op: effect is applied in OnUpdate and via hooks
-        }
-
-        public override void OnUpdate(float frameTime)
-        {
-            remainingTime -= frameTime;
-            if (remainingTime <= 0)
-                IsActive = false;
-        }
-
-        public override void OnDeactivate()
-        {
-            // No-op: effect is removed from list, so no lingering state
         }
 
         public override float SpeedMultiplier => 1.0f - slowPerEffect;
 
-        public override void ModifyPlayer(Player player, ref float speed, ref Color color)
+        public override void ModifyPlayerRendering(PlayerRendering playerRendering)
         {
-            speed *= SpeedMultiplier;
             // Apply blue tint (alpha is a blend, not replace)
-            color = new Color(
-                (byte)(color.R * (1 - blueAlpha)),
-                (byte)(color.G * (1 - blueAlpha)),
-                (byte)(color.B + (255 - color.B) * blueAlpha),
-                color.A);
+            playerRendering.Color = new Color(
+                (byte)(playerRendering.Color.R * (1 - blueAlpha)),
+                (byte)(playerRendering.Color.G * (1 - blueAlpha)),
+                (byte)(playerRendering.Color.B + (255 - playerRendering.Color.B) * blueAlpha),
+                playerRendering.Color.A);
         }
     }
 }

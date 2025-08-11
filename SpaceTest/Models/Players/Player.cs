@@ -3,6 +3,7 @@ using SpaceTest.Models.Projectiles;
 using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.PowerUps;
 using GalagaFigther.Models.Projectiles;
+using GalagaFigther.Models;
 
 namespace GalagaFighter.Models.Players
 {
@@ -126,6 +127,7 @@ namespace GalagaFighter.Models.Players
         private void HandleCollisions(Game game)
         {
             var gameObjects = game.GetGameObjects();
+            var collisions = new List<Collision>();
             foreach (var obj in gameObjects)
             {
                 if(obj is WallProjectile wall)
@@ -140,6 +142,7 @@ namespace GalagaFighter.Models.Players
                     if (obj is Projectile projectile && projectile.Owner != this)
                     {
                         projectile.OnHit(this, game);
+                        collisions.Add(new Collision(projectile.Rect, 7, useRight: !IsPlayer1));
                         if (projectile.DestroyOnHit)
                         {
                             projectile.IsActive = false;
@@ -147,6 +150,12 @@ namespace GalagaFighter.Models.Players
                     }
                 }
             }
+
+            foreach(var collision in collisions)
+            {
+                game.AddGameObject(collision);
+            }
+
             var myProjectiles = gameObjects.OfType<Projectile>().Where(p => p.Owner == this).ToList();
             foreach (var myProjectile in myProjectiles)
             {

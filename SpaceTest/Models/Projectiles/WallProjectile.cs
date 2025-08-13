@@ -1,9 +1,10 @@
-using Raylib_cs;
-using GalagaFighter.Models.Players;
-using System.Numerics;
 using GalagaFighter;
 using GalagaFighter.Models;
+using GalagaFighter.Models.Effects;
+using GalagaFighter.Models.Players;
 using GalagaFigther.Models.Projectiles;
+using Raylib_cs;
+using System.Numerics;
 
 namespace SpaceTest.Models.Projectiles
 {
@@ -11,8 +12,8 @@ namespace SpaceTest.Models.Projectiles
     {
         public bool IsStuck = false;
 
-        public WallProjectile(Rectangle rect, Vector2 speed, Player owner)
-            : base(rect, speed, owner)
+        public WallProjectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect)
+            : base(rect, speed, owner, ownerEffect)
         {
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Wall, (int)rect.Width, (int)rect.Height);
             DestroyOnHit = false;
@@ -64,8 +65,12 @@ namespace SpaceTest.Models.Projectiles
 
         public override void OnHit(Player target, Game game)
         {
-            IsStuck = true;
-            base.OnHit(target, game);
+            if(!IsStuck)
+            { 
+                IsStuck = true;
+                Speed = new Vector2(0f, 0f);
+                base.OnHit(target, game);
+            }
         }
 
         public override Color GetColor()

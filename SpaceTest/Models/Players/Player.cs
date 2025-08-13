@@ -5,6 +5,7 @@ using GalagaFighter.Models.PowerUps;
 using GalagaFigther.Models.Projectiles;
 using GalagaFigther.Models;
 using System.Numerics;
+using GalagaFigther;
 
 namespace GalagaFighter.Models.Players
 {
@@ -22,6 +23,8 @@ namespace GalagaFighter.Models.Players
         public readonly PlayerStats Stats;
         private readonly PlayerCombat combat;
 
+        private const string _spritePath = "Sprites/Players/Player1.png";
+
         private float UpHeldDuration;
         private float DownHeldDuration;
 
@@ -35,10 +38,9 @@ namespace GalagaFighter.Models.Players
             this.scaleFactor = scale;
             this.upKey = up;
             this.downKey = down;
-            
+
             // Load sprite
-            string spritePath = isPlayer1 ? "Sprites/Player1.png" : "Sprites/Player2.png";
-            shipSprite = Raylib.LoadTexture(spritePath);
+            shipSprite = TextureLibrary.Get(_spritePath);
 
             // Initialize components
             float baseSpeed = 20f * scale;
@@ -102,16 +104,17 @@ namespace GalagaFighter.Models.Players
             var frozen = Stats.GetFirstEffect<FrozenEffect>();
             bool isSlowed = frozen != null;
 
-            var skew = new Vector2 { X = 0f, Y = 0f };
-            if (UpHeldDuration > 0) skew = new Vector2(.5f, .5f);
-            else if (DownHeldDuration > 0) skew = new Vector2(0, -.25f);
+            var skew = 0f;
+            if (UpHeldDuration > 0) skew = IsPlayer1 ? -.5f : .5f;
+            else if (DownHeldDuration > 0) skew = IsPlayer1 ? .5f : -.5f;
 
             var playerRendering = new PlayerRendering
             {
                 Scale = Rect.Width / shipSprite.Width,
                 Color = Color.White,
                 Rotation = IsPlayer1 ? 90f : -90f,
-                Skew = skew
+                Skew = skew,
+                Texture = _spritePath
             };
 
             foreach (var effect in Stats.GetActiveEffects())
@@ -143,12 +146,13 @@ namespace GalagaFighter.Models.Players
             {
                 if(obj is WallProjectile wall)
                 {
-                    if (!wall.IsStuck && (wall.Rect.X <= 0 || wall.Rect.X + wall.Rect.Width >= Raylib.GetRenderWidth()))
+                    if (!wall.IsStuck && ((wall.Speed.X < 0 && wall.Rect.X <= Rect.Width/2) || (wall.Speed.X > 0 && wall.Rect.X + wall.Rect.Width >= Raylib.GetRenderWidth() - Rect.Width/2)))
                     {
                         wall.OnHit(this, game);
+                        collisions.Add(new Collision(wall.Rect, 20, wall.Speed, useRight: !IsPlayer1));
                     }
                 }
-                if (Raylib.CheckCollisionRecs(Rect, obj.Rect))
+                else if (Raylib.CheckCollisionRecs(Rect, obj.Rect))
                 {
                     if (obj is Projectile projectile && projectile.Owner != this)
                     {

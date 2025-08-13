@@ -1,10 +1,11 @@
-using Raylib_cs;
-using GalagaFighter.Models.Players;
-using System.Numerics;
-using System;
 using GalagaFighter;
 using GalagaFighter.Models;
+using GalagaFighter.Models.Effects;
+using GalagaFighter.Models.Players;
 using GalagaFigther.Models.Projectiles;
+using Raylib_cs;
+using System;
+using System.Numerics;
 
 namespace SpaceTest.Models.Projectiles
 {
@@ -12,13 +13,13 @@ namespace SpaceTest.Models.Projectiles
     {
         private const int ExplosionRadius = 50;
 
-        public ExplosiveProjectile(Rectangle rect, Vector2 speed, Player owner)
-            : base(rect, speed, owner)
+        public ExplosiveProjectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect)
+            : base(rect, speed, owner, ownerEffect)
         {
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Explosive, (int)rect.Width, (int)rect.Height);
         }
 
-        public override int Damage => 50; // Increased damage for explosive projectile
+        public override int Damage => 20; // Increased damage for explosive projectile
 
         public override void OnHit(Player target, Game game)
         {

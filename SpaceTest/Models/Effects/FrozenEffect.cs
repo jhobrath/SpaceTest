@@ -15,6 +15,17 @@ namespace GalagaFighter.Models.Effects
         {
         }
 
+        public override void OnActivate()
+        {
+            Player.Stats.ModifyFireRate(1/.8f);
+            base.OnActivate();
+        }
+
+        public override void OnDeactivate()
+        {
+            Player.Stats.ModifyFireRate(.8f);
+        }
+
         public override float SpeedMultiplier => 1.0f - slowPerEffect;
 
         public override void ModifyPlayerRendering(PlayerRendering playerRendering)

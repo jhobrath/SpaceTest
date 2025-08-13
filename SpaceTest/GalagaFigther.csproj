@@ -11,6 +11,9 @@
     <None Remove="Sprites\collision.png" />
     <None Remove="Sprites\Player1.png" />
     <None Remove="Sprites\Player2.png" />
+    <None Remove="Sprites\Players\IceShotShip.png" />
+    <None Remove="Sprites\Players\NinjaShotShip.png" />
+    <None Remove="Sprites\Players\WoodShotShip.png" />
     <None Remove="Sprites\Powerups\beam.png" />
     <None Remove="Sprites\Powerups\bomb.png" />
     <None Remove="Sprites\Powerups\boomerang.png" />
@@ -26,6 +29,7 @@
     <None Remove="Sprites\Powerups\vanish.png" />
     <None Remove="Sprites\Powerups\wall.png" />
     <None Remove="Sprites\Powerups\wind.png" />
+    <None Remove="Sprites\Projectiles\ice.png" />
     <None Remove="Sprites\Projectiles\ninja.png" />
   </ItemGroup>
 
@@ -33,10 +37,19 @@
     <EmbeddedResource Include="Sprites\collision.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Player1.png">
+    <EmbeddedResource Include="Sprites\Players\IceShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Player2.png">
+    <EmbeddedResource Include="Sprites\Players\NinjaShotShip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Players\Player1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Players\Player2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Players\WoodShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\beam.png">
@@ -82,6 +95,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\wind.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Projectiles\ice.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Projectiles\ninja.png">

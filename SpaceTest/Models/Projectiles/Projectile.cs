@@ -9,19 +9,21 @@ namespace GalagaFigther.Models.Projectiles
 {
     public abstract class Projectile : GameObject
     {
-        public Vector2 Speed { get; }
+        public Vector2 Speed { get; set;  }
         public Player Owner { get; }
+        public ProjectileEffect OwnerEffect { get; internal set;  }
         public bool DestroyOnHit { get; protected set; } = true;
         public bool BlocksMovement { get; protected set; } = false;
         public abstract int Damage { get; }
 
         protected Texture2D sprite;
 
-        protected Projectile(Rectangle rect, Vector2 speed, Player owner) : base(rect)
+        protected Projectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect) : base(rect)
         {
             Speed = speed;
             Owner = owner;
             IsActive = true;
+            OwnerEffect = ownerEffect;
         }
 
         public override void Update(Game game)
@@ -41,6 +43,8 @@ namespace GalagaFigther.Models.Projectiles
             var effects = GetEffects(target);   
             foreach(var effect in effects)
                 target.Stats.AddEffect(target, effect);
+
+            OwnerEffect.OnHit();
 
             PlaySound(game);
         }

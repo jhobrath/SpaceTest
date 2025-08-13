@@ -34,8 +34,14 @@ namespace GalagaFighter.Models.Effects
         public virtual void OnShoot(Game game) { }
         public bool ShouldDeactivate() => !IsActive;
 
+
         public virtual void ModifyPlayerRendering(PlayerRendering playerRendering)
         {
+        }
+
+        public void SetMaxRemainingTime(float duration)
+        {
+            _remainingTime = Math.Min(_remainingTime, duration);
         }
     }
 }

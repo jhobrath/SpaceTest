@@ -23,7 +23,7 @@ namespace GalagaFigther.Models
             Rect = new Rectangle(rectX, rectY, Math.Max(50, rect.Height), Math.Max(50, rect.Height));
             _frameCount = frameCount;
 
-            var texture = Raylib.LoadTexture("Sprites/collision.png");
+            var texture = TextureLibrary.Get("Sprites/collision.png");
             spriteWrapper = new SpriteWrapper(texture, 38, 0.12f);
         }
 

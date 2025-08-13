@@ -1,13 +1,14 @@
 using Raylib_cs;
 using GalagaFighter.Models.Players;
 using GalagaFighter.Models.Effects;
+using GalagaFigther;
 
 namespace GalagaFighter.Models.PowerUps
 {
     public class IceShotPowerUp : PowerUp
     {
         public IceShotPowerUp(Rectangle rect, float speed)
-            : base(rect, speed, Raylib.LoadTexture("Sprites/PowerUps/ice.png"))
+            : base(rect, speed, TextureLibrary.Get("Sprites/PowerUps/ice.png"))
         {
         }
         public override PlayerEffect CreateEffect(Player player) => new IceShotEffect(player);

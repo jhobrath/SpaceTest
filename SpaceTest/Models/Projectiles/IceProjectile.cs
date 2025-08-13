@@ -1,20 +1,31 @@
 using GalagaFighter;
 using GalagaFighter.Models;
+using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.Players;
+using GalagaFighter.Models.PowerUps;
+using GalagaFigther;
+using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using System.Numerics;
-using GalagaFighter.Models.PowerUps;
-using GalagaFighter.Models.Effects;
-using GalagaFigther.Models.Projectiles;
 
 namespace SpaceTest.Models.Projectiles
 {
     public class IceProjectile : Projectile
     {
-        public IceProjectile(Rectangle rect, Vector2 speed, Player owner) 
-            : base(rect, speed, owner) 
+        private SpriteWrapper _spriteWrapper;
+        private int _frame = 5;
+        private bool _isPlayer1 = false;
+        private int _isOffFrame = 0;
+        public IceProjectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect) 
+            : base(rect, speed, owner, ownerEffect) 
         {
-            sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Ice, (int)rect.Width, (int)rect.Height);
+            // Use ninja.png as an animated sprite (3 frames, 0.12s per frame)
+            var texture = TextureLibrary.Get("Sprites/Projectiles/ice.png");
+            _spriteWrapper = new SpriteWrapper(texture, 6, 0.12f);
+
+            _isPlayer1 = owner.IsPlayer1;
+
+            //sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Ice, (int)rect.Width, (int)rect.Height);
         }
 
         public override int Damage => 0; // Ice projectiles don't do damage
@@ -36,16 +47,72 @@ namespace SpaceTest.Models.Projectiles
 
         public override void Draw()
         {
-            // Use the generated sprite (which works!)
-            if (sprite.Id > 0)
+            if (_isOffFrame < 15)
             {
-                Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
+                _isOffFrame++;
+
+                if(_isOffFrame == 15) { 
+                    _frame = _frame - 1;
+                    _isOffFrame = 0;
+                    if (_frame < 0) _frame = 0;
+                }
             }
-            else
+
+            if(_frame == 5)
             {
-                // Fallback to simple rectangle if sprite fails
-                Raylib.DrawRectangleRec(Rect, Color.SkyBlue);
+                var s = "";
+
             }
+            else if(_frame == 4)
+            {
+                var s = "";
+
+            }
+            else if(_frame == 3)
+            {
+                var s = "";
+
+            }
+            else if(_frame == 2)
+            {
+                var s = "";
+
+            }
+            else if(_frame == 1)
+            {
+                var s = "";
+            }
+
+                //Rotate the opposite way for player 2
+                //_frame = _isPlayer1 ? _frame : (3 - _frame);
+
+                // Draw animated ninja sprite
+                _spriteWrapper.DrawAnimated(
+                    new Vector2(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f),
+                    Owner.IsPlayer1 ? 0f : 180f,
+                    Rect.Width,
+                    Rect.Height,
+                    _frame
+                );
+
+
+           // // Use the generated sprite (which works!)
+           // if (sprite.Id > 0)
+           // {
+           //     Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
+           // }
+           // else
+           // {
+           //     // Fallback to simple rectangle if sprite fails
+           //     Raylib.DrawRectangleRec(Rect, Color.SkyBlue);
+           // }
+        }
+
+        public override void Update(Game game)
+        {
+            _spriteWrapper.Update(Raylib.GetFrameTime());
+
+            base.Update(game);
         }
     }
 }

@@ -12,13 +12,13 @@ namespace GalagaFighter.Models
         public static Projectile Create(ProjectileEffect effect, Rectangle rect, Vector2 speed, Player owner)
         {
             if (effect is IceShotEffect)
-                return new IceProjectile(rect, speed, owner);
+                return new IceProjectile(rect, speed, owner, effect);
             if (effect is WallEffect)
-                return new WallProjectile(rect, speed, owner);
+                return new WallProjectile(rect, speed, owner, effect);
             if (effect is NinjaShotEffect)
-                return new NinjaProjectile(rect, speed, owner);
+                return new NinjaProjectile(rect, speed, owner, effect);
 
-            return new NormalProjectile(rect, speed, owner);
+            return new NormalProjectile(rect, speed, owner, effect);
         }
     }
 }

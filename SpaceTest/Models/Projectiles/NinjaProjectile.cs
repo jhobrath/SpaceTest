@@ -1,6 +1,8 @@
 using GalagaFighter;
 using GalagaFighter.Models;
+using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.Players;
+using GalagaFigther;
 using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using System.Numerics;
@@ -19,21 +21,26 @@ namespace SpaceTest.Models.Projectiles
         private float _randomTilt = 1;
         private int _frame = 0;
         private bool _isOffFrame = false;
+        private float _veer = 1.0f;
+        private float _downOrUp = 1f;
 
-        public NinjaProjectile(Rectangle rect, Vector2 speed, Player owner) 
-            : base(rect, speed, owner) 
+        public NinjaProjectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect) 
+            : base(rect, speed, owner, ownerEffect) 
         {
             // Use ninja.png as an animated sprite (3 frames, 0.12s per frame)
-            var texture = Raylib.LoadTexture("Sprites/Projectiles/ninja.png");
+            var texture = TextureLibrary.Get("Sprites/Projectiles/ninja.png");
             spriteWrapper = new SpriteWrapper(texture, 3, 0.12f);
 
             _trueRectX = rect.X;
             _trueRectY = rect.Y;
             _theta = 0;
             _isPlayer1 = owner.IsPlayer1;
+
+            _veer = 1 + (float)_random.NextDouble()*.02f;
+            _downOrUp = _random.NextDouble() < .5 ? -1 : 1;
         }
 
-        public override int Damage => 20; // Ninja do double damage
+        public override int Damage => 10; // Ninja do double damage
 
         public override Color GetColor()
         {
@@ -42,31 +49,16 @@ namespace SpaceTest.Models.Projectiles
 
         public override void Update(Game game)
         {
-            _trueRectX += Speed.X;
-            _trueRectY += Speed.Y;
+           
+
             var frameTime = Raylib.GetFrameTime();
-            _theta += Raylib.GetFrameTime() * (_isPlayer1 ? -1 : 1) * 360f;
+            var ySpeed = Speed.Y;
+            if (ySpeed == 0) ySpeed = _downOrUp * -1;
 
-            float offsetX = (float)Math.Cos(_theta) * _randomTilt;
-            float offsetY = (float)Math.Sin(_theta) * _randomTilt;
+            Speed = new Vector2(Speed.X, ySpeed*_veer);
 
-            var sw = Raylib.GetScreenWidth();
-            var sh = Raylib.GetScreenWidth();
-
-            if (_isPlayer1)
-            { 
-                offsetX = offsetX * (_trueRectX / sw);
-                offsetY = offsetY * (_trueRectX / sw);
-            }
-            else
-            { 
-                offsetX = offsetX * (sw - _trueRectX) / sw;
-                offsetY = offsetY * (sw - _trueRectX) / sw;
-            }
-
-            Rect.X = _trueRectX + offsetX * _radius;
-            Rect.Y = _trueRectY + offsetY * _radius;
-
+            Rect.Y += Speed.Y;
+            Rect.X += Speed.X;
 
             if (Rect.X < -Rect.Width || Rect.X > Raylib.GetScreenWidth())
                 IsActive = false;

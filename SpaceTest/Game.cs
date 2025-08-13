@@ -126,7 +126,7 @@ namespace GalagaFighter
 
         private void SpawnPowerUps()
         {
-            if (random.Next(0, 20 * 5) != 1)
+            if (random.Next(0, 60 * 5) != 1)
                 return;
 
             var powerUp = PowerUpFactory.Create();

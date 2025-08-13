@@ -1,6 +1,7 @@
 ﻿using GalagaFighter;
 using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
+using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace GalagaFighter.Models.Effects
         protected virtual int ProjectileWidth { get; } = 30;
         protected virtual int ProjectileHeight { get; } = 15;
         protected virtual bool OneTimeUse { get; } = false;
+        protected virtual Vector2 SpawnOffset => new Vector2(0,0);
+        protected virtual float? OnHitMaxRemainingTime => null;
+        protected virtual string Texture => null;
+
+        protected abstract Projectile Spawn(Rectangle rect, Vector2 speed);
 
         public override void OnShoot(Game game)
         {
@@ -31,14 +37,31 @@ namespace GalagaFighter.Models.Effects
             var _useLeftEngine = Player.ToggleEngine();
 
             var spawnPoint = combat.GetProjectileSpawnPoint(Player.Rect, ProjectileWidth * scaleFactor, ProjectileHeight * scaleFactor, _useLeftEngine);
+
+            spawnPoint.X += SpawnOffset.X * scaleFactor*(Player.IsPlayer1 ? 1 : -1);
+            spawnPoint.Y += SpawnOffset.Y * scaleFactor*(_useLeftEngine ? 1 : -1);
+
             var rect = new Rectangle(spawnPoint.X, spawnPoint.Y, ProjectileWidth * scaleFactor, ProjectileHeight * scaleFactor);
             var speed = new Vector2(combat.GetProjectileSpeed(), Math.Min(3, Math.Max(-3, Player.GetMovement().Speed * .3333f)));
-            var projectile = ProjectileFactory.Create(this, rect, speed, Player);
+            var projectile = Spawn(rect, speed);
             game.AddGameObject(projectile);
 
             game.PlayShootSound();
             if (OneTimeUse) 
                 IsActive = false;
+        }
+
+
+        public override void ModifyPlayerRendering(PlayerRendering playerRendering)
+        {
+            if (Texture != null)
+                playerRendering.Texture = Texture;
+        }
+
+        public virtual void OnHit()
+        {
+            if(OnHitMaxRemainingTime != null)
+                SetMaxRemainingTime(OnHitMaxRemainingTime.Value);
         }
     }
 }

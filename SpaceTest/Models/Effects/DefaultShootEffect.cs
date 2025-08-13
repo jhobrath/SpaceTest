@@ -1,4 +1,8 @@
 using GalagaFighter.Models.Players;
+using GalagaFigther.Models.Projectiles;
+using Raylib_cs;
+using SpaceTest.Models.Projectiles;
+using System.Numerics;
 
 namespace GalagaFighter.Models.Effects
 {
@@ -10,5 +14,6 @@ namespace GalagaFighter.Models.Effects
         protected override int ProjectileHeight => 15;
         protected override bool OneTimeUse => false;
         protected override float Duration => float.MaxValue;
+        protected override Projectile Spawn(Rectangle rect, Vector2 speed) => new NormalProjectile(rect, speed, Player, this);
     }
 }

@@ -232,5 +232,6 @@ namespace GalagaFighter
         public static void PlayWallStickSound() => AudioService.PlayWallStickSound();
         public static void PlayExplosionConversionSound() => AudioService.PlayExplosionConversionSound();
         public static void PlayBurningSound() => AudioService.PlayBurningSound();
+        public static void PlayMagnetSound() => AudioService.PlayMagnetSound();
     }
 }

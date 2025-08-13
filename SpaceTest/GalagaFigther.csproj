@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="Sounds\collision-default.wav" />
     <None Remove="Sounds\explosion_conversion.ogg" />
+    <None Remove="Sounds\magnet.wav" />
     <None Remove="Sounds\plank_landing.wav" />
     <None Remove="Sounds\player_freezing.wav" />
     <None Remove="Sounds\powerup-default.wav" />
@@ -29,6 +30,7 @@
     <None Remove="Sprites\Powerups\force-field.png" />
     <None Remove="Sprites\Powerups\ice.png" />
     <None Remove="Sprites\Powerups\lightning.png" />
+    <None Remove="Sprites\Powerups\magnet.png" />
     <None Remove="Sprites\Powerups\ninja.png" />
     <None Remove="Sprites\Powerups\poison.png" />
     <None Remove="Sprites\Powerups\reflect.png" />
@@ -47,6 +49,9 @@
     <EmbeddedResource Include="Sounds\explosion_conversion.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\magnet.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sounds\plank_landing.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -63,6 +68,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Players\IceShotShip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Players\MagnetShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Players\NinjaShotShip.png">
@@ -102,6 +110,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\lightning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\magnet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\ninja.png">

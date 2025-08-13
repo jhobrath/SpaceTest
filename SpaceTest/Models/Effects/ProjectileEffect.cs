@@ -1,6 +1,7 @@
 ﻿using GalagaFighter;
 using GalagaFighter.Models;
 using GalagaFighter.Models.Players;
+using GalagaFigther.Models.Effects;
 using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using System;
@@ -33,6 +34,11 @@ namespace GalagaFighter.Models.Effects
             if (!combat.CanFire(Raylib.IsKeyDown(Player.GetShootKey()), Player.Stats))
                 return;
             combat.ResetFireTimer();
+
+
+            if (Player.Stats.HasEffect<MagnetShotEffect>())
+                return;
+
             var scaleFactor = Player.GetScaleFactor();
             var _useLeftEngine = Player.ToggleEngine();
 

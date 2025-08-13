@@ -15,6 +15,7 @@ namespace GalagaFighter.Services
         void Cleanup();
         void PlayExplosionConversionSound();
         void PlayBurningSound();
+        void PlayMagnetSound();
     }
 
     public class AudioService : IAudioService
@@ -26,6 +27,7 @@ namespace GalagaFighter.Services
         private Sound wallStickSound;
         private Sound explosionConversionSound;
         private Sound burningSound;
+        private Sound magnetSound;
 
         public void Initialize()
         {
@@ -42,6 +44,7 @@ namespace GalagaFighter.Services
             Raylib.UnloadSound(explosionConversionSound);
             Raylib.UnloadSound(powerUpSound);
             Raylib.UnloadSound(burningSound);
+            Raylib.UnloadSound(magnetSound);
             Raylib.CloseAudioDevice();
         }
 
@@ -52,6 +55,7 @@ namespace GalagaFighter.Services
         public void PlayExplosionConversionSound() => Raylib.PlaySound(explosionConversionSound);
         public void PlayPowerUpSound() => Raylib.PlaySound(powerUpSound);
         public void PlayBurningSound() => Raylib.PlaySound(burningSound);
+        public void PlayMagnetSound() => Raylib.PlaySound(magnetSound);
 
         private void CreateSounds()
         {
@@ -65,6 +69,7 @@ namespace GalagaFighter.Services
                 hitSound = LoadSoundFile("collision-default.wav");
                 powerUpSound = LoadSoundFile("powerup-default.wav");
                 burningSound = LoadSoundFile("burning.wav");
+                magnetSound = LoadSoundFile("magnet.wav");
 
                 SetSoundVolumes();
                 Console.WriteLine("Audio system initialized with mixed sound sources");
@@ -131,6 +136,7 @@ namespace GalagaFighter.Services
             Raylib.SetSoundVolume(powerUpSound, .005f);
             Raylib.SetSoundVolume(explosionConversionSound, .05f);
             Raylib.SetSoundVolume(burningSound, 1.5f);
+            Raylib.SetSoundVolume(magnetSound, .05f);
         }
 
         private Sound CreateBeepSound(float frequency, float duration, float volume)

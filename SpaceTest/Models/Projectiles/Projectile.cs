@@ -10,7 +10,7 @@ namespace GalagaFigther.Models.Projectiles
     public abstract class Projectile : GameObject
     {
         public Vector2 Speed { get; set;  }
-        public Player Owner { get; }
+        public Player Owner { get; set; }
         public ProjectileEffect OwnerEffect { get; internal set;  }
         public bool DestroyOnHit { get; protected set; } = true;
         public bool BlocksMovement { get; protected set; } = false;

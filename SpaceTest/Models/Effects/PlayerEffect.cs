@@ -15,6 +15,7 @@ namespace GalagaFighter.Models.Effects
         protected virtual float Duration => 0f;
 
         public virtual bool AllowSelfStacking => true;
+        public virtual bool DisableShooting => false;
 
         protected PlayerEffect(Player player)
         {

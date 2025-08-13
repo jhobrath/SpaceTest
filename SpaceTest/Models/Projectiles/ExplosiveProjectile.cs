@@ -2,6 +2,7 @@ using GalagaFighter;
 using GalagaFighter.Models;
 using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.Players;
+using GalagaFigther;
 using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using System;
@@ -11,39 +12,61 @@ namespace SpaceTest.Models.Projectiles
 {
     public class ExplosiveProjectile : Projectile
     {
-        private const int ExplosionRadius = 50;
+        private const int ExplosionRadius = 200;
+
+        private float _width = 0f;
+        private float _height = 0f;
+        private float _originalWidth = 0f;
+        private float _originalHeight = 0f;
+        private float _growthPercentage = 6f;
+
+        public override bool DestroyOnPowerUp =>  false;
 
         public ExplosiveProjectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect)
             : base(rect, speed, owner, ownerEffect)
         {
-            sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Explosive, (int)rect.Width, (int)rect.Height);
+            sprite = TextureLibrary.Get("Sprites/Projectiles/explosion.png");
+            sprite.Width = Convert.ToInt32(rect.Width);
+            sprite.Height = Convert.ToInt32(rect.Height);
+            _width = rect.Width;
+            _height = rect.Height;
+            _originalWidth = _width;
+            _originalHeight = _height;
         }
 
         public override int Damage => 20; // Increased damage for explosive projectile
+
+        public static int ExplosionRadius1 => ExplosionRadius;
 
         public override void OnHit(Player target, Game game)
         {
             // Deal damage to the target
             target.TakeDamage(Damage);
             
-            // Create area of effect damage to all nearby objects
-            foreach (var obj in game.GetGameObjects())
-            {
-                if (obj is Player otherPlayer && otherPlayer != target && otherPlayer != Owner)
-                {
-                    float distance = Vector2.Distance(
-                        new Vector2(Rect.X + Rect.Width / 2, Rect.Y + Rect.Height / 2),
-                        new Vector2(otherPlayer.Rect.X + otherPlayer.Rect.Width / 2, otherPlayer.Rect.Y + otherPlayer.Rect.Height / 2)
-                    );
-                    
-                    if (distance <= ExplosionRadius)
-                    {
-                        otherPlayer.TakeDamage(Damage / 2); // Half damage to nearby players
-                    }
-                }
-            }
-            
             game.PlayHitSound(); // Could add a special explosion sound here
+        }
+
+        public override void Update(Game game)
+        {
+            var centerX = Rect.X + Rect.Width / 2;
+            var centerY = Rect.Y + Rect.Height / 2;
+            var percentageAcross = centerX / Raylib.GetScreenWidth();
+            var comparableSize = Owner.IsPlayer1 ? _growthPercentage * percentageAcross : _growthPercentage * (1 - percentageAcross);
+            var newWidth = Math.Max(_originalWidth, comparableSize * _originalWidth);
+            var newHeight = Math.Max(_originalHeight, comparableSize * _originalHeight);
+
+            Rect.X = centerX - newWidth / 2;
+            Rect.Y = centerY - newHeight / 2;
+            Rect.Width = newWidth;
+            Rect.Height = newHeight;
+
+            sprite.Width = Convert.ToInt32(newWidth);
+            sprite.Height = Convert.ToInt32(newHeight);
+
+            base.Update(game);
+
+            //Rect.X *= 1 + 2 * Raylib.GetFrameTime();
+            //Rect.Y *= 1 + 2 * Raylib.GetFrameTime();
         }
 
         public override Color GetColor()
@@ -53,27 +76,7 @@ namespace SpaceTest.Models.Projectiles
 
         public override void Draw()
         {
-            // Draw the projectile sprite
-            if (sprite.Id > 0)
-            {
-                Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
-                
-                // Add a pulsing effect to show it's explosive
-                float pulseIntensity = MathF.Sin((float)Raylib.GetTime() * 10) * 0.3f + 0.7f;
-                Color pulseColor = new Color((int)(255 * pulseIntensity), (int)(165 * pulseIntensity), 0, 100);
-                
-                Rectangle pulseRect = new Rectangle(
-                    Rect.X - 2, Rect.Y - 2, 
-                    Rect.Width + 4, Rect.Height + 4
-                );
-                
-                Raylib.DrawRectangleRec(pulseRect, pulseColor);
-            }
-            else
-            {
-                // Fallback to original drawing code
-                base.Draw();
-            }
+            Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
         }
     }
 }

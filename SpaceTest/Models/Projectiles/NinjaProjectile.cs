@@ -12,13 +12,8 @@ namespace SpaceTest.Models.Projectiles
     public class NinjaProjectile : Projectile
     {
         private readonly SpriteWrapper spriteWrapper;
-        private float _trueRectX;
-        private float _trueRectY;
-        private float _theta;
-        private float _radius = 100;
         private bool _isPlayer1 = false;
         private static Random _random = new Random();
-        private float _randomTilt = 1;
         private int _frame = 0;
         private bool _isOffFrame = false;
         private float _veer = 1.0f;
@@ -31,9 +26,6 @@ namespace SpaceTest.Models.Projectiles
             var texture = TextureLibrary.Get("Sprites/Projectiles/ninja.png");
             spriteWrapper = new SpriteWrapper(texture, 3, 0.12f);
 
-            _trueRectX = rect.X;
-            _trueRectY = rect.Y;
-            _theta = 0;
             _isPlayer1 = owner.IsPlayer1;
 
             _veer = 1 + (float)_random.NextDouble()*.02f;

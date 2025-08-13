@@ -16,6 +16,8 @@ namespace GalagaFigther.Models.Projectiles
         public bool BlocksMovement { get; protected set; } = false;
         public abstract int Damage { get; }
 
+        public virtual bool DestroyOnPowerUp => true;
+
         protected Texture2D sprite;
 
         protected Projectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect) : base(rect)

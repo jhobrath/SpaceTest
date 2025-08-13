@@ -56,7 +56,10 @@ namespace GalagaFighter.Models.Players
         public void AddEffect(Player player, PlayerEffect effect)
         {
             if (effect is ProjectileEffect)
+            {
+                activeEffects.ForEach(x => x.OnDeactivate());
                 activeEffects.RemoveAll(x => x is ProjectileEffect);
+            }
 
             activeEffects.Add(effect);
             effect.OnActivate();

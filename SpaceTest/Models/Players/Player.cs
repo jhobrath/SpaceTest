@@ -186,7 +186,10 @@ namespace GalagaFighter.Models.Players
                                 Stats.AddEffect(this, effect);
                             }
                             powerUp.IsActive = false;
-                            myProjectile.IsActive = false;
+
+                            if(myProjectile.DestroyOnPowerUp)
+                                myProjectile.IsActive = false;
+
                             game.PlayPowerUpSound();
                             break;
                         }

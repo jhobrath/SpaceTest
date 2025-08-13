@@ -157,7 +157,7 @@ namespace GalagaFighter.Models.Players
                     if (obj is Projectile projectile && projectile.Owner != this)
                     {
                         projectile.OnHit(this, game);
-                        collisions.Add(new Collision(projectile.Rect, 20, projectile.Speed, useRight: !IsPlayer1));
+                        collisions.Add(new Collision(projectile.Rect, 20, projectile.Speed, useRight: projectile.Owner.IsPlayer1));
                         if (projectile.DestroyOnHit)
                         {
                             projectile.IsActive = false;

@@ -128,7 +128,7 @@ namespace GalagaFighter.Services
             Raylib.SetSoundVolume(iceHitSound, 1.0f);
             Raylib.SetSoundVolume(wallStickSound, 1.0f);
             Raylib.SetSoundVolume(hitSound, 1.0f);
-            Raylib.SetSoundVolume(powerUpSound, .03f);
+            Raylib.SetSoundVolume(powerUpSound, .005f);
             Raylib.SetSoundVolume(explosionConversionSound, .05f);
             Raylib.SetSoundVolume(burningSound, 1.5f);
         }

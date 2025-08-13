@@ -15,12 +15,16 @@ namespace GalagaFigther.Models
         public Collision(Rectangle rect, int frameCount, Vector2 speed, bool useRight = false, bool useBottom = false)
             : base(rect)
         {
-            var size = Math.Max(20, rect.Height);
-            var rectX = Rect.X + (useRight ? (rect.Width - rect.Width/2) : -(size/2));
-            var rectY = Rect.Y + (useBottom ? (rect.Height + rect.Height/2) : -(size/2));
+            var size = Math.Max(50, rect.Height);
+
+            var rectWidth = size;
+            var rectHeight = size;
+
+            var rectX = Rect.X + (useRight ? Rect.Width : 0) + (useRight ? -1 : 1) * (size/2);
+            var rectY = Rect.Y + (useBottom ? Rect.Height : 0) + (useBottom ? -1 : 1) * (size / 2);
 
             _speed = speed;
-            Rect = new Rectangle(rectX, rectY, Math.Max(50, rect.Height), Math.Max(50, rect.Height));
+            Rect = new Rectangle(rectX, rectY, size, size);
             _frameCount = frameCount;
 
             var texture = TextureLibrary.Get("Sprites/collision.png");
@@ -41,7 +45,7 @@ namespace GalagaFigther.Models
 
             // Draw animated ninja sprite
             spriteWrapper.DrawAnimated(
-                new Vector2(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f),
+                new Vector2(Rect.X, Rect.Y),
                 0f,
                 Rect.Width,
                 Rect.Height,
@@ -51,10 +55,9 @@ namespace GalagaFigther.Models
 
         public override void Update(Game game)
         {
-            _speed.X = _speed.X * .75f;
-            _speed.Y = _speed.Y * .75f;
+            _speed.X = _speed.X * .9f;
+            _speed.Y = _speed.Y * .9f;
 
-            var frameTime = Raylib.GetFrameTime();
             Rect.X += _speed.X;
             Rect.Y += _speed.Y;
         }

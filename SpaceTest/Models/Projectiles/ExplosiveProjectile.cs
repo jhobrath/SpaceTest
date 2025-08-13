@@ -5,24 +5,18 @@ using GalagaFighter.Models.Players;
 using GalagaFigther;
 using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
-using System;
 using System.Numerics;
 
 namespace SpaceTest.Models.Projectiles
 {
     public class ExplosiveProjectile : Projectile
     {
-        private const int ExplosionRadius = 200;
-
-        private float _width = 0f;
-        private float _height = 0f;
-        private float _originalWidth = 0f;
-        private float _originalHeight = 0f;
+        private readonly float _originalWidth = 0f;
+        private readonly float _originalHeight = 0f;
         private float _rotationAmount;
         private float _rotation;
-        private float _growthPercentage = 6f;
+        private const float _growthPercentage = 6f;
         private int _frame = 0;
-
         private static Random _random = new Random();
 
         public override bool DestroyOnPowerUp =>  false;
@@ -37,10 +31,8 @@ namespace SpaceTest.Models.Projectiles
 
             sprite.Width = Convert.ToInt32(rect.Width);
             sprite.Height = Convert.ToInt32(rect.Height);
-            _width = rect.Width;
-            _height = rect.Height;
-            _originalWidth = _width;
-            _originalHeight = _height;
+            _originalWidth = rect.Width;
+            _originalHeight = rect.Height;
 
             _rotationAmount = (float)_random.NextDouble() * 20f - 10f;
             _rotation = 0f;

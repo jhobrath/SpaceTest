@@ -37,7 +37,7 @@ namespace SpaceTest.Models.Projectiles
         
         public override void PlaySound(Game game)
         {
-            game.PlayIceHitSound();
+            Game.PlayIceHitSound();
         }
 
         public override Color GetColor()

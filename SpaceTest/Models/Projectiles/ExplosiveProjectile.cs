@@ -18,33 +18,40 @@ namespace SpaceTest.Models.Projectiles
         private float _height = 0f;
         private float _originalWidth = 0f;
         private float _originalHeight = 0f;
+        private float _rotationAmount;
+        private float _rotation;
         private float _growthPercentage = 6f;
+        private int _frame = 0;
+
+        private static Random _random = new Random();
 
         public override bool DestroyOnPowerUp =>  false;
+
+        private readonly SpriteWrapper _spriteWrapper;
 
         public ExplosiveProjectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect)
             : base(rect, speed, owner, ownerEffect)
         {
-            sprite = TextureLibrary.Get("Sprites/Projectiles/explosion.png");
+            var texture = TextureLibrary.Get("Sprites/Projectiles/explosion.png");
+            _spriteWrapper = new SpriteWrapper(texture, 2, 0.12f);
+
             sprite.Width = Convert.ToInt32(rect.Width);
             sprite.Height = Convert.ToInt32(rect.Height);
             _width = rect.Width;
             _height = rect.Height;
             _originalWidth = _width;
             _originalHeight = _height;
+
+            _rotationAmount = (float)_random.NextDouble() * 20f - 10f;
+            _rotation = 0f;
         }
+
+        public override List<PlayerEffect> GetEffects(Player target) => new List<PlayerEffect>
+        {
+            new BurningEffect(target)
+        };
 
         public override int Damage => 20; // Increased damage for explosive projectile
-
-        public static int ExplosionRadius1 => ExplosionRadius;
-
-        public override void OnHit(Player target, Game game)
-        {
-            // Deal damage to the target
-            target.TakeDamage(Damage);
-            
-            game.PlayHitSound(); // Could add a special explosion sound here
-        }
 
         public override void Update(Game game)
         {
@@ -55,6 +62,17 @@ namespace SpaceTest.Models.Projectiles
             var newWidth = Math.Max(_originalWidth, comparableSize * _originalWidth);
             var newHeight = Math.Max(_originalHeight, comparableSize * _originalHeight);
 
+
+            percentageAcross = Owner.IsPlayer1 ? percentageAcross : (1 - percentageAcross);
+            if (percentageAcross > .5 && _frame == 0)
+            {
+                Game.PlayExplosionConversionSound();
+                _frame = 1;
+                _rotationAmount *= .25f;
+            }
+            
+            _rotation = (_rotation + _rotationAmount) % 360;
+
             Rect.X = centerX - newWidth / 2;
             Rect.Y = centerY - newHeight / 2;
             Rect.Width = newWidth;
@@ -64,9 +82,6 @@ namespace SpaceTest.Models.Projectiles
             sprite.Height = Convert.ToInt32(newHeight);
 
             base.Update(game);
-
-            //Rect.X *= 1 + 2 * Raylib.GetFrameTime();
-            //Rect.Y *= 1 + 2 * Raylib.GetFrameTime();
         }
 
         public override Color GetColor()
@@ -76,7 +91,14 @@ namespace SpaceTest.Models.Projectiles
 
         public override void Draw()
         {
-            Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
+            // Draw animated ninja sprite
+            _spriteWrapper.DrawAnimated(
+                new Vector2(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f),
+                _rotation,
+                Rect.Width,
+                Rect.Height,
+                _frame
+            );
         }
     }
 }

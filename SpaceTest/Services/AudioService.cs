@@ -13,6 +13,8 @@ namespace GalagaFighter.Services
         void PlayWallStickSound();
         void Initialize();
         void Cleanup();
+        void PlayExplosionConversionSound();
+        void PlayBurningSound();
     }
 
     public class AudioService : IAudioService
@@ -22,6 +24,8 @@ namespace GalagaFighter.Services
         private Sound powerUpSound;
         private Sound iceHitSound;
         private Sound wallStickSound;
+        private Sound explosionConversionSound;
+        private Sound burningSound;
 
         public void Initialize()
         {
@@ -33,17 +37,21 @@ namespace GalagaFighter.Services
         {
             Raylib.UnloadSound(shootSound);
             Raylib.UnloadSound(hitSound);
-            Raylib.UnloadSound(powerUpSound);
             Raylib.UnloadSound(iceHitSound);
             Raylib.UnloadSound(wallStickSound);
+            Raylib.UnloadSound(explosionConversionSound);
+            Raylib.UnloadSound(powerUpSound);
+            Raylib.UnloadSound(burningSound);
             Raylib.CloseAudioDevice();
         }
 
         public void PlayShootSound() => Raylib.PlaySound(shootSound);
         public void PlayHitSound() => Raylib.PlaySound(hitSound);
-        public void PlayPowerUpSound() => Raylib.PlaySound(powerUpSound);
         public void PlayIceHitSound() => Raylib.PlaySound(iceHitSound);
         public void PlayWallStickSound() => Raylib.PlaySound(wallStickSound);
+        public void PlayExplosionConversionSound() => Raylib.PlaySound(explosionConversionSound);
+        public void PlayPowerUpSound() => Raylib.PlaySound(powerUpSound);
+        public void PlayBurningSound() => Raylib.PlaySound(burningSound);
 
         private void CreateSounds()
         {
@@ -53,11 +61,11 @@ namespace GalagaFighter.Services
                 shootSound = LoadSoundFile("projectile-default.wav");
                 iceHitSound = LoadSoundFile("player_freezing.wav");
                 wallStickSound = LoadSoundFile("plank_landing.wav");
-                
-                // Generate fallback sounds for other effects
-                hitSound = CreateBeepSound(200, 0.08f, 0.5f);
-                powerUpSound = CreateBeepSound(600, 0.2f, 0.4f);
-                
+                explosionConversionSound = LoadSoundFile("explosion_conversion.ogg");
+                hitSound = LoadSoundFile("collision-default.wav");
+                powerUpSound = LoadSoundFile("powerup-default.wav");
+                burningSound = LoadSoundFile("burning.wav");
+
                 SetSoundVolumes();
                 Console.WriteLine("Audio system initialized with mixed sound sources");
             }
@@ -103,7 +111,7 @@ namespace GalagaFighter.Services
                 powerUpSound = CreateBeepSound(600, 0.2f, 0.4f);
                 iceHitSound = CreateBeepSound(1200, 0.12f, 0.3f);
                 wallStickSound = CreateBeepSound(150, 0.15f, 0.4f);
-                
+
                 SetSoundVolumes();
                 Console.WriteLine("Audio system initialized with generated fallback sounds");
             }
@@ -120,7 +128,9 @@ namespace GalagaFighter.Services
             Raylib.SetSoundVolume(iceHitSound, 1.0f);
             Raylib.SetSoundVolume(wallStickSound, 1.0f);
             Raylib.SetSoundVolume(hitSound, 1.0f);
-            Raylib.SetSoundVolume(powerUpSound, 1.0f);
+            Raylib.SetSoundVolume(powerUpSound, .03f);
+            Raylib.SetSoundVolume(explosionConversionSound, .05f);
+            Raylib.SetSoundVolume(burningSound, 1.5f);
         }
 
         private Sound CreateBeepSound(float frequency, float duration, float volume)

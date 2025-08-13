@@ -46,7 +46,7 @@ namespace GalagaFighter.Models.Effects
             var projectile = Spawn(rect, speed);
             game.AddGameObject(projectile);
 
-            game.PlayShootSound();
+            Game.PlayShootSound();
             if (OneTimeUse) 
                 IsActive = false;
         }

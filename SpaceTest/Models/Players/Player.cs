@@ -190,7 +190,7 @@ namespace GalagaFighter.Models.Players
                             if(myProjectile.DestroyOnPowerUp)
                                 myProjectile.IsActive = false;
 
-                            game.PlayPowerUpSound();
+                            Game.PlayPowerUpSound();
                             break;
                         }
                     }

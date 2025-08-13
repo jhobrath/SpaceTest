@@ -52,7 +52,7 @@ namespace GalagaFigther.Models.Projectiles
         }
 
         public virtual void PlaySound(Game game) =>
-            game.PlayHitSound();
+            Game.PlayHitSound();
 
         public abstract Color GetColor();
 

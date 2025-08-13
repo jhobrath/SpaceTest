@@ -12,7 +12,7 @@ namespace GalagaFighter
         private Player player1;
         private Player player2;
         private Random random;
-        private IAudioService audioService;
+        public static IAudioService AudioService;
 
         public Game()
         {
@@ -34,8 +34,8 @@ namespace GalagaFighter
 
         private void InitializeAudio()
         {
-            audioService = new AudioService();
-            audioService.Initialize();
+            AudioService = new AudioService();
+            AudioService.Initialize();
         }
 
         private void InitializePlayers()
@@ -204,7 +204,7 @@ namespace GalagaFighter
 
         private void Cleanup()
         {
-            audioService.Cleanup();
+            AudioService.Cleanup();
             Raylib.CloseWindow();
         }
 
@@ -225,10 +225,12 @@ namespace GalagaFighter
         }
 
         // Audio interface - delegates to audio service
-        public void PlayShootSound() => audioService.PlayShootSound();
-        public void PlayHitSound() => audioService.PlayHitSound();
-        public void PlayPowerUpSound() => audioService.PlayPowerUpSound();
-        public void PlayIceHitSound() => audioService.PlayIceHitSound();
-        public void PlayWallStickSound() => audioService.PlayWallStickSound();
+        public static void PlayShootSound() => AudioService.PlayShootSound();
+        public static void PlayHitSound() => AudioService.PlayHitSound();
+        public static void PlayPowerUpSound() => AudioService.PlayPowerUpSound();
+        public static void PlayIceHitSound() => AudioService.PlayIceHitSound();
+        public static void PlayWallStickSound() => AudioService.PlayWallStickSound();
+        public static void PlayExplosionConversionSound() => AudioService.PlayExplosionConversionSound();
+        public static void PlayBurningSound() => AudioService.PlayBurningSound();
     }
 }

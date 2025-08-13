@@ -61,6 +61,19 @@ namespace GalagaFighter.Models.Players
                 activeEffects.RemoveAll(x => x is ProjectileEffect);
             }
 
+            if(!effect.AllowSelfStacking)
+            {
+                var effectType = effect.GetType().Name;
+                for(var i = activeEffects.Count-1;i>=0;i--)
+                {
+                    if (activeEffects[i].GetType().Name == effectType)
+                    {
+                        activeEffects[i].OnDeactivate();
+                        activeEffects.RemoveAt(i);
+                    }
+                }
+            }
+
             activeEffects.Add(effect);
             effect.OnActivate();
         }

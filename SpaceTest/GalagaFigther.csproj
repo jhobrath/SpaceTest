@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Shaders\**" />
+    <EmbeddedResource Remove="Shaders\**" />
+    <None Remove="Shaders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Sounds\collision-default.wav" />
     <None Remove="Sounds\explosion_conversion.ogg" />
     <None Remove="Sounds\magnet.wav" />
@@ -146,10 +152,6 @@
 
   <ItemGroup>
     <PackageReference Include="Raylib-cs" Version="7.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Shaders\" />
   </ItemGroup>
 
 </Project>

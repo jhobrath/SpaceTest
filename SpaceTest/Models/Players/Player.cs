@@ -20,7 +20,7 @@ namespace GalagaFighter.Models.Players
 
         private readonly PlayerMovement movement;
         private readonly PlayerRenderer renderer;
-        public readonly PlayerStats Stats;
+        public PlayerStats Stats;
         private readonly PlayerCombat combat;
 
         private const string _spritePath = "Sprites/Players/Player1.png";
@@ -29,6 +29,8 @@ namespace GalagaFighter.Models.Players
         private float DownHeldDuration;
 
         public bool _useLeftEngine;
+
+        private readonly List<PlayerStats> _statsGroups = [];
 
         public Player(Rectangle rect, float fireRate, KeyboardKey up, KeyboardKey down, KeyboardKey shoot, bool isPlayer1, float scale) 
             : base(rect)
@@ -49,8 +51,13 @@ namespace GalagaFighter.Models.Players
 
             movement = new PlayerMovement(baseSpeed, up, down);
             renderer = new PlayerRenderer(shipSprite, isPlayer1, scale);
-            Stats = new PlayerStats(this);
             combat = new PlayerCombat(isPlayer1, projectileSpeed, scale, effectiveFireRate);
+
+            _statsGroups.Add(new PlayerStats(this));
+            _statsGroups.Add(new PlayerStats(this));
+
+            Stats = _statsGroups[0];
+
 
             UpHeldDuration = 0f;
             DownHeldDuration = 0f;
@@ -78,6 +85,31 @@ namespace GalagaFighter.Models.Players
             
             HandleShooting(game);
             HandleCollisions(game);
+            HandleStatsSwitching(game);
+        }
+
+        private void HandleStatsSwitching(Game game)
+        {
+            if (Raylib.IsKeyPressed(GetStatsSwitchKey()))
+            {
+                // Switch to the next stats group
+                int currentIndex = _statsGroups.IndexOf(Stats);
+                int nextIndex = (currentIndex + 1) % _statsGroups.Count;
+                Stats = _statsGroups[nextIndex];
+                Game.PlayPowerUpSound();
+            }
+        }
+
+        private KeyboardKey GetStatsSwitchKey()
+        {
+            if(IsPlayer1)
+            {
+                return KeyboardKey.A;
+            }
+            else
+            {
+                return KeyboardKey.Right;
+            }
         }
 
         private void HandleShooting(Game game)

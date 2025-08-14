@@ -9,7 +9,7 @@ namespace GalagaFighter.Models.Effects
 {
     public class MudShotEffect : ProjectileEffect
     {
-        protected override float Duration => 4.0f;
+        protected override float Duration => 5.0f;
 
         public MudShotEffect(Player player) : base(player)
         {

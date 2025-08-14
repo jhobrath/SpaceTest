@@ -33,5 +33,11 @@ namespace GalagaFighter.Models.Effects
             _spriteWrapper.CurrentFrame = _frame;
             _spriteWrapper.DrawAnimated(_positionCenter, _rotation, 256f, 256f, color: color);
         }
+
+        public bool IsNear(Rectangle rect)
+        {
+            return rect.X < _positionCenter.X + 128 && rect.X + rect.Width > _positionCenter.X - 128 &&
+                   rect.Y < _positionCenter.Y + 128 && rect.Y + rect.Height > _positionCenter.Y - 128;
+        }
     }
 }

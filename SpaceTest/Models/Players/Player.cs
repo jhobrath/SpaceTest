@@ -77,8 +77,20 @@ namespace GalagaFighter.Models.Players
 
             // Aggregate all active effects' SpeedMultiplier
             float speedMultiplier = 1.0f;
+            var isNearSplat = false;
             foreach (var effect in Stats.GetActiveEffects())
+            { 
                 speedMultiplier *= effect.SpeedMultiplier;
+
+                if (!isNearSplat && effect is MudSplatEffect splat)
+                    if (splat.IsNear(Rect))
+                        isNearSplat = true;
+            }
+
+            if(isNearSplat)
+            {
+                speedMultiplier *= .3f;
+            }
 
             Rect = movement.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
                 speedMultiplier, frameTime, game.GetGameObjects(), this);

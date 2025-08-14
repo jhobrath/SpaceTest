@@ -28,6 +28,8 @@ namespace GalagaFighter.Models.Players
             {
                 upHeldDuration += frameTime;
                 Speed = -(baseSpeed / (1 + upHeldDuration * slowdownFactor)) * slowIntensity;
+
+
                 newRect.Y += Speed;
             }
             else
@@ -39,6 +41,8 @@ namespace GalagaFighter.Models.Players
             {
                 downHeldDuration += frameTime;
                 Speed = (baseSpeed / (1 + downHeldDuration * slowdownFactor)) * slowIntensity;
+
+
                 newRect.Y += Speed;
             }
             else

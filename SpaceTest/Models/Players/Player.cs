@@ -86,16 +86,111 @@ namespace GalagaFighter.Models.Players
             HandleShooting(game);
             HandleCollisions(game);
             HandleStatsSwitching(game);
+
+            PrintStats();
+        }
+
+        private void PrintStats()
+        {
+            int screenWidth = Raylib.GetScreenWidth();
+            int screenHeight = Raylib.GetScreenHeight();
+            float uniformScale = Math.Min(screenWidth / 1920f, screenHeight / 1080f);
+            int margin = (int)(15 * uniformScale);
+
+            var xPos = IsPlayer1 ? margin : screenWidth - (int)(250 * uniformScale);
+            var yPos = margin + (int)(30 * uniformScale);
+
+            var verticalOffset = 0;
+            foreach (var stats in _statsGroups)
+            {
+                var row = 0;
+                var col = 0;
+
+                var effects = stats.GetActiveEffects();
+                var icons = effects.Where(e => !(e is DefaultShootEffect) && !(e is FireRateEffect))
+                    .Select(x => x.IconPath).ToList();
+
+                var fireRateCount = Math.Max(1, Math.Min(8, GetFireRateIndex(stats.FireRateMultiplier)));
+                icons.Insert(0, $"Sprites/Effects/firerate{fireRateCount}.png");
+
+                var rows = (int)Math.Ceiling(icons.Count / 6f);
+                if (stats == Stats)
+                    Raylib.DrawRectangle(xPos - 2, yPos + verticalOffset - 2, 6 * 30 + 4, rows * 30 + 4, Color.DarkGray);
+
+                foreach (var icon in icons)
+                {
+                    var thisX = xPos + col * 30f * uniformScale;
+                    var thisY = yPos + row * 30f * uniformScale + verticalOffset;
+                    var texture = TextureLibrary.Get(icon);
+
+                    Raylib.DrawTextureEx(
+                        texture,
+                        new Vector2(thisX, thisY),
+                        0f,
+                        30f / texture.Width,
+                        Color.White);
+
+                    col++;
+                    col = col % 6;
+                    if (col == 0)
+                        row++;
+                }
+
+                verticalOffset += row * (int)(30 * uniformScale) + (int)(30 * uniformScale);
+            }
+        }
+
+        public static int GetFireRateIndex(float inputValue)
+        {
+            var baseValue = .72f;
+            // Handle invalid inputs.
+            if (inputValue > baseValue)
+            {
+                return 1;
+            }
+
+            int n = 1;
+            double currentPower = baseValue;
+            double previousPower;
+
+            // Loop through powers of BaseValue to find the correct range.
+            while (true)
+            {
+                previousPower = currentPower;
+                currentPower = Math.Pow(baseValue, n + 1);
+
+                // Check if the inputValue falls within the current range.
+                // The range for 'n' is (BaseValue^n, BaseValue^(n-1)]
+                if (inputValue <= previousPower && inputValue > currentPower)
+                {
+                    return n + 1;
+                }
+
+                // Handle the special case where the input value is exactly BaseValue.
+                if (Math.Abs(inputValue - baseValue) < float.Epsilon)
+                {
+                    return 1;
+                }
+
+                n++;
+            }
         }
 
         private void HandleStatsSwitching(Game game)
         {
             if (Raylib.IsKeyPressed(GetStatsSwitchKey()))
             {
+                foreach(var effect in Stats.GetActiveEffects())
+                {
+                    effect.OnStatsSwitch();
+                }
+
+                var health = Stats.Health;
                 // Switch to the next stats group
                 int currentIndex = _statsGroups.IndexOf(Stats);
                 int nextIndex = (currentIndex + 1) % _statsGroups.Count;
                 Stats = _statsGroups[nextIndex];
+                Stats.Health = health;
                 Game.PlayPowerUpSound();
             }
         }

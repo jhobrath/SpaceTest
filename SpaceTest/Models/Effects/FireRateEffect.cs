@@ -8,6 +8,8 @@ namespace GalagaFighter.Models.Effects
 
         protected override float Duration => 0f;
 
+        public override string IconPath => throw new NotImplementedException();
+
         public FireRateEffect(Player player) : base(player)
         {
         }

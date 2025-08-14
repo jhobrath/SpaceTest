@@ -9,6 +9,7 @@ namespace GalagaFighter.Models.Effects
         private readonly float blueAlpha = .4f;
 
         protected override float Duration => 5.0f;
+        public override string IconPath => "Sprites/Effects/frozen.png";
 
         public FrozenEffect(Player player)
             : base(player)

@@ -172,26 +172,6 @@ namespace GalagaFighter
 
             // Bullet capacity display
             int bulletStatusY = margin + (int)(30 * uniformScale);
-            int p1ActiveBullets = player1.GetActiveBulletCount(gameObjects);
-            int p2ActiveBullets = player2.GetActiveBulletCount(gameObjects);
-            
-            string p1BulletStatus = $"P1 Bullets: {p1ActiveBullets}/{player1.MaxBullets}";
-            string p2BulletStatus = $"P2 Bullets: {p2ActiveBullets}/{player2.MaxBullets}";
-            
-            Color p1BulletColor = p1ActiveBullets >= player1.MaxBullets ? Color.Red : Color.Yellow;
-            Color p2BulletColor = p2ActiveBullets >= player2.MaxBullets ? Color.Red : Color.Yellow;
-            
-            Raylib.DrawText(p1BulletStatus, margin, bulletStatusY, statusTextSize, p1BulletColor);
-            Vector2 p2BulletTextSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), p2BulletStatus, statusTextSize, 1);
-            Raylib.DrawText(p2BulletStatus, screenWidth - (int)(250 * uniformScale), bulletStatusY, statusTextSize, p2BulletColor);
-
-            // Ice effect status display
-            int iceStatusY = bulletStatusY + (int)(25 * uniformScale);
-            // Remove display of IceEffectCount and CurrentSlowIntensity
-            // If you want to show frozen status, query effects directly from player.Stats
-
-            // Controls
-            Raylib.DrawText("F11 - Toggle Fullscreen | ESC - Exit", margin, screenHeight - (int)(40 * uniformScale), controlTextSize, Color.LightGray);
 
             // Winner display
             if (player1.Health <= 0 || player2.Health <= 0)

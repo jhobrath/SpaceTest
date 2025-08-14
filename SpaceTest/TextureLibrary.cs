@@ -18,5 +18,10 @@ namespace GalagaFigther
         {
             _library[path] = texture;
         }
+
+        internal static object Get(object iconPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

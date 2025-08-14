@@ -19,6 +19,7 @@ namespace GalagaFighter.Models.Effects
         protected override bool OneTimeUse => false;
         protected override Projectile Spawn(Rectangle rect, Vector2 speed) => new NinjaProjectile(rect, speed, Player, this);
         protected override string Texture => "Sprites/Players/NinjaShotShip.png";
+        public override string IconPath => "Sprites/Effects/ninjashot.png";
 
         protected override Vector2 SpawnOffset => new Vector2(-50, 15);
     }

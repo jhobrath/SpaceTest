@@ -17,6 +17,13 @@ namespace GalagaFighter.Models.Effects
         public virtual bool AllowSelfStacking => true;
         public virtual bool DisableShooting => false;
 
+        public abstract string IconPath { get; }
+
+        public virtual void OnStatsSwitch()
+        {
+
+        }
+
         protected PlayerEffect(Player player)
         {
             Player = player;

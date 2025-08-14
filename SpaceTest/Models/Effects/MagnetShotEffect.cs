@@ -11,6 +11,7 @@ namespace GalagaFigther.Models.Effects
     {
         private Vector2 _attractPosition;
         public override bool DisableShooting => true;
+        public override string IconPath => "Sprites/Effects/magnetshot.png";
 
         private List<Projectile> _caughtProjectiles = new List<Projectile>();
         private Dictionary<Projectile, Vector2> _originalSpeeds = new Dictionary<Projectile, Vector2>();
@@ -26,6 +27,12 @@ namespace GalagaFigther.Models.Effects
                 player.Rect.X + (player.IsPlayer1 ? player.Rect.Width + 50 : -50),
                 player.Rect.Y + player.Rect.Height/2
             );
+        }
+
+        public override void OnStatsSwitch()
+        {
+            _shootDown = false;
+            OnUpdate(0f);
         }
 
         public override void ModifyPlayerRendering(PlayerRendering playerRendering)

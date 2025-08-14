@@ -22,11 +22,24 @@
     <None Remove="Sounds\powerup-default.wav" />
     <None Remove="Sounds\projectile-default.wav" />
     <None Remove="Sprites\collision.png" />
+    <None Remove="Sprites\Effects\burning.png" />
+    <None Remove="Sprites\Effects\effects.pdn" />
+    <None Remove="Sprites\Effects\explosiveshot.png" />
+    <None Remove="Sprites\Effects\firerate1.png" />
+    <None Remove="Sprites\Effects\firerate2.png" />
+    <None Remove="Sprites\Effects\firerate3.png" />
+    <None Remove="Sprites\Effects\firerate4.png" />
+    <None Remove="Sprites\Effects\firerate5.png" />
+    <None Remove="Sprites\Effects\firerate6.png" />
+    <None Remove="Sprites\Effects\firerate7.png" />
+    <None Remove="Sprites\Effects\firerate8.png" />
+    <None Remove="Sprites\Effects\iceshot.png" />
+    <None Remove="Sprites\Effects\ninjashot.png" />
+    <None Remove="Sprites\Effects\wallshot.png" />
     <None Remove="Sprites\Player1.png" />
     <None Remove="Sprites\Player2.png" />
     <None Remove="Sprites\Players\IceShotShip.png" />
     <None Remove="Sprites\Players\NinjaShotShip.png" />
-    <None Remove="Sprites\Players\WoodShotShip.png" />
     <None Remove="Sprites\Powerups\beam.png" />
     <None Remove="Sprites\Powerups\bomb.png" />
     <None Remove="Sprites\Powerups\boomerang.png" />
@@ -73,6 +86,54 @@
     <EmbeddedResource Include="Sprites\collision.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\burning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\effects.pdn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\explosiveshot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate6.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate7.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\firerate8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\frozen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\iceshot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\magnetshot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\ninjashot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\wallshot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Players\IceShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -88,7 +149,7 @@
     <EmbeddedResource Include="Sprites\Players\Player2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Players\WoodShotShip.png">
+    <EmbeddedResource Include="Sprites\Players\WallShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\beam.png">

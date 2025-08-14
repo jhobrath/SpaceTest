@@ -30,5 +30,7 @@ namespace GalagaFighter.Models.Effects
         }
 
         protected override Vector2 SpawnOffset => new Vector2(-50, 15);
+
+        public override string IconPath => "Sprites/Effects/explosiveshot.png";
     }
 }

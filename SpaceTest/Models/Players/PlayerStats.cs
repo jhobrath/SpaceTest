@@ -6,7 +6,7 @@ namespace GalagaFighter.Models.Players
 {
     public class PlayerStats
     {
-        public int Health { get; private set; }
+        public int Health { get;  set; }
         public int MaxBullets { get; private set; }
         public float FireRateMultiplier { get; private set; }
         private const int baseBulletCapacity = 8;

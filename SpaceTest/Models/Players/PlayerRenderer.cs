@@ -36,15 +36,21 @@ namespace GalagaFighter.Models.Players
             var scale = playerRendering.Scale;
             var skew = playerRendering.Skew;
 
-            var texture = TextureLibrary.Get(playerRendering.Texture);
-
             rotation = rotation + playerRendering.Skew * 5;
-            //if(skew == 0)
-            //{
-                Raylib.DrawTextureEx(texture, position, rotation, scale, playerRendering.Color);
-            //}
-            //else
-            //    DrawBankingSpaceship(texture, playerRect.Position, skew, scale, rotation, playerRendering.Color, isPlayer1);
+
+            float width = playerRect.Width;
+            float height = playerRect.Height;
+
+            Vector2 centerPosition = new Vector2(
+                playerRect.X + width / 2f,
+                playerRect.Y + height / 2f
+            );
+
+            var texture = playerRendering.Texture;
+            if (playerRendering.TextureFrame.HasValue)
+                playerRendering.Texture.DrawAnimated(centerPosition, rotation, width, height, playerRendering.TextureFrame, playerRendering.Color);
+            else
+                playerRendering.Texture.Draw(centerPosition, rotation, width, height, color: playerRendering.Color);
         }
 
         public static void DrawBankingSpaceship(Texture2D texture, Vector2 position, float bankingAmount, float scale, float rotationDegrees, Color color, bool isPlayer1)
@@ -179,6 +185,8 @@ namespace GalagaFighter.Models.Players
         public Color Color { get; set; }
         public float Rotation { get; set; }
         public float Skew { get; set; }
-        public string Texture { get; set; }
+        public SpriteWrapper Texture { get; set; }
+
+        public int? TextureFrame { get; set; }
     }
 }

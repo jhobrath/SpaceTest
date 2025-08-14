@@ -1,3 +1,4 @@
+using GalagaFigther;
 using Raylib_cs;
 using System.Numerics;
 
@@ -12,7 +13,7 @@ namespace GalagaFighter.Models
         public int FrameCount { get; }
         public float FrameDuration { get; }
         private float _animationTimer;
-        private int _currentFrame;
+        public int CurrentFrame;
         private readonly Action<Vector2, float, float, float, float> _drawAction;
 
         // For drawn mode
@@ -20,6 +21,13 @@ namespace GalagaFighter.Models
         {
             Mode = SpriteMode.Drawn;
             _drawAction = drawAction;
+        }
+
+        // For still image
+        public SpriteWrapper(string texturePath)
+        {
+            Mode = SpriteMode.StillImage;
+            Texture = TextureLibrary.Get(texturePath);
         }
 
         // For still image
@@ -37,7 +45,7 @@ namespace GalagaFighter.Models
             FrameCount = frameCount;
             FrameDuration = frameDuration;
             _animationTimer = 0f;
-            _currentFrame = 0;
+            CurrentFrame = 0;
         }
 
         public void Update(float frameTime)
@@ -48,12 +56,12 @@ namespace GalagaFighter.Models
                 if (_animationTimer >= FrameDuration)
                 {
                     _animationTimer -= FrameDuration;
-                    _currentFrame = (_currentFrame + 1) % FrameCount;
+                    CurrentFrame = (CurrentFrame + 1) % FrameCount;
                 }
             }
         }
 
-        public void Draw(Vector2 position, float rotation, float width, float height)
+        public void Draw(Vector2 position, float rotation, float width, float height, Color? color = null)
         {
             switch (Mode)
             {
@@ -67,7 +75,7 @@ namespace GalagaFighter.Models
                         new Rectangle(position.X, position.Y, width, height),
                         new Vector2(width / 2f, height / 2f),
                         rotation,
-                        Color.White);
+                        color ?? Color.White);
                     break;
                 case SpriteMode.Animation:
                     DrawAnimated(position, rotation, width, height);
@@ -75,9 +83,9 @@ namespace GalagaFighter.Models
             }
         }
 
-        public void DrawAnimated(Vector2 position, float rotation, float width, float height, int? frame = null)
+        public void DrawAnimated(Vector2 position, float rotation, float width, float height, int? frame = null, Color? color = null)
         {
-            frame = frame ?? _currentFrame;
+            frame = frame ?? CurrentFrame;
             float frameWidth = Texture.Width / (float)FrameCount;
             Rectangle source = new Rectangle(frameWidth * frame.Value, 0, frameWidth, Texture.Height);
             Raylib.DrawTexturePro(
@@ -86,7 +94,7 @@ namespace GalagaFighter.Models
                 new Rectangle(position.X, position.Y, width, height),
                 new Vector2(width / 2f, height / 2f),
                 rotation,
-                Color.White);
+                color ?? Color.White);
         }
     }
 }

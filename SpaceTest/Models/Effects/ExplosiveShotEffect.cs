@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Models.Players;
+using GalagaFigther;
 using GalagaFigther.Models.Projectiles;
 using Raylib_cs;
 using SpaceTest.Models.Projectiles;
@@ -9,8 +10,12 @@ namespace GalagaFighter.Models.Effects
     public class ExplosiveShotEffect : ProjectileEffect
     {
         protected override float Duration => 10.0f;
+
+        private readonly SpriteWrapper _spriteWrapper;
+
         public ExplosiveShotEffect(Player player) : base(player)
         {
+            _spriteWrapper = new SpriteWrapper(TextureLibrary.Get("Sprites/Players/ExplosiveShotShip.png"), 3, .12f);
         }
 
         public override void OnActivate()
@@ -22,7 +27,15 @@ namespace GalagaFighter.Models.Effects
         protected override int ProjectileHeight => 40;
         protected override bool OneTimeUse => false;
         protected override Projectile Spawn(Rectangle rect, Vector2 speed) => new ExplosiveProjectile(rect, speed, Player, this);
-        //protected override string Texture => "Sprites/Players/ExplosiveShotShip.png";
+        
+        protected override SpriteWrapper Texture => _spriteWrapper;
+        public override int? TextureFrame => _spriteWrapper.CurrentFrame;
+
+        public override void OnUpdate(float frameTime)
+        {
+            _spriteWrapper.Update(frameTime);
+            base.OnUpdate(frameTime);
+        }
 
         public override void OnDeactivate()
         {

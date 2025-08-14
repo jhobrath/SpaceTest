@@ -24,7 +24,7 @@ namespace GalagaFighter.Models.Effects
         protected virtual bool OneTimeUse { get; } = false;
         protected virtual Vector2 SpawnOffset => new Vector2(0,0);
         protected virtual float? OnHitMaxRemainingTime => null;
-        protected virtual string Texture => null;
+        protected virtual SpriteWrapper Texture => null;
 
         protected abstract Projectile Spawn(Rectangle rect, Vector2 speed);
 
@@ -61,7 +61,11 @@ namespace GalagaFighter.Models.Effects
         public override void ModifyPlayerRendering(PlayerRendering playerRendering)
         {
             if (Texture != null)
+            {
                 playerRendering.Texture = Texture;
+                if(TextureFrame.HasValue)
+                    playerRendering.TextureFrame = TextureFrame.Value;
+            }
         }
 
         public virtual void OnHit()

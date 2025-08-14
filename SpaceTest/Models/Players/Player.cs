@@ -241,13 +241,19 @@ namespace GalagaFighter.Models.Players
                 Color = Color.White,
                 Rotation = IsPlayer1 ? 90f : -90f,
                 Skew = skew,
-                Texture = _spritePath
+                Texture = new SpriteWrapper(_spritePath)
             };
 
             foreach (var effect in Stats.GetActiveEffects())
+            {
                 effect.ModifyPlayerRendering(playerRendering);
+            }
 
             renderer.DrawPlayer(Rect, playerRendering, isMoving);
+
+            foreach (var effect in Stats.GetActiveEffects())
+                effect.OnDraw();
+
         }
 
         // Interface methods for other classes
@@ -271,12 +277,20 @@ namespace GalagaFighter.Models.Players
             var collisions = new List<Collision>();
             foreach (var obj in gameObjects)
             {
-                if(obj is WallProjectile wall)
+                if (obj is WallProjectile wall)
                 {
-                    if (!wall.IsStuck && ((wall.Speed.X < 0 && wall.Rect.X <= Rect.Width/2) || (wall.Speed.X > 0 && wall.Rect.X + wall.Rect.Width >= Raylib.GetRenderWidth() - Rect.Width/2)))
+                    if (!wall.IsStuck && ((wall.Speed.X < 0 && wall.Rect.X <= Rect.Width / 2) || (wall.Speed.X > 0 && wall.Rect.X + wall.Rect.Width >= Raylib.GetRenderWidth() - Rect.Width / 2)))
                     {
                         wall.OnHit(this, game);
                         collisions.Add(new Collision(wall.Rect, 20, wall.Speed, useRight: !IsPlayer1));
+                    }
+                }
+                else if (obj is MudProjectile mud && mud.Owner != this)
+                {
+                    if((mud.Speed.X < 0 && mud.Rect.X <= Rect.Width / 2) || (mud.Speed.X > 0 && mud.Rect.X + mud.Rect.Width >= Raylib.GetRenderWidth() - Rect.Width / 2))
+                    {
+                        mud.OnHit(this, game);
+                        mud.IsActive = false;
                     }
                 }
                 else if (Raylib.CheckCollisionRecs(Rect, obj.Rect))

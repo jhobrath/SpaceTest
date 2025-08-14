@@ -16,6 +16,8 @@ namespace GalagaFighter.Services
         void PlayExplosionConversionSound();
         void PlayBurningSound();
         void PlayMagnetSound();
+        void PlayMudSplat();
+        void PlayMagnetReleaseSound();
     }
 
     public class AudioService : IAudioService
@@ -28,6 +30,8 @@ namespace GalagaFighter.Services
         private Sound explosionConversionSound;
         private Sound burningSound;
         private Sound magnetSound;
+        private Sound mudsplat;
+        private Sound magnetReleaseSound;
 
         public void Initialize()
         {
@@ -45,6 +49,8 @@ namespace GalagaFighter.Services
             Raylib.UnloadSound(powerUpSound);
             Raylib.UnloadSound(burningSound);
             Raylib.UnloadSound(magnetSound);
+            Raylib.UnloadSound(mudsplat);
+            Raylib.UnloadSound(magnetReleaseSound);
             Raylib.CloseAudioDevice();
         }
 
@@ -56,6 +62,8 @@ namespace GalagaFighter.Services
         public void PlayPowerUpSound() => Raylib.PlaySound(powerUpSound);
         public void PlayBurningSound() => Raylib.PlaySound(burningSound);
         public void PlayMagnetSound() => Raylib.PlaySound(magnetSound);
+        public void PlayMudSplat() => Raylib.PlaySound(mudsplat);
+        public void PlayMagnetReleaseSound() => Raylib.PlaySound(magnetReleaseSound);
 
         private void CreateSounds()
         {
@@ -70,6 +78,8 @@ namespace GalagaFighter.Services
                 powerUpSound = LoadSoundFile("powerup-default.wav");
                 burningSound = LoadSoundFile("burning.wav");
                 magnetSound = LoadSoundFile("magnet.wav");
+                mudsplat = LoadSoundFile("mudsplat.wav");
+                magnetReleaseSound = LoadSoundFile("magnet-release.wav");
 
                 SetSoundVolumes();
                 Console.WriteLine("Audio system initialized with mixed sound sources");
@@ -137,6 +147,8 @@ namespace GalagaFighter.Services
             Raylib.SetSoundVolume(explosionConversionSound, .05f);
             Raylib.SetSoundVolume(burningSound, 1.5f);
             Raylib.SetSoundVolume(magnetSound, .05f);
+            Raylib.SetSoundVolume(mudsplat, .1f);
+            Raylib.SetSoundVolume(magnetReleaseSound, .1f);
         }
 
         private Sound CreateBeepSound(float frequency, float duration, float volume)

@@ -34,11 +34,16 @@
     <None Remove="Sprites\Effects\firerate7.png" />
     <None Remove="Sprites\Effects\firerate8.png" />
     <None Remove="Sprites\Effects\iceshot.png" />
+    <None Remove="Sprites\Effects\mudshot.png" />
+    <None Remove="Sprites\Effects\mudsplat.png" />
+    <None Remove="Sprites\Effects\mudsplaticon.png" />
     <None Remove="Sprites\Effects\ninjashot.png" />
     <None Remove="Sprites\Effects\wallshot.png" />
     <None Remove="Sprites\Player1.png" />
     <None Remove="Sprites\Player2.png" />
+    <None Remove="Sprites\Players\ExplosiveShotShip.png" />
     <None Remove="Sprites\Players\IceShotShip.png" />
+    <None Remove="Sprites\Players\MagnetShotShipSucking.png" />
     <None Remove="Sprites\Players\NinjaShotShip.png" />
     <None Remove="Sprites\Powerups\beam.png" />
     <None Remove="Sprites\Powerups\bomb.png" />
@@ -50,6 +55,7 @@
     <None Remove="Sprites\Powerups\ice.png" />
     <None Remove="Sprites\Powerups\lightning.png" />
     <None Remove="Sprites\Powerups\magnet.png" />
+    <None Remove="Sprites\Powerups\mud.png" />
     <None Remove="Sprites\Powerups\ninja.png" />
     <None Remove="Sprites\Powerups\poison.png" />
     <None Remove="Sprites\Powerups\reflect.png" />
@@ -58,6 +64,7 @@
     <None Remove="Sprites\Powerups\wind.png" />
     <None Remove="Sprites\Projectiles\explosion.png" />
     <None Remove="Sprites\Projectiles\ice.png" />
+    <None Remove="Sprites\Projectiles\mud.png" />
     <None Remove="Sprites\Projectiles\ninja.png" />
   </ItemGroup>
 
@@ -128,16 +135,34 @@
     <EmbeddedResource Include="Sprites\Effects\magnetshot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\mudshot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\mudsplat.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\mudsplaticon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\ninjashot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\wallshot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Players\ExplosiveShotShip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Players\IceShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Players\MagnetShotShip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Players\MagnetShotShipSucking.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Players\MudShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Players\NinjaShotShip.png">
@@ -182,6 +207,9 @@
     <EmbeddedResource Include="Sprites\Powerups\magnet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\mud.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\ninja.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -204,6 +232,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Projectiles\ice.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Projectiles\mud.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Projectiles\ninja.png">

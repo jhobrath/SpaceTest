@@ -20,7 +20,8 @@ namespace GalagaFighter.Models
             (r,f) => new WallPowerUp(r,f),
             (r,f) => new NinjaPowerUp(r,f),
             (r,f) => new ExplosivePowerUp(r, f),
-            (r,f) => new MagnetPowerUp(r,f)
+            (r,f) => new MagnetPowerUp(r,f),
+            (r,f) => new MudShotPowerUp(r,f)
         };
 
         public static PowerUp Create()
@@ -33,7 +34,7 @@ namespace GalagaFighter.Models
             var rect = new Rectangle(_random.Next(Convert.ToInt32(.1f * screenWidth), Convert.ToInt32(screenWidth * .9f)),
                 -powerUpSize, powerUpSize, powerUpSize);
 
-            return _powerUpTypes[powerUpTypeIndex](rect, 2f * uniformScale);
+            return _powerUpTypes[6](rect, 2f * uniformScale);
         }
     }
 }

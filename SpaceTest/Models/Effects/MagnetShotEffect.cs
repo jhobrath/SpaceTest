@@ -1,4 +1,5 @@
 ﻿using GalagaFighter;
+using GalagaFighter.Models;
 using GalagaFighter.Models.Effects;
 using GalagaFighter.Models.Players;
 using GalagaFigther.Models.Projectiles;
@@ -21,8 +22,13 @@ namespace GalagaFigther.Models.Effects
 
         protected override float Duration => 5f;
 
+        private readonly SpriteWrapper _spriteWrapper;
+        private readonly SpriteWrapper _spriteWrapperSucking;
+
         public MagnetShotEffect(Player player) : base(player)
         {
+            _spriteWrapper = new SpriteWrapper(TextureLibrary.Get("Sprites/Players/MagnetShotShip.png"), 3, .12f);
+            _spriteWrapperSucking = new SpriteWrapper(TextureLibrary.Get("Sprites/Players/MagnetShotShipSucking.png"), 3, .12f);
             _attractPosition = new Vector2(
                 player.Rect.X + (player.IsPlayer1 ? player.Rect.Width + 50 : -50),
                 player.Rect.Y + player.Rect.Height/2
@@ -37,7 +43,10 @@ namespace GalagaFigther.Models.Effects
 
         public override void ModifyPlayerRendering(PlayerRendering playerRendering)
         {
-            playerRendering.Texture = "Sprites/Players/MagnetShotShip.png";
+            if (Raylib.IsKeyDown(Player.GetShootKey()))
+                playerRendering.Texture = _spriteWrapperSucking;
+            else
+                playerRendering.Texture = _spriteWrapper;
         }
 
         public override void OnUpdate(float frameTime)
@@ -63,10 +72,13 @@ namespace GalagaFigther.Models.Effects
 
                 if (fired)
                 {
-                    Game.PlayExplosionConversionSound();
+                    Game.PlayMagnetReleaseSound();
                     _shootDown = false;
                 }
             }
+
+            _spriteWrapper.Update(frameTime);
+            _spriteWrapperSucking.Update(frameTime);
 
             base.OnUpdate(frameTime);
         }

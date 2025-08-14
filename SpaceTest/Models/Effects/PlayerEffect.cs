@@ -7,7 +7,7 @@ namespace GalagaFighter.Models.Effects
         protected readonly Player Player;
         public bool IsActive { get; protected set; } = true;
 
-        private float _remainingTime = 0f;
+        protected float _remainingTime = 0f;
 
         // Speed multiplier for stacking movement effects
         public virtual float SpeedMultiplier => 1.0f;
@@ -18,6 +18,7 @@ namespace GalagaFighter.Models.Effects
         public virtual bool DisableShooting => false;
 
         public abstract string IconPath { get; }
+        public virtual int? TextureFrame => null;
 
         public virtual void OnStatsSwitch()
         {
@@ -42,6 +43,12 @@ namespace GalagaFighter.Models.Effects
         }
         public virtual void OnDeactivate() { }
         public virtual void OnShoot(Game game) { }
+
+        public virtual void OnDraw()
+        {
+
+        }
+
         public bool ShouldDeactivate() => !IsActive;
 
 

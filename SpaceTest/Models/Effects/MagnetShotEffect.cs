@@ -47,13 +47,13 @@ namespace GalagaFigther.Models.Effects
                 Player.Rect.Y + Player.Rect.Height / 2
             );
 
-            if(!Raylib.IsKeyPressed(Player.GetShootKey()))
+            if(!Raylib.IsKeyDown(Player.GetShootKey()))
             {
                 var fired = false;
                 _caughtProjectiles.ForEach(p => {
                     p.Speed = new Vector2(Player.IsPlayer1 ? 75f : -75f, 10f - 20f * (float)_random.NextDouble());
                     p.Owner = Player;
-                    fired = true;
+                    fired = true && _shootDown;
                 });
                 foreach (var key in _originalSpeeds.Keys)
                 { 

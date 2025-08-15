@@ -332,30 +332,31 @@ namespace GalagaFighter.Models.Players
             }
 
             var myProjectiles = gameObjects.OfType<Projectile>().Where(p => p.Owner == this).ToList();
+            var powerUps = gameObjects.OfType<PowerUp>().Where(p => p.IsActive).ToList();
             foreach (var myProjectile in myProjectiles)
             {
-                foreach (var obj in gameObjects)
+                foreach (var powerUp in powerUps)
                 {
-                    if (Raylib.CheckCollisionRecs(myProjectile.Rect, obj.Rect))
-                    {
-                        if (obj is PowerUp powerUp)
-                        {
-                            var effect = powerUp.CreateEffect(this);
-                            if (effect != null)
-                            {
-                                Stats.AddEffect(this, effect);
-                            }
-                            powerUp.IsActive = false;
+                    if (!powerUp.Available)
+                        continue;
 
-                            if(myProjectile.DestroyOnPowerUp)
-                                myProjectile.IsActive = false;
+                    if (!CollisionUtils.IsColliding(powerUp.GetBoundingBox(), myProjectile.Rect))
+                        continue;
 
-                            Game.PlayPowerUpSound();
-                            break;
-                        }
-                    }
+                    powerUp.Collect(myProjectile.Owner);
+
+                    if(myProjectile.DestroyOnPowerUp)
+                        myProjectile.IsActive = false;
+
+                    Game.PlayPowerUpSound();
+                    break;
                 }
             }
+        }
+
+        protected void CheckCollisionWithRotate(Rectangle rect1, float rotation1, Rectangle rect2, float rotation2)
+        {
+            //Implement here
         }
     }
 }

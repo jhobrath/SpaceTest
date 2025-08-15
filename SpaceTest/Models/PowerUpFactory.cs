@@ -34,7 +34,7 @@ namespace GalagaFighter.Models
             var rect = new Rectangle(_random.Next(Convert.ToInt32(.1f * screenWidth), Convert.ToInt32(screenWidth * .9f)),
                 -powerUpSize, powerUpSize, powerUpSize);
 
-            return _powerUpTypes[powerUpTypeIndex](rect, 2f * uniformScale);
+            return _powerUpTypes[2](rect, 2f * uniformScale);
         }
     }
 }

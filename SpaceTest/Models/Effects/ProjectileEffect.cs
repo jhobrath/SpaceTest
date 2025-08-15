@@ -34,7 +34,6 @@ namespace GalagaFighter.Models.Effects
         
         public override void OnShoot(Game game)
         {
-            _totalUses++;
             var combat = Player.GetCombat();
             if (!combat.CanFire(Raylib.IsKeyDown(Player.GetShootKey()), Player.Stats))
                 return;
@@ -43,6 +42,8 @@ namespace GalagaFighter.Models.Effects
 
             if (Player.Stats.HasEffect<MagnetShotEffect>())
                 return;
+
+            _totalUses++;
 
             var scaleFactor = Player.GetScaleFactor();
             var _useLeftEngine = Player.ToggleEngine();
@@ -58,7 +59,7 @@ namespace GalagaFighter.Models.Effects
             game.AddGameObject(projectile);
 
             Game.PlayShootSound();
-            if (TotalUses.HasValue && TotalUses <= _totalUses)
+            if (TotalUses.HasValue && _totalUses >= TotalUses)
                 IsActive = false;
         }
 

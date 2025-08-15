@@ -25,7 +25,6 @@ namespace GalagaFighter.Models.Effects
 
         protected override int ProjectileWidth => 40;
         protected override int ProjectileHeight => 40;
-        protected override bool TotalUses => false;
         protected override Projectile Spawn(Rectangle rect, Vector2 speed) => new ExplosiveProjectile(rect, speed, Player, this);
         
         protected override SpriteWrapper Texture => _spriteWrapper;

@@ -12,7 +12,6 @@ namespace GalagaFighter.Models.Effects
         public override string IconPath => throw new NotImplementedException();
         protected override int ProjectileWidth => 30;
         protected override int ProjectileHeight => 15;
-        protected override bool TotalUses => false;
         protected override float Duration => float.MaxValue;
         protected override Projectile Spawn(Rectangle rect, Vector2 speed) => new NormalProjectile(rect, speed, Player, this);
     }

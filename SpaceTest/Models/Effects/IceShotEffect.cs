@@ -25,7 +25,6 @@ namespace GalagaFighter.Models.Effects
 
         protected override int ProjectileWidth => 95;
         protected override int ProjectileHeight => 42;
-        protected override bool TotalUses => false;
         protected override float? OnHitMaxRemainingTime => 2;
         protected override SpriteWrapper Texture => _spriteWrapper;
         public override int? TextureFrame => _spriteWrapper.CurrentFrame;

@@ -13,16 +13,19 @@ namespace SpaceTest.Models.Projectiles
     public class IceProjectile : Projectile
     {
         private SpriteWrapper _spriteWrapper;
-        private int _frame = 5;
         private bool _isPlayer1 = false;
-        private int _isOffFrame = 0;
+
+        private readonly SpriteWrapper _collision;
+
+        public override SpriteWrapper Collision => _collision;
+
         public IceProjectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect) 
             : base(rect, speed, owner, ownerEffect) 
         {
             // Use ninja.png as an animated sprite (3 frames, 0.12s per frame)
             var texture = TextureLibrary.Get("Sprites/Projectiles/ice.png");
-            _spriteWrapper = new SpriteWrapper(texture, 6, 0.12f);
-
+            _spriteWrapper = new SpriteWrapper(texture, 6, .33f);
+            _collision = new SpriteWrapper(TextureLibrary.Get("Sprites/Effects/iceshot-collision.png"), 5, .12f);
             _isPlayer1 = owner.IsPlayer1;
 
             //sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Ice, (int)rect.Width, (int)rect.Height);
@@ -47,65 +50,7 @@ namespace SpaceTest.Models.Projectiles
 
         public override void Draw()
         {
-            if (_isOffFrame < 15)
-            {
-                _isOffFrame++;
-
-                if(_isOffFrame == 15) { 
-                    _frame = _frame - 1;
-                    _isOffFrame = 0;
-                    if (_frame < 0) _frame = 0;
-                }
-            }
-
-            if(_frame == 5)
-            {
-                var s = "";
-
-            }
-            else if(_frame == 4)
-            {
-                var s = "";
-
-            }
-            else if(_frame == 3)
-            {
-                var s = "";
-
-            }
-            else if(_frame == 2)
-            {
-                var s = "";
-
-            }
-            else if(_frame == 1)
-            {
-                var s = "";
-            }
-
-                //Rotate the opposite way for player 2
-                //_frame = _isPlayer1 ? _frame : (3 - _frame);
-
-                // Draw animated ninja sprite
-                _spriteWrapper.DrawAnimated(
-                    new Vector2(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f),
-                    Owner.IsPlayer1 ? 0f : 180f,
-                    Rect.Width,
-                    Rect.Height,
-                    _frame
-                );
-
-
-           // // Use the generated sprite (which works!)
-           // if (sprite.Id > 0)
-           // {
-           //     Raylib.DrawTexture(sprite, (int)Rect.X, (int)Rect.Y, Color.White);
-           // }
-           // else
-           // {
-           //     // Fallback to simple rectangle if sprite fails
-           //     Raylib.DrawRectangleRec(Rect, Color.SkyBlue);
-           // }
+            _spriteWrapper.DrawFromTopLeft(Rect.Position, Owner.IsPlayer1 ? 0f : 180f, Rect.Width, Rect.Height);
         }
 
         public override void Update(Game game)

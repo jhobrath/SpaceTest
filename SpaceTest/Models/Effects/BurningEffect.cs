@@ -13,6 +13,8 @@ namespace GalagaFighter.Models.Effects
 
         public override string IconPath => "Sprites/Effects/burning.png";
 
+        public override float FireRateMultiplier => .4f;
+
         public BurningEffect(Player player)
             : base(player)
         {
@@ -21,14 +23,7 @@ namespace GalagaFighter.Models.Effects
         public override void OnActivate()
         {
             Game.PlayBurningSound();
-            Player.Stats.ModifyFireRate(.4f);
         }
-
-        public override void OnDeactivate()
-        {
-            Player.Stats.ModifyFireRate(1/.4f);
-        }
-       
 
         public override void ModifyPlayerRendering(PlayerRendering playerRendering)
         {

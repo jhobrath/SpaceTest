@@ -20,6 +20,8 @@ namespace GalagaFigther.Models.Projectiles
 
         protected Texture2D sprite;
 
+        public virtual SpriteWrapper Collision { get; }
+
         protected Projectile(Rectangle rect, Vector2 speed, Player owner, ProjectileEffect ownerEffect) : base(rect)
         {
             Speed = speed;

@@ -13,15 +13,13 @@ namespace GalagaFighter.Models.Effects
 
         private readonly SpriteWrapper _spriteWrapper;
 
+        public override float FireRateMultiplier => 2f;
+
         public ExplosiveShotEffect(Player player) : base(player)
         {
             _spriteWrapper = new SpriteWrapper(TextureLibrary.Get("Sprites/Players/ExplosiveShotShip.png"), 3, .12f);
         }
 
-        public override void OnActivate()
-        {
-            Player.Stats.ModifyFireRate(1 / .5f);
-        }
 
         protected override int ProjectileWidth => 40;
         protected override int ProjectileHeight => 40;
@@ -34,11 +32,6 @@ namespace GalagaFighter.Models.Effects
         {
             _spriteWrapper.Update(frameTime);
             base.OnUpdate(frameTime);
-        }
-
-        public override void OnDeactivate()
-        {
-            Player.Stats.ModifyFireRate(.5f);
         }
 
         protected override Vector2 SpawnOffset => new Vector2(-50, 15);

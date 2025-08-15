@@ -33,6 +33,8 @@
     <None Remove="Sprites\Effects\firerate6.png" />
     <None Remove="Sprites\Effects\firerate7.png" />
     <None Remove="Sprites\Effects\firerate8.png" />
+    <None Remove="Sprites\Effects\frozen-decoration.png" />
+    <None Remove="Sprites\Effects\iceshot-collision.png" />
     <None Remove="Sprites\Effects\iceshot.png" />
     <None Remove="Sprites\Effects\mudshot.png" />
     <None Remove="Sprites\Effects\mudsplat.png" />
@@ -126,7 +128,13 @@
     <EmbeddedResource Include="Sprites\Effects\firerate8.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\frozen-decoration.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\frozen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\iceshot-collision.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\iceshot.png">

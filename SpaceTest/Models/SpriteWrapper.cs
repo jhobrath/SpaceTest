@@ -10,6 +10,7 @@ namespace GalagaFighter.Models
     {
         public SpriteMode Mode { get; }
         public Texture2D Texture { get; }
+
         public int FrameCount { get; }
         public float FrameDuration { get; }
         private float _animationTimer;
@@ -53,12 +54,25 @@ namespace GalagaFighter.Models
             if (Mode == SpriteMode.Animation)
             {
                 _animationTimer += frameTime;
+
+                
                 if (_animationTimer >= FrameDuration)
                 {
+                    if (FrameDuration == .667f)
+                    {
+                        var s = "";
+                    }
+
                     _animationTimer -= FrameDuration;
                     CurrentFrame = (CurrentFrame + 1) % FrameCount;
                 }
             }
+        }
+
+        public void DrawFromTopLeft(Vector2 position, float rotation, float width, float height, Color? color = null)
+        {
+            var center = new Vector2(position.X + width / 2f, position.Y + height / 2f);
+            Draw(center, rotation, width, height, color);
         }
 
         public void Draw(Vector2 position, float rotation, float width, float height, Color? color = null)

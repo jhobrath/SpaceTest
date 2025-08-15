@@ -1,4 +1,5 @@
 using GalagaFighter.Models.Players;
+using GalagaFigther;
 using Raylib_cs;
 
 namespace GalagaFighter.Models.Effects
@@ -11,20 +12,16 @@ namespace GalagaFighter.Models.Effects
         protected override float Duration => 5.0f;
         public override string IconPath => "Sprites/Effects/frozen.png";
 
+        protected override SpriteWrapper? Decoration => _decoration;
+
+        public override float FireRateMultiplier => 1.25f;
+
+        private SpriteWrapper _decoration;
+
         public FrozenEffect(Player player)
             : base(player)
         {
-        }
-
-        public override void OnActivate()
-        {
-            Player.Stats.ModifyFireRate(1/.8f);
-            base.OnActivate();
-        }
-
-        public override void OnDeactivate()
-        {
-            Player.Stats.ModifyFireRate(.8f);
+            _decoration = new SpriteWrapper(TextureLibrary.Get("Sprites/Effects/frozen-decoration.png"), 4, .2f * (float)(.5f + new Random().NextDouble()));
         }
 
         public override float SpeedMultiplier => 1.0f - slowPerEffect;

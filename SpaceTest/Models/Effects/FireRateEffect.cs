@@ -4,7 +4,7 @@ namespace GalagaFighter.Models.Effects
 {
     public class FireRateEffect : PlayerEffect
     {
-        private readonly float multiplier = 0.72f; // 7% faster fire rate
+        public override float FireRateMultiplier => .72f;
 
         protected override float Duration => 0f;
 
@@ -12,11 +12,6 @@ namespace GalagaFighter.Models.Effects
 
         public FireRateEffect(Player player) : base(player)
         {
-        }
-
-        public override void OnActivate()
-        {
-            Player.Stats.ModifyFireRate(multiplier);
         }
     }
 }

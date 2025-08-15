@@ -21,6 +21,7 @@ namespace GalagaFighter.Models.Effects
         public override void OnUpdate(float frameTime)
         {
             _spriteWrapper.Update(frameTime);
+            base.OnUpdate(frameTime);
         }
 
         protected override int ProjectileWidth => 95;

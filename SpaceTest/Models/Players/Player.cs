@@ -23,6 +23,8 @@ namespace GalagaFighter.Models.Players
         public PlayerStats Stats;
         private readonly PlayerCombat combat;
 
+        private static Random _random = new Random();
+
         private const string _spritePath = "Sprites/Players/Player1.png";
 
         private float UpHeldDuration;
@@ -240,8 +242,6 @@ namespace GalagaFighter.Models.Players
         public override void Draw()
         {
             bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
-            var frozen = Stats.GetFirstEffect<FrozenEffect>();
-            bool isSlowed = frozen != null;
 
             var skew = 0f;
             if (UpHeldDuration > 0) skew = IsPlayer1 ? -.5f : .5f;
@@ -264,7 +264,9 @@ namespace GalagaFighter.Models.Players
             renderer.DrawPlayer(Rect, playerRendering, isMoving);
 
             foreach (var effect in Stats.GetActiveEffects())
+            {
                 effect.OnDraw();
+            }
 
         }
 
@@ -310,7 +312,12 @@ namespace GalagaFighter.Models.Players
                     if (obj is Projectile projectile && projectile.Owner != this)
                     {
                         projectile.OnHit(this, game);
-                        collisions.Add(new Collision(projectile.Rect, 20, projectile.Speed, useRight: projectile.Owner.IsPlayer1));
+
+                        if(projectile.Collision != null)
+                            collisions.Add(new Collision(projectile.Rect, projectile.Collision, projectile.Speed, useRight: projectile.Owner.IsPlayer1));   
+                        else
+                            collisions.Add(new Collision(projectile.Rect, 20, projectile.Speed, useRight: projectile.Owner.IsPlayer1));
+                        
                         if (projectile.DestroyOnHit)
                         {
                             projectile.IsActive = false;

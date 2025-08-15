@@ -8,7 +8,7 @@ namespace GalagaFighter.Models.Players
     {
         public int Health { get;  set; }
         public int MaxBullets { get; private set; }
-        public float FireRateMultiplier { get; private set; }
+        public float FireRateMultiplier => activeEffects.Select(x => x.FireRateMultiplier).Aggregate((a, b) => a * b);
         private const int baseBulletCapacity = 8;
 
         private Player _player;
@@ -19,17 +19,13 @@ namespace GalagaFighter.Models.Players
         {
             Health = 100;
             MaxBullets = baseBulletCapacity;
-            FireRateMultiplier = 1;
         }
 
         public PlayerStats(Player player)
         {
             Health = 100;
             MaxBullets = baseBulletCapacity;
-            FireRateMultiplier = 1;
-            // Always add default shooting effect
             activeEffects.Add(new DefaultShootEffect(player));
-
             _player = player;
         }
 
@@ -91,12 +87,6 @@ namespace GalagaFighter.Models.Players
         public void TakeDamage(int damage)
         {
             Health -= damage;
-        }
-
-        // Methods for PowerUpEffects to use
-        public void ModifyFireRate(float multiplier)
-        {
-            FireRateMultiplier *= multiplier;
         }
 
         public void AddBullets(int amount)

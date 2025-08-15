@@ -7,7 +7,7 @@ namespace GalagaFighter.Models.Effects
 {
     public class MudSplatEffect : PlayerEffect
     {
-        protected override float Duration => 10.0f;
+        protected override float Duration => 5f;
         public override string IconPath => "Sprites/Effects/mudsplaticon.png";
 
         private int _frame = 0;

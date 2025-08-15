@@ -18,6 +18,8 @@ namespace SpaceTest.Models.Projectiles
             sprite = SpriteGenerator.CreateProjectileSprite(ProjectileType.Wall, (int)rect.Width, (int)rect.Height);
             DestroyOnHit = false;
             BlocksMovement = true;
+
+            Speed = new Vector2(speed.X * 10, 0f);
         }
 
         private float alpha = 1.0f;

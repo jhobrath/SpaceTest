@@ -15,21 +15,26 @@ namespace GalagaFighter.Models.Effects
 {
     public abstract class ProjectileEffect : PlayerEffect
     {
+
+
         public ProjectileEffect(Player player) : base(player)
         {
         }
 
         protected virtual int ProjectileWidth { get; } = 30;
         protected virtual int ProjectileHeight { get; } = 15;
-        protected virtual bool OneTimeUse { get; } = false;
+        protected virtual int? TotalUses { get; } = null;
         protected virtual Vector2 SpawnOffset => new Vector2(0,0);
         protected virtual float? OnHitMaxRemainingTime => null;
         protected virtual SpriteWrapper Texture => null;
 
         protected abstract Projectile Spawn(Rectangle rect, Vector2 speed);
 
+        private int _totalUses = 0;
+        
         public override void OnShoot(Game game)
         {
+            _totalUses++;
             var combat = Player.GetCombat();
             if (!combat.CanFire(Raylib.IsKeyDown(Player.GetShootKey()), Player.Stats))
                 return;
@@ -53,7 +58,7 @@ namespace GalagaFighter.Models.Effects
             game.AddGameObject(projectile);
 
             Game.PlayShootSound();
-            if (OneTimeUse) 
+            if (TotalUses.HasValue && TotalUses <= _totalUses)
                 IsActive = false;
         }
 

@@ -26,7 +26,7 @@ namespace GalagaFighter.Models.Effects
 
         protected override int ProjectileWidth => 60;
         protected override int ProjectileHeight => 40;
-        protected override bool OneTimeUse => false;
+        protected override bool TotalUses => false;
         protected override Projectile Spawn(Rectangle rect, Vector2 speed) => new NinjaProjectile(rect, speed, Player, this);
         protected override SpriteWrapper Texture => _spriteWrapper;
 

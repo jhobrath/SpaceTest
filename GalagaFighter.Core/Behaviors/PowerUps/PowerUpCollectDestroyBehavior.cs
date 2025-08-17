@@ -14,18 +14,23 @@ namespace GalagaFighter.Core.Behaviors.PowerUps
     public class PowerUpCollectDestroyBehavior : IPowerUpDestroyBehavior
     {
         private readonly IObjectService _objectService;
-        private readonly GameObject _player;
+        private readonly Player _player;
 
         public PowerUpCollectDestroyBehavior(IObjectService objectService, Projectile projectile)
         {
             _objectService = objectService;
-            _player = _objectService.GetOwner(projectile);
+            _player = (Player)_objectService.GetOwner(projectile);
         }
 
         public void Apply(PowerUp powerUp)
         {
             if (Math.Abs(_player.Center.X - powerUp.Center.X) < 50)
+            {
                 powerUp.IsActive = false;
+
+                foreach (var effect in powerUp.Effects)
+                    _player.AddEffect(effect);
+            }
         }
     }
 }

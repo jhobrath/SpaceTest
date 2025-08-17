@@ -10,6 +10,6 @@ namespace GalagaFighter.Core.Behaviors.Players.Interfaces
 {
     public interface IPlayerInputBehavior
     {
-        PlayerInputUpdate Apply(PlayerInputUpdate inputUpdate);
+        PlayerInputUpdate Apply();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Behaviors.PowerUps.Interfaces;
 using GalagaFighter.Core.Models.Collisions;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.PowerUps;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;

@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
 using GalagaFighter.Core.Behaviors.Players.Updates;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.PowerUps;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;

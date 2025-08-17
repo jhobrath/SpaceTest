@@ -144,8 +144,8 @@ namespace GalagaFighter.Core
 
             if (Raylib.IsKeyPressed(KeyboardKey.Space))
             {
-                InitializePlayers();
                 _objectService.Reset();
+                InitializePlayers();
             }
         }
 

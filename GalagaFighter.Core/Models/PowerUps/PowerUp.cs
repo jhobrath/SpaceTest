@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Behaviors.PowerUps;
 using GalagaFighter.Core.Behaviors.PowerUps.Interfaces;
+using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
@@ -14,6 +15,8 @@ namespace GalagaFighter.Core.Models.PowerUps
 {
     public abstract class PowerUp : GameObject
     {
+        public virtual List<PlayerEffect> Effects { get; } = [];
+
         protected IPowerUpMovementBehavior? MovementBehavior { get; set; }
         protected IPowerUpDestroyBehavior? DestroyBehavior { get; set; }
         protected IPowerUpCollisionBehavior? CollisionBehavior { get; set; }

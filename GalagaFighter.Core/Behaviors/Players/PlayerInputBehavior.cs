@@ -37,8 +37,10 @@ namespace GalagaFighter.Core.Behaviors.Players
             _mappings = mappings;   
         }
 
-        public PlayerInputUpdate Apply(PlayerInputUpdate update)
+        public PlayerInputUpdate Apply()
         {
+            var update = new PlayerInputUpdate();
+
             update.Left = IsMovingLeft();
             update.Right = IsMovingRight();
             update.Shoot = IsShooting();

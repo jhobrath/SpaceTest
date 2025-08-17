@@ -8,7 +8,7 @@ using System.Numerics;
 
 namespace GalagaFigther.Models.Effects
 {
-    public class MagnetShotEffect : PlayerEffect
+    public class MagnetShotEffect : ProjectileEffect
     {
         private Vector2 _attractPosition;
         public override bool DisableShooting => true;
@@ -111,8 +111,11 @@ namespace GalagaFigther.Models.Effects
                     }
                 }
             }
+        }
 
-            base.OnShoot(game);
+        protected override Projectile Spawn(Rectangle rect, Vector2 speed)
+        {
+            return null;
         }
     }
 }

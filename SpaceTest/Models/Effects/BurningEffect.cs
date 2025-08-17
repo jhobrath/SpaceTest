@@ -10,9 +10,7 @@ namespace GalagaFighter.Models.Effects
 
         protected override float Duration => 2.0f;
         public override bool AllowSelfStacking => false;
-
         public override string IconPath => "Sprites/Effects/burning.png";
-
         public override float FireRateMultiplier => .4f;
 
         public BurningEffect(Player player)

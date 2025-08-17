@@ -1,0 +1,81 @@
+﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
+using GalagaFighter.Core.Behaviors.Players.Updates;
+using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
+using Raylib_cs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GalagaFighter.Core.Behaviors.Players
+{
+    public class DefaultShootingBehavior : IPlayerShootingBehavior
+    {
+        private float _fireRateTimer = 0f;
+        private bool _lastGunLeft = false;
+
+
+        protected virtual Vector2 SpawnOffset => new Vector2(-10, 30);
+        protected virtual float EffectiveFireRate => 1.2f*(float)Math.Pow(0.8f, 5);
+
+        public PlayerShootingUpdate Apply(Player player, PlayerInputUpdate inputUpdate, PlayerMovementUpdate movementUpdate, PlayerShootingUpdate shootingUpdate)
+        {
+            _fireRateTimer += Raylib.GetFrameTime();
+
+            var fireRate = player.Stats.FireRate * EffectiveFireRate;
+            if (!inputUpdate.Shoot || _fireRateTimer < fireRate)
+                return shootingUpdate;
+
+            _fireRateTimer = 0;
+
+            var spawnSize = GetSpawnSize(player);
+            var spawnSpeed = GetSpawnSpeed(player, movementUpdate);
+            var spawnPosition = GetSpawnPosition(player, spawnSize);
+            var projectile = Spawn(spawnPosition, spawnSize, spawnSpeed);
+
+            if(projectile != null)
+                shootingUpdate.Projectiles.Add(projectile);
+
+            return shootingUpdate;
+        }
+
+        protected virtual Vector2 GetSpawnPosition(Player player, Vector2 spawnSize)
+        {
+            var playerWidth = player.Rect.Width * player.Display.Size;
+            var playerHeight = player.Rect.Height * player.Display.Size;
+            var spawnX = player.IsPlayer1 ? player.Rect.X + playerWidth : player.Rect.X;
+            var spawnY = player.Rect.Y + playerHeight / 2;
+            spawnX += SpawnOffset.X * (player.IsPlayer1 ? 1 : -1);
+            spawnY += SpawnOffset.Y * (_lastGunLeft ? 1 : -1);
+            
+            //Correct for initial size
+            spawnX += player.IsPlayer1 ? 0 : -spawnSize.X;
+            spawnY += -(spawnSize.Y / 2);
+
+            var position = new Vector2(spawnX, spawnY);
+            return position;
+        }
+
+        protected virtual Vector2 GetSpawnSpeed(Player player, PlayerMovementUpdate movementUpdate)
+        {
+            var projectileSpeed = NormalProjectile.BaseSpeed;
+            var playerVerticalSpeed = ((movementUpdate.To.Y - movementUpdate.From.Y)/Raylib.GetFrameTime())/3;
+            var playerHorizontalSpeed = 0f;
+
+            return new Vector2(projectileSpeed.X*(player.IsPlayer1 ? 1 : -1) + playerHorizontalSpeed, projectileSpeed.Y + playerVerticalSpeed);
+        }
+
+        protected virtual Vector2 GetSpawnSize(Player player)
+        {
+            return NormalProjectile.BaseSize;
+        }
+
+        protected virtual Projectile Spawn(Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        {
+            return new NormalProjectile(initialPosition, initialSize, initialSpeed);
+        }
+    }
+}

@@ -16,6 +16,8 @@ namespace GalagaFighter.Models.Effects
         private static Random _random = new Random();
         private Vector2 _positionCenter;
 
+        public override bool AllowSelfStacking => base.AllowSelfStacking;
+
         public MudSplatEffect(Player player, Vector2 positionCenter)
             : base(player)
         {

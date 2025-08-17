@@ -58,11 +58,6 @@ namespace GalagaFighter.Models
                 
                 if (_animationTimer >= FrameDuration)
                 {
-                    if (FrameDuration == .667f)
-                    {
-                        var s = "";
-                    }
-
                     _animationTimer -= FrameDuration;
                     CurrentFrame = (CurrentFrame + 1) % FrameCount;
                 }

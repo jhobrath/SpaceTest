@@ -28,7 +28,6 @@ namespace GalagaFighter
             int monitorHeight = Raylib.GetMonitorHeight(0);
             
             Raylib.InitWindow(monitorWidth, monitorHeight, "Galaga Fighter");
-            //Raylib.ToggleFullscreen();
             Raylib.SetTargetFPS(60);
         }
 

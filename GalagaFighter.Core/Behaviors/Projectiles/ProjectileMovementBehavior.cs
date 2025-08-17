@@ -1,0 +1,23 @@
+﻿using GalagaFighter.Core.Behaviors.Projectiles.Interfaces;
+using GalagaFighter.Core.Behaviors.Projectiles.Updates;
+using GalagaFighter.Core.Models.Projectiles;
+using Raylib_cs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GalagaFighter.Core.Behaviors.Projectiles
+{
+    public class ProjectileMovementBehavior : IProjectileMovementBehavior
+    {
+        public void Apply(Projectile projectile)
+        {
+            var frameTime = Raylib.GetFrameTime();
+            projectile.Rect.X += projectile.Speed.X * frameTime;
+            projectile.Rect.Y += projectile.Speed.Y * frameTime;
+        }
+    }
+}

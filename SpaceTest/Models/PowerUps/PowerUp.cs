@@ -44,7 +44,7 @@ namespace GalagaFighter.Models.PowerUps
                 Rect.Width *= (1 - 2*frameTime);
                 Rect.Height *= (1 - 2*frameTime);
 
-                if (Math.Abs(_owner.Rect.X - Rect.X) < 50f)
+                if (Math.Abs(_owner.Rect.X - Rect.X) < 50f || Rect.Width < 50f)
                 {
                     var effect = CreateEffect(_owner);
                     if (effect != null)

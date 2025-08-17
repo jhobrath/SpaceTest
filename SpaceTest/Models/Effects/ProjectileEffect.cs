@@ -38,8 +38,7 @@ namespace GalagaFighter.Models.Effects
             if (!combat.CanFire(Raylib.IsKeyDown(Player.GetShootKey()), Player.Stats))
                 return;
             combat.ResetFireTimer();
-
-
+            
             if (Player.Stats.HasEffect<MagnetShotEffect>())
                 return;
 
@@ -56,9 +55,12 @@ namespace GalagaFighter.Models.Effects
             var rect = new Rectangle(spawnPoint.X, spawnPoint.Y, ProjectileWidth * scaleFactor, ProjectileHeight * scaleFactor);
             var speed = new Vector2(combat.GetProjectileSpeed(), Math.Min(3, Math.Max(-3, Player.GetMovement().Speed * .3333f)));
             var projectile = Spawn(rect, speed);
-            game.AddGameObject(projectile);
+            if (projectile != null)
+            {
+                game.AddGameObject(projectile);
+                Game.PlayShootSound();
+            }
 
-            Game.PlayShootSound();
             if (TotalUses.HasValue && _totalUses >= TotalUses)
                 IsActive = false;
         }

@@ -11,17 +11,18 @@ namespace GalagaFighter.Models.Players
 {
     public class Player : GameObject
     {
-        private readonly KeyboardKey upKey;
-        private readonly KeyboardKey downKey;
-        private readonly KeyboardKey shootKey;
         public readonly bool IsPlayer1;
-        private readonly Texture2D shipSprite;
-        private readonly float scaleFactor;
-
-        private readonly PlayerMovement movement;
-        private readonly PlayerRenderer renderer;
         public PlayerStats Stats;
-        private readonly PlayerCombat combat;
+
+        private readonly KeyboardKey _upKey;
+        private readonly KeyboardKey _downKey;
+        private readonly KeyboardKey _shootKey;
+        private readonly Texture2D _shipSprite;
+        private readonly float _scaleFactor;
+
+        private readonly PlayerMovement _movement;
+        private readonly PlayerRenderer _renderer;
+        private readonly PlayerCombat _combat;
 
         private static Random _random = new Random();
 
@@ -37,23 +38,23 @@ namespace GalagaFighter.Models.Players
         public Player(Rectangle rect, float fireRate, KeyboardKey up, KeyboardKey down, KeyboardKey shoot, bool isPlayer1, float scale) 
             : base(rect)
         {
-            this.IsPlayer1 = isPlayer1;
-            this.shootKey = shoot;
-            this.scaleFactor = scale;
-            this.upKey = up;
-            this.downKey = down;
+            IsPlayer1 = isPlayer1;
+            _shootKey = shoot;
+            _scaleFactor = scale;
+            _upKey = up;
+            _downKey = down;
 
             // Load sprite
-            shipSprite = TextureLibrary.Get(_spritePath);
+            _shipSprite = TextureLibrary.Get(_spritePath);
 
             // Initialize components
             float baseSpeed = 20f * scale;
             float projectileSpeed = 17f * scale;
             float effectiveFireRate = fireRate * (float)Math.Pow(0.8f, 5);
 
-            movement = new PlayerMovement(baseSpeed, up, down);
-            renderer = new PlayerRenderer(shipSprite, isPlayer1, scale);
-            combat = new PlayerCombat(isPlayer1, projectileSpeed, scale, effectiveFireRate);
+            _movement = new PlayerMovement(baseSpeed, up, down);
+            _renderer = new PlayerRenderer(_shipSprite, isPlayer1, scale);
+            _combat = new PlayerCombat(isPlayer1, projectileSpeed, scale, effectiveFireRate);
 
             _statsGroups.Add(new PlayerStats(this));
             _statsGroups.Add(new PlayerStats(this));
@@ -74,7 +75,7 @@ namespace GalagaFighter.Models.Players
             }
 
             float frameTime = Raylib.GetFrameTime();
-            combat.UpdateTimer(frameTime);
+            _combat.UpdateTimer(frameTime);
             Stats.UpdateEffects(frameTime);
 
             // Aggregate all active effects' SpeedMultiplier
@@ -94,7 +95,7 @@ namespace GalagaFighter.Models.Players
                 speedMultiplier *= .3f;
             }
 
-            Rect = movement.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
+            Rect = _movement.HandleMovement(Rect, ref UpHeldDuration, ref DownHeldDuration, 
                 speedMultiplier, frameTime, game.GetGameObjects(), this);
             
             HandleShooting(game);
@@ -124,7 +125,7 @@ namespace GalagaFighter.Models.Players
                 var icons = effects.Where(e => !(e is DefaultShootEffect) && !(e is FireRateEffect))
                     .Select(x => x.IconPath).ToList();
 
-                var fireRateCount = Math.Max(1, Math.Min(8, GetFireRateIndex(stats.FireRateMultiplier)));
+                var fireRateCount = Math.Max(1, Math.Min(8, effects.OfType<FireRateEffect>().Count()));
                 icons.Insert(0, $"Sprites/Effects/firerate{fireRateCount}.png");
 
                 var rows = (int)Math.Ceiling(icons.Count / 6f);
@@ -223,7 +224,7 @@ namespace GalagaFighter.Models.Players
 
         private void HandleShooting(Game game)
         {
-            if (Raylib.IsKeyDown(shootKey))
+            if (Raylib.IsKeyDown(_shootKey))
             {
                 foreach (var effect in Stats.GetActiveEffects())
                 {
@@ -233,15 +234,15 @@ namespace GalagaFighter.Models.Players
         }
 
         // Helper methods for effects to access internals
-        public PlayerCombat GetCombat() => combat;
-        public PlayerMovement GetMovement() => movement;
-        public float GetScaleFactor() => scaleFactor;
-        public KeyboardKey GetShootKey() => shootKey;
+        public PlayerCombat GetCombat() => _combat;
+        public PlayerMovement GetMovement() => _movement;
+        public float GetScaleFactor() => _scaleFactor;
+        public KeyboardKey GetShootKey() => _shootKey;
         public bool ToggleEngine() { _useLeftEngine = !_useLeftEngine; return _useLeftEngine; }
 
         public override void Draw()
         {
-            bool isMoving = Raylib.IsKeyDown(upKey) || Raylib.IsKeyDown(downKey);
+            bool isMoving = Raylib.IsKeyDown(_upKey) || Raylib.IsKeyDown(_downKey);
 
             var skew = 0f;
             if (UpHeldDuration > 0) skew = IsPlayer1 ? -.5f : .5f;
@@ -249,7 +250,7 @@ namespace GalagaFighter.Models.Players
 
             var playerRendering = new PlayerRendering
             {
-                Scale = Rect.Width / shipSprite.Width,
+                Scale = Rect.Width / _shipSprite.Width,
                 Color = Color.White,
                 Rotation = IsPlayer1 ? 90f : -90f,
                 Skew = skew,
@@ -261,7 +262,7 @@ namespace GalagaFighter.Models.Players
                 effect.ModifyPlayerRendering(playerRendering);
             }
 
-            renderer.DrawPlayer(Rect, playerRendering, isMoving);
+            _renderer.DrawPlayer(Rect, playerRendering, isMoving);
 
             foreach (var effect in Stats.GetActiveEffects())
             {
@@ -276,7 +277,6 @@ namespace GalagaFighter.Models.Players
         
         // Properties
         public int Health => Stats.Health;
-        public int MaxBullets => Stats.MaxBullets;
         public int GetActiveBulletCount(List<GameObject> gameObjects)
         {
             return gameObjects
@@ -352,11 +352,6 @@ namespace GalagaFighter.Models.Players
                     break;
                 }
             }
-        }
-
-        protected void CheckCollisionWithRotate(Rectangle rect1, float rotation1, Rectangle rect2, float rotation2)
-        {
-            //Implement here
         }
     }
 }

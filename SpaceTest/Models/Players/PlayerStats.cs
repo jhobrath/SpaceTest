@@ -6,46 +6,39 @@ namespace GalagaFighter.Models.Players
 {
     public class PlayerStats
     {
-        public int Health { get;  set; }
-        public int MaxBullets { get; private set; }
-        public float FireRateMultiplier => activeEffects.Select(x => x.FireRateMultiplier).Aggregate((a, b) => a * b);
-        private const int baseBulletCapacity = 8;
+        public int Health { get; set; }
+        public float FireRateMultiplier => _effects.Select(x => x.FireRateMultiplier).Aggregate((a,b) => a*b);
 
+        private readonly List<PlayerEffect> _effects = [];
         private Player _player;
 
-        private readonly List<PlayerEffect> activeEffects = new List<PlayerEffect>();
 
         public PlayerStats()
         {
             Health = 100;
-            MaxBullets = baseBulletCapacity;
         }
 
         public PlayerStats(Player player)
         {
             Health = 100;
-            MaxBullets = baseBulletCapacity;
-            activeEffects.Add(new DefaultShootEffect(player));
+            _effects.Add(new DefaultShootEffect(player));
             _player = player;
         }
 
         public void UpdateEffects(float frameTime)
         {
-            for (int i = activeEffects.Count - 1; i >= 0; i--)
+            for (int i = _effects.Count - 1; i >= 0; i--)
             {
-                var effect = activeEffects[i];
+                var effect = _effects[i];
                 effect.OnUpdate(frameTime);
                 if (effect.ShouldDeactivate())
                 {
                     effect.OnDeactivate();
-                    activeEffects.RemoveAt(i);
-                }
-            }
+                    _effects.RemoveAt(i);
 
-            if(activeEffects.All(x => x is not ProjectileEffect))
-            {
-                // Ensure there's always a default shooting effect
-                activeEffects.Add(new DefaultShootEffect(_player));
+                    if (_effects.All(x => x is not ProjectileEffect))
+                        _effects.Add(new DefaultShootEffect(_player));
+                }
             }
         }
 
@@ -53,35 +46,25 @@ namespace GalagaFighter.Models.Players
         {
             if (effect is ProjectileEffect)
             {
-                activeEffects.ForEach(x => x.OnDeactivate());
-                activeEffects.RemoveAll(x => x is ProjectileEffect);
+                _effects.ForEach(x => x.OnDeactivate());
+                _effects.RemoveAll(x => x is ProjectileEffect);
             }
 
             if(!effect.AllowSelfStacking)
             {
                 var effectType = effect.GetType().Name;
-                for(var i = activeEffects.Count-1;i>=0;i--)
+                for(var i = _effects.Count-1;i>=0;i--)
                 {
-                    if (activeEffects[i].GetType().Name == effectType)
+                    if (_effects[i].GetType().Name == effectType)
                     {
-                        activeEffects[i].OnDeactivate();
-                        activeEffects.RemoveAt(i);
+                        _effects[i].OnDeactivate();
+                        _effects.RemoveAt(i);
                     }
                 }
             }
 
-            activeEffects.Add(effect);
+            _effects.Add(effect);
             effect.OnActivate();
-        }
-
-        public int GetActiveEffectCount<T>() where T : PlayerEffect
-        {
-            return activeEffects.Count(e => e is T);
-        }
-
-        public T GetFirstEffect<T>() where T : PlayerEffect
-        {
-            return activeEffects.OfType<T>().FirstOrDefault();
         }
 
         public void TakeDamage(int damage)
@@ -89,17 +72,13 @@ namespace GalagaFighter.Models.Players
             Health -= damage;
         }
 
-        public void AddBullets(int amount)
-        {
-            MaxBullets += amount;
-        }
 
         // For effects to query if player is currently affected
         public bool HasEffect<T>() where T : PlayerEffect
         {
-            return activeEffects.Any(e => e is T);
+            return _effects.Any(e => e is T);
         }
 
-        public IEnumerable<PlayerEffect> GetActiveEffects() => activeEffects;
+        public IEnumerable<PlayerEffect> GetActiveEffects() => _effects;
     }
 }

@@ -23,18 +23,12 @@ namespace GalagaFighter.Core.Behaviors.Players
         public void Apply(Player player, Projectile projectile)
         {
             UpdatePlayer(player, projectile);
-            UpdateProjectile(projectile);
         }
 
         protected virtual void UpdatePlayer(Player player, Projectile projectile)
         {
             projectile.IsActive = false;
             player.Health -= projectile.Damage*player.Stats.Shield;
-        }
-
-        protected virtual void UpdateProjectile(Projectile projectile)
-        {
-            projectile.Collide();
         }
     }
 }

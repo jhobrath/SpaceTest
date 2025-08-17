@@ -10,9 +10,10 @@ namespace GalagaFighter.Core.Behaviors.PowerUps
 {
     public class PowerUpDestroyBehavior : IPowerUpDestroyBehavior
     {
-        void IPowerUpDestroyBehavior.Apply(PowerUp powerUp)
+        public void Apply(PowerUp powerUp)
         {
-            
+            if (powerUp.Rect.Y > Game.Height)
+                powerUp.IsActive = false;
         }
     }
 }

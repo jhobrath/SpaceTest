@@ -64,6 +64,7 @@ namespace GalagaFighter.Core.Services
             var powerUp = _powerUpTypes[powerUpTypeIndex](Game.Id, rect, speed);
             powerUp.SetMovementBehavior(new PowerUpMovementBehavior());
             powerUp.SetDestroyBehavior(new PowerUpDestroyBehavior());
+            powerUp.SetCollisionBehavior(new PowerUpCollisionBehavior(_objectService));
             return powerUp;
         }
     }

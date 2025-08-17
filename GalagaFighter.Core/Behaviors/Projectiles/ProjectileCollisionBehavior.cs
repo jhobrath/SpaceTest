@@ -3,6 +3,8 @@ using GalagaFighter.Core.Behaviors.Players.Updates;
 using GalagaFighter.Core.Behaviors.Projectiles.Interfaces;
 using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Collisions;
+using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.PowerUps;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
@@ -23,7 +25,7 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
             _objectService = objectService;
         }
 
-        public void Apply(Projectile projectile)
+        public virtual void Apply(Projectile projectile, Player player)
         {
             var initialPosition = GetInitialPosition(projectile);
             var initialSize = GetInitialSize(projectile);
@@ -35,6 +37,11 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
             projectile.IsActive = false;
          
             _objectService.AddGameObject(collision);
+        }
+
+        public void Apply(Projectile projectile, PowerUp powerUp)
+        {
+            projectile.IsActive = false;
         }
 
         protected virtual Vector2 GetInitialPosition(Projectile projectile)

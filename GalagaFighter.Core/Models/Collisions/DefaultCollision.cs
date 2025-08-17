@@ -12,7 +12,7 @@ namespace GalagaFighter.Core.Models.Collisions
     public class DefaultCollision : GameObject
     {
         private const int _frameCount = 38;
-        private const float _frameLength = .04f;
+        private const float _frameLength = .08f;
         private const string _texture = "Sprites/collision.png";
         private const int _frameSkip = 4;
 
@@ -20,8 +20,8 @@ namespace GalagaFighter.Core.Models.Collisions
 
         protected virtual float FrameLength => _frameLength;
         protected virtual int FrameCount => _frameCount;
-        protected virtual string Texture => _texture;
         protected virtual int FrameSkip => _frameSkip;
+        protected virtual string Texture => _texture;
 
         private float _frameTimer = 0f;
 
@@ -53,9 +53,10 @@ namespace GalagaFighter.Core.Models.Collisions
             else
                 _frameTimer += frameTime;
 
-            if (_frameTimer > FrameLength)
+            if (_frameTimer > FrameLength) { 
                 Sprite.CurrentFrame += FrameSkip;
-
+                _frameTimer = 0;
+            }
             if (Sprite.CurrentFrame >= Sprite.FrameCount - 1)
                 IsActive = false;
         }

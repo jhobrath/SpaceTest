@@ -16,6 +16,7 @@ namespace GalagaFighter.Core.Models.PowerUps
     {
         protected IPowerUpMovementBehavior? MovementBehavior { get; set; }
         protected IPowerUpDestroyBehavior? DestroyBehavior { get; set; }
+        protected IPowerUpCollisionBehavior? CollisionBehavior { get; set; }
 
         public PowerUp(Guid owner, string texture, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
             : base(owner, new SpriteWrapper(TextureService.Get(texture)), initialPosition, initialSize, initialSpeed)
@@ -30,6 +31,16 @@ namespace GalagaFighter.Core.Models.PowerUps
         public void SetDestroyBehavior(IPowerUpDestroyBehavior destroyBehavior)
         {
             DestroyBehavior = destroyBehavior;
+        }
+
+        public void SetCollisionBehavior(IPowerUpCollisionBehavior collisionBehavior)
+        {
+            CollisionBehavior = collisionBehavior;
+        }
+
+        public virtual void Collide(Projectile projectile)
+        {
+            CollisionBehavior?.Apply(this, projectile);
         }
 
         public override void Update(Game game)

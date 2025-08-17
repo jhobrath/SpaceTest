@@ -48,8 +48,8 @@ namespace GalagaFighter.Core
 
         public void Hurry(float? x = null, float? y = null)
         {
-            _speed.X *= x ?? 0f;
-            _speed.Y *= y ?? 0f;
+            _speed.X *= x ?? 1f;
+            _speed.Y *= y ?? 1f;
         }
 
         public void HurryTo(float? x = null, float? y = null)
@@ -57,6 +57,20 @@ namespace GalagaFighter.Core
             _speed.X = x ?? _speed.X;
             _speed.Y = y ?? _speed.Y;
         }
+
+        public void Scale(float? x = null, float? y = null)
+        {
+            _rect.Width *= x ?? 1f;
+            _rect.Height *= y ?? 1f;
+        }
+
+        public void ScaleTo(float? x = null, float? y = null)
+        {
+            _rect.Width = x ?? _rect.Width;
+            _rect.Height = y ?? _rect.Height;
+        }
+
+        public void SetOwner(Guid id) => _owner = id;
 
         public OrientedBoundingBox GetBoundingBox()
         {

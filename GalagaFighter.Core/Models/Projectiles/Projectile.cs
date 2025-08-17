@@ -2,6 +2,7 @@ using GalagaFighter.Core.Behaviors.Projectiles;
 using GalagaFighter.Core.Behaviors.Projectiles.Interfaces;
 using GalagaFighter.Core.Behaviors.Projectiles.Updates;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.PowerUps;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,14 @@ namespace GalagaFighter.Core.Models.Projectiles
         {
         }
 
-        public virtual void Collide()
+        public virtual void Collide(Player player)
         {
-            CollisionBehavior?.Apply(this);
+            CollisionBehavior?.Apply(this, player);
+        }
+
+        public virtual void Collide(PowerUp powerUp)
+        {
+            CollisionBehavior?.Apply(this, powerUp);
         }
 
         public override void Update(Game game)

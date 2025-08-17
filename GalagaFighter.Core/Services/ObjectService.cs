@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalagaFighter.Core.Models.Projectiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace GalagaFighter.Core.Services
         List<T> GetChildren<T>(Guid id) where T : GameObject;
         List<T> GetGameObjects<T>() where T : GameObject;
         List<GameObject> GetGameObjects();
+        GameObject GetOwner(Projectile projectile);
         void RemoveGameObject(Guid id);
         void RemoveGameObject(GameObject gameObject);
         void Reset();
@@ -68,6 +70,11 @@ namespace GalagaFighter.Core.Services
         public void Reset()
         {
             _gameObjects = [];
+        }
+
+        public GameObject GetOwner(Projectile gameObject)
+        {
+            return _gameObjects[gameObject.Owner];
         }
     }
 }

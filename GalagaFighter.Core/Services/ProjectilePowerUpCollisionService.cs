@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.PowerUps;
 using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 using System;
@@ -9,34 +10,37 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Services
 {
-    public interface IProjectileCollisionService
+    public interface IProjectilePowerUpCollisionService
     {
         void HandleCollisions();
     }
 
-    public class ProjectileCollisionService : IProjectileCollisionService
+    public class ProjectilePowerUpCollisionService : IProjectilePowerUpCollisionService
     {
         private readonly IObjectService _objectService;
 
-        public ProjectileCollisionService(IObjectService objectService)
+        public ProjectilePowerUpCollisionService(IObjectService objectService)
         {
             _objectService = objectService;
         }
 
         public void HandleCollisions()
         {
-            var players = _objectService.GetGameObjects<Player>();
             var projectiles = _objectService.GetGameObjects<Projectile>();
+            var powerUps = _objectService.GetGameObjects<PowerUp>();
 
             foreach(var projectile in projectiles)
             {
-                foreach(var player in players)
+                foreach(var powerUp in powerUps)
                 {
-                    if (projectile.Owner == player.Id)
+                    if (powerUp.Owner == projectile.Owner)
                         continue;
 
-                    if(Raylib.CheckCollisionRecs(player.Rect, projectile.Rect))
-                        player.Collide(projectile);
+                    if(Raylib.CheckCollisionRecs(projectile.Rect, powerUp.Rect))
+                    { 
+                        projectile.Collide(powerUp);
+                        powerUp.Collide(projectile);
+                    }
                 }
             }
         }

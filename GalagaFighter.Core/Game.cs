@@ -34,14 +34,16 @@ namespace GalagaFighter.Core
         private Player _player2;
         private static Random _random = new Random();
 
-        private readonly IProjectileCollisionService _projectileCollisionService;
+        private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
+        private readonly IProjectilePowerUpCollisionService _projectilePowerUpCollisionService;
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
 
         public Game()
         {
             _objectService = new ObjectService();
-            _projectileCollisionService = new ProjectileCollisionService(_objectService);
+            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService);
+            _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
             _powerUpService = new PowerUpService(_objectService);
 
             InitializeWindow();
@@ -119,7 +121,8 @@ namespace GalagaFighter.Core
 
         private void Update()
         {
-            _projectileCollisionService.HandleCollisions();
+            _playerProjectileCollisionService.HandleCollisions();
+            _projectilePowerUpCollisionService.HandleCollisions();
 
             HandleInput();
             UpdateGameObjects();

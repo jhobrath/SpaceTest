@@ -39,6 +39,9 @@ namespace GalagaFighter.Core.Behaviors.Players
             if(projectile != null)
                 shootingUpdate.Projectiles.Add(projectile);
 
+
+            _lastGunLeft = !_lastGunLeft;
+
             return shootingUpdate;
         }
 
@@ -61,7 +64,7 @@ namespace GalagaFighter.Core.Behaviors.Players
 
         protected virtual Vector2 GetSpawnSpeed(Player player, PlayerMovementUpdate movementUpdate)
         {
-            var projectileSpeed = NormalProjectile.BaseSpeed;
+            var projectileSpeed = DefaultProjectile.BaseSpeed;
             var playerVerticalSpeed = ((movementUpdate.To.Y - movementUpdate.From.Y)/Raylib.GetFrameTime())/3;
             var playerHorizontalSpeed = 0f;
 
@@ -70,12 +73,12 @@ namespace GalagaFighter.Core.Behaviors.Players
 
         protected virtual Vector2 GetSpawnSize(Player player)
         {
-            return NormalProjectile.BaseSize;
+            return DefaultProjectile.BaseSize;
         }
 
         protected virtual Projectile Spawn(Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            return new NormalProjectile(initialPosition, initialSize, initialSpeed);
+            return new DefaultProjectile(initialPosition, initialSize, initialSpeed);
         }
     }
 }

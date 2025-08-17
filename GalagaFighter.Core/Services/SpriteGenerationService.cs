@@ -2,9 +2,9 @@ using Raylib_cs;
 using System;
 using System.Numerics;
 
-namespace GalagaFighter
+namespace GalagaFighter.Core.Services
 {
-    public static class SpriteGenerator
+    public static class SpriteGenerationService
     {
         public static Texture2D CreatePlayerShip(bool isPlayer1, int width = 20, int height = 40)
         {

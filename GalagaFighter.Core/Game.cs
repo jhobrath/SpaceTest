@@ -1,7 +1,6 @@
 ﻿using GalagaFighter.Core.Behaviors;
 using GalagaFighter.Core.Models;
 using GalagaFighter;
-using GalagaFighter.Core;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GalagaFighter.Core.Behaviors.Players;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 
 namespace GalagaFighter.Core
 {
@@ -75,8 +75,8 @@ namespace GalagaFighter.Core
 
             var shipSize = new Vector2(shipWidth, shipHeight);
 
-            var sprite1 = new SpriteWrapper(TextureLibrary.Get("Sprites/Players/Player1.png"));
-            var sprite2 = new SpriteWrapper(TextureLibrary.Get("Sprites/Players/Player1.png"));
+            var sprite1 = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
+            var sprite2 = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
 
             var position1 = new Vector2(playerMargin, _height / 2 - shipHeight / 2);
             var position2 = new Vector2(_width - playerMargin - shipWidth, _height / 2 - shipHeight / 2);
@@ -110,7 +110,8 @@ namespace GalagaFighter.Core
         {
             HandleInput();
             UpdateGameObjects();
-            //SpawnPowerUps();
+
+            _gameObjects.AddRange(PowerUpService.SpawnPowerUps());
         }
 
         private void HandleInput()
@@ -155,38 +156,11 @@ namespace GalagaFighter.Core
             Raylib.ClearBackground(Color.Black);
 
             DrawGameObjects();
-            DrawUI();
+            UiService.DrawUi(_player1, _player2);
 
             Raylib.EndDrawing();
         }
 
-
-        private void DrawUI()
-        {
-            int healthTextSize = (int)(24 * _uniformScale);
-            int controlTextSize = (int)(20 * _uniformScale);
-            int winnerTextSize = (int)(50 * _uniformScale);
-            int statusTextSize = (int)(16 * _uniformScale);
-            int margin = (int)(15 * _uniformScale);
-
-            var player1Health = _player1.Health;
-            var player2Health = _player2.Health;    
-
-            // Health and bullet capacity display
-            Raylib.DrawText($"P1 Health: {player1Health}", margin, margin, healthTextSize, Color.White);
-            Raylib.DrawText($"P2 Health: {player2Health}", (int)_width - (int)(250 * _uniformScale), margin, healthTextSize, Color.White);
-
-            // Bullet capacity display
-            int bulletStatusY = margin + (int)(30 * _uniformScale);
-
-            // Winner display
-            if (_player1.Health <= 0 || _player2.Health <= 0)
-            {
-                string winner = _player1.Health > 0 ? "Player 1 Wins!" : "Player 2 Wins!";
-                Vector2 textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), winner, winnerTextSize, 1);
-                Raylib.DrawText(winner, (int)(_width / 2 - textSize.X / 2), (int)(_width / 2 - textSize.Y / 2), winnerTextSize, Color.Gold);
-            }
-        }
 
         public void AddGameObject(GameObject gameObject)
         {

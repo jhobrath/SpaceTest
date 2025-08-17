@@ -1,9 +1,9 @@
 ﻿using Raylib_cs;
 using System.Collections.Generic;
 
-namespace GalagaFighter.Core
+namespace GalagaFighter.Core.Services
 {
-    public static class TextureLibrary
+    public static class TextureService
     {
         public static Dictionary<string, Texture2D> _library = new Dictionary<string, Texture2D>();
 

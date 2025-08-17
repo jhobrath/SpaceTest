@@ -6,20 +6,53 @@ namespace GalagaFighter.Core
 {
     public abstract class GameObject
     {
-        public Rectangle Rect;
-        public float Rotation { get; set; } = 0f;
         public Vector2 Center => new Vector2(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f);
+        public Vector2 Position => Rect.Position;
 
-        public bool IsActive;
+        public Rectangle Rect => _rect;
+        public float Rotation { get; set; } = 0f;
+        public Vector2 Speed => _speed;
+        public Color Color { get; set; } = Color.White;
+        public SpriteWrapper Sprite { get; set; }
+        public bool IsActive { get; set; }
 
-        public GameObject(Rectangle rect)
+        private Vector2 _speed;
+        private Rectangle _rect;
+
+        public GameObject(SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            Rect = rect;
+            _rect = new Rectangle(initialPosition, initialSize);
+            _speed = initialSpeed;
+            Sprite = sprite;
             IsActive = true;
         }
 
         public abstract void Update(Game game);
         public abstract void Draw();
+
+        public void Move(float? x = null, float? y = null)
+        {
+            _rect.X += x ?? 0f;
+            _rect.Y += y ?? 0f;
+        }
+
+        public void MoveTo(float? x = null, float? y = null)
+        {
+            _rect.X = x ?? _rect.X;
+            _rect.Y = y ?? _rect.Y;
+        }
+
+        public void Hurry(float? x = null, float? y = null)
+        {
+            _speed.X *= x ?? 0f;
+            _speed.Y *= y ?? 0f;
+        }
+
+        public void HurryTo(float? x = null, float? y = null)
+        {
+            _speed.X = x ?? _speed.X;
+            _speed.Y = y ?? _speed.Y;
+        }
 
         public OrientedBoundingBox GetBoundingBox()
         {

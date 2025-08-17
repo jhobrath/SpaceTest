@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Core
+namespace GalagaFighter.Core.Services
 {
     public interface ICollisionService
     {

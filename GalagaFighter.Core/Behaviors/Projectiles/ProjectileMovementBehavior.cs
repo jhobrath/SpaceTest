@@ -16,8 +16,7 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
         public void Apply(Projectile projectile)
         {
             var frameTime = Raylib.GetFrameTime();
-            projectile.Rect.X += projectile.Speed.X * frameTime;
-            projectile.Rect.Y += projectile.Speed.Y * frameTime;
+            projectile.Move(projectile.Speed.X * frameTime, projectile.Speed.Y * frameTime);
         }
     }
 }

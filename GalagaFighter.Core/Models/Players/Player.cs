@@ -3,7 +3,9 @@ using GalagaFighter.Core.Behaviors.Players;
 using GalagaFighter.Core.Behaviors.Players.Interfaces;
 using GalagaFighter.Core.Behaviors.Players.Updates;
 using GalagaFighter.Core.Models.Projectiles;
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Players
 {
@@ -26,7 +28,7 @@ namespace GalagaFighter.Core.Models.Players
 
 
         public Player(IPlayerInputBehavior inputBehavior, PlayerDisplay display, bool isPlayer1)
-            : base(display.Rect)
+            : base(display.Sprite, display.Rect.Position, display.Rect.Size, new Vector2(0,0))
         {
             InputBehavior = inputBehavior;
             Display = display;
@@ -68,8 +70,7 @@ namespace GalagaFighter.Core.Models.Players
 
             Health -= collisions.DamageDealt * Stats.Shield;
 
-            Rect.Y = movement.To.Y;
-            Rect.X = movement.To.X;
+            MoveTo(movement.To.X, movement.To.Y);
         }
 
         public override void Draw()

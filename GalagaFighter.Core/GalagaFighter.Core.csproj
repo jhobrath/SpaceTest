@@ -205,4 +205,8 @@
     <PackageReference Include="Raylib-cs" Version="7.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Behaviors\PowerUps\Updates\" />
+  </ItemGroup>
+
 </Project>

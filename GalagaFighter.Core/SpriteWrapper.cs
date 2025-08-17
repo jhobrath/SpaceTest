@@ -1,4 +1,5 @@
 using GalagaFighter;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Numerics;
@@ -29,7 +30,7 @@ namespace GalagaFighter.Core
         public SpriteWrapper(string texturePath)
         {
             Mode = SpriteMode.StillImage;
-            Texture = TextureLibrary.Get(texturePath);
+            Texture = TextureService.Get(texturePath);
         }
 
         // For still image

@@ -4,6 +4,7 @@ using GalagaFighter.Core.Behaviors.Projectiles.Interfaces;
 using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Projectiles;
+using GalagaFighter.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,14 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
 {
     public class ProjectileCollisionBehavior : IProjectileCollisionBehavior
     {
-        public List<GameObject> Apply(Projectile projectile)
+        private IObjectService _objectService;
+
+        public ProjectileCollisionBehavior(IObjectService objectService)
+        {
+            _objectService = objectService;
+        }
+
+        public void Apply(Projectile projectile)
         {
             var initialPosition = GetInitialPosition(projectile);
             var initialSize = GetInitialSize(projectile);
@@ -23,9 +31,10 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
 
             initialPosition.Y -= initialSize.Y / 2;
 
-            var collision = new DefaultCollision(initialPosition, initialSize, initialVelocity);
-
-            return new List<GameObject> { collision };
+            var collision = new DefaultCollision(projectile.Id, initialPosition, initialSize, initialVelocity);
+            projectile.IsActive = false;
+         
+            _objectService.AddGameObject(collision);
         }
 
         protected virtual Vector2 GetInitialPosition(Projectile projectile)

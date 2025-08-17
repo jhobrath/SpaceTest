@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Behaviors.PowerUps;
 using GalagaFighter.Core.Behaviors.PowerUps.Interfaces;
+using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
@@ -13,18 +14,28 @@ namespace GalagaFighter.Core.Models.PowerUps
 {
     public abstract class PowerUp : GameObject
     {
-        protected virtual IPowerUpMovementBehavior MovementBehavior => new PowerUpMovementBehavior();
-        protected virtual IPowerUpDestroyBehavior DestroyBehavior => new PowerUpDestroyBehavior();
+        protected IPowerUpMovementBehavior? MovementBehavior { get; set; }
+        protected IPowerUpDestroyBehavior? DestroyBehavior { get; set; }
 
-        public PowerUp(string texture, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
-            : base(new SpriteWrapper(TextureService.Get(texture)), initialPosition, initialSize, initialSpeed)
+        public PowerUp(Guid owner, string texture, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+            : base(owner, new SpriteWrapper(TextureService.Get(texture)), initialPosition, initialSize, initialSpeed)
         {
+        }
+
+        public void SetMovementBehavior(IPowerUpMovementBehavior movementBehavior)
+        {
+            MovementBehavior = movementBehavior;
+        }
+
+        public void SetDestroyBehavior(IPowerUpDestroyBehavior destroyBehavior)
+        {
+            DestroyBehavior = destroyBehavior;
         }
 
         public override void Update(Game game)
         {
-            MovementBehavior.Apply(this);
-            DestroyBehavior.Apply(this);
+            MovementBehavior?.Apply(this);
+            DestroyBehavior?.Apply(this);
         }
 
         public override void Draw()

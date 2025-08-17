@@ -9,8 +9,8 @@ namespace GalagaFighter.Core.Models.PowerUps
 {
     public class FireRatePowerUp : PowerUp
     {
-        public FireRatePowerUp(Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
-            : base("Sprites/PowerUps/firerate.png", initialPosition, initialSize, initialSpeed)
+        public FireRatePowerUp(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
+            : base(owner, "Sprites/PowerUps/firerate.png", initialPosition, initialSize, initialSpeed)
         {
         }
     }

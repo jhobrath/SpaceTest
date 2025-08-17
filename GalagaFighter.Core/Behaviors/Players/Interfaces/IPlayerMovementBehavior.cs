@@ -10,6 +10,6 @@ namespace GalagaFighter.Core.Behaviors.Players.Interfaces
 {
     public interface IPlayerMovementBehavior
     {
-        PlayerMovementUpdate Apply(Player player, PlayerInputUpdate inputUpdate, PlayerMovementUpdate update);
+        PlayerMovementUpdate Apply(Player player, PlayerInputUpdate inputUpdate);
     }
 }

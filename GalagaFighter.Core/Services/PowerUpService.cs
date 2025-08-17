@@ -1,4 +1,6 @@
-﻿using GalagaFighter.Core.Models.PowerUps;
+﻿using GalagaFighter.Core.Behaviors.Players;
+using GalagaFighter.Core.Behaviors.PowerUps;
+using GalagaFighter.Core.Models.PowerUps;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -9,11 +11,23 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Services
 {
-    public static class PowerUpService
+    public interface IPowerUpService
     {
-        private readonly static List<Func<Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<Rectangle, Vector2, PowerUp>>
+        void Roll();
+    }
+
+    public class PowerUpService : IPowerUpService
+    {
+        private IObjectService _objectService;
+
+        public PowerUpService(IObjectService objectService)
         {
-            (r,f) => new FireRatePowerUp(r.Position, r.Size, f),
+            _objectService = objectService;
+        }
+
+        private readonly static List<Func<Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<Guid, Rectangle, Vector2, PowerUp>>
+        {
+            (o,r,f) => new FireRatePowerUp(o, r.Position, r.Size, f),
             //(r,f) => new IceShotPowerUp(r,f),
             //(r,f) => new WallPowerUp(r,f),
             //(r,f) => new NinjaPowerUp(r,f),
@@ -22,22 +36,20 @@ namespace GalagaFighter.Core.Services
             //(r,f) => new MudShotPowerUp(r,f)
         };
 
-        public static List<GameObject> SpawnPowerUps()
+        public void Roll()
         {
             var output = new List<GameObject>();
 
             if (Game.Random.Next(0, 60 * 5) != 1)
-                return output;
+                return;
 
             var powerUp = Create();
 
             if (powerUp != null)
-                output.Add(powerUp);
-
-            return output;
+                _objectService.AddGameObject(powerUp);
         }
 
-        public static PowerUp Create()
+        public PowerUp Create()
         {
             int powerUpTypeIndex = Game.Random.Next(0, _powerUpTypes.Count);
             int screenWidth = Raylib.GetScreenWidth();
@@ -49,7 +61,10 @@ namespace GalagaFighter.Core.Services
 
             var speed = new Vector2(0, 200f * uniformScale);
 
-            return _powerUpTypes[powerUpTypeIndex](rect, speed);
+            var powerUp = _powerUpTypes[powerUpTypeIndex](Game.Id, rect, speed);
+            powerUp.SetMovementBehavior(new PowerUpMovementBehavior());
+            powerUp.SetDestroyBehavior(new PowerUpDestroyBehavior());
+            return powerUp;
         }
     }
 }

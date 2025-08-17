@@ -14,23 +14,22 @@ namespace GalagaFighter.Core.Models.Players
         public float Health { get; set; } = 100f;
         public PlayerStats Stats { get; set; } = new PlayerStats();
         public PlayerDisplay Display { get; set; }
-        public IPlayerShootingBehavior ShootingBehavior { get; set; } = new DefaultShootingBehavior();
-        public IPlayerInputBehavior InputBehavior { get; set; }
-        public IPlayerMovementBehavior MovementBehavior { get; set; } = new DefaultMovementBehavior();
-        public IPlayerCollisionBehavior CollisionBehavior { get; set; } = new PlayerCollisionBehavior();
+
+        public IPlayerShootingBehavior? ShootingBehavior { get; set; } 
+        public IPlayerInputBehavior? InputBehavior { get; set; }
+        public IPlayerMovementBehavior? MovementBehavior { get; set; }
+        public IPlayerCollisionBehavior? CollisionBehavior { get; set; }
 
         public bool IsPlayer1 { get; private set; }
-        public List<Projectile> Projectiles { get; } = [];
         private List<Projectile> _collisions = [];
 
         private PlayerStats _baseStats;
         private PlayerDisplay _baseDisplay;
 
 
-        public Player(IPlayerInputBehavior inputBehavior, PlayerDisplay display, bool isPlayer1)
-            : base(display.Sprite, display.Rect.Position, display.Rect.Size, new Vector2(0,0))
+        public Player(Guid owner, PlayerDisplay display, bool isPlayer1)
+            : base(owner, display.Sprite, display.Rect.Position, display.Rect.Size, new Vector2(0,0))
         {
-            InputBehavior = inputBehavior;
             Display = display;
             IsPlayer1 = isPlayer1;
 
@@ -43,39 +42,30 @@ namespace GalagaFighter.Core.Models.Players
             _collisions = projectiles;
         }
 
+        public void Collide(Projectile projectile)
+        {
+            CollisionBehavior?.Apply(this, projectile);
+        }
+
         public override void Update(Game game)
         {
             //Always start with base stats/rendering
             Stats = new PlayerStats();
             Display = new PlayerDisplay(_baseDisplay.Sprite, _baseDisplay.Rect, _baseDisplay.Rotation);
 
-            var input = InputBehavior.Apply(new PlayerInputUpdate());
-            var movement = MovementBehavior.Apply(this, input, new PlayerMovementUpdate(this));
-            var shooting = ShootingBehavior.Apply(this, input, movement, new PlayerShootingUpdate());
-            var collisions = CollisionBehavior.Apply(this, new PlayerCollisionUpdate { Hits = _collisions });
-
-            Projectiles.RemoveAll(p => !p.IsActive);
-
-            foreach(var projectile in shooting.Projectiles)
-            {
-                Projectiles.Add(projectile);
-                game.AddGameObject(projectile);
-            }
-
-            foreach (var projectile in collisions.Destroy)
-                projectile.IsActive = false;
-
-            foreach (var obj in collisions.Create)
-                game.AddGameObject(obj);
-
-            Health -= collisions.DamageDealt * Stats.Shield;
-
-            MoveTo(movement.To.X, movement.To.Y);
+            var input = InputBehavior?.Apply(new PlayerInputUpdate());
+            var movement = MovementBehavior?.Apply(this, input);
+            ShootingBehavior?.Apply(this, input, movement);
         }
 
         public override void Draw()
         {
             Display.Sprite.Draw(Center, Display.Rotation, Rect.Width * Display.Size, Rect.Height * Display.Size, Display.Color);
         }
+
+        public void SetMovementBehavior(PlayerMovementBehavior movementBehavior) => MovementBehavior = movementBehavior;
+        public void SetCollisionBehavior(PlayerCollisionBehavior collisionBehavior) => CollisionBehavior = collisionBehavior;
+        public void SetShootingBehavior(PlayerShootingBehavior shootingBehavior) => ShootingBehavior = shootingBehavior;
+        public void SetInputBehavior(PlayerInputBehavior inputBehavior) => InputBehavior = inputBehavior;
     }
 }

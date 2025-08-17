@@ -1,5 +1,6 @@
 using GalagaFighter.Core.Services;
 using Raylib_cs;
+using System;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Projectiles
@@ -11,8 +12,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override int Damage => 5;
 
-        public DefaultProjectile(Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
-            : base(GetSprite(initialSize), initialPosition, initialSize, initialSpeed)
+        public DefaultProjectile(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+            : base(owner, GetSprite(initialSize), initialPosition, initialSize, initialSpeed)
         {
         }
 

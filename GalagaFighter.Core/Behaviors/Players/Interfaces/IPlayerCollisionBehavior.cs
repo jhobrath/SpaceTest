@@ -11,6 +11,6 @@ namespace GalagaFighter.Core.Behaviors.Players.Interfaces
 {
     public interface IPlayerCollisionBehavior
     {
-        PlayerCollisionUpdate Apply(Player player, PlayerCollisionUpdate collisionUpdate);
+        void Apply(Player player, Projectile projectile);
     }
 }

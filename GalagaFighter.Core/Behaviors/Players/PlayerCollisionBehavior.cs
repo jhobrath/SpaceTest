@@ -2,6 +2,7 @@
 using GalagaFighter.Core.Behaviors.Players.Updates;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
+using GalagaFighter.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,28 +13,28 @@ namespace GalagaFighter.Core.Behaviors.Players
 {
     public class PlayerCollisionBehavior : IPlayerCollisionBehavior
     {
-        public PlayerCollisionUpdate Apply(Player player, PlayerCollisionUpdate collisionUpdate)
-        {
-            foreach (var projectile in collisionUpdate.Hits)
-            {
-                HandleHit(projectile, collisionUpdate);
-                CreateCollision(projectile, collisionUpdate);
-            }
+        private IObjectService _objectService;
 
-            return collisionUpdate;
+        public PlayerCollisionBehavior(IObjectService objectService)
+        {
+            _objectService = objectService;
         }
 
-        protected virtual void HandleHit(Projectile projectile, PlayerCollisionUpdate collisionUpdate)
+        public void Apply(Player player, Projectile projectile)
         {
-            collisionUpdate.Destroy.Add(projectile);
-            collisionUpdate.DamageDealt += projectile.Damage;
+            UpdatePlayer(player, projectile);
+            UpdateProjectile(projectile);
         }
 
-        protected virtual void CreateCollision(Projectile projectile, PlayerCollisionUpdate collisionUpdate)
+        protected virtual void UpdatePlayer(Player player, Projectile projectile)
         {
-            var collisions = projectile.Collide();
-            foreach (var collision in collisions)
-                collisionUpdate.Create.Add(collision);
+            projectile.IsActive = false;
+            player.Health -= projectile.Damage*player.Stats.Shield;
+        }
+
+        protected virtual void UpdateProjectile(Projectile projectile)
+        {
+            projectile.Collide();
         }
     }
 }

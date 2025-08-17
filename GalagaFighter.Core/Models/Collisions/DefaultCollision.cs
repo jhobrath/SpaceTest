@@ -25,8 +25,8 @@ namespace GalagaFighter.Core.Models.Collisions
 
         private float _frameTimer = 0f;
 
-        public DefaultCollision(Vector2 initialPosition, Vector2 initialSize, Vector2 initialVelocity)
-            : base(new SpriteWrapper(TextureService.Get(_texture), _frameCount, _frameLength), initialPosition, initialSize, initialVelocity)
+        public DefaultCollision(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialVelocity)
+            : base(owner, new SpriteWrapper(TextureService.Get(_texture), _frameCount, _frameLength), initialPosition, initialSize, initialVelocity)
         {
         }
 

@@ -1,7 +1,9 @@
 ﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
 using GalagaFighter.Core.Behaviors.Players.Updates;
+using GalagaFighter.Core.Behaviors.Projectiles;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -12,37 +14,38 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Behaviors.Players
 {
-    public class DefaultShootingBehavior : IPlayerShootingBehavior
+    public class PlayerShootingBehavior : IPlayerShootingBehavior
     {
         private float _fireRateTimer = 0f;
         private bool _lastGunLeft = false;
+
+        private IObjectService _objectService;
+
+        public PlayerShootingBehavior(IObjectService objectService)
+        {
+            _objectService = objectService;
+        }
 
 
         protected virtual Vector2 SpawnOffset => new Vector2(-10, 30);
         protected virtual float EffectiveFireRate => 1.2f*(float)Math.Pow(0.8f, 5);
 
-        public PlayerShootingUpdate Apply(Player player, PlayerInputUpdate inputUpdate, PlayerMovementUpdate movementUpdate, PlayerShootingUpdate shootingUpdate)
+        public void Apply(Player player, PlayerInputUpdate inputUpdate, PlayerMovementUpdate movementUpdate)
         {
             _fireRateTimer += Raylib.GetFrameTime();
 
             var fireRate = player.Stats.FireRate * EffectiveFireRate;
             if (!inputUpdate.Shoot || _fireRateTimer < fireRate)
-                return shootingUpdate;
+                return;
 
             _fireRateTimer = 0;
 
             var spawnSize = GetSpawnSize(player);
             var spawnSpeed = GetSpawnSpeed(player, movementUpdate);
             var spawnPosition = GetSpawnPosition(player, spawnSize);
-            var projectile = Spawn(spawnPosition, spawnSize, spawnSpeed);
-
-            if(projectile != null)
-                shootingUpdate.Projectiles.Add(projectile);
-
+            var projectile = Spawn(player.Id, spawnPosition, spawnSize, spawnSpeed);
 
             _lastGunLeft = !_lastGunLeft;
-
-            return shootingUpdate;
         }
 
         protected virtual Vector2 GetSpawnPosition(Player player, Vector2 spawnSize)
@@ -65,7 +68,7 @@ namespace GalagaFighter.Core.Behaviors.Players
         protected virtual Vector2 GetSpawnSpeed(Player player, PlayerMovementUpdate movementUpdate)
         {
             var projectileSpeed = DefaultProjectile.BaseSpeed;
-            var playerVerticalSpeed = ((movementUpdate.To.Y - movementUpdate.From.Y)/Raylib.GetFrameTime())/3;
+            var playerVerticalSpeed = ((movementUpdate.To.Y - movementUpdate.From.Y)/ Raylib.GetFrameTime()) / 3;
             var playerHorizontalSpeed = 0f;
 
             return new Vector2(projectileSpeed.X*(player.IsPlayer1 ? 1 : -1) + playerHorizontalSpeed, projectileSpeed.Y + playerVerticalSpeed);
@@ -76,9 +79,14 @@ namespace GalagaFighter.Core.Behaviors.Players
             return DefaultProjectile.BaseSize;
         }
 
-        protected virtual Projectile Spawn(Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        protected virtual Projectile Spawn(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            return new DefaultProjectile(initialPosition, initialSize, initialSpeed);
+            var projectile = new DefaultProjectile(owner, initialPosition, initialSize, initialSpeed);
+            projectile.SetMovementBehavior(new ProjectileMovementBehavior());
+            projectile.SetDestroyBehavior(new ProjectileDestroyBehavior());
+            projectile.SetCollisionBehavior(new ProjectileCollisionBehavior(_objectService));
+            _objectService.AddGameObject(projectile);
+            return projectile;
         }
     }
 }

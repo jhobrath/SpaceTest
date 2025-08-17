@@ -11,50 +11,62 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Behaviors.Players
 {
-    public class DefaultMovementBehavior : IPlayerMovementBehavior
+    public class PlayerMovementBehavior : IPlayerMovementBehavior
     {
-        private float _baseSpeed = 20f;
+        protected virtual float BaseSpeed => 20f;
 
-        public DefaultMovementBehavior()
+        public PlayerMovementBehavior()
         {
 
         }
 
-        public PlayerMovementUpdate Apply(Player player, PlayerInputUpdate inputUpdate, PlayerMovementUpdate update)
+        public PlayerMovementUpdate Apply(Player player, PlayerInputUpdate inputUpdate)
         {
-            var vec2 = update.To;
-            var speed = _baseSpeed * player.Stats.MovementSpeed * Game.UniformScale;
+            var update = new PlayerMovementUpdate(player);
 
-            if (inputUpdate.Left)
-            {
-                vec2.Y = update.From.Y - speed / (1+inputUpdate.Left.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
-            }
-            else if (inputUpdate.Right)
-            {
-                vec2.Y = update.From.Y + speed / (1 + inputUpdate.Right.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
-            }
+            var position = GetPosition(player, inputUpdate);
+            var rotation = GetRotation(player, position);
 
-            if (vec2.Y < Game.Margin)
-                vec2.Y = Game.Margin;
+            player.Display.Rotation = rotation;
+            player.MoveTo(position.X, position.Y);
 
-            var maxY = Game.Height - Game.Margin - player.Rect.Height;
-            if (vec2.Y > maxY)
-                vec2.Y = maxY;
-
-            update.To = vec2;
-
-            ApplyMovementRotation(player, update);
-
+            update.To = position;
             return update;
         }
 
-        //Does this belong here?
-        private void ApplyMovementRotation(Player player, PlayerMovementUpdate movement)
+        protected virtual Vector2 GetPosition(Player player, PlayerInputUpdate inputUpdate)
         {
-            if (movement.To.Y < movement.From.Y)
-                player.Display.Rotation -= 5f * (player.IsPlayer1 ? 1 : -1);
-            else if (movement.To.Y > movement.From.Y)
-                player.Display.Rotation += 5f * (player.IsPlayer1 ? 1 : -1);
+            var newPosition = player.Rect.Position;
+            var speed = BaseSpeed * player.Stats.MovementSpeed * Game.UniformScale;
+
+            if (inputUpdate.Left)
+            {
+                newPosition.Y = newPosition.Y - speed / (1 + inputUpdate.Left.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
+            }
+            else if (inputUpdate.Right)
+            {
+                newPosition.Y = newPosition.Y + speed / (1 + inputUpdate.Right.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
+            }
+
+            if (newPosition.Y < Game.Margin)
+                newPosition.Y = Game.Margin;
+
+            var maxY = Game.Height - Game.Margin - player.Rect.Height;
+            if (newPosition.Y > maxY)
+                newPosition.Y = maxY;
+
+            return newPosition;
+        }
+
+        protected virtual float GetRotation(Player player, Vector2 newPosition)
+        {
+            if (newPosition.Y < player.Rect.Y)
+                return player.Display.Rotation - 5f * (player.IsPlayer1 ? 1 : -1);
+            
+            if (newPosition.Y > player.Rect.Y)
+                return player.Display.Rotation + 5f * (player.IsPlayer1 ? 1 : -1);
+
+            return player.IsPlayer1 ? 90f : -90f;
         }
     }
 }

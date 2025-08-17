@@ -9,6 +9,8 @@ namespace GalagaFighter.Core
         public Vector2 Center => new Vector2(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f);
         public Vector2 Position => Rect.Position;
 
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Owner => _owner;
         public Rectangle Rect => _rect;
         public float Rotation { get; set; } = 0f;
         public Vector2 Speed => _speed;
@@ -18,9 +20,11 @@ namespace GalagaFighter.Core
 
         private Vector2 _speed;
         private Rectangle _rect;
+        private Guid _owner;
 
-        public GameObject(SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        public GameObject(Guid owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
+            _owner = owner;
             _rect = new Rectangle(initialPosition, initialSize);
             _speed = initialSpeed;
             Sprite = sprite;

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using GalagaFighter.Core.Behaviors.Players;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
+using System.Net.Http.Headers;
 
 namespace GalagaFighter.Core
 {
@@ -21,6 +22,8 @@ namespace GalagaFighter.Core
         public static float Height => _height;
         public static float Width => _width;
 
+        public static Guid Id => Guid.NewGuid();
+
         public static Random Random => _random;
 
         private static float _uniformScale;
@@ -29,18 +32,21 @@ namespace GalagaFighter.Core
 
         private Player _player1;
         private Player _player2;
-        private List<GameObject> _gameObjects;
         private static Random _random = new Random();
-        private readonly ICollisionService _collisionService;
+
+        private readonly IProjectileCollisionService _projectileCollisionService;
+        private readonly IPowerUpService _powerUpService;
+        private readonly IObjectService _objectService;
 
         public Game()
         {
-            _collisionService = new CollisionService();
+            _objectService = new ObjectService();
+            _projectileCollisionService = new ProjectileCollisionService(_objectService);
+            _powerUpService = new PowerUpService(_objectService);
 
             InitializeWindow();
             InitializeScale();
             InitializePlayers();
-            InitializeGameObjects();
         }
 
         private static void InitializeWindow()
@@ -70,9 +76,6 @@ namespace GalagaFighter.Core
             int shipHeight = (int)(120 * _uniformScale);
             int playerMargin = (int)(60 * _uniformScale);
 
-            var inputBehavior1 = new PlayerInputBehavior(new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D));
-            var inputBehavior2 = new PlayerInputBehavior(new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left));
-
             var shipSize = new Vector2(shipWidth, shipHeight);
 
             var sprite1 = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
@@ -84,15 +87,23 @@ namespace GalagaFighter.Core
             var display1 = new PlayerDisplay(sprite1, new Rectangle(position1.X, position1.Y, shipSize.X, shipSize.Y), 90f);
             var display2 = new PlayerDisplay(sprite2, new Rectangle(position2.X, position2.Y, shipSize.X, shipSize.Y), -90f);
 
-            _player1 = new Player(inputBehavior1, display1, true);
-            _player2 = new Player(inputBehavior2, display2, false);
-        }
+            var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D);
+            var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left);
 
-        private void InitializeGameObjects()
-        {
-            _gameObjects = new List<GameObject>();
-            _gameObjects.Add(_player1);
-            _gameObjects.Add(_player2);
+            _player1 = new Player(Id, display1, true);
+            _player2 = new Player(Id, display2, false);
+
+            _player1.SetMovementBehavior(new PlayerMovementBehavior());
+            _player1.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
+            _player1.SetInputBehavior(new PlayerInputBehavior(player1Mappings));
+            _player1.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
+            _objectService.AddGameObject(_player1);
+
+            _player2.SetMovementBehavior(new PlayerMovementBehavior());
+            _player2.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
+            _player2.SetInputBehavior(new PlayerInputBehavior(player2Mappings));
+            _player2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
+            _objectService.AddGameObject(_player2);
         }
 
         public void Run()
@@ -108,10 +119,12 @@ namespace GalagaFighter.Core
 
         private void Update()
         {
+            _projectileCollisionService.HandleCollisions();
+
             HandleInput();
             UpdateGameObjects();
 
-            _gameObjects.AddRange(PowerUpService.SpawnPowerUps());
+            _powerUpService.Roll();
         }
 
         private void HandleInput()
@@ -129,24 +142,19 @@ namespace GalagaFighter.Core
             if (Raylib.IsKeyPressed(KeyboardKey.Space))
             {
                 InitializePlayers();
-                InitializeGameObjects();
+                _objectService.Reset();
             }
         }
 
         private void UpdateGameObjects()
         {
-            var player1Collisions = _collisionService.GetProjectileCollisions(_player1, _player2.Projectiles);
-            var player2Collisions = _collisionService.GetProjectileCollisions(_player2, _player1.Projectiles);
-
-            _player1.SetCollisions(player1Collisions);
-            _player2.SetCollisions(player2Collisions);
-
-            for (int i = _gameObjects.Count - 1; i >= 0; i--)
+            var gameObjects = _objectService.GetGameObjects();
+            for (int i = gameObjects.Count - 1; i >= 0; i--)
             {
-                if (!_gameObjects[i].IsActive)
-                    _gameObjects.RemoveAt(i);
+                if (!gameObjects[i].IsActive)
+                    _objectService.RemoveGameObject(gameObjects[i]);
                 else
-                    _gameObjects[i].Update(this);
+                    gameObjects[i].Update(this);
             }
         }
 
@@ -161,18 +169,11 @@ namespace GalagaFighter.Core
             Raylib.EndDrawing();
         }
 
-
-        public void AddGameObject(GameObject gameObject)
-        {
-            _gameObjects.Add(gameObject);
-        }
-
         private void DrawGameObjects()
         {
-            foreach (var obj in _gameObjects)
-            {
-                obj.Draw();
-            }
+            var gameObjects = _objectService.GetGameObjects();
+            foreach (var gameObject in gameObjects)
+                gameObject.Draw();
         }
 
 

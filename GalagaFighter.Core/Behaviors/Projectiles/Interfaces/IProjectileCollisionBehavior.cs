@@ -9,6 +9,6 @@ namespace GalagaFighter.Core.Behaviors.Projectiles.Interfaces
 {
     public interface IProjectileCollisionBehavior
     {
-        List<GameObject> Apply(Projectile projectile);
+        void Apply(Projectile projectile);
     }
 }

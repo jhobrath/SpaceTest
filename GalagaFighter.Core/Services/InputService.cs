@@ -19,6 +19,7 @@ namespace GalagaFighter.Core.Services
         ButtonState GetShoot(Guid owner);
         ButtonState GetMoveLeft(Guid owner);
         ButtonState GetMoveRight(Guid owner);
+        ButtonState GetSwitch(Guid owner);
     }
 
     public class InputService : IInputService
@@ -27,6 +28,7 @@ namespace GalagaFighter.Core.Services
         private Dictionary<Guid, float> _movingLeftDuration = [];
         private Dictionary<Guid, float> _movingRightDuration = [];
         private Dictionary<Guid, float> _shootingDuration = [];
+        private Dictionary<Guid, float> _switchingDuration = [];
 
         public InputService()
         {
@@ -38,11 +40,14 @@ namespace GalagaFighter.Core.Services
             _movingLeftDuration.Add(owner, 0f);
             _movingRightDuration.Add(owner, 0f);
             _shootingDuration.Add(owner, 0f);
+            _switchingDuration.Add(owner, 0f);
         }
 
         public ButtonState GetMoveRight(Guid owner) => GetButton(_mappings[owner].MoveRight, _movingRightDuration[owner]);
         public ButtonState GetMoveLeft(Guid owner) => GetButton(_mappings[owner].MoveLeft, _movingLeftDuration[owner]);
         public ButtonState GetShoot(Guid owner) => GetButton(_mappings[owner].Shoot, _shootingDuration[owner]);
+        public ButtonState GetSwitch(Guid owner) => GetButton(_mappings[owner].Switch, _switchingDuration[owner]);
+
 
         public void Update()
         {
@@ -51,16 +56,26 @@ namespace GalagaFighter.Core.Services
                 UpdateMovingLeft(mapping.Key);
                 UpdateMovingRight(mapping.Key);
                 UpdateIsShooting(mapping.Key);
+                UpdateIsSwitching(mapping.Key);
             }
         }
 
         private ButtonState GetButton(KeyboardKey key, float duration)
         {
-            return new ButtonState
+            var frameTime = Raylib.GetFrameTime();
+            var state = new ButtonState
             {
                 HeldDuration = duration,
-                IsPressed = Raylib.IsKeyDown(key)
+                IsDown = Raylib.IsKeyDown(key),
+                IsPressed = Math.Abs(duration - frameTime) < .001
             };
+
+            if(state.IsDown && state.IsPressed)
+            {
+                var s = "";
+            }
+
+            return state;
         }
 
         public void UpdateMovingLeft(Guid owner)
@@ -100,6 +115,19 @@ namespace GalagaFighter.Core.Services
                 _shootingDuration[owner] = 0f;
             else
                 _shootingDuration[owner] += Raylib.GetFrameTime();
+        }
+
+        public void UpdateIsSwitching(Guid owner)
+        {
+            if (!_mappings.TryGetValue(owner, out KeyMappings? mappings))
+                return;
+
+            var isSwitching = Raylib.IsKeyDown(mappings.Switch);
+
+            if (!isSwitching)
+                _switchingDuration[owner] = 0f;
+            else
+                _switchingDuration[owner] += Raylib.GetFrameTime();
         }
     }
 }

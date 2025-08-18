@@ -13,6 +13,8 @@ namespace GalagaFighter.Core.Models.Effects
     public class WoodShotEffect : PlayerEffect
     {
         private readonly SpriteWrapper _sprite;
+        public override bool IsProjectile => true;
+
         private readonly IPlayerShootingBehavior? _shootingBehavior;
         public override IPlayerShootingBehavior? ShootingBehavior => _shootingBehavior;
 

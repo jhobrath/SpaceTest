@@ -17,12 +17,14 @@ namespace GalagaFighter.Core.Behaviors.Players
         public KeyboardKey MoveLeft { get; set; } = KeyboardKey.W;
         public KeyboardKey MoveRight { get; set; } = KeyboardKey.S;
         public KeyboardKey Shoot { get; set; } = KeyboardKey.D;
+        public KeyboardKey Switch { get; set; } = KeyboardKey.A;
 
-        public KeyMappings(KeyboardKey left, KeyboardKey right, KeyboardKey shoot)
+        public KeyMappings(KeyboardKey left, KeyboardKey right, KeyboardKey shoot, KeyboardKey switchButton)
         {
             MoveLeft = left;
             MoveRight = right;
             Shoot = shoot;
+            Switch = switchButton;
         }
     }
 
@@ -42,12 +44,14 @@ namespace GalagaFighter.Core.Behaviors.Players
             update.Left = IsMovingLeft(player.Id);
             update.Right = IsMovingRight(player.Id);
             update.Shoot = IsShooting(player.Id);
+            update.Switch = IsSwitching(player.Id);
 
             return update;
         }
 
         protected virtual ButtonState IsMovingLeft(Guid owner) => _inputService.GetMoveLeft(owner);
         protected virtual ButtonState IsMovingRight(Guid owner) => _inputService.GetMoveRight(owner);
-        protected virtual bool IsShooting(Guid owner) => _inputService.GetShoot(owner);
+        protected virtual ButtonState IsShooting(Guid owner) => _inputService.GetShoot(owner);
+        protected virtual ButtonState IsSwitching(Guid owner) => _inputService.GetSwitch(owner);
     }
 }

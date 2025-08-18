@@ -41,7 +41,7 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
             if (_heldDurationOffset == -1f)
                 _heldDurationOffset = shootState.HeldDuration;
 
-            if (!shootState.IsPressed)
+            if (!shootState.IsDown)
             { 
                 Release(projectile);
                 _heldDurationOffset = 0f;

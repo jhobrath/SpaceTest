@@ -14,6 +14,8 @@ namespace GalagaFighter.Core.Models.Effects
     public class IceShotEffect : PlayerEffect
     {
         private readonly SpriteWrapper _sprite;
+        public override bool IsProjectile => false;
+
         private readonly IPlayerShootingBehavior? _shootingBehavior;
         public override IPlayerShootingBehavior? ShootingBehavior => _shootingBehavior;
 

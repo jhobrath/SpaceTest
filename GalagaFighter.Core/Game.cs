@@ -12,6 +12,7 @@ using GalagaFighter.Core.Behaviors.Players;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using System.Net.Http.Headers;
+using GalagaFighter.Core.Models.Effects;
 
 namespace GalagaFighter.Core
 {
@@ -93,22 +94,27 @@ namespace GalagaFighter.Core
             var display1 = new PlayerDisplay(sprite1, new Rectangle(position1.X, position1.Y, shipSize.X, shipSize.Y), 90f);
             var display2 = new PlayerDisplay(sprite2, new Rectangle(position2.X, position2.Y, shipSize.X, shipSize.Y), -90f);
 
-            var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D);
-            var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left);
+            var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
+            var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left, KeyboardKey.Right);
 
             _player1 = new Player(Id, display1, true);
             _player2 = new Player(Id, display2, false);
 
-            _player1.SetMovementBehavior(new PlayerMovementBehavior());
-            _player1.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
-            _player1.SetInputBehavior(new PlayerInputBehavior(_inputService));
-            _player1.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
-            _objectService.AddGameObject(_player1);
+            var defaultShootEffect1 = new DefaultShootEffect();
+            defaultShootEffect1.SetMovementBehavior(new PlayerMovementBehavior());
+            defaultShootEffect1.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
+            defaultShootEffect1.SetInputBehavior(new PlayerInputBehavior(_inputService));
+            defaultShootEffect1.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
+            _player1.AddEffect(defaultShootEffect1);
 
-            _player2.SetMovementBehavior(new PlayerMovementBehavior());
-            _player2.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
-            _player2.SetInputBehavior(new PlayerInputBehavior(_inputService));
-            _player2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
+            var defaultShootEffect2 = new DefaultShootEffect();
+            defaultShootEffect2.SetMovementBehavior(new PlayerMovementBehavior());
+            defaultShootEffect2.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
+            defaultShootEffect2.SetInputBehavior(new PlayerInputBehavior(_inputService));
+            defaultShootEffect2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
+            _player2.AddEffect(defaultShootEffect2);
+            
+            _objectService.AddGameObject(_player1);
             _objectService.AddGameObject(_player2);
 
             _inputService.AddPlayer(_player1.Id, player1Mappings);

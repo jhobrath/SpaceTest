@@ -48,7 +48,7 @@ namespace GalagaFighter.Core.Behaviors.Players
             var projectile = new WoodProjectile(owner, initialPosition, initialSize, initialSpeed);
             var player = _objectService.GetById(owner);
             projectile.SetMovementBehavior(new WoodUnreleasedMovementBehavior(_objectService, _inputService, spawnOffset: player.Rect.Y - projectile.Rect.Y));
-            projectile.SetDestroyBehavior(new WoodShotDestroyBehavior());
+            projectile.SetDestroyBehavior(new ProjectileDestroyBehavior());
             projectile.SetCollisionBehavior(new ProjectileCollisionBehavior(_objectService));
 
             projectile.SetDrawPriority(-1);

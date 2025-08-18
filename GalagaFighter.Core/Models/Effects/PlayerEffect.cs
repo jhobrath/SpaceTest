@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Effects
 {
-    public class PlayerEffect
+    public abstract class PlayerEffect
     {
         public virtual float TimeDuration  => 0f;
         public virtual float BulletDuration => 0f;
+        public virtual bool IsProjectile { get; }
 
         public virtual void Apply(PlayerStats stats) { }
         public virtual void Apply(PlayerDisplay display) { }

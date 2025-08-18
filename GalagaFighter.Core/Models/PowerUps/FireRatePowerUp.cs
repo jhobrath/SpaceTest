@@ -18,7 +18,7 @@ namespace GalagaFighter.Core.Models.PowerUps
         {
         }
 
-        public override List<PlayerEffect> CreateEffects(IObjectService objectService)
+        public override List<PlayerEffect> CreateEffects(IObjectService objectService, IInputService inputService)
         {
             return [new FireRateEffect()];
         }

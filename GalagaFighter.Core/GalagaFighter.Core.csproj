@@ -142,7 +142,7 @@
     <EmbeddedResource Include="Sprites\Players\Ships.pdn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Players\WallShotShip.png">
+    <EmbeddedResource Include="Sprites\Players\WoodShotShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\beam.png">
@@ -193,7 +193,7 @@
     <EmbeddedResource Include="Sprites\Powerups\vanish.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Powerups\wall.png">
+    <EmbeddedResource Include="Sprites\Powerups\wood.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\wind.png">

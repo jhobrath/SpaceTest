@@ -41,6 +41,7 @@ namespace GalagaFighter.Core.Behaviors.Players
 
             if (inputUpdate.Left)
             {
+                player.HurryTo(y: speed);
                 newPosition.Y = newPosition.Y - speed / (1 + inputUpdate.Left.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
             }
             else if (inputUpdate.Right)
@@ -54,6 +55,8 @@ namespace GalagaFighter.Core.Behaviors.Players
             var maxY = Game.Height - Game.Margin - player.Rect.Height;
             if (newPosition.Y > maxY)
                 newPosition.Y = maxY;
+
+            player.HurryTo(y: newPosition.Y - player.Rect.Y);
 
             return newPosition;
         }

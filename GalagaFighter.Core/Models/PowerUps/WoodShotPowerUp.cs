@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.PowerUps
 {
-    public class IceShotPowerUp : PowerUp
+    public class WoodShotPowerUp : PowerUp
     {
-        public IceShotPowerUp(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
-            : base(owner, "Sprites/PowerUps/ice.png", initialPosition, initialSize, initialSpeed)
+        public WoodShotPowerUp(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+           : base(owner, "Sprites/PowerUps/wood.png", initialPosition, initialSize, initialSpeed)
         {
         }
 
         public override List<PlayerEffect> CreateEffects(IObjectService objectService, IInputService inputService)
         {
             return [
-                new IceShotEffect(objectService)
+                new WoodShotEffect(objectService, inputService)
             ];
         }
     }

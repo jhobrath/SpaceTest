@@ -18,7 +18,7 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
 {
     public class ProjectileCollisionBehavior : IProjectileCollisionBehavior
     {
-        private IObjectService _objectService;
+        protected readonly IObjectService _objectService;
 
         public ProjectileCollisionBehavior(IObjectService objectService)
         {
@@ -47,6 +47,7 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
         public void Apply(Projectile projectile, PowerUp powerUp)
         {
             projectile.IsActive = false;
+            projectile.EffectsApplied = true;
         }
 
         protected virtual Vector2 GetInitialPosition(Projectile projectile)

@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Behaviors.Projectiles
 {
-    public class IceShotCollisionBehavior : ProjectileCollisionBehavior
+    public class IceCollisionBehavior : ProjectileCollisionBehavior
     {
-        public IceShotCollisionBehavior(IObjectService objectService) : base(objectService)
+        public IceCollisionBehavior(IObjectService objectService) : base(objectService)
         {
         }
 

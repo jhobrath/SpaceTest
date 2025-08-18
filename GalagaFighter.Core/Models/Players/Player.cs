@@ -27,7 +27,6 @@ namespace GalagaFighter.Core.Models.Players
         public bool IsPlayer1 { get; private set; }
         public List<PlayerEffect> Effects { get; set; }
 
-
         public Player(Guid owner, PlayerDisplay display, bool isPlayer1)
             : base(owner, display.Sprite, display.Rect.Position, display.Rect.Size, new Vector2(0,0))
         {
@@ -66,7 +65,7 @@ namespace GalagaFighter.Core.Models.Players
 
             Stats = stats;
 
-            var input = inputBehavior?.Apply();
+            var input = inputBehavior?.Apply(this);
             var movement = movementBehavior?.Apply(this, input);
             shootingBehavior?.Apply(this, input, movement);
 

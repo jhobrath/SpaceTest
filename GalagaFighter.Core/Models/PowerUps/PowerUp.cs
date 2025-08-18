@@ -57,6 +57,6 @@ namespace GalagaFighter.Core.Models.PowerUps
             Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
         }
 
-        public abstract List<PlayerEffect> CreateEffects(IObjectService objectService);
+        public abstract List<PlayerEffect> CreateEffects(IObjectService objectService, IInputService inputService);
     }
 }

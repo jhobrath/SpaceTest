@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
 using GalagaFighter.Core.Behaviors.Players.Updates;
 using GalagaFighter.Core.Models;
+using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -26,74 +28,26 @@ namespace GalagaFighter.Core.Behaviors.Players
 
     public class PlayerInputBehavior : IPlayerInputBehavior
     {
-        private KeyMappings _mappings;
+        private readonly IInputService _inputService;
 
-        private float _movingLeftDuration = 0f;
-        private float _movingRightDuration = 0f;
-        private float _shootingDuration = 0f;
-
-        public PlayerInputBehavior(KeyMappings mappings)
+        public PlayerInputBehavior(IInputService inputService)
         {
-            _mappings = mappings;   
+            _inputService = inputService;
         }
 
-        public PlayerInputUpdate Apply()
+        public PlayerInputUpdate Apply(Player player)
         {
             var update = new PlayerInputUpdate();
 
-            update.Left = IsMovingLeft();
-            update.Right = IsMovingRight();
-            update.Shoot = IsShooting();
+            update.Left = IsMovingLeft(player.Id);
+            update.Right = IsMovingRight(player.Id);
+            update.Shoot = IsShooting(player.Id);
 
             return update;
         }
 
-        protected virtual ButtonState IsMovingLeft()
-        {
-            var isMovingLeft = Raylib.IsKeyDown(_mappings.MoveLeft);
-
-            if (!isMovingLeft)
-                _movingLeftDuration = 0f;
-            else
-                _movingLeftDuration += Raylib.GetFrameTime();
-
-            return new ButtonState
-            {
-                IsPressed = isMovingLeft,
-                HeldDuration = _movingLeftDuration
-            };
-        }
-
-        protected virtual ButtonState IsMovingRight()
-        {
-            var isMovingRight = Raylib.IsKeyDown(_mappings.MoveRight);
-
-            if (!isMovingRight)
-                _movingRightDuration = 0f;
-            else
-                _movingRightDuration += Raylib.GetFrameTime();
-
-            return new ButtonState
-            {
-                IsPressed = isMovingRight,
-                HeldDuration = _movingRightDuration
-            };
-        }
-
-        protected virtual bool IsShooting()
-        {
-            var isShooting = Raylib.IsKeyDown(_mappings.Shoot);
-
-            if (!isShooting)
-                _shootingDuration = 0f;
-            else
-                _shootingDuration += Raylib.GetFrameTime(); 
-
-            return new ButtonState
-                {
-                    IsPressed = isShooting,
-                    HeldDuration = _shootingDuration
-                };
-        }
+        protected virtual ButtonState IsMovingLeft(Guid owner) => _inputService.GetMoveLeft(owner);
+        protected virtual ButtonState IsMovingRight(Guid owner) => _inputService.GetMoveRight(owner);
+        protected virtual bool IsShooting(Guid owner) => _inputService.GetShoot(owner);
     }
 }

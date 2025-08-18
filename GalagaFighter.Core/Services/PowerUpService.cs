@@ -29,7 +29,7 @@ namespace GalagaFighter.Core.Services
         {
             (o,r,f) => new FireRatePowerUp(o, r.Position, r.Size, f),
             (o,r,f) => new IceShotPowerUp(o, r.Position, r.Size, f),
-            //(r,f) => new WallPowerUp(r,f),
+            (o,r,f) => new WoodShotPowerUp(o,r.Position,r.Size,f),
             //(r,f) => new NinjaPowerUp(r,f),
             //(r,f) => new ExplosivePowerUp(r, f),
             //(r,f) => new MagnetPowerUp(r,f),
@@ -61,7 +61,7 @@ namespace GalagaFighter.Core.Services
 
             var speed = new Vector2(0, 200f * uniformScale);
 
-            var powerUp = _powerUpTypes[powerUpTypeIndex](Game.Id, rect, speed);
+            var powerUp = _powerUpTypes[2](Game.Id, rect, speed);
             powerUp.SetMovementBehavior(new PowerUpMovementBehavior());
             powerUp.SetDestroyBehavior(new PowerUpDestroyBehavior());
             powerUp.SetCollisionBehavior(new PowerUpCollisionBehavior(_objectService));

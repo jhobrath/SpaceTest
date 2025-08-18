@@ -13,7 +13,7 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
 {
     public class ProjectileMovementBehavior : IProjectileMovementBehavior
     {
-        public void Apply(Projectile projectile)
+        public virtual void Apply(Projectile projectile)
         {
             var frameTime = Raylib.GetFrameTime();
             projectile.Move(projectile.Speed.X * frameTime, projectile.Speed.Y * frameTime);

@@ -17,10 +17,12 @@ namespace GalagaFighter.Core.Services
     public class PlayerPowerUpCollisionService : IPlayerPowerUpCollisionService
     {
         private readonly IObjectService _objectService;
+        private readonly IInputService _inputService;
 
-        public PlayerPowerUpCollisionService(IObjectService objectService)
+        public PlayerPowerUpCollisionService(IObjectService objectService, IInputService inputService)
         {
             _objectService = objectService;
+            _inputService = inputService;
         }
 
         public void HandleCollisions()
@@ -40,7 +42,7 @@ namespace GalagaFighter.Core.Services
 
                     if(Math.Abs(player.Center.X - powerUp.Center.X) < 50)
                     { 
-                        foreach(var effect in powerUp.CreateEffects(_objectService))
+                        foreach(var effect in powerUp.CreateEffects(_objectService, _inputService))
                         {
                             player.AddEffect(effect);
                         }

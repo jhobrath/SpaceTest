@@ -20,23 +20,22 @@ namespace GalagaFighter.Core.Behaviors.Players
         {
         }
 
-        protected override Vector2 GetSpawnSize(Player player)
+        protected override Vector2 GetBaseSize(Player player)
         {
             return IceProjectile.BaseSize;
         }
 
+        protected override Vector2 GetBaseSpeed()
+        {
+            return IceProjectile.BaseSpeed;
+        }
+
         protected override Projectile Create(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-
             var projectile = new IceProjectile(owner, initialPosition, initialSize, initialSpeed);
             projectile.SetMovementBehavior(new ProjectileMovementBehavior());
             projectile.SetDestroyBehavior(new ProjectileDestroyBehavior());
-            projectile.SetCollisionBehavior(new IceShotCollisionBehavior(_objectService));
-
-            if (projectile.Speed.X < 0)
-                projectile.Rotation = -180f;
-
-            _objectService.AddGameObject(projectile);
+            projectile.SetCollisionBehavior(new IceCollisionBehavior(_objectService));
 
             return projectile;
         }

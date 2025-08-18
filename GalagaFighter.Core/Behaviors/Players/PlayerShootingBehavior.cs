@@ -17,7 +17,7 @@ namespace GalagaFighter.Core.Behaviors.Players
     public class PlayerShootingBehavior : IPlayerShootingBehavior
     {
         private float _fireRateTimer = 0f;
-        private bool _lastGunLeft = false;
+        protected bool _lastGunLeft = false;
 
         protected readonly IObjectService _objectService;
 
@@ -31,20 +31,38 @@ namespace GalagaFighter.Core.Behaviors.Players
 
         public void Apply(Player player, PlayerInputUpdate inputUpdate, PlayerMovementUpdate movementUpdate)
         {
-            _fireRateTimer += Raylib.GetFrameTime();
+            var canShoot = GetCanShoot(player, inputUpdate);
 
-            var fireRate = player.Stats.FireRate * EffectiveFireRate;
-            if (!inputUpdate.Shoot || _fireRateTimer < fireRate)
+            if (!canShoot)
                 return;
 
-            _fireRateTimer = 0;
-
-            var spawnSize = GetSpawnSize(player);
+            var spawnSize = GetBaseSize(player);
             var spawnSpeed = GetSpawnSpeed(player, movementUpdate);
             var spawnPosition = GetSpawnPosition(player, spawnSize);
             var projectile = Create(player.Id, spawnPosition, spawnSize, spawnSpeed);
 
+            SetRotation(projectile);
+
+            _objectService.AddGameObject(projectile);
             _lastGunLeft = !_lastGunLeft;
+        }
+
+        protected virtual bool GetCanShoot(Player player, PlayerInputUpdate inputUpdate)
+        {
+            _fireRateTimer += Raylib.GetFrameTime();
+
+            var fireRate = player.Stats.FireRate * EffectiveFireRate;
+            if (!inputUpdate.Shoot || _fireRateTimer < fireRate)
+                return false;
+
+            _fireRateTimer = 0;
+            return true;
+        }
+
+        protected virtual void SetRotation(Projectile projectile)
+        {
+            if (projectile.Speed.X < 0)
+                projectile.Rotation = -180f;
         }
 
         protected virtual Vector2 GetSpawnPosition(Player player, Vector2 spawnSize)
@@ -64,16 +82,22 @@ namespace GalagaFighter.Core.Behaviors.Players
             return position;
         }
 
+        protected virtual Vector2 GetBaseSpeed()
+        {
+            return DefaultProjectile.BaseSpeed;
+        }
+
         protected virtual Vector2 GetSpawnSpeed(Player player, PlayerMovementUpdate movementUpdate)
         {
-            var projectileSpeed = DefaultProjectile.BaseSpeed;
+            var baseSpeed = GetBaseSpeed();
+            
             var playerVerticalSpeed = ((movementUpdate.To.Y - movementUpdate.From.Y)/ Raylib.GetFrameTime()) / 3;
             var playerHorizontalSpeed = 0f;
 
-            return new Vector2(projectileSpeed.X*(player.IsPlayer1 ? 1 : -1) + playerHorizontalSpeed, projectileSpeed.Y + playerVerticalSpeed);
+            return new Vector2(baseSpeed.X*(player.IsPlayer1 ? 1 : -1) + playerHorizontalSpeed, baseSpeed.Y + playerVerticalSpeed);
         }
 
-        protected virtual Vector2 GetSpawnSize(Player player)
+        protected virtual Vector2 GetBaseSize(Player player)
         {
             return DefaultProjectile.BaseSize;
         }
@@ -84,7 +108,6 @@ namespace GalagaFighter.Core.Behaviors.Players
             projectile.SetMovementBehavior(new ProjectileMovementBehavior());
             projectile.SetDestroyBehavior(new ProjectileDestroyBehavior());
             projectile.SetCollisionBehavior(new ProjectileCollisionBehavior(_objectService));
-            _objectService.AddGameObject(projectile);
             return projectile;
         }
 

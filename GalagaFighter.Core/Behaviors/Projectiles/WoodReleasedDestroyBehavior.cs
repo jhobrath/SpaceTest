@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Behaviors.Projectiles
 {
-    public class ProjectileDestroyBehavior : IProjectileDestroyBehavior
+    public class WoodReleasedDestroyBehavior : ProjectileDestroyBehavior, IProjectileDestroyBehavior
     {
-        public virtual void Apply(Projectile projectile)
+        private float _lifeTimeDuration = 0f;
+        private readonly float _plankedDuration = 10f;
+
+        public override void Apply(Projectile projectile)
         {
-            if (projectile.Rect.X < 0 || projectile.Rect.X > Game.Width)
+            _lifeTimeDuration += Raylib.GetFrameTime();
+            if (_lifeTimeDuration >= _plankedDuration)
                 projectile.IsActive = false;
         }
     }

@@ -28,13 +28,10 @@ namespace GalagaFighter.Core.Behaviors.Players
             var effects = projectile.CreateEffects(_objectService);
             foreach (var effect in effects)
                 player.AddEffect(effect);
-
-            projectile.EffectsApplied = true;
         }
 
         protected virtual void UpdatePlayer(Player player, Projectile projectile)
         {
-            projectile.IsActive = false;
             player.Health -= projectile.Damage*player.Stats.Shield;
         }
     }

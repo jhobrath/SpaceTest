@@ -39,13 +39,15 @@ namespace GalagaFighter.Core
         private readonly IPlayerPowerUpCollisionService _playerPowerUpCollisionService;
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
+        private readonly IInputService _inputService;
 
         public Game()
         {
             _objectService = new ObjectService();
+            _inputService = new InputService(); 
             _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService);
             _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
-            _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_objectService);
+            _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_objectService, _inputService);
             _powerUpService = new PowerUpService(_objectService);
 
             InitializeWindow();
@@ -99,15 +101,21 @@ namespace GalagaFighter.Core
 
             _player1.SetMovementBehavior(new PlayerMovementBehavior());
             _player1.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
-            _player1.SetInputBehavior(new PlayerInputBehavior(player1Mappings));
+            _player1.SetInputBehavior(new PlayerInputBehavior(_inputService));
             _player1.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
             _objectService.AddGameObject(_player1);
 
             _player2.SetMovementBehavior(new PlayerMovementBehavior());
             _player2.SetCollisionBehavior(new PlayerCollisionBehavior(_objectService));
-            _player2.SetInputBehavior(new PlayerInputBehavior(player2Mappings));
+            _player2.SetInputBehavior(new PlayerInputBehavior(_inputService));
             _player2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
             _objectService.AddGameObject(_player2);
+
+            _inputService.AddPlayer(_player1.Id, player1Mappings);
+            _inputService.AddPlayer(_player2.Id, player2Mappings);
+
+            _player1.SetDrawPriority(0);
+            _player1.SetDrawPriority(0);
         }
 
         public void Run()
@@ -126,6 +134,7 @@ namespace GalagaFighter.Core
             _playerProjectileCollisionService.HandleCollisions();
             _projectilePowerUpCollisionService.HandleCollisions();
             _playerPowerUpCollisionService.HandleCollisions();
+            _inputService.Update();
 
             HandleInput();
             UpdateGameObjects();
@@ -178,7 +187,7 @@ namespace GalagaFighter.Core
         private void DrawGameObjects()
         {
             var gameObjects = _objectService.GetGameObjects();
-            foreach (var gameObject in gameObjects)
+            foreach (var gameObject in gameObjects.OrderBy(x => x.DrawPriority))
                 gameObject.Draw();
         }
 

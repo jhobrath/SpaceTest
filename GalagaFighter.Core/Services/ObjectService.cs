@@ -10,6 +10,7 @@ namespace GalagaFighter.Core.Services
     public interface IObjectService
     {
         void AddGameObject(GameObject gameObject);
+        GameObject GetById(Guid owner);
         List<T> GetChildren<T>(Guid id) where T : GameObject;
         List<T> GetGameObjects<T>() where T : GameObject;
         List<GameObject> GetGameObjects();
@@ -75,6 +76,11 @@ namespace GalagaFighter.Core.Services
         public GameObject GetOwner(Projectile gameObject)
         {
             return _gameObjects[gameObject.Owner];
+        }
+
+        public GameObject GetById(Guid owner)
+        {
+            return _gameObjects[owner];
         }
     }
 }

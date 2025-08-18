@@ -17,6 +17,9 @@ namespace GalagaFighter.Core
         public Color Color { get; set; } = Color.White;
         public SpriteWrapper Sprite { get; set; }
         public bool IsActive { get; set; }
+        public virtual double DrawPriority => _drawPriority;
+
+        private double _drawPriority = 1;
 
         private Vector2 _speed;
         private Rectangle _rect;
@@ -71,6 +74,8 @@ namespace GalagaFighter.Core
         }
 
         public void SetOwner(Guid id) => _owner = id;
+
+        public void SetDrawPriority(double drawPriority) => _drawPriority = drawPriority;
 
         public OrientedBoundingBox GetBoundingBox()
         {

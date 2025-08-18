@@ -19,13 +19,12 @@ namespace GalagaFighter.Core.Behaviors.Players
         private float _fireRateTimer = 0f;
         private bool _lastGunLeft = false;
 
-        private IObjectService _objectService;
+        protected readonly IObjectService _objectService;
 
         public PlayerShootingBehavior(IObjectService objectService)
         {
             _objectService = objectService;
         }
-
 
         protected virtual Vector2 SpawnOffset => new Vector2(-10, 30);
         protected virtual float EffectiveFireRate => 1.2f*(float)Math.Pow(0.8f, 5);
@@ -43,7 +42,7 @@ namespace GalagaFighter.Core.Behaviors.Players
             var spawnSize = GetSpawnSize(player);
             var spawnSpeed = GetSpawnSpeed(player, movementUpdate);
             var spawnPosition = GetSpawnPosition(player, spawnSize);
-            var projectile = Spawn(player.Id, spawnPosition, spawnSize, spawnSpeed);
+            var projectile = Create(player.Id, spawnPosition, spawnSize, spawnSpeed);
 
             _lastGunLeft = !_lastGunLeft;
         }
@@ -79,14 +78,19 @@ namespace GalagaFighter.Core.Behaviors.Players
             return DefaultProjectile.BaseSize;
         }
 
-        protected virtual Projectile Spawn(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        protected virtual Projectile Create(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            var projectile = new DefaultProjectile(owner, initialPosition, initialSize, initialSpeed);
+            var projectile = Spawn(owner, initialPosition, initialSize, initialSpeed);
             projectile.SetMovementBehavior(new ProjectileMovementBehavior());
             projectile.SetDestroyBehavior(new ProjectileDestroyBehavior());
             projectile.SetCollisionBehavior(new ProjectileCollisionBehavior(_objectService));
             _objectService.AddGameObject(projectile);
             return projectile;
+        }
+
+        protected virtual Projectile Spawn(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        {
+            return new DefaultProjectile(owner, initialPosition, initialSize, initialSpeed);
         }
     }
 }

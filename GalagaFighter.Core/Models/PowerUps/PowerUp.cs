@@ -15,7 +15,7 @@ namespace GalagaFighter.Core.Models.PowerUps
 {
     public abstract class PowerUp : GameObject
     {
-        public virtual List<PlayerEffect> Effects { get; } = [];
+        public bool EffectsApplied { get; set; } = false;
 
         protected IPowerUpMovementBehavior? MovementBehavior { get; set; }
         protected IPowerUpDestroyBehavior? DestroyBehavior { get; set; }
@@ -56,5 +56,7 @@ namespace GalagaFighter.Core.Models.PowerUps
         {
             Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
         }
+
+        public abstract List<PlayerEffect> CreateEffects(IObjectService objectService);
     }
 }

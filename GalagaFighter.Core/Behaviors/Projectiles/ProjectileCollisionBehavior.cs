@@ -33,10 +33,15 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
 
             initialPosition.Y -= initialSize.Y / 2;
 
-            var collision = new DefaultCollision(projectile.Id, initialPosition, initialSize, initialVelocity);
+            var collision = Spawn(projectile, initialPosition, initialSize, initialVelocity);
             projectile.IsActive = false;
          
             _objectService.AddGameObject(collision);
+        }
+
+        protected virtual DefaultCollision Spawn(Projectile projectile, Vector2 initialPosition, Vector2 initialSize, Vector2 initialVelocity)
+        {
+            return new DefaultCollision(projectile.Id, initialPosition, initialSize, initialVelocity);
         }
 
         public void Apply(Projectile projectile, PowerUp powerUp)
@@ -46,8 +51,8 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
 
         protected virtual Vector2 GetInitialPosition(Projectile projectile)
         {
-            var positionX = projectile.Speed.X < 0 ? projectile.Rect.X : projectile.Rect.X + projectile.Rect.Width;
-            var positionY = projectile.Speed.Y < 0 ? projectile.Rect.Y + projectile.Rect.Height : projectile.Rect.Y;
+            var positionX = projectile.Speed.X < 0 ? projectile.Rect.X : projectile.Rect.X;// + projectile.Rect.Width) - projectile.Rect.Width/2;
+            var positionY = projectile.Speed.Y < 0 ? projectile.Center.Y + projectile.Rect.Height : projectile.Center.Y;
 
             if (projectile.Speed.Y == 0)
                 positionY = projectile.Center.Y;

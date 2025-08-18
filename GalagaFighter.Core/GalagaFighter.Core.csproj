@@ -7,9 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
+    <None Remove="Sprites\Effects\Whirlwind.png" />
     <None Remove="Sprites\Players\3frameships.pdn" />
     <None Remove="Sprites\Players\mud.pdn" />
     <None Remove="Sprites\Players\Ships.pdn" />
+    <None Remove="Sprites\Powerups\powerups.pdn" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,7 +79,10 @@
     <EmbeddedResource Include="Sprites\Effects\frozen.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Effects\iceshot-collision.png">
+    <EmbeddedResource Include="Sprites\Effects\frozen_embellishment.pdn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Collisions\iceshot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\iceshot.png">
@@ -98,6 +104,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\wallshot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Effects\Whirlwind.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Players\3frameships.pdn">
@@ -173,6 +182,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\poison.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Powerups\powerups.pdn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Powerups\reflect.png">

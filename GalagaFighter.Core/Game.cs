@@ -36,6 +36,7 @@ namespace GalagaFighter.Core
 
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IProjectilePowerUpCollisionService _projectilePowerUpCollisionService;
+        private readonly IPlayerPowerUpCollisionService _playerPowerUpCollisionService;
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
 
@@ -44,6 +45,7 @@ namespace GalagaFighter.Core
             _objectService = new ObjectService();
             _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService);
             _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
+            _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_objectService);
             _powerUpService = new PowerUpService(_objectService);
 
             InitializeWindow();
@@ -123,6 +125,7 @@ namespace GalagaFighter.Core
         {
             _playerProjectileCollisionService.HandleCollisions();
             _projectilePowerUpCollisionService.HandleCollisions();
+            _playerPowerUpCollisionService.HandleCollisions();
 
             HandleInput();
             UpdateGameObjects();
@@ -185,6 +188,40 @@ namespace GalagaFighter.Core
             //AudioService.Cleanup();
             Raylib.CloseWindow();
         }
+    }
 
+    public static class RaylibExtensions
+    {
+        public static Color ApplyBlue(this Color color, float blueAlpha)
+        {
+             var newColor = new Color(
+                (byte)(color.R * (1 - blueAlpha)),
+                (byte)(color.G * (1 - blueAlpha)),
+                (byte)(color.B + (255 - color.B) * blueAlpha),
+                color.A);
+
+            return newColor;
+        }
+
+        public static Color ApplyGreen(this Color color, float greenAlpha)
+        {
+            var newColor = new Color(
+               (byte)(color.R * (1 - greenAlpha)),
+               (byte)(color.G + (255 - color.G) * greenAlpha),
+               (byte)(color.B * (1 - greenAlpha)),
+               color.A);
+            return newColor;
+
+        }
+
+        public static Color ApplyRed(this Color color, float redAlpha)
+        {
+            var newColor = new Color(
+               (byte)(color.R + (255 - color.R) * redAlpha),
+               (byte)(color.G * (1 - redAlpha)),
+               (byte)(color.B * (1 - redAlpha)),
+               color.A);
+            return newColor;
+        }
     }
 }

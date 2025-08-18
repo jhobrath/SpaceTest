@@ -28,7 +28,7 @@ namespace GalagaFighter.Core.Services
         private readonly static List<Func<Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<Guid, Rectangle, Vector2, PowerUp>>
         {
             (o,r,f) => new FireRatePowerUp(o, r.Position, r.Size, f),
-            //(r,f) => new IceShotPowerUp(r,f),
+            (o,r,f) => new IceShotPowerUp(o, r.Position, r.Size, f),
             //(r,f) => new WallPowerUp(r,f),
             //(r,f) => new NinjaPowerUp(r,f),
             //(r,f) => new ExplosivePowerUp(r, f),

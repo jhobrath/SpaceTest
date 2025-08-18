@@ -25,12 +25,7 @@ namespace GalagaFighter.Core.Behaviors.PowerUps
         public void Apply(PowerUp powerUp)
         {
             if (Math.Abs(_player.Center.X - powerUp.Center.X) < 50)
-            {
                 powerUp.IsActive = false;
-
-                foreach (var effect in powerUp.Effects)
-                    _player.AddEffect(effect);
-            }
         }
     }
 }

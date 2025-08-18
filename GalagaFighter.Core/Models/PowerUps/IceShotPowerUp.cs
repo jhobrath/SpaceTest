@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.PowerUps
 {
-    public class FireRatePowerUp : PowerUp
+    public class IceShotPowerUp : PowerUp
     {
-        private readonly List<PlayerEffect> _effects = [];
-
-        public FireRatePowerUp(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
-            : base(owner, "Sprites/PowerUps/firerate.png", initialPosition, initialSize, initialSpeed)
+        public IceShotPowerUp(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
+            : base(owner, "Sprites/PowerUps/ice.png", initialPosition, initialSize, initialSpeed)
         {
         }
 
         public override List<PlayerEffect> CreateEffects(IObjectService objectService)
         {
-            return [new FireRateEffect()];
+            return [
+                new IceShotEffect(objectService)
+            ];
         }
     }
 }

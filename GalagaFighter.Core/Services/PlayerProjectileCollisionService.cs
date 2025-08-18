@@ -30,6 +30,9 @@ namespace GalagaFighter.Core.Services
 
             foreach(var projectile in projectiles)
             {
+                if (projectile.EffectsApplied)
+                    continue;
+
                 foreach(var player in players)
                 {
                     if (projectile.Owner == player.Id)

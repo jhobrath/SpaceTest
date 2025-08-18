@@ -24,6 +24,12 @@ namespace GalagaFighter.Core.Behaviors.Players
         public void Apply(Player player, Projectile projectile)
         {
             UpdatePlayer(player, projectile);
+
+            var effects = projectile.CreateEffects(_objectService);
+            foreach (var effect in effects)
+                player.AddEffect(effect);
+
+            projectile.EffectsApplied = true;
         }
 
         protected virtual void UpdatePlayer(Player player, Projectile projectile)

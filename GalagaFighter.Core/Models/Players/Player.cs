@@ -8,6 +8,7 @@ using GalagaFighter.Core.Models.Projectiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Players
@@ -35,11 +36,6 @@ namespace GalagaFighter.Core.Models.Players
             Effects = new List<PlayerEffect>();
         }
 
-        public void Collide(PowerUp powerUp)
-        {
-            Effects.AddRange(powerUp.Effects);
-        }
-
         public void Collide(Projectile projectile)
         {
             IPlayerCollisionBehavior? _collisionBehavior = CollisionBehavior;
@@ -54,25 +50,25 @@ namespace GalagaFighter.Core.Models.Players
             var stats = new PlayerStats();
             var display = new PlayerDisplay(Display.Sprite, Display.Rect, Display.Rotation);
 
-            IPlayerInputBehavior? _inputBehavior = InputBehavior;
-            IPlayerMovementBehavior? _movementBehavior = MovementBehavior;
-            IPlayerShootingBehavior? _shootingBehavior = ShootingBehavior;
+            IPlayerInputBehavior? inputBehavior = InputBehavior;
+            IPlayerMovementBehavior? movementBehavior = MovementBehavior;
+            IPlayerShootingBehavior? shootingBehavior = ShootingBehavior;
 
             foreach(var effect in Effects)
             {
                 effect.Apply(stats);
                 effect.Apply(display);
 
-                _inputBehavior = effect.InputBehavior ?? _inputBehavior;
-                _shootingBehavior = effect.ShootingBehavior ?? _shootingBehavior;
-                _movementBehavior = effect.MovementBehavior ?? _movementBehavior;
+                inputBehavior = effect.InputBehavior ?? inputBehavior;
+                shootingBehavior = effect.ShootingBehavior ?? shootingBehavior;
+                movementBehavior = effect.MovementBehavior ?? movementBehavior;
             }
 
             Stats = stats;
 
-            var input = _inputBehavior?.Apply();
-            var movement = MovementBehavior?.Apply(this, input);
-            ShootingBehavior?.Apply(this, input, movement);
+            var input = inputBehavior?.Apply();
+            var movement = movementBehavior?.Apply(this, input);
+            shootingBehavior?.Apply(this, input, movement);
 
             Display = display;
         }
@@ -82,10 +78,10 @@ namespace GalagaFighter.Core.Models.Players
             Display.Sprite.Draw(Center, Display.Rotation, Rect.Width * Display.Size, Rect.Height * Display.Size, Display.Color);
         }
 
-        public void SetMovementBehavior(PlayerMovementBehavior movementBehavior) => MovementBehavior = movementBehavior;
-        public void SetCollisionBehavior(PlayerCollisionBehavior collisionBehavior) => CollisionBehavior = collisionBehavior;
-        public void SetShootingBehavior(PlayerShootingBehavior shootingBehavior) => ShootingBehavior = shootingBehavior;
-        public void SetInputBehavior(PlayerInputBehavior inputBehavior) => InputBehavior = inputBehavior;
+        public void SetMovementBehavior(IPlayerMovementBehavior movementBehavior) => MovementBehavior = movementBehavior;
+        public void SetCollisionBehavior(IPlayerCollisionBehavior collisionBehavior) => CollisionBehavior = collisionBehavior;
+        public void SetShootingBehavior(IPlayerShootingBehavior shootingBehavior) => ShootingBehavior = shootingBehavior;
+        public void SetInputBehavior(IPlayerInputBehavior inputBehavior) => InputBehavior = inputBehavior;
         public void AddEffect(PlayerEffect effect) { Effects.Add(effect); }
     }
 }

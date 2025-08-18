@@ -103,7 +103,7 @@
     <EmbeddedResource Include="Sprites\Effects\ninjashot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Effects\wallshot.png">
+    <EmbeddedResource Include="Sprites\Effects\woodshot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\Whirlwind.png">

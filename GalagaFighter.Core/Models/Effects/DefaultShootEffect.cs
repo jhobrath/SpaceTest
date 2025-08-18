@@ -10,6 +10,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public class DefaultShootEffect : PlayerEffect
     {
+        public override string IconPath => "Sprites/Effects/firerate1.png";
         public override bool IsProjectile => true;
         public SpriteWrapper _sprite;
 

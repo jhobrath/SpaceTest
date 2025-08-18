@@ -11,6 +11,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public abstract class PlayerEffect
     {
+        public abstract string IconPath { get; }
         public virtual float TimeDuration  => 0f;
         public virtual float BulletDuration => 0f;
         public virtual bool IsProjectile { get; }

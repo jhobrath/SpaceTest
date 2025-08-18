@@ -133,5 +133,8 @@ namespace GalagaFighter.Core.Models.Players
 
             _effects.Add(effect); 
         }
+
+        public List<PlayerEffect> GetEffects() => _effects;
+        public PlayerEffect GetSelectedProjectile() => _selectedProjectile;
     }
 }

@@ -13,6 +13,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public class IceShotEffect : PlayerEffect
     {
+        public override string IconPath => "Sprites/Effects/iceshot.png";
         private readonly SpriteWrapper _sprite;
         public override bool IsProjectile => false;
 

@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Players;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -11,23 +12,76 @@ namespace GalagaFighter.Core.Services
 {
     public static class UiService
     {
+        private static int _healthTextSize = (int)(24 * Game.UniformScale);
+        private static int _controlTextSize = (int)(20 * Game.UniformScale);
+        private static int _statusTextSize = (int)(16 * Game.UniformScale);
+        private static int _margin = (int)(15 * Game.UniformScale);
+
         public static void DrawUi(Player player1, Player player2)
         {
-            int healthTextSize = (int)(24 * Game.UniformScale);
-            int controlTextSize = (int)(20 * Game.UniformScale);
+            DrawPlayerHealth(player1, false);
+            DrawPlayerHealth(player2, true);
+            DrawWinner(player1, player2);
+            DrawEffects(player1, false);
+            DrawEffects(player2, true);
+        }
+
+        private static void DrawEffects(Player player, bool reverse)
+        {
+            var player1Effects = player.GetEffects();
+            var iconSize = 30f * Game.UniformScale;
+            var startX = reverse
+                ? Game.Width - (_margin + iconSize * 6)
+                : _margin;
+
+            var start = new Vector2(0f, iconSize);
+            var iconVec = new Vector2(iconSize, iconSize);
+
+            var fireRate = player1Effects.Where(x => x.GetType() == typeof(FireRateEffect)).ToList();
+            var icons = player1Effects.Except(fireRate).Where(x => x.GetType() != typeof(DefaultShootEffect)).Select(x => x.IconPath).ToList();
+
+            icons.Insert(0, "Sprites/Effects/firerate" + (fireRate.Count+1) + ".png");
+
+            var selected = player.GetSelectedProjectile();
+            var isDefaultEffect = selected.GetType() == typeof(DefaultShootEffect);
+            
+            for(var i =0;i < icons.Count;i++)
+            {
+                var col = (reverse ? ((6 - (i % 6))-1) : i % 6);
+                var row = (int)Math.Floor(i / 6f);
+
+                var texture = TextureService.Get(icons[i]);
+                var position = new Vector2(startX + col * iconSize, _margin + iconSize + row * iconSize);
+                
+                Raylib.DrawTextureEx(texture, position, 0f, 1f, Color.White);
+                if(
+                    (isDefaultEffect && i == 0) ||
+                    (icons[i] == selected.IconPath)
+                )
+                {
+                    Raylib.DrawRectangleLines((int)position.X, (int)position.Y, (int)iconVec.X, (int)iconVec.Y, Color.LightGray);
+                }
+
+            }
+        }
+
+        public static void DrawPlayerHealth(Player player, bool reverse)
+        {
+            var remainingHealthStartX = (int)(((reverse 
+                ? Game.Width - (_margin + (player.Health * 500 / 100f)) 
+                : _margin))*Game.UniformScale);
+
+            var healthBarLinesStart = (int)((reverse
+                ? Game.Width - (_margin + 500)
+                : _margin)*Game.UniformScale);
+
+            Raylib.DrawRectangle(remainingHealthStartX, _margin, (int)(player.Health*500*Game.UniformScale/100f), 30, Color.Red);
+            Raylib.DrawRectangleLines(healthBarLinesStart, _margin, 500, 30, Color.White);
+        }
+
+        public static void DrawWinner(Player player1, Player player2)
+        {
             int winnerTextSize = (int)(50 * Game.UniformScale);
-            int statusTextSize = (int)(16 * Game.UniformScale);
-            int margin = (int)(15 * Game.UniformScale);
-
-            var player1Health = player1.Health;
-            var player2Health = player2.Health;
-
-            // Health and bullet capacity display
-            Raylib.DrawText($"P1 Health: {player1Health}", margin, margin, healthTextSize, Color.White);
-            Raylib.DrawText($"P2 Health: {player2Health}", (int)Game.Width - (int)(250 * Game.UniformScale), margin, healthTextSize, Color.White);
-
-            // Bullet capacity display
-            int bulletStatusY = margin + (int)(30 * Game.UniformScale);
 
             // Winner display
             if (player1.Health <= 0 || player2.Health <= 0)

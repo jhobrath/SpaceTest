@@ -14,6 +14,7 @@ namespace GalagaFighter.Core.Models.Effects
     {
         private readonly SpriteWrapper _sprite;
         public override bool IsProjectile => true;
+        public override string IconPath => "Sprites/Effects/woodshot.png";
 
         private readonly IPlayerShootingBehavior? _shootingBehavior;
         public override IPlayerShootingBehavior? ShootingBehavior => _shootingBehavior;

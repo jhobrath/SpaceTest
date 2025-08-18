@@ -9,6 +9,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public class FireRateEffect : PlayerEffect
     {
+        public override string IconPath => "Sprites/Effects/firerate1.png";
         public override void Apply(PlayerStats stats)
         {
             stats.FireRate *= .75f;

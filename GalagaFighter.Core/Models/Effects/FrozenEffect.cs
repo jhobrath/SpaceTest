@@ -10,6 +10,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public class FrozenEffect : PlayerEffect
     {
+        public override string IconPath => "Sprites/Effects/frozen.png";
         public override void Apply(PlayerStats stats)
         {
             stats.MovementSpeed *= .667f;

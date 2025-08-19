@@ -1,33 +1,28 @@
 ﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
-using GalagaFighter.Core.Behaviors.Players.Updates;
+using GalagaFighter.Core.Events;
 using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Models.PowerUps;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Behaviors.Players
 {
     public class PlayerCollisionBehavior : IPlayerCollisionBehavior
     {
-        private IObjectService _objectService;
+        private readonly IObjectService _objectService;
+        private readonly IEventService _eventService;
 
-        public PlayerCollisionBehavior(IObjectService objectService)
+        public PlayerCollisionBehavior(IEventService eventService, IObjectService objectService)
         {
             _objectService = objectService;
+            _eventService = eventService;
         }
 
         public void Apply(Player player, Projectile projectile)
         {
             UpdatePlayer(player, projectile);
-
             var effects = projectile.CreateEffects(_objectService);
             foreach (var effect in effects)
-                player.AddEffect(effect);
+                _eventService.Publish(new EffectActivatedEventArgs(effect, player));
         }
 
         protected virtual void UpdatePlayer(Player player, Projectile projectile)

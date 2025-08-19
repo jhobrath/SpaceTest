@@ -64,10 +64,10 @@ namespace GalagaFighter.Core.Behaviors.Players
         protected virtual float GetRotation(Player player, Vector2 newPosition)
         {
             if (newPosition.Y < player.Rect.Y)
-                return player.Display.Rotation - 5f * (player.IsPlayer1 ? 1 : -1);
-            
+                return player.IsPlayer1 ? 85f : 95f;// player.Display.Rotation - 5f * (player.IsPlayer1 ? 1 : -1);
+
             if (newPosition.Y > player.Rect.Y)
-                return player.Display.Rotation + 5f * (player.IsPlayer1 ? 1 : -1);
+                return player.IsPlayer1 ? 95f : 85f;// + 5f * (player.IsPlayer1 ? 1 : -1);
 
             return player.IsPlayer1 ? 90f : -90f;
         }

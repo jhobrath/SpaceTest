@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Events
 {
-    public class EffectDeactivatedEventArgs<T> : EventArgs
-        where T : PlayerEffect
+    public class EffectDeactivatedEventArgs : EventArgs
     {
-        public T Effect { get; set; }
+        public PlayerEffect Effect { get; set; }
         public Player Player { get; set; }
 
-        public EffectDeactivatedEventArgs(T effect, Player player)
+        public EffectDeactivatedEventArgs(PlayerEffect effect, Player player)
         {
             Effect = effect;
             Player = player;

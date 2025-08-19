@@ -1,44 +1,54 @@
 ﻿using GalagaFighter.Core.Events;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
+using System;
 using System.Linq;
 
 namespace GalagaFighter.Core.Services
 {
     public interface IPlayerEventService
     {
+        void Initialize();
     }
-    public class PlayerEffectService
+    public class PlayerEventService : IPlayerEventService
     {
+        private IObjectService _objectService;
         private IEventService _eventService;
+        private IInputService _inputService;
 
-        public PlayerEffectService(IEventService eventService)
+        public PlayerEventService(IEventService eventService, IObjectService objectService, IInputService inputService)
         {
+            _objectService = objectService;
             _eventService = eventService;
+            _inputService = inputService;
 
             Initialize();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
-            SubscribeEffectDeactivated<DefaultShootEffect>();
-            SubscribeEffectDeactivated<IceShotEffect>();
-            SubscribeEffectDeactivated<FireRateEffect>();
-            SubscribeEffectDeactivated<WoodShotEffect>();
-            SubscribeEffectDeactivated<FrozenEffect>();
-
-            SubscribeEffectActivated<DefaultShootEffect>();
-            SubscribeEffectActivated<IceShotEffect>();
-            SubscribeEffectActivated<FireRateEffect>();
-            SubscribeEffectActivated<WoodShotEffect>();
-            SubscribeEffectActivated<FrozenEffect>();
+            SubscribeEffectDeactivated();
+            SubscribeProjectileCollided();
+            SubscribePowerUpCollected();
         }
 
-        private void SubscribeEffectDeactivated<T>() where T : PlayerEffect 
+        private void SubscribePowerUpCollected()
+        {
+            _eventService.Subscribe<PowerUpCollectedEventArgs>(HandlePowerUpCollected);
+        }
+
+        private void HandlePowerUpCollected(PowerUpCollectedEventArgs args)
+        {
+            var effects = args.PowerUp.CreateEffects(_eventService, _objectService, _inputService);
+            foreach (var effect in effects)
+                AddEffect(args.Player, effect);
+        }
+
+        private void SubscribeEffectDeactivated()
         { 
-            _eventService.Subscribe<EffectDeactivatedEventArgs<T>>(HandleEffectDeactivated); 
+            _eventService.Subscribe<EffectDeactivatedEventArgs>(HandleEffectDeactivated); 
         }
-        private static void HandleEffectDeactivated<T>(EffectDeactivatedEventArgs<T> e) where T : PlayerEffect
+        private static void HandleEffectDeactivated(EffectDeactivatedEventArgs e)
         {
             if (!e.Effect.IsProjectile)
             {
@@ -52,23 +62,33 @@ namespace GalagaFighter.Core.Services
             e.Player.ProjectileEffects.Remove(e.Effect);
         }
 
-        private void SubscribeEffectActivated<T>() where T : PlayerEffect { _eventService.Subscribe<EffectActivatedEventArgs<T>>(HandleEffectActivated); }
-        private static void HandleEffectActivated<T>(EffectActivatedEventArgs<T> e) where T : PlayerEffect
+        private void SubscribeProjectileCollided() 
+        { 
+            _eventService.Subscribe<ProjectileCollidedEventArgs>(HandleProjectileCollided); 
+        }
+        private void HandleProjectileCollided(ProjectileCollidedEventArgs e)
         {
-            if (!e.Effect.IsProjectile)
+            var effects = e.Projectile.CreateEffects(_objectService);
+            foreach(var effect in effects)
+                AddEffect(e.Player, effect);
+        }
+
+        private void AddEffect(Player player, PlayerEffect effect)
+        {
+            if (!effect.IsProjectile)
             {
-                e.Player.StatusEffects.Add(e.Effect);
+                player.StatusEffects.Add(effect);
                 return;
             }
-         
-            var duplicates = e.Player.ProjectileEffects.Where(x => x.GetType() == e.Effect.GetType()).ToList();
-            if (e.Player.SelectedProjectileEffect != null && duplicates.Contains(e.Player.SelectedProjectileEffect))
-                e.Player.SelectedProjectileEffect = e.Effect;
+
+            var duplicates = player.ProjectileEffects.Where(x => x.GetType() == effect.GetType()).ToList();
+            if (player.SelectedProjectileEffect != null && duplicates.Contains(player.SelectedProjectileEffect))
+                player.SelectedProjectileEffect = effect;
 
             foreach (var duplicate in duplicates)
-                e.Player.ProjectileEffects.Remove(duplicate);
+                player.ProjectileEffects.Remove(duplicate);
 
-            e.Player.ProjectileEffects.Add(e.Effect);
+            player.ProjectileEffects.Add(effect);
         }
     }
 }

@@ -13,16 +13,15 @@ namespace GalagaFighter.Core.Behaviors.Players
 
         public PlayerCollisionBehavior(IEventService eventService, IObjectService objectService)
         {
-            _objectService = objectService;
             _eventService = eventService;
+            _objectService = objectService;
         }
 
         public void Apply(Player player, Projectile projectile)
         {
             UpdatePlayer(player, projectile);
-            var effects = projectile.CreateEffects(_objectService);
-            foreach (var effect in effects)
-                _eventService.Publish(new EffectActivatedEventArgs(effect, player));
+
+            _eventService.Publish(new ProjectileCollidedEventArgs(projectile, player));
         }
 
         protected virtual void UpdatePlayer(Player player, Projectile projectile)

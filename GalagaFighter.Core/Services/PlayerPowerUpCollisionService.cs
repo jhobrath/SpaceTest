@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Events;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.PowerUps;
 using Raylib_cs;
 using System;
@@ -24,6 +25,7 @@ namespace GalagaFighter.Core.Services
         {
             _objectService = objectService;
             _inputService = inputService;
+            _eventService = eventService;
         }
 
         public void HandleCollisions()
@@ -33,22 +35,15 @@ namespace GalagaFighter.Core.Services
 
             foreach(var powerUp in powerUps)
             {
-                if (powerUp.EffectsApplied)
-                    continue;
-
                 foreach(var player in players)
                 {
                     if (powerUp.Owner != player.Id)
                         continue;
 
                     if(Math.Abs(player.Center.X - powerUp.Center.X) < 50)
-                    { 
-                        foreach(var effect in powerUp.CreateEffects(_objectService, _inputService))
-                        {
-                            player.AddEffect(effect);
-                        }
-
-                        powerUp.EffectsApplied = true;
+                    {
+                        _eventService.Publish(new PowerUpCollectedEventArgs(player, powerUp));
+                        powerUp.IsActive = false;
                     }
                 }
             }

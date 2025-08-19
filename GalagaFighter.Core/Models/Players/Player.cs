@@ -11,19 +11,21 @@ namespace GalagaFighter.Core.Models.Players
     public class Player : GameObject
     {
         public float Health { get; set; } = 100f;
-        public PlayerStats Stats { get; set; } = new PlayerStats();
+        public PlayerStats Stats { get; set; } = new();
         public PlayerDisplay Display { get; set; }
-        public List<PlayerEffect> StatusEffects = new List<PlayerEffect>();
-        public List<PlayerEffect> ProjectileEffects = new List<PlayerEffect>();
-        public PlayerEffect? SelectedProjectileEffect = null;
+        public List<PlayerEffect> StatusEffects = [];
+        public List<PlayerEffect> ProjectileEffects = [];
+        public PlayerEffect SelectedProjectileEffect;
 
         public bool IsPlayer1 { get; private set; }
 
-        public Player(Guid owner, PlayerDisplay display, bool isPlayer1)
+        public Player(Guid owner, PlayerDisplay display, bool isPlayer1, PlayerEffect defautlShootEffect)
             : base(owner, display.Sprite, display.Rect.Position, display.Rect.Size, new Vector2(0,0))
         {
             Display = display;
             IsPlayer1 = isPlayer1;
+            ProjectileEffects.Add(defautlShootEffect);
+            SelectedProjectileEffect = defautlShootEffect;
         }
 
         public void Collide(Projectile projectile)
@@ -60,7 +62,6 @@ namespace GalagaFighter.Core.Models.Players
             apply(SelectedProjectileEffect ?? ProjectileEffects[0]);
 
             Stats = stats;
-            Display = display;
 
             var input = inputBehavior?.Apply(this);
             var movement = movementBehavior?.Apply(this, input);
@@ -68,6 +69,8 @@ namespace GalagaFighter.Core.Models.Players
 
             if (input?.Switch?.IsPressed == true)
                 SwitchProjectile();
+
+            Display = display;
         }
 
         public override void Draw()

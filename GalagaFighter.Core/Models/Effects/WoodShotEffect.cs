@@ -39,7 +39,7 @@ namespace GalagaFighter.Core.Models.Effects
             {
                 Deactivate();
                 _eventService.Unsubscribe<ProjectileFiredEventArgs<WoodProjectile>>(HandleWoodShotFired);
-                _eventService.Publish(new EffectDeactivatedEventArgs<WoodShotEffect>(this, args.Player));
+                _eventService.Publish(new EffectDeactivatedEventArgs(this, args.Player));
             }
         }
 

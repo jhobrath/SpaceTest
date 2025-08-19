@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,12 @@ namespace GalagaFighter.Core.Services
         private static int _controlTextSize = (int)(20 * Game.UniformScale);
         private static int _statusTextSize = (int)(16 * Game.UniformScale);
         private static int _margin = (int)(15 * Game.UniformScale);
+        private static IPlayerEffectManager _effectManager;
+
+        public static void Initialize(IPlayerEffectManager effectManager)
+        {
+            _effectManager = effectManager;
+        }
 
         public static void DrawUi(Player player1, Player player2)
         {
@@ -28,8 +35,8 @@ namespace GalagaFighter.Core.Services
 
         private static void DrawEffects(Player player, bool reverse)
         {
-            var statusEffects = player.StatusEffects;
-            var projectiles = player.ProjectileEffects;
+            var statusEffects = _effectManager.GetStatusEffects(player);
+            var projectiles = _effectManager.GetProjectileEffects(player);
 
             var iconSize = 30f * Game.UniformScale;
             var startX = reverse
@@ -44,8 +51,8 @@ namespace GalagaFighter.Core.Services
 
             icons.Insert(0, "Sprites/Effects/firerate" + (fireRate.Count+1) + ".png");
 
-            var selected = player.SelectedProjectileEffect;
-            var isDefaultEffect = selected.GetType() == typeof(DefaultShootEffect);
+            var selected = _effectManager.GetSelectedProjectileEffect(player);
+            var isDefaultEffect = selected != null && selected.GetType() == typeof(DefaultShootEffect);
             
             for(var i =0;i < icons.Count;i++)
             {
@@ -58,7 +65,7 @@ namespace GalagaFighter.Core.Services
                 Raylib.DrawTextureEx(texture, position, 0f, 1f, Color.White);
                 if(
                     (isDefaultEffect && i == 0) ||
-                    (icons[i] == selected.IconPath)
+                    (selected != null && icons[i] == selected.IconPath)
                 )
                 {
                     Raylib.DrawRectangleLines((int)position.X, (int)position.Y, (int)iconVec.X, (int)iconVec.Y, Color.LightGray);

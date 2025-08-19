@@ -1,6 +1,10 @@
 ﻿using GalagaFighter.Core.Behaviors;
+using GalagaFighter.Core.Behaviors.Players;
+using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models;
-using GalagaFighter;
+using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -8,11 +12,6 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using GalagaFighter.Core.Behaviors.Players;
-using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Services;
-using System.Net.Http.Headers;
-using GalagaFighter.Core.Models.Effects;
 
 namespace GalagaFighter.Core
 {
@@ -35,6 +34,9 @@ namespace GalagaFighter.Core
         private Player _player2;
         private static Random _random = new Random();
 
+        private PlayerController _player1Controller;
+        private PlayerController _player2Controller;
+
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IProjectilePowerUpCollisionService _projectilePowerUpCollisionService;
         private readonly IPlayerPowerUpCollisionService _playerPowerUpCollisionService;
@@ -43,6 +45,7 @@ namespace GalagaFighter.Core
         private readonly IInputService _inputService;
         private readonly IEventService _eventService;
         private readonly IPlayerEventService _playerEventService;
+        private readonly IPlayerEffectManager _playerEffectManager;
 
         public Game()
         {
@@ -53,9 +56,10 @@ namespace GalagaFighter.Core
             _eventService = new EventService();
             _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_eventService, _objectService, _inputService);
             _powerUpService = new PowerUpService(_objectService);
-            _playerEventService = new PlayerEventService(_eventService, _objectService, _inputService);
+            _playerEffectManager = new PlayerEffectManager();
+            _playerEventService = new PlayerEventService(_eventService, _objectService, _inputService, _playerEffectManager);
             _playerEventService.Initialize();
-
+            UiService.Initialize(_playerEffectManager);
             InitializeWindow();
             InitializeScale();
             InitializePlayers();
@@ -115,8 +119,12 @@ namespace GalagaFighter.Core
             defaultShootEffect2.SetInputBehavior(new PlayerInputBehavior(_inputService));
             defaultShootEffect2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
 
-            _player1 = new Player(Id, display1, true, defaultShootEffect1);
-            _player2 = new Player(Id, display2, false, defaultShootEffect2);
+            _player1 = new Player(Id, display1, true);
+            _player2 = new Player(Id, display2, false);
+            _player1Controller = new PlayerController(_playerEffectManager, _inputService);
+            _player2Controller = new PlayerController(_playerEffectManager, _inputService);
+            _playerEffectManager.AddEffect(_player1, defaultShootEffect1);
+            _playerEffectManager.AddEffect(_player2, defaultShootEffect2);
 
             _objectService.AddGameObject(_player1);
             _objectService.AddGameObject(_player2);
@@ -178,6 +186,13 @@ namespace GalagaFighter.Core
             {
                 if (!gameObjects[i].IsActive)
                     _objectService.RemoveGameObject(gameObjects[i]);
+                else if (gameObjects[i] is Player player)
+                {
+                    if (player == _player1)
+                        _player1Controller.Update(player, this);
+                    else if (player == _player2)
+                        _player2Controller.Update(player, this);
+                }
                 else
                     gameObjects[i].Update(this);
             }

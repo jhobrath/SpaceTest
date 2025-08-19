@@ -15,12 +15,14 @@ namespace GalagaFighter.Core.Services
         private IObjectService _objectService;
         private IEventService _eventService;
         private IInputService _inputService;
+        private IPlayerEffectManager _effectManager;
 
-        public PlayerEventService(IEventService eventService, IObjectService objectService, IInputService inputService)
+        public PlayerEventService(IEventService eventService, IObjectService objectService, IInputService inputService, IPlayerEffectManager effectManager)
         {
             _objectService = objectService;
             _eventService = eventService;
             _inputService = inputService;
+            _effectManager = effectManager;
 
             Initialize();
         }
@@ -41,25 +43,16 @@ namespace GalagaFighter.Core.Services
         {
             var effects = args.PowerUp.CreateEffects(_eventService, _objectService, _inputService);
             foreach (var effect in effects)
-                AddEffect(args.Player, effect);
+                _effectManager.AddEffect(args.Player, effect);
         }
 
         private void SubscribeEffectDeactivated()
         { 
             _eventService.Subscribe<EffectDeactivatedEventArgs>(HandleEffectDeactivated); 
         }
-        private static void HandleEffectDeactivated(EffectDeactivatedEventArgs e)
+        private void HandleEffectDeactivated(EffectDeactivatedEventArgs e)
         {
-            if (!e.Effect.IsProjectile)
-            {
-                e.Player.StatusEffects.Remove(e.Effect);
-                return;
-            }
-
-            if (e.Player.SelectedProjectileEffect == e.Effect)
-                e.Player.SelectedProjectileEffect = e.Player.ProjectileEffects[0];
-
-            e.Player.ProjectileEffects.Remove(e.Effect);
+            _effectManager.RemoveEffect(e.Player, e.Effect);
         }
 
         private void SubscribeProjectileCollided() 
@@ -70,25 +63,7 @@ namespace GalagaFighter.Core.Services
         {
             var effects = e.Projectile.CreateEffects(_objectService);
             foreach(var effect in effects)
-                AddEffect(e.Player, effect);
-        }
-
-        private void AddEffect(Player player, PlayerEffect effect)
-        {
-            if (!effect.IsProjectile)
-            {
-                player.StatusEffects.Add(effect);
-                return;
-            }
-
-            var duplicates = player.ProjectileEffects.Where(x => x.GetType() == effect.GetType()).ToList();
-            if (player.SelectedProjectileEffect != null && duplicates.Contains(player.SelectedProjectileEffect))
-                player.SelectedProjectileEffect = effect;
-
-            foreach (var duplicate in duplicates)
-                player.ProjectileEffects.Remove(duplicate);
-
-            player.ProjectileEffects.Add(effect);
+                _effectManager.AddEffect(e.Player, effect);
         }
     }
 }

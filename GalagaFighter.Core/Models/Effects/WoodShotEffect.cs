@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core.Behaviors.Players;
 using GalagaFighter.Core.Behaviors.Players.Interfaces;
+using GalagaFighter.Core.Events;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public class WoodShotEffect : PlayerEffect
     {
+        private readonly IEventService _eventService;
         private readonly SpriteWrapper _sprite;
         public override bool IsProjectile => true;
         public override string IconPath => "Sprites/Effects/woodshot.png";
@@ -19,10 +22,25 @@ namespace GalagaFighter.Core.Models.Effects
         private readonly IPlayerShootingBehavior? _shootingBehavior;
         public override IPlayerShootingBehavior? ShootingBehavior => _shootingBehavior;
 
-        public WoodShotEffect(IObjectService objectService, IInputService inputService)
+        private int _remainingBullets = 3;
+
+        public WoodShotEffect(IEventService eventService, IObjectService objectService, IInputService inputService)
         {
+            _eventService = eventService;
             _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/WoodShotShip.png"));
-            _shootingBehavior = new WoodShotShootingBehavior(objectService, inputService);
+            _shootingBehavior = new WoodShotShootingBehavior(_eventService, objectService, inputService);
+            _eventService.Subscribe<ProjectileFiredEventArgs<WoodProjectile>>(HandleWoodShotFired);
+        }
+
+        private void HandleWoodShotFired(ProjectileFiredEventArgs<WoodProjectile> args)
+        {
+            _remainingBullets--;
+            if(_remainingBullets == 0)
+            {
+                Deactivate();
+                _eventService.Unsubscribe<ProjectileFiredEventArgs<WoodProjectile>>(HandleWoodShotFired);
+                _eventService.Publish(new EffectDeactivatedEventArgs<WoodShotEffect>(this));
+            }
         }
 
         public override void Apply(PlayerDisplay display)

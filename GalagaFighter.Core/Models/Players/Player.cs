@@ -79,10 +79,15 @@ namespace GalagaFighter.Core.Models.Players
             var movement = movementBehavior?.Apply(this, input);
             shootingBehavior?.Apply(this, input, movement);
 
-            if(input?.Switch?.IsPressed ?? false)
+            if (input?.Switch?.IsPressed ?? false)
                 SwitchProjectile();
 
             Display = display;
+        }
+
+        public void RemoveEffect(PlayerEffect effect)
+        {
+            _effects.Remove(effect);
         }
 
         public override void Draw()
@@ -136,5 +141,6 @@ namespace GalagaFighter.Core.Models.Players
 
         public List<PlayerEffect> GetEffects() => _effects;
         public PlayerEffect GetSelectedProjectile() => _selectedProjectile;
+        public void SetSelectedProjectile(PlayerEffect projectile) => _selectedProjectile = projectile;
     }
 }

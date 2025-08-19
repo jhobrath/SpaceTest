@@ -12,9 +12,9 @@ namespace GalagaFighter.Core.Models.Effects
     public abstract class PlayerEffect
     {
         public abstract string IconPath { get; }
-        public virtual float TimeDuration  => 0f;
-        public virtual float BulletDuration => 0f;
         public virtual bool IsProjectile { get; }
+
+        public bool IsActive { get; private set; } = true;
 
         public virtual void Apply(PlayerStats stats) { }
         public virtual void Apply(PlayerDisplay display) { }
@@ -28,5 +28,7 @@ namespace GalagaFighter.Core.Models.Effects
         public void SetCollisionBehavior(IPlayerCollisionBehavior collisionBehavior) => CollisionBehavior = collisionBehavior;
         public void SetShootingBehavior(IPlayerShootingBehavior shootingBehavior) => ShootingBehavior = shootingBehavior;
         public void SetInputBehavior(IPlayerInputBehavior inputBehavior) => InputBehavior = inputBehavior;
+
+        public void Deactivate() => IsActive = false;
     }
 }

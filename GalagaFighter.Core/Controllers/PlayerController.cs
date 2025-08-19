@@ -1,8 +1,8 @@
 using GalagaFighter.Core.Behaviors.Players.Interfaces;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Events;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Controllers
@@ -11,11 +11,13 @@ namespace GalagaFighter.Core.Controllers
     {
         private readonly IPlayerEffectManager _effectManager;
         private readonly IInputService _inputService;
+        private readonly IEventService _eventService;
 
-        public PlayerController(IPlayerEffectManager effectManager, IInputService inputService)
+        public PlayerController(IPlayerEffectManager effectManager, IInputService inputService, IEventService eventService)
         {
             _effectManager = effectManager;
             _inputService = inputService;
+            _eventService = eventService;
         }
 
         public void Update(Player player, Game game)
@@ -56,6 +58,13 @@ namespace GalagaFighter.Core.Controllers
                 _effectManager.SwitchProjectileEffect(player);
 
             player.Display = display;
+        }
+
+        public void TakeDamage(Player player, int damage)
+        {
+            float oldHealth = player.Health;
+            player.Health -= damage;
+            _eventService.Publish(new PlayerHealthChangedEventArgs(player, oldHealth, player.Health));
         }
     }
 }

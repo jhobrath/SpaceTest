@@ -121,8 +121,8 @@ namespace GalagaFighter.Core
 
             _player1 = new Player(Id, display1, true);
             _player2 = new Player(Id, display2, false);
-            _player1Controller = new PlayerController(_playerEffectManager, _inputService);
-            _player2Controller = new PlayerController(_playerEffectManager, _inputService);
+            _player1Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
+            _player2Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
             _playerEffectManager.AddEffect(_player1, defaultShootEffect1);
             _playerEffectManager.AddEffect(_player2, defaultShootEffect2);
 

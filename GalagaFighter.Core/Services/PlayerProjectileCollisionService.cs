@@ -17,10 +17,12 @@ namespace GalagaFighter.Core.Services
     public class PlayerProjectileCollisionService : IPlayerProjectileCollisionService
     {
         private readonly IObjectService _objectService;
+        private readonly IPlayerEffectManager _playerEffectManager;
 
-        public PlayerProjectileCollisionService(IObjectService objectService)
+        public PlayerProjectileCollisionService(IObjectService objectService, IPlayerEffectManager playerEffectManager)
         {
             _objectService = objectService;
+            _playerEffectManager = playerEffectManager;
         }
 
         public void HandleCollisions()
@@ -40,6 +42,10 @@ namespace GalagaFighter.Core.Services
 
                     if(Raylib.CheckCollisionRecs(player.Rect, projectile.Rect))
                     { 
+                        var collisionBehavior = _playerEffectManager?.GetSelectedProjectileEffect(player)?.CollisionBehavior
+                            ?? _playerEffectManager?.GetProjectileEffects(player).FirstOrDefault()?.CollisionBehavior;
+                        collisionBehavior?.Apply(player, projectile);
+
                         player.Collide(projectile);
                         projectile.Collide(player);
                     }

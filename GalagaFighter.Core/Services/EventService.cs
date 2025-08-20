@@ -8,31 +8,35 @@ namespace GalagaFighter.Core.Services
 {
     public interface IEventService
     {
-        void Subscribe<T>(Action<T> listener) where T : EventArgs;
-        void Unsubscribe<T>(Action<T> listener) where T : EventArgs;
+        Guid Subscribe<T>(Action<T> listener) where T : EventArgs;
+        void Unsubscribe<T>(Guid subscriptionId) where T : EventArgs;
         void Publish<T>(T eventArgs) where T : EventArgs;
     }
 
     public class EventService : IEventService
     {
-        private static readonly Dictionary<Type, List<Action<object>>> _events = new Dictionary<Type, List<Action<object>>>();
+        private static readonly Dictionary<Type, Dictionary<Guid, Action<object>>> _events = new();
 
-        public void Subscribe<T>(Action<T> listener) where T : EventArgs
+        public Guid Subscribe<T>(Action<T> listener) where T : EventArgs
         {
             var type = typeof(T);
             if (!_events.ContainsKey(type))
             {
-                _events[type] = new List<Action<object>>();
+                _events[type] = new Dictionary<Guid, Action<object>>();
             }
-            _events[type].Add(e => listener((T)e));
+            var id = Guid.NewGuid();
+            _events[type][id] = e => listener((T)e);
+            return id;
         }
 
-        public void Unsubscribe<T>(Action<T> listener) where T : EventArgs
+        public void Unsubscribe<T>(Guid subscriptionId) where T : EventArgs
         {
             var type = typeof(T);
             if (_events.ContainsKey(type))
             {
-                _events.Remove(type);
+                _events[type].Remove(subscriptionId);
+                if (_events[type].Count == 0)
+                    _events.Remove(type);
             }
         }
 
@@ -41,7 +45,7 @@ namespace GalagaFighter.Core.Services
             var type = typeof(T);
             if (_events.ContainsKey(type))
             {
-                foreach (var action in _events[type])
+                foreach (var action in _events[type].Values.ToList())
                 {
                     action(eventArgs);
                 }

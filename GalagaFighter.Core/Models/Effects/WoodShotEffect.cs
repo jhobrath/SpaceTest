@@ -23,22 +23,33 @@ namespace GalagaFighter.Core.Models.Effects
         public override IPlayerShootingBehavior? ShootingBehavior => _shootingBehavior;
 
         private int _remainingBullets = 3;
+        private Guid _ownerId;
+        private Guid _subscriptionId;
 
         public WoodShotEffect(IEventService eventService, IObjectService objectService, IInputService inputService)
         {
             _eventService = eventService;
             _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/WoodShotShip.png"));
             _shootingBehavior = new WoodShotShootingBehavior(_eventService, objectService, inputService);
-            _eventService.Subscribe<ProjectileFiredEventArgs<WoodProjectile>>(HandleWoodShotFired);
+            _subscriptionId = _eventService.Subscribe<ProjectileFiredEventArgs<WoodProjectile>>(HandleWoodShotFired);
+        }
+
+        public void SetOwner(Guid ownerId)
+        {
+            _ownerId = ownerId;
         }
 
         private void HandleWoodShotFired(ProjectileFiredEventArgs<WoodProjectile> args)
         {
+            // Only decrement if the event is for the player who owns this effect
+            if (args.Player == null || args.Player.Id != _ownerId)
+                return;
+
             _remainingBullets--;
             if(_remainingBullets == 0)
             {
                 Deactivate();
-                _eventService.Unsubscribe<ProjectileFiredEventArgs<WoodProjectile>>(HandleWoodShotFired);
+                _eventService.Unsubscribe<ProjectileFiredEventArgs<WoodProjectile>>(_subscriptionId);
                 _eventService.Publish(new EffectDeactivatedEventArgs(this, args.Player));
             }
         }

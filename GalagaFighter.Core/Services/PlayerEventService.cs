@@ -17,6 +17,10 @@ namespace GalagaFighter.Core.Services
         private IInputService _inputService;
         private IPlayerEffectManager _effectManager;
 
+        private Guid _powerUpCollectedSubId;
+        private Guid _effectDeactivatedSubId;
+        private Guid _projectileCollidedSubId;
+
         public PlayerEventService(IEventService eventService, IObjectService objectService, IInputService inputService, IPlayerEffectManager effectManager)
         {
             _objectService = objectService;
@@ -29,14 +33,14 @@ namespace GalagaFighter.Core.Services
 
         public void Initialize()
         {
-            SubscribeEffectDeactivated();
-            SubscribeProjectileCollided();
-            SubscribePowerUpCollected();
+            _effectDeactivatedSubId = SubscribeEffectDeactivated();
+            _projectileCollidedSubId = SubscribeProjectileCollided();
+            _powerUpCollectedSubId = SubscribePowerUpCollected();
         }
 
-        private void SubscribePowerUpCollected()
+        private Guid SubscribePowerUpCollected()
         {
-            _eventService.Subscribe<PowerUpCollectedEventArgs>(HandlePowerUpCollected);
+            return _eventService.Subscribe<PowerUpCollectedEventArgs>(HandlePowerUpCollected);
         }
 
         private void HandlePowerUpCollected(PowerUpCollectedEventArgs args)
@@ -46,18 +50,18 @@ namespace GalagaFighter.Core.Services
                 _effectManager.AddEffect(args.Player, effect);
         }
 
-        private void SubscribeEffectDeactivated()
+        private Guid SubscribeEffectDeactivated()
         { 
-            _eventService.Subscribe<EffectDeactivatedEventArgs>(HandleEffectDeactivated); 
+            return _eventService.Subscribe<EffectDeactivatedEventArgs>(HandleEffectDeactivated); 
         }
         private void HandleEffectDeactivated(EffectDeactivatedEventArgs e)
         {
             _effectManager.RemoveEffect(e.Player, e.Effect);
         }
 
-        private void SubscribeProjectileCollided() 
+        private Guid SubscribeProjectileCollided() 
         { 
-            _eventService.Subscribe<ProjectileCollidedEventArgs>(HandleProjectileCollided); 
+            return _eventService.Subscribe<ProjectileCollidedEventArgs>(HandleProjectileCollided); 
         }
         private void HandleProjectileCollided(ProjectileCollidedEventArgs e)
         {

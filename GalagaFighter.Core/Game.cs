@@ -51,12 +51,12 @@ namespace GalagaFighter.Core
         {
             _objectService = new ObjectService();
             _inputService = new InputService(); 
-            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService);
+            _playerEffectManager = new PlayerEffectManager();
+            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService, _playerEffectManager);
             _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
             _eventService = new EventService();
             _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_eventService, _objectService, _inputService);
             _powerUpService = new PowerUpService(_objectService);
-            _playerEffectManager = new PlayerEffectManager();
             _playerEventService = new PlayerEventService(_eventService, _objectService, _inputService, _playerEffectManager);
             _playerEventService.Initialize();
             UiService.Initialize(_playerEffectManager);
@@ -106,23 +106,30 @@ namespace GalagaFighter.Core
             var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
             var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left, KeyboardKey.Right);
 
+            // 1. Construct players
+            _player1 = new Player(Id, display1, true);
+            _player2 = new Player(Id, display2, false);
 
+            // 2. Construct controllers
+            _player1Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
+            _player2Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
+
+            // 3. Construct default effects and set collision behaviors using lambdas
             var defaultShootEffect1 = new DefaultShootEffect();
             defaultShootEffect1.SetMovementBehavior(new PlayerMovementBehavior());
-            defaultShootEffect1.SetCollisionBehavior(new PlayerCollisionBehavior(_eventService, _objectService));
+            defaultShootEffect1.SetCollisionBehavior(new PlayerCollisionBehavior(
+                _eventService, _objectService, (player, damage) => _player1Controller.TakeDamage(player, damage)));
             defaultShootEffect1.SetInputBehavior(new PlayerInputBehavior(_inputService));
             defaultShootEffect1.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
 
             var defaultShootEffect2 = new DefaultShootEffect();
             defaultShootEffect2.SetMovementBehavior(new PlayerMovementBehavior());
-            defaultShootEffect2.SetCollisionBehavior(new PlayerCollisionBehavior(_eventService, _objectService));
+            defaultShootEffect2.SetCollisionBehavior(new PlayerCollisionBehavior(
+                _eventService, _objectService, (player, damage) => _player2Controller.TakeDamage(player, damage)));
             defaultShootEffect2.SetInputBehavior(new PlayerInputBehavior(_inputService));
             defaultShootEffect2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
 
-            _player1 = new Player(Id, display1, true);
-            _player2 = new Player(Id, display2, false);
-            _player1Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
-            _player2Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
+            // 4. Add effects to players
             _playerEffectManager.AddEffect(_player1, defaultShootEffect1);
             _playerEffectManager.AddEffect(_player2, defaultShootEffect2);
 

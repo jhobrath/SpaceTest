@@ -15,18 +15,26 @@ namespace GalagaFighter.Core.Models.Effects
     {
         public override string IconPath => "Sprites/Effects/iceshot.png";
         private readonly SpriteWrapper _sprite;
-        public override bool IsProjectile => false;
+        public override bool IsProjectile => true;
 
         private readonly IPlayerShootingBehavior? _shootingBehavior;
         public override IPlayerShootingBehavior? ShootingBehavior => _shootingBehavior;
 
         private readonly IObjectService _objectService;
 
+        protected override float Duration => 10f; // 10 seconds
+
         public IceShotEffect(IObjectService objectService)
         {
             _objectService = objectService;
             _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/IceShotShip.png"), 3, .33f);
             _shootingBehavior = new IceShotShootingBehavior(objectService);
+        }
+
+        public override void OnUpdate(float frameTime)
+        {
+            base.OnUpdate(frameTime); // Handles duration and deactivation
+            // Add any custom update logic here if needed
         }
 
         public override void Apply(PlayerDisplay display)

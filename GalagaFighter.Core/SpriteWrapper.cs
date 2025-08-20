@@ -88,7 +88,7 @@ namespace GalagaFighter.Core
                         color ?? Color.White);
                     break;
                 case SpriteMode.Animation:
-                    DrawAnimated(position, rotation, width, height);
+                    DrawAnimated(position, rotation, width, height, color: color);
                     break;
             }
         }

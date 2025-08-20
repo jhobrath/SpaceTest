@@ -156,6 +156,7 @@ namespace GalagaFighter.Core
 
         private void Update()
         {
+            _playerEffectManager.UpdateEffects(Raylib.GetFrameTime());
             _playerProjectileCollisionService.HandleCollisions();
             _projectilePowerUpCollisionService.HandleCollisions();
             _playerPowerUpCollisionService.HandleCollisions();

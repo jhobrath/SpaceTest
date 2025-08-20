@@ -32,7 +32,7 @@ namespace GalagaFighter.Core.Models.Players
 
         public override void Draw()
         {
-            Display.Sprite.Draw(Center, Display.Rotation, Rect.Width * Display.Size, Rect.Height * Display.Size, Display.Color);
+            dDisplay.Sprite.Draw(Center, Display.Rotation, Rect.Width * Display.Size, Rect.Height * Display.Size, Display.Color);
         }
     }
 }

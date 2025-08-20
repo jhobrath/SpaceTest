@@ -26,6 +26,8 @@ namespace GalagaFighter.Core.Models.Effects
         private Guid _ownerId;
         private Guid _subscriptionId;
 
+        protected override float Duration => 0f; // Set to >0 if you want a time limit
+
         public WoodShotEffect(IEventService eventService, IObjectService objectService, IInputService inputService)
         {
             _eventService = eventService;
@@ -39,19 +41,28 @@ namespace GalagaFighter.Core.Models.Effects
             _ownerId = ownerId;
         }
 
+        public override void OnUpdate(float frameTime)
+        {
+            base.OnUpdate(frameTime); // Handles duration if set
+            if (_remainingBullets <= 0)
+                Deactivate();
+        }
+
         private void HandleWoodShotFired(ProjectileFiredEventArgs<WoodProjectile> args)
         {
-            // Only decrement if the event is for the player who owns this effect
             if (args.Player == null || args.Player.Id != _ownerId)
                 return;
-
             _remainingBullets--;
-            if(_remainingBullets == 0)
-            {
-                Deactivate();
-                _eventService.Unsubscribe<ProjectileFiredEventArgs<WoodProjectile>>(_subscriptionId);
-                _eventService.Publish(new EffectDeactivatedEventArgs(this, args.Player));
-            }
+            if (_remainingBullets == 0)
+                Deactivate(args.Player);
+        }
+
+        public void Deactivate(Player player)
+        {
+            base.Deactivate();
+            _eventService.Unsubscribe<ProjectileFiredEventArgs<WoodProjectile>>(_subscriptionId);
+            if (_ownerId != Guid.Empty)
+                _eventService.Publish(new EffectDeactivatedEventArgs(this, player));
         }
 
         public override void Apply(PlayerDisplay display)

@@ -14,6 +14,7 @@ namespace GalagaFighter.Core.Services
         IReadOnlyList<PlayerEffect> GetProjectileEffects(Player player);
         PlayerEffect GetSelectedProjectileEffect(Player player);
         void SwitchProjectileEffect(Player player);
+        void UpdateEffects(float frameTime);
     }
 
     public class PlayerEffectManager : IPlayerEffectManager
@@ -106,6 +107,32 @@ namespace GalagaFighter.Core.Services
                 _selectedProjectileEffect[player] = effects[idx + 1];
             else
                 _selectedProjectileEffect[player] = effects[0];
+        }
+
+        public void UpdateEffects(float frameTime)
+        {
+            foreach (var kvp in _statusEffects)
+            {
+                var player = kvp.Key;
+                var effects = kvp.Value;
+                for (int i = effects.Count - 1; i >= 0; i--)
+                {
+                    effects[i].OnUpdate(frameTime);
+                    if (!effects[i].IsActive)
+                        RemoveEffect(player, effects[i]);
+                }
+            }
+            foreach (var kvp in _projectileEffects)
+            {
+                var player = kvp.Key;
+                var effects = kvp.Value;
+                for (int i = effects.Count - 1; i >= 0; i--)
+                {
+                    effects[i].OnUpdate(frameTime);
+                    if (!effects[i].IsActive)
+                        RemoveEffect(player, effects[i]);
+                }
+            }
         }
     }
 }

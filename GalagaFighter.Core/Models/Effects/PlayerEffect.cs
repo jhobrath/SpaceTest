@@ -15,6 +15,23 @@ namespace GalagaFighter.Core.Models.Effects
         public virtual bool IsProjectile { get; }
 
         public bool IsActive { get; private set; } = true;
+        protected virtual float Duration => 0f;
+        private float _remainingTime;
+
+        public PlayerEffect()
+        {
+            _remainingTime = Duration;
+        }
+
+        public virtual void OnUpdate(float frameTime)
+        {
+            if (Duration > 0f)
+            {
+                _remainingTime -= frameTime;
+                if (_remainingTime <= 0f)
+                    IsActive = false;
+            }
+        }
 
         public virtual void Apply(PlayerStats stats) { }
         public virtual void Apply(PlayerDisplay display) { }
@@ -29,6 +46,6 @@ namespace GalagaFighter.Core.Models.Effects
         public void SetShootingBehavior(IPlayerShootingBehavior shootingBehavior) => ShootingBehavior = shootingBehavior;
         public void SetInputBehavior(IPlayerInputBehavior inputBehavior) => InputBehavior = inputBehavior;
 
-        public void Deactivate() => IsActive = false;
+        public virtual void Deactivate() => IsActive = false;
     }
 }

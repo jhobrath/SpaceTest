@@ -26,7 +26,7 @@ namespace GalagaFighter.Core.Services
         {
             var frameTime = Raylib.GetFrameTime();
 
-            EffectModifiers effects = GetModifiers(player, frameTime);
+            var effects = GetModifiers(player, frameTime);
 
             player.Rotation = player.IsPlayer1 ? 90f : -90f;
             player.CurrentFrameSprite = effects.Sprite;
@@ -39,7 +39,8 @@ namespace GalagaFighter.Core.Services
         }
 
         private static EffectModifiers GetModifiers(Player player, float frameTime)
-        {
+        { 
+
             var effects = new EffectModifiers(player.Sprite)
             {
                 Stats = new PlayerStats(),

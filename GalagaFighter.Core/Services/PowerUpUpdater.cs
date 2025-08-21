@@ -37,6 +37,24 @@ namespace GalagaFighter.Core.Services
                 StoreOriginalSizeAndDistanceIfNeeded(powerUp);
                 UpdateCollectedPowerUp(powerUp, frameTime);
             }
+
+            if(powerUp.IsActive && powerUp.Rect.Y > Game.Height)
+                powerUp.IsActive = false;
+
+            RemoveInactiveGlobals();
+        }
+
+        private void RemoveInactiveGlobals()
+        {
+            RemoveInactiveKeys(_sinceHitDict);
+            RemoveInactiveKeys(_originalSizeDict);
+            RemoveInactiveKeys(_originalDistanceDict);
+        }
+
+        private void RemoveInactiveKeys<T>(Dictionary<PowerUp, T> dict)
+        {
+            var keys = dict.Keys.Where(x => !x.IsActive).ToList();
+            keys.ForEach(x => dict.Remove(x));
         }
 
         private void UpdateUncollectedPowerUp(PowerUp powerUp, float frameTime)
@@ -100,8 +118,8 @@ namespace GalagaFighter.Core.Services
             var originalDistance = _originalDistanceDict.TryGetValue(powerUp, out var dist) ? dist : 1f;
             var currentDistance = Math.Abs(powerUp.Center.X - player.Center.X) + Math.Abs(powerUp.Center.Y - player.Center.Y);
             var pct = originalDistance > 0 ? currentDistance / originalDistance : 0f;
-            var xScale = originalSize.X * pct;
-            var yScale = originalSize.Y * pct;
+            var xScale = Math.Min(originalSize.X, originalSize.X * pct);
+            var yScale = Math.Min(originalSize.Y, originalSize.Y * pct);
 
             return new Vector2(xScale, yScale);
         }

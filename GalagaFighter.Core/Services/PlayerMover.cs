@@ -1,5 +1,4 @@
 ﻿using GalagaFighter.Core.Behaviors.Players.Updates;
-using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using Raylib_cs;
 using System;

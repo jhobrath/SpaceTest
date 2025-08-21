@@ -1,0 +1,42 @@
+using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Effects;
+using System.Collections.Generic;
+
+namespace GalagaFighter.Core.Services
+{
+    public interface IPlayerSwitcher
+    {
+        void Switch(Player player, EffectModifiers modifiers);
+    }
+    public class PlayerSwitcher : IPlayerSwitcher
+    {
+        private IInputService _inputService;
+
+        public PlayerSwitcher(IInputService inputService)
+        {
+            _inputService = inputService;
+        }
+
+        public void Switch(Player player, EffectModifiers modifiers)
+        {
+            var switchButton = _inputService.GetSwitch(player.Id);
+            if (!switchButton.IsPressed)
+                return;
+
+            var projectileEffects = new List<PlayerEffect>();
+
+            foreach (var effect in player.Effects)
+            {
+                if (effect.IsProjectile)
+                    projectileEffects.Add(effect);
+            }
+            
+            if (projectileEffects.Count == 0)
+                return;
+            
+            var currentIndex = projectileEffects.IndexOf(player.SelectedProjectile);
+            var nextIndex = (currentIndex + 1) % projectileEffects.Count;
+            player.SelectedProjectile = projectileEffects[nextIndex];
+        }
+    }
+}

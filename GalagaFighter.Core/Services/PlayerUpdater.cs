@@ -13,17 +13,31 @@ namespace GalagaFighter.Core.Services
     {
         private IPlayerMover _playerMover;
         private IPlayerShooter _playerShooter;
+        private IPlayerSwitcher _playerSwitcher;
 
-        public PlayerUpdater(IPlayerMover playerMover, IPlayerShooter playerShooter)
+        public PlayerUpdater(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;
-        }
+            _playerSwitcher = playerSwitcher;
+         }
 
         public void Update(Game game, Player player)
         {
             var frameTime = Raylib.GetFrameTime();
 
+            EffectModifiers effects = GetModifiers(player, frameTime);
+
+            player.Rotation = player.IsPlayer1 ? 90f : -90f;
+            player.CurrentFrameSprite = effects.Sprite;
+
+            _playerMover.Move(player, effects);
+            _playerShooter.Shoot(player, effects);
+            _playerSwitcher.Switch(player, effects);
+        }
+
+        private static EffectModifiers GetModifiers(Player player, float frameTime)
+        {
             var effects = new EffectModifiers(player.Sprite)
             {
                 Stats = new PlayerStats(),
@@ -31,16 +45,15 @@ namespace GalagaFighter.Core.Services
                 Projectile = new PlayerProjectile()
             };
 
-            foreach(var effect in player.Effects)
-                effect.OnUpdate(frameTime);
+            foreach (var effect in player.Effects)
+                if (!effect.IsProjectile || effect == player.SelectedProjectile)
+                    effect.OnUpdate(frameTime);
 
-            foreach(var playerEffect in player.Effects)
-                playerEffect.Apply(effects);
+            foreach (var effect in player.Effects)
+                if (!effect.IsProjectile || effect == player.SelectedProjectile)
+                    effect.Apply(effects);
 
-            player.Rotation = player.IsPlayer1 ? 90f : -90f;
-
-            _playerMover.Move(player, effects);
-            _playerShooter.Shoot(player, effects);
+            return effects;
         }
     }
 }

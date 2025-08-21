@@ -10,7 +10,7 @@ namespace GalagaFighter.Core
         public Vector2 Position => Rect.Position;
 
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid Owner => _owner;
+        public Guid Owner { get { return _owner; } set { _owner = value; } }
         public Rectangle Rect => _rect;
         public float Rotation { get; set; } = 0f;
         public Vector2 Speed => _speed;

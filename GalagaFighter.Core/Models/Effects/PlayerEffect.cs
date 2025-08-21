@@ -1,4 +1,6 @@
-﻿namespace GalagaFighter.Core.Models.Effects
+﻿using GalagaFighter.Core.Models.Players;
+
+namespace GalagaFighter.Core.Models.Effects
 {
     public abstract class PlayerEffect
     {

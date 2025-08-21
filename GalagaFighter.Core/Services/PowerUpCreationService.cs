@@ -16,20 +16,22 @@ namespace GalagaFighter.Core.Services
         void Roll();
     }
 
-    public class PowerUpService : IPowerUpService
+    public class PowerUpCreationService : IPowerUpService
     {
         private IObjectService _objectService;
+        private IPowerUpUpdater _powerUpUpdater;
 
-        public PowerUpService(IObjectService objectService)
+        public PowerUpCreationService(IObjectService objectService, IPowerUpUpdater powerUpUpdater)
         {
             _objectService = objectService;
+            _powerUpUpdater = powerUpUpdater;
         }
 
-        private readonly static List<Func<Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<Guid, Rectangle, Vector2, PowerUp>>
+        private readonly static List<Func<IPowerUpUpdater, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<IPowerUpUpdater, Guid, Rectangle, Vector2, PowerUp>>
         {
-            (o,r,f) => new FireRatePowerUp(o, r.Position, r.Size, f),
-            (o,r,f) => new IceShotPowerUp(o, r.Position, r.Size, f),
-            (o,r,f) => new WoodShotPowerUp(o,r.Position,r.Size,f),
+            (up,o,r,f) => new FireRatePowerUp(up,o, r.Position, r.Size, f),
+            (up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
+            (up,o,r,f) => new WoodShotPowerUp(up,o,r.Position,r.Size,f),
             //(r,f) => new NinjaPowerUp(r,f),
             //(r,f) => new ExplosivePowerUp(r, f),
             //(r,f) => new MagnetPowerUp(r,f),
@@ -61,10 +63,7 @@ namespace GalagaFighter.Core.Services
 
             var speed = new Vector2(0, 200f * uniformScale);
 
-            var powerUp = _powerUpTypes[1](Game.Id, rect, speed);
-            powerUp.SetMovementBehavior(new PowerUpMovementBehavior());
-            powerUp.SetDestroyBehavior(new PowerUpDestroyBehavior());
-            powerUp.SetCollisionBehavior(new PowerUpCollisionBehavior(_objectService));
+            var powerUp = _powerUpTypes[1](_powerUpUpdater, Game.Id, rect, speed);
             return powerUp;
         }
     }

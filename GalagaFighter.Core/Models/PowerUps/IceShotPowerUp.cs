@@ -11,12 +11,12 @@ namespace GalagaFighter.Core.Models.PowerUps
 {
     public class IceShotPowerUp : PowerUp
     {
-        public IceShotPowerUp(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
-            : base(owner, "Sprites/PowerUps/ice.png", initialPosition, initialSize, initialSpeed)
+        public IceShotPowerUp(IPowerUpUpdater updater, Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
+            : base(updater, owner, "Sprites/PowerUps/ice.png", initialPosition, initialSize, initialSpeed)
         {
         }
 
-        public override List<PlayerEffect> CreateEffects(IEventService eventService,IObjectService objectService, IInputService inputService)
+        public override List<PlayerEffect> CreateEffects()
         {
             return [
                 new IceShotEffect()

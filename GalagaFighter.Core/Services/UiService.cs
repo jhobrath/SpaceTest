@@ -50,8 +50,8 @@ namespace GalagaFighter.Core.Services
 
         private static void DrawEffects(Player player, bool reverse)
         {
-            var statusEffects = _effectManager.GetStatusEffects(player);
-            var projectiles = _effectManager.GetProjectileEffects(player);
+            var statusEffects = player.Effects.Where(x => !x.IsProjectile);
+            var projectiles = player.Effects.Where(x => x.IsProjectile); 
 
             var iconSize = 30f * Game.UniformScale;
             var startX = reverse
@@ -66,7 +66,7 @@ namespace GalagaFighter.Core.Services
 
             icons.Insert(0, "Sprites/Effects/firerate" + (fireRate.Count+1) + ".png");
 
-            var selected = _effectManager.GetSelectedProjectileEffect(player);
+            var selected = player.SelectedProjectile;
             var isDefaultEffect = selected != null && selected.GetType() == typeof(DefaultShootEffect);
             
             for(var i =0;i < icons.Count;i++)

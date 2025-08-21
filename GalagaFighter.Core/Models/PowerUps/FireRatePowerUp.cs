@@ -13,12 +13,12 @@ namespace GalagaFighter.Core.Models.PowerUps
     {
         private readonly List<PlayerEffect> _effects = [];
 
-        public FireRatePowerUp(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
-            : base(owner, "Sprites/PowerUps/firerate.png", initialPosition, initialSize, initialSpeed)
+        public FireRatePowerUp(IPowerUpUpdater updater, Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
+            : base(updater, owner, "Sprites/PowerUps/firerate.png", initialPosition, initialSize, initialSpeed)
         {
         }
 
-        public override List<PlayerEffect> CreateEffects(IEventService eventService, IObjectService objectService, IInputService inputService)
+        public override List<PlayerEffect> CreateEffects()
         {
             return [new FireRateEffect()];
         }

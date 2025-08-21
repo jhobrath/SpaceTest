@@ -24,17 +24,6 @@ namespace GalagaFighter.Core.Behaviors.PowerUps
 
         public void Apply(PowerUp powerUp, Projectile projectile)
         {
-            var player = _objectService.GetOwner(projectile);
-            powerUp.SetOwner(player.Id);
-
-            powerUp.SetMovementBehavior(new PowerUpCollectMovementBehavior(_objectService, powerUp, player));
-            powerUp.SetDestroyBehavior(new PowerUpCollectDestroyBehavior(_objectService, projectile));
-
-            //var collisionSize = new Vector2(20f, 20f);
-            //var xOffset = projectile.Speed.X < 0 ? 0 : projectile.Rect.Width;
-            //var position = new Vector2(powerUp.Center.X - collisionSize.X / 2 + xOffset, powerUp.Center.Y - collisionSize.Y / 2);
-            //var collision = new SmallCollision(powerUp.Id, position, collisionSize, projectile.Speed);
-            //_objectService.AddGameObject(collision);
         }
     }
 }

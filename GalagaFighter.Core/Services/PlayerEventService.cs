@@ -65,7 +65,6 @@ namespace GalagaFighter.Core.Services
         }
         private void HandleProjectileCollided(ProjectileCollidedEventArgs e)
         {
-            var effects = e.Projectile.CreateEffects(_objectService);
             foreach(var effect in effects)
                 _effectManager.AddEffect(e.Player, effect);
         }

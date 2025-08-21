@@ -35,18 +35,41 @@ namespace GalagaFighter.Core.Services
 
             foreach(var powerUp in powerUps)
             {
-                foreach(var player in players)
-                {
-                    if (powerUp.Owner != player.Id)
-                        continue;
+                if (powerUp.Owner == Game.Id)
+                    continue;
 
-                    if(Math.Abs(player.Center.X - powerUp.Center.X) < 50)
-                    {
-                        _eventService.Publish(new PowerUpCollectedEventArgs(player, powerUp));
-                        powerUp.IsActive = false;
-                    }
-                }
+                HandleCollision(players, powerUp);
             }
+        }
+
+        private static void HandleCollision(List<Player> players, PowerUp powerUp)
+        {
+            var player = players.Single(x => x.Id == powerUp.Owner);
+
+            var powerUpIsClose = Math.Abs(player.Center.X - powerUp.Center.X) < 20;
+            if (!powerUpIsClose)
+                return;
+
+            var newEffects = powerUp.CreateEffects();
+            foreach (var newEffect in newEffects)
+            {
+                var existingEffect = player.Effects.FirstOrDefault(e => e.GetType() == newEffect.GetType());
+                if (existingEffect != null)
+                    ReplaceExistingEffect(player, newEffect, existingEffect);
+                else
+                    player.Effects.Add(newEffect);
+            }
+
+            powerUp.IsActive = false;
+        }
+
+        private static void ReplaceExistingEffect(Player player, Models.Effects.PlayerEffect newEffect, Models.Effects.PlayerEffect existingEffect)
+        {
+            var index = player.Effects.IndexOf(existingEffect);
+            player.Effects[index] = newEffect;
+
+            if (player.SelectedProjectile == existingEffect)
+                player.SelectedProjectile = newEffect;
         }
     }
 }

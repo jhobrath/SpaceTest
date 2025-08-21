@@ -15,41 +15,17 @@ namespace GalagaFighter.Core.Models.PowerUps
 {
     public abstract class PowerUp : GameObject
     {
-        public bool EffectsApplied { get; set; } = false;
+        private IPowerUpUpdater _powerUpUpdater;
 
-        protected IPowerUpMovementBehavior? MovementBehavior { get; set; }
-        protected IPowerUpDestroyBehavior? DestroyBehavior { get; set; }
-        protected IPowerUpCollisionBehavior? CollisionBehavior { get; set; }
-
-        public PowerUp(Guid owner, string texture, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        public PowerUp(IPowerUpUpdater powerUpUpdater, Guid owner, string texture, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
             : base(owner, new SpriteWrapper(TextureService.Get(texture)), initialPosition, initialSize, initialSpeed)
         {
-        }
-
-        public void SetMovementBehavior(IPowerUpMovementBehavior movementBehavior)
-        {
-            MovementBehavior = movementBehavior;
-        }
-
-        public void SetDestroyBehavior(IPowerUpDestroyBehavior destroyBehavior)
-        {
-            DestroyBehavior = destroyBehavior;
-        }
-
-        public void SetCollisionBehavior(IPowerUpCollisionBehavior collisionBehavior)
-        {
-            CollisionBehavior = collisionBehavior;
-        }
-
-        public virtual void Collide(Projectile projectile)
-        {
-            CollisionBehavior?.Apply(this, projectile);
+            _powerUpUpdater = powerUpUpdater;
         }
 
         public override void Update(Game game)
         {
-            MovementBehavior?.Apply(this);
-            DestroyBehavior?.Apply(this);
+            _powerUpUpdater.Update(game, this);
         }
 
         public override void Draw()
@@ -57,6 +33,6 @@ namespace GalagaFighter.Core.Models.PowerUps
             Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
         }
 
-        public abstract List<PlayerEffect> CreateEffects(IEventService eventService, IObjectService objectService, IInputService inputService);
+        public abstract List<PlayerEffect> CreateEffects();
     }
 }

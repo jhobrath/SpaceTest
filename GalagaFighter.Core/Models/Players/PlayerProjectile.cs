@@ -21,11 +21,29 @@ namespace GalagaFighter.Core.Models.Players
         public bool DoubleShot { get; set; } = false;
 
         //Creation
-        public List<Func<IProjectileUpdater, Player, Vector2, Projectile>> Projectiles = [];
+        public List<Func<IProjectileUpdater, Player, Vector2, PlayerProjectile, Projectile>> Projectiles = [];
 
         //Callbacks
         public Action<Projectile>? OnShoot { get; set; } = null;
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
+
+        public PlayerProjectile Clone()
+        {
+            return new PlayerProjectile
+            {
+                DamageMultiplier = DamageMultiplier,
+                SpeedMultiplier = SpeedMultiplier,
+                SizeMultiplier = SizeMultiplier,
+                RedAlpha = RedAlpha,
+                BlueAlpha = BlueAlpha,
+                GreenAlpha = GreenAlpha,
+                OpacityAlpha = OpacityAlpha,
+                DoubleShot = DoubleShot,
+                Projectiles = Projectiles,
+                OnShoot = OnShoot,
+                OnProjectileDestroyed = OnProjectileDestroyed
+            };
+        }
 
     }
 }

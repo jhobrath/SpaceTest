@@ -1,5 +1,4 @@
-﻿using GalagaFighter.Core.Models.Effects;
-using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 using System;
@@ -78,7 +77,9 @@ namespace GalagaFighter.Core.Services
 
             foreach(var projectileFunc in modifiers.Projectile.Projectiles)
             {
-                var projectile = projectileFunc(_projectileUpdater, player, spawnPosition);
+                var projectileModifiers = modifiers.Projectile.Clone();
+
+                var projectile = projectileFunc(_projectileUpdater, player, spawnPosition, projectileModifiers);
                 SetRotation(projectile);
                 
                 projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);

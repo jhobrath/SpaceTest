@@ -13,7 +13,12 @@
     <Compile Remove="Behaviors\Players\PlayerMovementBehavior.cs" />
     <Compile Remove="Behaviors\Players\PlayerShootingBehavior.cs" />
     <Compile Remove="Behaviors\Players\WoodShotShootingBehavior.cs" />
+    <Compile Remove="Behaviors\Projectiles\WoodCollisionBehavior.cs" />
+    <Compile Remove="Behaviors\Projectiles\WoodReleasedDestroyBehavior.cs" />
+    <Compile Remove="Behaviors\Projectiles\WoodReleasedMovementBehavior.cs" />
+    <Compile Remove="Behaviors\Projectiles\WoodUnreleasedMovementBehavior.cs" />
     <Compile Remove="Controllers\PlayerController.cs" />
+    <Compile Remove="Services\PlayerEventService.cs" />
   </ItemGroup>
 
   <ItemGroup>

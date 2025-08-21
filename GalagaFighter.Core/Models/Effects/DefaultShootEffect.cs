@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Projectiles;
+﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 
 namespace GalagaFighter.Core.Models.Effects
@@ -17,7 +18,7 @@ namespace GalagaFighter.Core.Models.Effects
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Sprite = _sprite;
-            modifiers.Projectile.Projectiles.Add((updater, owner, position) => new DefaultProjectile(updater, owner, position));
+            modifiers.Projectile.Projectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers));
         }
     }
 }

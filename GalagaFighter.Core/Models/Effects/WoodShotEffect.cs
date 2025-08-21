@@ -28,8 +28,8 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
         }
 
-        private Projectile CreateProjectile(IProjectileUpdater projectileUpdater, Player owner, Vector2 position)
-            => new WoodProjectile(projectileUpdater, owner, position);
+        private Projectile CreateProjectile(IProjectileUpdater projectileUpdater, Player owner, Vector2 position, PlayerProjectile modifiers)
+            => new WoodProjectile(projectileUpdater, owner, position, modifiers);
 
         private void HandleWoodShotFired(Projectile projectile)
         {

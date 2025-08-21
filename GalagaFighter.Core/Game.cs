@@ -22,7 +22,8 @@ namespace GalagaFighter.Core
         public static float Height => _height;
         public static float Width => _width;
 
-        public static Guid Id => Guid.NewGuid();
+        public static Guid _gameId = Guid.NewGuid();
+        public static Guid Id => _gameId;
 
         public static Random Random => _random;
 
@@ -44,12 +45,14 @@ namespace GalagaFighter.Core
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
         private readonly IEventService _eventService;
-        private readonly IPlayerEventService _playerEventService;
+        //private readonly IPlayerEventService _playerEventService;
         private readonly IPlayerEffectManager _playerEffectManager;
         private readonly IPlayerUpdater _playerUpdater;
         private readonly IPlayerMover _playerMover;
         private readonly IPlayerShooter _playerShooter;
         private readonly IProjectileUpdater _projectileUpdater;
+        private readonly IPowerUpUpdater _powerUpUpdater;
+        private readonly IPlayerSwitcher _playerSwitcher;
 
         public Game()
         {
@@ -59,14 +62,16 @@ namespace GalagaFighter.Core
             _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService, _playerEffectManager);
             _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
             _eventService = new EventService();
+            _powerUpUpdater = new PowerUpUpdater(_objectService);
             _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_eventService, _objectService, _inputService);
-            _powerUpService = new PowerUpService(_objectService);
-            _playerEventService = new PlayerEventService(_eventService, _objectService, _inputService, _playerEffectManager);
+            _powerUpService = new PowerUpCreationService(_objectService, _powerUpUpdater);
+            //_playerEventService = new PlayerEventService(_eventService, _objectService, _inputService, _playerEffectManager);
             _playerMover = new PlayerMover(_inputService);
             _projectileUpdater = new ProjectileUpdater();
             _playerShooter = new PlayerShooter(_inputService, _objectService, _projectileUpdater);
-            _playerUpdater = new PlayerUpdater(_playerMover, _playerShooter);
-            _playerEventService.Initialize();
+            _playerSwitcher = new PlayerSwitcher(_inputService);
+            _playerUpdater = new PlayerUpdater(_playerMover, _playerShooter, _playerSwitcher);
+            //_playerEventService.Initialize();
             UiService.Initialize(_playerEffectManager);
             InitializeWindow();
             InitializeScale();
@@ -160,10 +165,10 @@ namespace GalagaFighter.Core
 
         private void Update()
         {
-            _playerEffectManager.UpdateEffects(Raylib.GetFrameTime());
             _playerProjectileCollisionService.HandleCollisions();
             _projectilePowerUpCollisionService.HandleCollisions();
             _playerPowerUpCollisionService.HandleCollisions();
+            //_playerEffectManager.UpdateEffects(Raylib.GetFrameTime());
             _inputService.Update();
 
             HandleInput();

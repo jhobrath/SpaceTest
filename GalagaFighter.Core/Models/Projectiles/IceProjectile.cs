@@ -15,8 +15,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override int BaseDamage => 0;
         public override Vector2 SpawnOffset => new Vector2(-10, 30);
 
-        public IceProjectile(IProjectileUpdater updater, Player owner, Vector2 initialPosition)
-            : base(updater, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed)
+        public IceProjectile(IProjectileUpdater updater, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
+            : base(updater, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed, modifiers)
         {
         }
 
@@ -26,7 +26,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             return new SpriteWrapper(texture, 6, .33f);
         }
 
-        public override List<PlayerEffect> CreateEffects(IObjectService objectService)
+        public override List<PlayerEffect> CreateEffects()
         {
             return new List<PlayerEffect> { new FrozenEffect() };
         }

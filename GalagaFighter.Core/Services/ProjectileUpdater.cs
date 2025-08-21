@@ -13,6 +13,11 @@ namespace GalagaFighter.Core.Services
         {
             var frameTime = Raylib.GetFrameTime();
             projectile.Move(projectile.Speed.X * frameTime, projectile.Speed.Y * frameTime);
+
+            if (projectile.Rect.X - projectile.Rect.Width < 0f)
+                projectile.IsActive = false;
+            else if (projectile.Rect.X > Game.Width)
+                projectile.IsActive = false;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
         }
 
-        private Projectile CreateProjectile(IProjectileUpdater updater, Player owner, Vector2 position)
-            => new IceProjectile(updater, owner, position);
+        private Projectile CreateProjectile(IProjectileUpdater updater, Player owner, Vector2 position, PlayerProjectile modifiers)
+            => new IceProjectile(updater, owner, position, modifiers);
     }
 }

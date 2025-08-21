@@ -47,7 +47,6 @@ namespace GalagaFighter.Core.Behaviors.Projectiles
         public void Apply(Projectile projectile, PowerUp powerUp)
         {
             projectile.IsActive = false;
-            projectile.EffectsApplied = true;
         }
 
         protected virtual Vector2 GetInitialPosition(Projectile projectile)

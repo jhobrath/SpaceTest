@@ -1,6 +1,4 @@
-﻿using GalagaFighter.Core.Models.Players;
-
-namespace GalagaFighter.Core.Models.Effects
+﻿namespace GalagaFighter.Core.Models.Players
 {
     public class EffectModifiers
     {

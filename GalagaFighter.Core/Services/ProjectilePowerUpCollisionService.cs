@@ -36,13 +36,17 @@ namespace GalagaFighter.Core.Services
                     if (powerUp.Owner == projectile.Owner)
                         continue;
 
-                    if(Raylib.CheckCollisionRecs(projectile.Rect, powerUp.Rect))
-                    { 
-                        projectile.Collide(powerUp);
-                        powerUp.Collide(projectile);
-                    }
+                    if (!Raylib.CheckCollisionRecs(projectile.Rect, powerUp.Rect))
+                        continue;
+                 
+                    Collide(projectile, powerUp);
                 }
             }
+        }
+
+        private void Collide(Projectile projectile, PowerUp powerUp)
+        {
+            powerUp.Owner = projectile.Owner;
         }
     }
 }

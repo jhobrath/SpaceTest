@@ -22,6 +22,7 @@ namespace GalagaFighter.Core.Models.Players
         public Rectangle CurrentFrameRect { get; set; }
         public float CurrentFrameRotation { get; set; } = 0f;
         public Color CurrentFrameColor { get; set; } = Color.White;
+        public Vector2 CurrentFrameSpeed { get; set; } = new Vector2(0f,0f);
         public SpriteWrapper CurrentFrameSprite { get; set; }
 
         private static readonly SpriteWrapper _defaultSprite = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));

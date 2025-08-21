@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using GalagaFighter.Core.Models.Players;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,9 @@ namespace GalagaFighter.Core.Models.Collisions
 
         private float _lifetimeThusFar = 0f;
         private float _speedDecreaseFactor = 0f;
+
+        private Player? _gluedTo;
+        private float? _gluedOffsetY;
 
         public Collision(Guid owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
             : base(owner, sprite, initialPosition, initialSize, initialSpeed)
@@ -35,7 +39,7 @@ namespace GalagaFighter.Core.Models.Collisions
 
             UpdatePosition(frameTime);
             UpdateColor(frameTime);
-
+            UpdateGluedVerticalPosition();
 
             Sprite.Update(frameTime);
 
@@ -48,8 +52,8 @@ namespace GalagaFighter.Core.Models.Collisions
         private void UpdatePosition(float frameTime)
         {
             var speedChange = 1 - SpeedDecreaseFactor * frameTime;
-            Hurry(speedChange, speedChange);
-            Move(Speed.X * frameTime, Speed.Y * frameTime);
+            Hurry(x: speedChange);
+            Move(x: Speed.X * frameTime);
         }
 
         private void UpdateColor(float frameTime)
@@ -70,6 +74,21 @@ namespace GalagaFighter.Core.Models.Collisions
         public override void Draw()
         {
             Sprite.Draw(Center, 0f, Rect.Width, Rect.Height, Color);
+        }
+
+        public void GlueVerticallyTo(Player target)
+        {
+            _gluedTo = target;
+            _gluedOffsetY = Rect.Y - _gluedTo.Rect.Y;
+        }
+
+        protected void UpdateGluedVerticalPosition()
+        {
+            if (_gluedTo == null || !_gluedOffsetY.HasValue)
+                return;
+
+            var newCenter = _gluedTo.Rect.Y + _gluedOffsetY.Value;
+            MoveTo(y: newCenter);
         }
     }
 }

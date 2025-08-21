@@ -73,11 +73,21 @@ namespace GalagaFighter.Core.Services
 
             var size = new Vector2(rect.Width, rect.Height);
 
-            var collisions = projectile.CreateCollisions(player.Id, position, size, speed);
+            var collisions = projectile.CreateCollisions(player.Id, position, size, new Vector2(speed.X, 0f));
 
             foreach (var collision in collisions)
             {
-                collision.Move(x: -collision.Rect.Size.X / 2);
+                collision.Move(x: -collision.Rect.Size.X / 2, y: -collision.Rect.Size.Y / 2);
+
+                var positionXWithinShipBounds = (float)Math.Clamp(collision.Rect.X, 
+                    player.Rect.X, 
+                    player.Rect.X + player.Rect.Width - collision.Rect.Width);
+                var positionYWithinShipBounds = (float)Math.Clamp(collision.Rect.Y,
+                    player.Rect.Y,
+                    player.Rect.Y + player.Rect.Height - collision.Rect.Height);
+
+                collision.MoveTo(x: positionXWithinShipBounds, y: positionYWithinShipBounds);
+                collision.GlueVerticallyTo(player);
                 _objectService.AddGameObject(collision);
             }
         }

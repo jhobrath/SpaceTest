@@ -51,6 +51,11 @@ namespace GalagaFighter.Core.Services
             if (newPosition.Y > maxY)
                 newPosition.Y = maxY;
 
+            var frameTime = Raylib.GetFrameTime();
+            player.CurrentFrameSpeed = new Vector2(
+                (newPosition.X - player.Rect.X)/frameTime, 
+                (newPosition.Y - player.Rect.Y)/frameTime
+            );
             player.MoveTo(x: newPosition.X, y: newPosition.Y);
         }
 

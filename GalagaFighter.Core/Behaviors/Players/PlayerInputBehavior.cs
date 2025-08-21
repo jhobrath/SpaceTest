@@ -12,22 +12,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Behaviors.Players
 {
-    public class KeyMappings
-    {
-        public KeyboardKey MoveLeft { get; set; } = KeyboardKey.W;
-        public KeyboardKey MoveRight { get; set; } = KeyboardKey.S;
-        public KeyboardKey Shoot { get; set; } = KeyboardKey.D;
-        public KeyboardKey Switch { get; set; } = KeyboardKey.A;
-
-        public KeyMappings(KeyboardKey left, KeyboardKey right, KeyboardKey shoot, KeyboardKey switchButton)
-        {
-            MoveLeft = left;
-            MoveRight = right;
-            Shoot = shoot;
-            Switch = switchButton;
-        }
-    }
-
+   
     public class PlayerInputBehavior : IPlayerInputBehavior
     {
         private readonly IInputService _inputService;

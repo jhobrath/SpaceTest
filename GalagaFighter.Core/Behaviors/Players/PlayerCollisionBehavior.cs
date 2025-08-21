@@ -29,7 +29,7 @@ namespace GalagaFighter.Core.Behaviors.Players
         protected virtual void UpdatePlayer(Player player, Projectile projectile)
         {
             // Centralized damage calculation using projectile and player stats
-            float baseDamage = projectile.Damage;
+            float baseDamage = projectile.BaseDamage;
             float shield = player.Stats.Shield;
             float healthMultiplier = player.Stats.Health; // e.g., 2.0 for double health effect
 

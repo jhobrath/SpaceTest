@@ -19,7 +19,7 @@ namespace GalagaFighter.Core.Models.PowerUps
         public override List<PlayerEffect> CreateEffects(IEventService eventService,IObjectService objectService, IInputService inputService)
         {
             return [
-                new IceShotEffect(objectService)
+                new IceShotEffect()
             ];
         }
     }

@@ -1,10 +1,5 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Effects
 {
@@ -19,10 +14,10 @@ namespace GalagaFighter.Core.Models.Effects
             _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
         }
 
-        public override void Apply(PlayerDisplay display)
+        public override void Apply(EffectModifiers modifiers)
         {
-            display.Sprite = _sprite;
+            modifiers.Sprite = _sprite;
+            modifiers.Projectile.Projectiles.Add((updater, owner, position) => new DefaultProjectile(updater, owner, position));
         }
-
     }
 }

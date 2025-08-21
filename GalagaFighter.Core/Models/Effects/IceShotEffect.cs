@@ -1,45 +1,30 @@
-﻿using GalagaFighter.Core.Behaviors.Players;
-using GalagaFighter.Core.Behaviors.Players.Interfaces;
-using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects
 {
     public class IceShotEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/Effects/iceshot.png";
-        private readonly SpriteWrapper _sprite;
         public override bool IsProjectile => true;
+        private readonly SpriteWrapper _sprite;
+        protected override float Duration => 10f; 
 
-        private readonly IPlayerShootingBehavior? _shootingBehavior;
-        public override IPlayerShootingBehavior? ShootingBehavior => _shootingBehavior;
-
-        private readonly IObjectService _objectService;
-
-        protected override float Duration => 10f; // 10 seconds
-
-        public IceShotEffect(IObjectService objectService)
+        public IceShotEffect()
         {
-            _objectService = objectService;
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/IceShotShip.png"), 3, .33f);
-            _shootingBehavior = new IceShotShootingBehavior(objectService);
+            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/IceShotShip.png"), 3,  .33f);
         }
 
-        public override void OnUpdate(float frameTime)
+        public override void Apply(EffectModifiers modifiers)
         {
-            base.OnUpdate(frameTime); // Handles duration and deactivation
-            // Add any custom update logic here if needed
+            modifiers.Sprite = _sprite;
+            modifiers.Projectile.Projectiles.Add(CreateProjectile);
         }
 
-        public override void Apply(PlayerDisplay display)
-        {
-            display.Sprite = _sprite;
-        }
+        private Projectile CreateProjectile(IProjectileUpdater updater, Player owner, Vector2 position)
+            => new IceProjectile(updater, owner, position);
     }
 }

@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Behaviors\Players\IceShotShootingBehavior.cs" />
+    <Compile Remove="Behaviors\Players\PlayerCollisionBehavior.cs" />
+    <Compile Remove="Behaviors\Players\PlayerInputBehavior.cs" />
+    <Compile Remove="Behaviors\Players\PlayerMovementBehavior.cs" />
+    <Compile Remove="Behaviors\Players\PlayerShootingBehavior.cs" />
+    <Compile Remove="Behaviors\Players\WoodShotShootingBehavior.cs" />
+    <Compile Remove="Controllers\PlayerController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
     <None Remove="Sprites\Effects\Whirlwind.png" />
     <None Remove="Sprites\Players\3frameships.pdn" />
@@ -219,6 +229,7 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\PowerUps\Updates\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

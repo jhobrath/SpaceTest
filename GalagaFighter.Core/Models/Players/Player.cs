@@ -1,7 +1,10 @@
 ﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Projectiles;
+using GalagaFighter.Core.Services;
+using Raylib_cs;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Players
@@ -9,30 +12,38 @@ namespace GalagaFighter.Core.Models.Players
     public class Player : GameObject
     {
         public float Health { get; set; } = 100f;
-        public PlayerStats Stats { get; set; } = new();
-        public PlayerDisplay Display { get; set; }
         public bool IsPlayer1 { get; private set; }
+        public List<PlayerEffect> Effects { get; set; } = [];
 
-        public Player(Guid owner, PlayerDisplay display, bool isPlayer1)
-            : base(owner, display.Sprite, display.Rect.Position, display.Rect.Size, new Vector2(0,0))
+        public Rectangle CurrentFrameRect { get; set; }
+        public float CurrentFrameRotation { get; set; } = 0f;
+        public Color CurrentFrameColor { get; set; } = Color.White;
+
+        private static readonly SpriteWrapper _defaultSprite = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
+        private readonly IPlayerUpdater _playerUpdater;
+
+        //Since effects compile each frame, and can change size/rotation/color,
+        //  we need a our base rect for when the effects wear off and a current-frame
+        //  rect for rendering/collision
+
+
+        public Player(IPlayerUpdater playerUpdater, Rectangle initialPosition, bool isPlayer1)
+            : base(Game.Id, _defaultSprite, initialPosition.Position, initialPosition.Size, new Vector2(0,20f))
         {
-            Display = display;
             IsPlayer1 = isPlayer1;
-        }
-
-        public void Collide(Projectile projectile)
-        {
-            // Collision logic will be handled by controller/system
+            _playerUpdater = playerUpdater;
+            CurrentFrameRect = Rect;
+            Effects.Add(new DefaultShootEffect());
         }
 
         public override void Update(Game game)
         {
-            // Update logic will be handled by controller/system
+            _playerUpdater.Update(game, this);
         }
 
         public override void Draw()
         {
-            dDisplay.Sprite.Draw(Center, Display.Rotation, Rect.Width * Display.Size, Rect.Height * Display.Size, Display.Color);
+            Sprite.Draw(Center, CurrentFrameRotation, CurrentFrameRect.Width, CurrentFrameRect.Height, CurrentFrameColor);
         }
     }
 }

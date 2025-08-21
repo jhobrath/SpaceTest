@@ -31,6 +31,21 @@ namespace GalagaFighter.Core.Services
             DrawWinner(player1, player2);
             DrawEffects(player1, false);
             DrawEffects(player2, true);
+#if DEBUG
+            DrawPlayerDebugInfo(player1, false);
+            DrawPlayerDebugInfo(player2, true);
+#endif
+        }
+
+        private static void DrawPlayerDebugInfo(Player player, bool reverse)
+        {
+            // Position debug info near health bar
+            var healthBarX = (int)(((reverse 
+                ? Game.Width - (_margin + (player.Health * 500 / 100f)) 
+                : _margin))*Game.UniformScale);
+            var healthBarY = _margin + 35; // Just below health bar
+            var healthBarPosition = new Vector2(healthBarX, healthBarY);
+            DebugWriter.DrawPlayerDebug(player, healthBarPosition);
         }
 
         private static void DrawEffects(Player player, bool reverse)

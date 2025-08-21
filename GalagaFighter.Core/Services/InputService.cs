@@ -22,6 +22,23 @@ namespace GalagaFighter.Core.Services
         ButtonState GetSwitch(Guid owner);
     }
 
+    public class KeyMappings
+    {
+        public KeyboardKey MoveLeft { get; set; } = KeyboardKey.W;
+        public KeyboardKey MoveRight { get; set; } = KeyboardKey.S;
+        public KeyboardKey Shoot { get; set; } = KeyboardKey.D;
+        public KeyboardKey Switch { get; set; } = KeyboardKey.A;
+
+        public KeyMappings(KeyboardKey left, KeyboardKey right, KeyboardKey shoot, KeyboardKey switchButton)
+        {
+            MoveLeft = left;
+            MoveRight = right;
+            Shoot = shoot;
+            Switch = switchButton;
+        }
+    }
+
+
     public class InputService : IInputService
     {
         private Dictionary<Guid, KeyMappings> _mappings = [];
@@ -48,7 +65,6 @@ namespace GalagaFighter.Core.Services
         public ButtonState GetShoot(Guid owner) => GetButton(_mappings[owner].Shoot, _shootingDuration[owner]);
         public ButtonState GetSwitch(Guid owner) => GetButton(_mappings[owner].Switch, _switchingDuration[owner]);
 
-
         public void Update()
         {
             foreach(var mapping in _mappings)
@@ -69,11 +85,6 @@ namespace GalagaFighter.Core.Services
                 IsDown = Raylib.IsKeyDown(key),
                 IsPressed = Math.Abs(duration - frameTime) < .001
             };
-
-            if(state.IsDown && state.IsPressed)
-            {
-                var s = "";
-            }
 
             return state;
         }

@@ -1,6 +1,5 @@
 ﻿using GalagaFighter.Core.Behaviors;
 using GalagaFighter.Core.Behaviors.Players;
-using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
@@ -10,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,8 +34,8 @@ namespace GalagaFighter.Core
         private Player _player2;
         private static Random _random = new Random();
 
-        private PlayerController _player1Controller;
-        private PlayerController _player2Controller;
+        //private PlayerController _player1Controller;
+        //private PlayerController _player2Controller;
 
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IProjectilePowerUpCollisionService _projectilePowerUpCollisionService;
@@ -46,6 +46,10 @@ namespace GalagaFighter.Core
         private readonly IEventService _eventService;
         private readonly IPlayerEventService _playerEventService;
         private readonly IPlayerEffectManager _playerEffectManager;
+        private readonly IPlayerUpdater _playerUpdater;
+        private readonly IPlayerMover _playerMover;
+        private readonly IPlayerShooter _playerShooter;
+        private readonly IProjectileUpdater _projectileUpdater;
 
         public Game()
         {
@@ -58,6 +62,10 @@ namespace GalagaFighter.Core
             _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_eventService, _objectService, _inputService);
             _powerUpService = new PowerUpService(_objectService);
             _playerEventService = new PlayerEventService(_eventService, _objectService, _inputService, _playerEffectManager);
+            _playerMover = new PlayerMover(_inputService);
+            _projectileUpdater = new ProjectileUpdater();
+            _playerShooter = new PlayerShooter(_inputService, _objectService, _projectileUpdater);
+            _playerUpdater = new PlayerUpdater(_playerMover, _playerShooter);
             _playerEventService.Initialize();
             UiService.Initialize(_playerEffectManager);
             InitializeWindow();
@@ -93,29 +101,25 @@ namespace GalagaFighter.Core
             int playerMargin = (int)(60 * _uniformScale);
 
             var shipSize = new Vector2(shipWidth, shipHeight);
-
-            var sprite1 = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
-            var sprite2 = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
-
             var position1 = new Vector2(playerMargin, _height / 2 - shipHeight / 2);
             var position2 = new Vector2(_width - playerMargin - shipWidth, _height / 2 - shipHeight / 2);
 
-            var display1 = new PlayerDisplay(sprite1, new Rectangle(position1.X, position1.Y, shipSize.X, shipSize.Y), 90f);
-            var display2 = new PlayerDisplay(sprite2, new Rectangle(position2.X, position2.Y, shipSize.X, shipSize.Y), -90f);
+            var rect1 = new Rectangle(position1, shipSize);
+            var rect2 = new Rectangle(position2, shipSize);
 
             var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
             var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left, KeyboardKey.Right);
 
             // 1. Construct players
-            _player1 = new Player(Id, display1, true);
-            _player2 = new Player(Id, display2, false);
+            _player1 = new Player(_playerUpdater, rect1, true);
+            _player2 = new Player(_playerUpdater, rect2, false);
 
             // 2. Construct controllers
-            _player1Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
-            _player2Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
+            //_player1Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
+            //_player2Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
 
             // 3. Construct default effects and set collision behaviors using lambdas
-            var defaultShootEffect1 = new DefaultShootEffect();
+            /*var defaultShootEffect1 = new DefaultShootEffect();
             defaultShootEffect1.SetMovementBehavior(new PlayerMovementBehavior());
             defaultShootEffect1.SetCollisionBehavior(new PlayerCollisionBehavior(
                 _eventService, _objectService, (player, damage) => _player1Controller.TakeDamage(player, damage)));
@@ -127,11 +131,11 @@ namespace GalagaFighter.Core
             defaultShootEffect2.SetCollisionBehavior(new PlayerCollisionBehavior(
                 _eventService, _objectService, (player, damage) => _player2Controller.TakeDamage(player, damage)));
             defaultShootEffect2.SetInputBehavior(new PlayerInputBehavior(_inputService));
-            defaultShootEffect2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
+            defaultShootEffect2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));*/
 
             // 4. Add effects to players
-            _playerEffectManager.AddEffect(_player1, defaultShootEffect1);
-            _playerEffectManager.AddEffect(_player2, defaultShootEffect2);
+            //_playerEffectManager.AddEffect(_player1, defaultShootEffect1);
+            //_playerEffectManager.AddEffect(_player2, defaultShootEffect2);
 
             _objectService.AddGameObject(_player1);
             _objectService.AddGameObject(_player2);
@@ -140,7 +144,7 @@ namespace GalagaFighter.Core
             _inputService.AddPlayer(_player2.Id, player2Mappings);
 
             _player1.SetDrawPriority(0);
-            _player1.SetDrawPriority(0);
+            _player2.SetDrawPriority(0);
         }
 
         public void Run()
@@ -194,13 +198,6 @@ namespace GalagaFighter.Core
             {
                 if (!gameObjects[i].IsActive)
                     _objectService.RemoveGameObject(gameObjects[i]);
-                else if (gameObjects[i] is Player player)
-                {
-                    if (player == _player1)
-                        _player1Controller.Update(player, this);
-                    else if (player == _player2)
-                        _player2Controller.Update(player, this);
-                }
                 else
                     gameObjects[i].Update(this);
             }
@@ -213,7 +210,6 @@ namespace GalagaFighter.Core
 
             DrawGameObjects();
             UiService.DrawUi(_player1, _player2);
-
             Raylib.EndDrawing();
         }
 

@@ -42,11 +42,11 @@ namespace GalagaFighter.Core.Services
 
                     if(Raylib.CheckCollisionRecs(player.Rect, projectile.Rect))
                     { 
-                        var collisionBehavior = _playerEffectManager?.GetSelectedProjectileEffect(player)?.CollisionBehavior
-                            ?? _playerEffectManager?.GetProjectileEffects(player).FirstOrDefault()?.CollisionBehavior;
-                        collisionBehavior?.Apply(player, projectile);
-
-                        player.Collide(projectile);
+                       // var collisionBehavior = _playerEffectManager?.GetSelectedProjectileEffect(player)?.CollisionBehavior
+                       //     ?? _playerEffectManager?.GetProjectileEffects(player).FirstOrDefault()?.CollisionBehavior;
+                       // collisionBehavior?.Apply(player, projectile);
+                       //
+                       // player.Collide(projectile);
                         projectile.Collide(player);
                     }
                 }

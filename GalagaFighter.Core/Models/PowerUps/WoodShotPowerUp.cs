@@ -18,9 +18,7 @@ namespace GalagaFighter.Core.Models.PowerUps
 
         public override List<PlayerEffect> CreateEffects(IEventService eventService, IObjectService objectService, IInputService inputService)
         {
-            var effect = new WoodShotEffect(eventService, objectService, inputService);
-            effect.SetOwner(this.Owner); // Track which player owns the effect
-            return new List<PlayerEffect> { effect };
+            return [new WoodShotEffect()];
         }
     }
 }

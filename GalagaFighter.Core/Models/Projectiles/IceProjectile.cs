@@ -1,4 +1,5 @@
 using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
@@ -11,11 +12,11 @@ namespace GalagaFighter.Core.Models.Projectiles
     {
         public static Vector2 BaseSize => new(95f, 42f);
         public static Vector2 BaseSpeed => new(1020f, 0f);
+        public override int BaseDamage => 0;
+        public override Vector2 SpawnOffset => new Vector2(-10, 30);
 
-        public override int Damage => 0;
-
-        public IceProjectile(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
-            : base(owner, GetSprite(), initialPosition, initialSize, initialSpeed)
+        public IceProjectile(IProjectileUpdater updater, Player owner, Vector2 initialPosition)
+            : base(updater, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed)
         {
         }
 

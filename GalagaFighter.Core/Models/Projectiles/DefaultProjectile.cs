@@ -1,7 +1,9 @@
+using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Projectiles
@@ -21,6 +23,15 @@ namespace GalagaFighter.Core.Models.Projectiles
         private static SpriteWrapper GetSprite(Vector2 initialSize)
         {
             return new SpriteWrapper(SpriteGenerationService.CreateProjectileSprite(ProjectileType.Normal, (int)initialSize.X, (int)initialSize.Y));
+        }
+
+        public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        {
+            var size = Math.Clamp(initialSize.Y, 50f, 200f);
+            return new List<Collision>
+            {
+                new DefaultCollision(owner, initialPosition, new Vector2(size,size), initialSpeed)
+            };
         }
     }
 }

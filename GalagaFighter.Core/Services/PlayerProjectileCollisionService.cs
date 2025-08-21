@@ -4,6 +4,7 @@ using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,7 +50,36 @@ namespace GalagaFighter.Core.Services
 
             player.Health -= projectile.BaseDamage;
 
+            CreateCollision(player, projectile);
+
             projectile.IsActive = false;
+        }
+
+        private void CreateCollision(Player player, Projectile projectile)
+        {
+            var rect = projectile.Rect;
+            var speed = projectile.Speed;
+
+            bool useRight = speed.X > 0;
+            bool useLeft = speed.X < 0;
+
+            Vector2 position;
+            if (useRight)
+                position = new Vector2(rect.X + rect.Width, rect.Y + rect.Height / 2f);
+            else if (useLeft)
+                position = new Vector2(rect.X, rect.Y + rect.Height / 2f);
+            else
+                position = new Vector2(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
+
+            var size = new Vector2(rect.Width, rect.Height);
+
+            var collisions = projectile.CreateCollisions(player.Id, position, size, speed);
+
+            foreach (var collision in collisions)
+            {
+                collision.Move(x: -collision.Rect.Size.X / 2);
+                _objectService.AddGameObject(collision);
+            }
         }
     }
 }

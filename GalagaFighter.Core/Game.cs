@@ -222,7 +222,12 @@ namespace GalagaFighter.Core
         {
             var gameObjects = _objectService.GetGameObjects();
             foreach (var gameObject in gameObjects.OrderBy(x => x.DrawPriority))
+            {
+#if DEBUG
+                Raylib.DrawRectangleLinesEx(gameObject.Rect, 2 * _uniformScale, Color.Red);
+#endif
                 gameObject.Draw();
+            }
         }
 
 

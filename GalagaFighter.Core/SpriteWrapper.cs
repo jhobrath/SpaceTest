@@ -2,6 +2,7 @@ using GalagaFighter;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
+using System.ComponentModel;
 using System.Numerics;
 
 namespace GalagaFighter.Core
@@ -15,9 +16,12 @@ namespace GalagaFighter.Core
 
         public int FrameCount { get; }
         public float FrameDuration { get; }
+        public bool FramesComplete { get; private set; } = false;
+
         private float _animationTimer;
+        private bool _frameRepeat;
         public int CurrentFrame;
-        private readonly Action<Vector2, float, float, float, float> _drawAction;
+        private readonly Action<Vector2, float, float, float, float>? _drawAction = null;
 
         // For drawn mode
         public SpriteWrapper(Action<Vector2, float, float, float, float> drawAction)
@@ -41,12 +45,13 @@ namespace GalagaFighter.Core
         }
 
         // For animation
-        public SpriteWrapper(Texture2D texture, int frameCount, float frameDuration)
+        public SpriteWrapper(Texture2D texture, int frameCount, float frameDuration, bool repeat = true)
         {
             Mode = SpriteMode.Animation;
             Texture = texture;
             FrameCount = frameCount;
             FrameDuration = frameDuration;
+            _frameRepeat = repeat;
             _animationTimer = 0f;
             CurrentFrame = 0;
         }
@@ -60,7 +65,12 @@ namespace GalagaFighter.Core
                 if (_animationTimer >= FrameDuration)
                 {
                     _animationTimer -= FrameDuration;
-                    CurrentFrame = (CurrentFrame + 1) % FrameCount;
+                    CurrentFrame = (CurrentFrame + 1);
+                    
+                    if(!_frameRepeat && CurrentFrame >= FrameCount)
+                        FramesComplete = true;
+                    
+                    CurrentFrame %= FrameCount;
                 }
             }
         }

@@ -13,6 +13,7 @@
     <Compile Remove="Behaviors\Players\PlayerMovementBehavior.cs" />
     <Compile Remove="Behaviors\Players\PlayerShootingBehavior.cs" />
     <Compile Remove="Behaviors\Players\WoodShotShootingBehavior.cs" />
+    <Compile Remove="Behaviors\Projectiles\IceCollisionBehavior.cs" />
     <Compile Remove="Behaviors\Projectiles\WoodCollisionBehavior.cs" />
     <Compile Remove="Behaviors\Projectiles\WoodReleasedDestroyBehavior.cs" />
     <Compile Remove="Behaviors\Projectiles\WoodReleasedMovementBehavior.cs" />
@@ -52,7 +53,7 @@
     <EmbeddedResource Include="Sounds\projectile-default.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\collision.png">
+    <EmbeddedResource Include="Sprites\Collisions\default.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\burning.png">
@@ -97,7 +98,7 @@
     <EmbeddedResource Include="Sprites\Effects\frozen_embellishment.pdn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sprites\Collisions\iceshot.png">
+    <EmbeddedResource Include="Sprites\Collisions\ice.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Effects\iceshot.png">

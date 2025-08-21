@@ -1,6 +1,7 @@
 using GalagaFighter.Core.Behaviors.Projectiles;
 using GalagaFighter.Core.Behaviors.Projectiles.Interfaces;
 using GalagaFighter.Core.Behaviors.Projectiles.Updates;
+using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.PowerUps;
@@ -22,8 +23,9 @@ namespace GalagaFighter.Core.Models.Projectiles
         public abstract Vector2 SpawnOffset { get; }
 
         public PlayerProjectile Modifiers { get; private set; }
-
         private readonly IProjectileUpdater _projectileUpdater;
+
+        public virtual SpriteWrapper? CollisionSprite => null;
 
         protected Projectile(IProjectileUpdater projectileUpdater, Player player, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
             : base(player.Id, sprite, initialPosition, initialSize, initialSpeed * (player.IsPlayer1 ? 1: -1))
@@ -43,5 +45,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         }
 
         public virtual List<PlayerEffect> CreateEffects() => [];
+        public virtual List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) => [];
+
     }
 }

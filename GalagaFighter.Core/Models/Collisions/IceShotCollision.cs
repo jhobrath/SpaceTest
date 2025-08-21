@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Collisions
 {
-    public class IceShotCollision : DefaultCollision
+    public class IceShotCollision : Collision
     {
-        protected override int FrameSkip => 0;
+        protected override bool FadeOut => false;
 
         public IceShotCollision(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialVelocity) 
-            : base(owner, initialPosition, initialSize, initialVelocity)
+            : base(owner, new SpriteWrapper(TextureService.Get("Sprites/Collisions/ice.png"), 5, .125f, repeat: false), initialPosition, initialSize, initialVelocity)
         {
-            Sprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/iceshot.png"), 5, .125f);
         }
     }
 }

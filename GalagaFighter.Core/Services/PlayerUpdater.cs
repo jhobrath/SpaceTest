@@ -34,6 +34,8 @@ namespace GalagaFighter.Core.Services
             _playerMover.Move(player, effects);
             _playerShooter.Shoot(player, effects);
             _playerSwitcher.Switch(player, effects);
+
+            player.CurrentFrameSprite.Update(frameTime);
         }
 
         private static EffectModifiers GetModifiers(Player player, float frameTime)

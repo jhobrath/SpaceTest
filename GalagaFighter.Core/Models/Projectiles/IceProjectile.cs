@@ -1,3 +1,4 @@
+using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
@@ -29,6 +30,14 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override List<PlayerEffect> CreateEffects()
         {
             return new List<PlayerEffect> { new FrozenEffect() };
+        }
+
+        public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        {
+            return new List<Collision>
+            {
+                new IceShotCollision(owner, initialPosition, initialSize, initialSpeed)
+            };
         }
     }
 }

@@ -20,6 +20,8 @@ namespace GalagaFighter.Core.Services
         public void Switch(Player player, EffectModifiers modifiers)
         {
             player.Effects.RemoveAll(x => x.IsActive == false);
+            if (!player.SelectedProjectile.IsActive) 
+                player.SelectedProjectile = player.Effects[0];
 
             var switchButton = _inputService.GetSwitch(player.Id);
             if (!switchButton.IsPressed)

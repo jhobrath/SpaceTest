@@ -59,7 +59,7 @@ namespace GalagaFighter.Core
             _objectService = new ObjectService();
             _inputService = new InputService(); 
             _playerEffectManager = new PlayerEffectManager();
-            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService, _playerEffectManager);
+            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService);
             _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
             _eventService = new EventService();
             _powerUpUpdater = new PowerUpUpdater(_objectService);
@@ -70,7 +70,7 @@ namespace GalagaFighter.Core
             _projectileUpdater = new ProjectileUpdater();
             _playerShooter = new PlayerShooter(_inputService, _objectService, _projectileUpdater);
             _playerSwitcher = new PlayerSwitcher(_inputService);
-            _playerUpdater = new PlayerUpdater(_playerMover, _playerShooter, _playerSwitcher);
+            _playerUpdater = new PlayerUpdater(_playerMover, _playerShooter, _playerSwitcher, _playerProjectileCollisionService);
             //_playerEventService.Initialize();
             UiService.Initialize(_playerEffectManager);
             InitializeWindow();
@@ -165,7 +165,6 @@ namespace GalagaFighter.Core
 
         private void Update()
         {
-            _playerProjectileCollisionService.HandleCollisions();
             _projectilePowerUpCollisionService.HandleCollisions();
             _playerPowerUpCollisionService.HandleCollisions();
             //_playerEffectManager.UpdateEffects(Raylib.GetFrameTime());
@@ -269,6 +268,12 @@ namespace GalagaFighter.Core
                (byte)(color.G * (1 - redAlpha)),
                (byte)(color.B * (1 - redAlpha)),
                color.A);
+            return newColor;
+        }
+
+        public static Color ApplyAlpha(this Color color, float alpha)
+        {
+            var newColor = new Color(color.R, color.G, color.B, alpha*255f);
             return newColor;
         }
     }

@@ -1,6 +1,7 @@
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using Raylib_cs;
+using System;
 
 namespace GalagaFighter.Core.Services
 {
@@ -11,16 +12,18 @@ namespace GalagaFighter.Core.Services
 
     public class PlayerUpdater : IPlayerUpdater
     {
-        private IPlayerMover _playerMover;
-        private IPlayerShooter _playerShooter;
-        private IPlayerSwitcher _playerSwitcher;
+        private readonly IPlayerMover _playerMover;
+        private readonly IPlayerShooter _playerShooter;
+        private readonly IPlayerSwitcher _playerSwitcher;
+        private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
 
-        public PlayerUpdater(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher)
+        public PlayerUpdater(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher, IPlayerProjectileCollisionService playerProjectileCollisionService)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;
             _playerSwitcher = playerSwitcher;
-         }
+            _playerProjectileCollisionService = playerProjectileCollisionService;
+        }
 
         public void Update(Game game, Player player)
         {
@@ -31,11 +34,31 @@ namespace GalagaFighter.Core.Services
             player.Rotation = player.IsPlayer1 ? 90f : -90f;
             player.CurrentFrameSprite = effects.Sprite;
 
+            UpdateColors(player, effects);
+
             _playerMover.Move(player, effects);
             _playerShooter.Shoot(player, effects);
             _playerSwitcher.Switch(player, effects);
+            _playerProjectileCollisionService.HandleCollisions(player, effects);
 
             player.CurrentFrameSprite.Update(frameTime);
+        }
+
+        private void UpdateColors(Player player, EffectModifiers effects)
+        {
+            player.CurrentFrameColor = Color.White;
+            
+            if(effects.Display.RedAlpha != 1f)
+                player.CurrentFrameColor = player.CurrentFrameColor.ApplyRed(1 - effects.Display.RedAlpha);
+            
+            if(effects.Display.GreenAlpha != 1f)
+                player.CurrentFrameColor = player.CurrentFrameColor.ApplyGreen(1 - effects.Display.GreenAlpha);
+
+            if(effects.Display.BlueAlpha != 1f)
+                player.CurrentFrameColor = player.CurrentFrameColor.ApplyBlue(1 - effects.Display.BlueAlpha);
+
+            if(effects.Display.Opacity != 1f)
+                player.CurrentFrameColor = player.CurrentFrameColor.ApplyAlpha(1 - effects.Display.Opacity);
         }
 
         private static EffectModifiers GetModifiers(Player player, float frameTime)

@@ -24,6 +24,7 @@ namespace GalagaFighter.Core.Models.Players
         public Color CurrentFrameColor { get; set; } = Color.White;
         public Vector2 CurrentFrameSpeed { get; set; } = new Vector2(0f,0f);
         public SpriteWrapper CurrentFrameSprite { get; set; }
+        public float CurrentFrameDamage { get; set; } = 1f;
 
         private static readonly SpriteWrapper _defaultSprite = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
         private readonly IPlayerUpdater _playerUpdater;

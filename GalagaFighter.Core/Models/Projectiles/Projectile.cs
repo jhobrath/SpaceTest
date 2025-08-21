@@ -27,8 +27,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public virtual SpriteWrapper? CollisionSprite => null;
 
-        protected Projectile(IProjectileUpdater projectileUpdater, Player player, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
-            : base(player.Id, sprite, initialPosition, initialSize, initialSpeed * (player.IsPlayer1 ? 1: -1))
+        protected Projectile(IProjectileUpdater projectileUpdater, Player owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
+            : base(owner.Id, sprite, initialPosition, initialSize, new Vector2(initialSpeed.X * (owner.IsPlayer1 ? 1: -1), owner.CurrentFrameSpeed.Y/3))
         {
             _projectileUpdater = projectileUpdater;
             Modifiers = modifiers;
@@ -37,6 +37,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override void Update(Game game)
         {
             _projectileUpdater.Update(game, this);
+            Sprite.Update(Raylib.GetFrameTime());
         }
 
         public override void Draw()

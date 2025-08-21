@@ -17,7 +17,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 SpawnOffset => new Vector2(-10, 30);
 
         public IceProjectile(IProjectileUpdater updater, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
-            : base(updater, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed, modifiers)
+            : base(updater, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed , modifiers)
         {
         }
 

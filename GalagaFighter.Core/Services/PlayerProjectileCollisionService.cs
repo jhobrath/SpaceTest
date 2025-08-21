@@ -12,43 +12,41 @@ namespace GalagaFighter.Core.Services
 {
     public interface IPlayerProjectileCollisionService
     {
-        void HandleCollisions();
+        void HandleCollisions(Player player, EffectModifiers modifiers);
     }
 
     public class PlayerProjectileCollisionService : IPlayerProjectileCollisionService
     {
         private readonly IObjectService _objectService;
-        private readonly IPlayerEffectManager _playerEffectManager;
 
-        public PlayerProjectileCollisionService(IObjectService objectService, IPlayerEffectManager playerEffectManager)
+        public PlayerProjectileCollisionService(IObjectService objectService)
         {
             _objectService = objectService;
-            _playerEffectManager = playerEffectManager;
         }
 
-        public void HandleCollisions()
+        public void HandleCollisions(Player player, EffectModifiers modifiers)
         {
-            var players = _objectService.GetGameObjects<Player>();
             var projectiles = _objectService.GetGameObjects<Projectile>();
 
             foreach(var projectile in projectiles)
             {
-                var target = players.Single(x => projectile.Owner != x.Id);
-
-                if (!Raylib.CheckCollisionRecs(target.Rect, projectile.Rect))
+                if (projectile.Owner == player.Id)
                     continue;
 
-                Collide(target, projectile);
+                if (!Raylib.CheckCollisionRecs(player.Rect, projectile.Rect))
+                    continue;
+
+                Collide(player, projectile, modifiers);
             }
         }
 
-        private void Collide(Player player, Projectile projectile)
+        private void Collide(Player player, Projectile projectile, EffectModifiers modifiers)
         {
             var effects = projectile.CreateEffects();
             foreach (var effect in effects)
                 player.Effects.AddRange(effects);
 
-            player.Health -= projectile.BaseDamage;
+            player.Health -= projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * 1/modifiers.Stats.Shield;
 
             CreateCollision(player, projectile);
 

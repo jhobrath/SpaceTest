@@ -31,15 +31,13 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
             modifiers.Projectile.DamageMultiplier *= Raylib.GetFrameTime();
             modifiers.Projectile.DeactivateOnCollision = false;
+            modifiers.Projectile.RotationOffset = 360f;
+            modifiers.Projectile.RotationMultiplier = (1/2f);
         }
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)
         {
-            var projectile = new ExplosiveProjectile(projectileController, owner, position, modifiers);
-            var explodeSprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .04f, repeat: false);
-            projectile.Modifiers["ExplodeSprite"] =  explodeSprite;
-            projectile.Modifiers["ExplodeTimer"] = (float)Game.Random.NextDouble() * .3f + 1.1f;
-            return projectile;
+            return new ExplosiveProjectile(projectileController, owner, position, modifiers);
         }
     }
 }

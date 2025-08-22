@@ -109,7 +109,7 @@ namespace GalagaFighter.Core.Services
         protected virtual void SetRotation(Projectile projectile)
         {
             if (projectile.Speed.X < 0)
-                projectile.Rotation = -180f;
+                projectile.Rotation += -180f;
         }
     }
 }

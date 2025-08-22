@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Sprites\Collisions\burst.png" />
     <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
     <None Remove="Sprites\Effects\Whirlwind.png" />
     <None Remove="Sprites\Players\3frameships.pdn" />
@@ -45,6 +46,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sounds\projectile-default.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Collisions\burst.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Collisions\default.png">

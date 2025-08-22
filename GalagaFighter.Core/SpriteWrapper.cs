@@ -17,6 +17,7 @@ namespace GalagaFighter.Core
         public int FrameCount { get; }
         public float FrameDuration { get; }
         public bool FramesComplete { get; private set; } = false;
+        public Color Color { get; set; }
 
         private float _animationTimer;
         private bool _frameRepeat;
@@ -112,6 +113,11 @@ namespace GalagaFighter.Core
 
         public void DrawAnimated(Vector2 position, float rotation, float width, float height, int? frame = null, Color? color = null)
         {
+            if(FrameCount == 8)
+            {
+                var s = "";
+            }
+
             frame = frame ?? CurrentFrame;
             float frameWidth = Texture.Width / (float)FrameCount;
             Rectangle source = new Rectangle(frameWidth * frame.Value, 0, frameWidth, Texture.Height);

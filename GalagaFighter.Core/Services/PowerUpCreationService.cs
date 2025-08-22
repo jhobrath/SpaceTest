@@ -31,7 +31,7 @@ namespace GalagaFighter.Core.Services
             (up,o,r,f) => new FireRatePowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new WoodShotPowerUp(up,o,r.Position,r.Size,f),
-            //(r,f) => new NinjaPowerUp(r,f),
+            (up,o,r,f) => new NinjaShotPowerUp(up,o,r.Position,r.Size,f),
             (up,o,r,f) => new ExplosiveShotPowerUp(up,o, r.Position, r.Size, f),
             //(r,f) => new MagnetPowerUp(r,f),
             //(r,f) => new MudShotPowerUp(r,f)

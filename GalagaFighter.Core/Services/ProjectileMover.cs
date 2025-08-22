@@ -35,6 +35,8 @@ namespace GalagaFighter.Core.Services
 
         public void Move(Projectile projectile)
         {
+            var frameTime = Raylib.GetFrameTime();
+            
             if (projectile.Modifiers.WindUpDuration > 0)
                 _projectileMoverWindUpper.WindUp(projectile);
             else if (projectile.Modifiers.PlankDuration > 0)
@@ -42,8 +44,10 @@ namespace GalagaFighter.Core.Services
 
             var currentFrameSpeed = projectile.Modifiers.SpeedMultiplier * projectile.Speed;
 
-            var frameTime = Raylib.GetFrameTime();
-            projectile.Move(currentFrameSpeed.X * frameTime, currentFrameSpeed.Y * frameTime);
+            projectile.Modifiers.VerticalPositionIncrement += ((projectile.Modifiers.VerticalPositionMultiplier * projectile.Modifiers.VerticalPositionIncrement) - projectile.Modifiers.VerticalPositionIncrement) * frameTime;
+            projectile.Modifiers.VerticalPositionOffset += projectile.Modifiers.VerticalPositionIncrement * frameTime;
+
+            projectile.Move(currentFrameSpeed.X * frameTime, currentFrameSpeed.Y * frameTime + projectile.Modifiers.VerticalPositionOffset);
         }
     }
 }

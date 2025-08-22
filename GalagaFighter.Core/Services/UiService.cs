@@ -72,10 +72,10 @@ namespace GalagaFighter.Core.Services
                 var col = (reverse ? ((6 - (i % 6))-1) : i % 6);
                 var row = (int)Math.Floor(i / 6f);
 
-                var texture = TextureService.Get(icons[i]);
-                var position = new Vector2(startX + col * iconSize, _margin + iconSize + row * iconSize);
-                
-                Raylib.DrawTextureEx(texture, position, 0f, 1f, Color.White);
+                var texture = new SpriteWrapper(TextureService.Get(icons[i]));
+                var position = new Vector2(startX + col * iconSize, _margin + iconSize + row * iconSize + iconSize / 2);
+                var center = new Vector2(position.X + iconSize / 2, position.Y + iconSize / 2);
+                texture.Draw(center, 0f, iconSize, iconSize, Color.White);
                 if(
                     (isDefaultEffect && i == 0) ||
                     (selected != null && icons[i] == selected.IconPath)

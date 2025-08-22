@@ -31,8 +31,8 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
             modifiers.Projectile.DamageMultiplier *= Raylib.GetFrameTime();
             modifiers.Projectile.DeactivateOnCollision = false;
-            modifiers.Projectile.RotationOffset = 360f;
-            modifiers.Projectile.RotationMultiplier = (1/2f);
+            modifiers.Projectile.RotationOffsetIncrement = 360f;
+            modifiers.Projectile.RotationOffsetMultiplier = (1/2f);
 
             modifiers.Projectile.Phases = new List<float> { .95f };
             modifiers.Projectile.OnPhaseChange = HandlePhaseChange;

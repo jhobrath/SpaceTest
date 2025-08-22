@@ -19,11 +19,15 @@ namespace GalagaFighter.Core.Models.Players
         public float BlueAlpha { get; set; } = 1f;
         public float GreenAlpha { get; set; } = 1f;
         public float OpacityAlpha { get; set; } = 1f;
-        public float RotationMultiplier { get; set; } = 1f;
-        public SpriteWrapper? Sprite { get; set; } = null;
 
         //Offsets
-        public float RotationOffset { get; set; } = 0f;
+        public float RotationOffset { get; set; } = 0f; //Always leave at zero in effects
+        public float RotationOffsetIncrement { get; set; } = 0f; //Amount of rotation each second
+        public float RotationOffsetMultiplier { get; set; } = 1f; //Amount to increase increment each second
+
+        public float VerticalPositionOffset { get; set; } = 0f; //Always leave at zero in effects
+        public float VerticalPositionIncrement { get; set; } = 0f; //Amount of rotation each second
+        public float VerticalPositionMultiplier { get; set; } = 1f; //Amount to increase vertical movement each second
 
         //Movement
         public float WindUpDuration { get; set; } = 0f;
@@ -49,6 +53,8 @@ namespace GalagaFighter.Core.Models.Players
         public Action<Projectile>? OnSpriteUpdate { get; internal set; }
         public Action<Projectile, int>? OnPhaseChange { get; set; } = null;
 
+        public SpriteWrapper? Sprite { get; set; } = null;
+
         public PlayerProjectile Clone()
         {
             return new PlayerProjectile
@@ -56,8 +62,6 @@ namespace GalagaFighter.Core.Models.Players
                 DamageMultiplier = DamageMultiplier,
                 SpeedMultiplier = SpeedMultiplier,
                 SizeMultiplier = SizeMultiplier,
-                RotationMultiplier = RotationMultiplier,
-                RotationOffset = RotationOffset,
                 RedAlpha = RedAlpha,
                 BlueAlpha = BlueAlpha,
                 GreenAlpha = GreenAlpha,
@@ -75,7 +79,13 @@ namespace GalagaFighter.Core.Models.Players
                 DeactivateOnCollision = DeactivateOnCollision,
                 Phases = Phases,
                 OnPhaseChange = OnPhaseChange,
-                Sprite = Sprite
+                Sprite = Sprite,
+                RotationOffset = RotationOffset,
+                RotationOffsetIncrement = RotationOffsetIncrement,
+                RotationOffsetMultiplier = RotationOffsetMultiplier,
+                VerticalPositionIncrement = VerticalPositionIncrement,
+                VerticalPositionOffset = VerticalPositionOffset,
+                VerticalPositionMultiplier = VerticalPositionMultiplier
             };
         }
     }

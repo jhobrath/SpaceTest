@@ -1,5 +1,7 @@
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
+using Raylib_cs;
+using System;
 
 namespace GalagaFighter.Core.Controllers
 {
@@ -26,21 +28,42 @@ namespace GalagaFighter.Core.Controllers
 
         public void Update(Game game, Projectile projectile)
         {
+
+            var frameTime = Raylib.GetFrameTime();
+            projectile.Sprite.Update(frameTime);
+            projectile.Modifiers.OnSpriteUpdate?.Invoke(projectile);
+
+
             _projectileMover.Move(projectile);
 
-            if (projectile.Modifiers.PlankDuration > 0f)
-                return;
+            SetSize(projectile);
+            Deactivate(projectile);
+        }
 
-            if (projectile.Rect.X < 0f)
-            { 
+        private void Deactivate(Projectile projectile)
+        {
+            if (projectile.CurrentFrameRect.X + projectile.CurrentFrameRect.Width < 0f)
+            {
                 projectile.IsActive = false;
                 projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
             }
-            else if (projectile.Rect.X + projectile.Rect.Width > Game.Width)
-            { 
+            else if (projectile.CurrentFrameRect.X > Game.Width)
+            {
                 projectile.IsActive = false;
                 projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
             }
+        }
+
+        private void SetSize(Projectile projectile)
+        {
+            var currentFrameSizeX = projectile.Rect.Width * projectile.Modifiers.SizeMultiplier;
+            var currentFrameSizeY = projectile.Rect.Height * projectile.Modifiers.SizeMultiplier;
+            projectile.CurrentFrameRect = new Rectangle(
+                projectile.Rect.X - (currentFrameSizeX - projectile.Rect.Width) / 2,
+                projectile.Rect.Y - (currentFrameSizeY - projectile.Rect.Height) / 2,
+                currentFrameSizeX,
+                currentFrameSizeY
+            );
         }
     }
 }

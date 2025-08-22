@@ -47,6 +47,8 @@ namespace GalagaFighter.Core.Services
         private void Collide(Projectile projectile, PowerUp powerUp)
         {
             powerUp.Owner = projectile.Owner;
+            projectile.IsActive = false;
+            projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
         }
     }
 }

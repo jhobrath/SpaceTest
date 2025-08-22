@@ -17,17 +17,20 @@ namespace GalagaFighter.Core.Services
     {
         private IProjectileMoverWindUpper _projectileMoverWindUpper;
         private IProjectileMoverPlanker _projectileMoverPlanker;
+        private IProjectileRotator _projectileRotator;
         private bool _planked = false;
 
-        public ProjectileMover(IProjectileMoverWindUpper projectileMoverWindUpper, IProjectileMoverPlanker projectileMoverPlanker)
+        public ProjectileMover(IProjectileMoverWindUpper projectileMoverWindUpper, IProjectileMoverPlanker projectileMoverPlanker,
+            IProjectileRotator projectileRotator)
         {
             _projectileMoverWindUpper = projectileMoverWindUpper;
             _projectileMoverPlanker = projectileMoverPlanker;
+            _projectileRotator = projectileRotator;
         }
 
         public IProjectileMover Create()
         {
-            return new ProjectileMover(_projectileMoverWindUpper.Create(), _projectileMoverPlanker.Create());
+            return new ProjectileMover(_projectileMoverWindUpper.Create(), _projectileMoverPlanker.Create(), _projectileRotator);
         }
 
         public void Move(Projectile projectile)
@@ -37,8 +40,10 @@ namespace GalagaFighter.Core.Services
             else if (projectile.Modifiers.PlankDuration > 0)
                 _projectileMoverPlanker.Plank(projectile);
 
+            var currentFrameSpeed = projectile.Modifiers.SpeedMultiplier * projectile.Speed;
+
             var frameTime = Raylib.GetFrameTime();
-            projectile.Move(projectile.Speed.X * frameTime, projectile.Speed.Y * frameTime);
+            projectile.Move(currentFrameSpeed.X * frameTime, currentFrameSpeed.Y * frameTime);
         }
     }
 }

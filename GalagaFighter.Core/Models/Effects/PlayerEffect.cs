@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
 
 namespace GalagaFighter.Core.Models.Effects
 {
@@ -7,13 +8,17 @@ namespace GalagaFighter.Core.Models.Effects
         public abstract string IconPath { get; }
         public virtual bool IsProjectile { get; }
         protected virtual float Duration => 0f;
+        protected virtual int TotalBullets => 0;
         public bool IsActive { get; private set; } = true;
         
         private float _remainingTime;
+        private int _remainingBullets;
+
 
         public PlayerEffect()
         {
             _remainingTime = Duration;
+            _remainingBullets = TotalBullets;
         }
 
         public virtual void OnUpdate(float frameTime)
@@ -28,5 +33,12 @@ namespace GalagaFighter.Core.Models.Effects
 
         public virtual void Apply(EffectModifiers modifiers) { }
         public virtual void Deactivate() => IsActive = false;
+
+        protected virtual void HandleShotFired(Projectile projectile)
+        {
+            _remainingBullets--;
+            if (_remainingBullets == 0)
+                Deactivate();
+        }
     }
 }

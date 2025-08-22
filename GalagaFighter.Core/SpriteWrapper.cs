@@ -60,16 +60,23 @@ namespace GalagaFighter.Core
         {
             if (Mode == SpriteMode.Animation)
             {
+                if (FramesComplete)
+                    return;
+
                 _animationTimer += frameTime;
                 
                 if (_animationTimer >= FrameDuration)
                 {
                     _animationTimer -= FrameDuration;
-                    CurrentFrame = (CurrentFrame + 1);
+                    CurrentFrame++;
                     
                     if(!_frameRepeat && CurrentFrame >= FrameCount)
+                    { 
                         FramesComplete = true;
-                    
+                        CurrentFrame--;
+                        return;
+                    }
+
                     CurrentFrame %= FrameCount;
                 }
             }

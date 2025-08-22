@@ -22,6 +22,9 @@ namespace GalagaFighter.Core.Models.Projectiles
         public PlayerProjectile Modifiers { get; private set; }
         private readonly IProjectileController _projectileController;
 
+        public Rectangle CurrentFrameRect { get; set; }
+        public Vector2 CurrentFrameSpeed { get; set; }
+
         public virtual SpriteWrapper? CollisionSprite => null;
 
         protected Projectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
@@ -34,12 +37,11 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override void Update(Game game)
         {
             _projectileController.Update(game, this);
-            Sprite.Update(Raylib.GetFrameTime());
         }
 
         public override void Draw()
         {
-            Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
+            Sprite.Draw(Center, Rotation, CurrentFrameRect.Width, CurrentFrameRect.Height, Color);
         }
 
         public virtual List<PlayerEffect> CreateEffects() => [];

@@ -24,7 +24,7 @@ namespace GalagaFighter.Core.Services
 
         public void Create(Player player, Projectile projectile, Vector2? speedOverride = null)
         {
-            var rect = projectile.Rect;
+            var rect = projectile.CurrentFrameRect;
             var speed = projectile.Speed;
 
             bool useRight = speed.X > 0;

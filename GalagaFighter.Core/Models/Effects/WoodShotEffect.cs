@@ -14,9 +14,7 @@ namespace GalagaFighter.Core.Models.Effects
         private readonly SpriteWrapper _sprite;
         public override bool IsProjectile => true;
         public override string IconPath => "Sprites/Effects/woodshot.png";
-        protected override float Duration => 0f; // Set to >0 if you want a time limit
-
-        private int _remainingBullets = 3;
+        protected override int TotalBullets => 3;
 
         public WoodShotEffect()
         {
@@ -26,24 +24,15 @@ namespace GalagaFighter.Core.Models.Effects
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Sprite = _sprite;
-            modifiers.Projectile.OnWindUpReleased = HandleWoodShotFired;
+            modifiers.Projectile.OnWindUpReleased = HandleShotFired;
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
             modifiers.Projectile.WindUpDuration = 1.0f;
             modifiers.Projectile.WindUpSpeed = 250f;
-            modifiers.Projectile.WindUpReleaseSpeed = 7000f;
             modifiers.Projectile.PlankDuration = 10f;
             modifiers.Projectile.PlankStopsMovement = true;
-
         }
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)
             => new WoodProjectile(projectileController, owner, position, modifiers);
-
-        private void HandleWoodShotFired(Projectile projectile)
-        {
-            _remainingBullets--;
-            if (_remainingBullets == 0)
-                Deactivate();
-        }
     }
 }

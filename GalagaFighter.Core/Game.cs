@@ -110,6 +110,15 @@ namespace GalagaFighter.Core
 
             _player1.SetDrawPriority(0);
             _player2.SetDrawPriority(0);
+
+#if DEBUG
+            _player1.Effects.Add(new IceShotEffect());
+            _player1.Effects.Add(new ExplosiveShotEffect());
+            _player1.Effects.Add(new WoodShotEffect());
+            _player2.Effects.Add(new IceShotEffect());
+            _player2.Effects.Add(new ExplosiveShotEffect());
+            _player2.Effects.Add(new WoodShotEffect());
+#endif
         }
 
         public void Run()

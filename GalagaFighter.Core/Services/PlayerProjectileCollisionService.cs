@@ -61,7 +61,12 @@ namespace GalagaFighter.Core.Services
             }
 
             _collisionCreationService.Create(player, projectile);
-            projectile.IsActive = false;
+
+            if(projectile.Modifiers.DeactivateOnCollision)
+            { 
+                projectile.IsActive = false;
+                projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
+            }
         }
     }
 }

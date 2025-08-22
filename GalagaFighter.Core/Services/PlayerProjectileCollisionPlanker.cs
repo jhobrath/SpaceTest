@@ -34,7 +34,7 @@ namespace GalagaFighter.Core.Services
             var alreadyStuck = _stuckProjectile.ContainsKey(player) && _stuckProjectile[player] == projectile;
             if(!alreadyStuck)
             {
-                if (!(projectile.Rect.X == 0 || projectile.Rect.X + projectile.Rect.Width == Game.Width))
+                if (!(projectile.CurrentFrameRect.X == 0 || projectile.CurrentFrameRect.X + projectile.CurrentFrameRect.Width == Game.Width))
                 {
                     alreadyStuck = true;
                     _collisionCreationService.Create(player, projectile, speedOverride: new Vector2(0f,0f));
@@ -61,10 +61,10 @@ namespace GalagaFighter.Core.Services
             if(projectile.Modifiers.PlankStopsMovement)
             {     
                 var playerIsStuck = _stuckProjectile.ContainsKey(player) && _stuckProjectile[player] == projectile;
-                if (player.Center.Y < projectile.Rect.Y && !playerIsStuck)
-                    player.MoveTo(y: projectile.Rect.Y - player.Rect.Height);
+                if (player.Center.Y < projectile.CurrentFrameRect.Y && !playerIsStuck)
+                    player.MoveTo(y: projectile.CurrentFrameRect.Y - player.Rect.Height);
                 else if(player.Rect.Y + player.Rect.Height > projectile.Center.Y && !playerIsStuck)
-                    player.MoveTo(y: projectile.Rect.Y + projectile.Rect.Height);
+                    player.MoveTo(y: projectile.CurrentFrameRect.Y + projectile.CurrentFrameRect.Height);
             }
         }
     }

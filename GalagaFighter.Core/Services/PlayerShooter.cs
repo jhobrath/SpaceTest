@@ -97,6 +97,8 @@ namespace GalagaFighter.Core.Services
                 projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
                 projectile.Move(y: -(projectile.Rect.Height / 2));
 
+                projectile.Modifiers.OnShoot?.Invoke(projectile);
+
                 _objectService.AddGameObject(projectile);
                 _lastProjectile[player.Id] = projectile;
             }

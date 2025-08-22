@@ -27,10 +27,9 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            var size = Math.Clamp(initialSize.Y, 50f, 200f);
             return new List<Collision>
             {
-                new DefaultCollision(owner, initialPosition, new Vector2(size,size), initialSpeed)
+                new DefaultCollision(owner, initialPosition, initialSize, initialSpeed)
             };
         }
     }

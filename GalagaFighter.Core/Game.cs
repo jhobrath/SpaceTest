@@ -57,14 +57,16 @@ namespace GalagaFighter.Core
         private readonly IProjectileMoverWindUpper _projectileMoverWindUpper;
         private readonly IProjectileMoverPlanker _projectileMoverPlanker;
         private readonly IPlayerProjectileCollisionPlanker _playerProjectileCollisionPlanker;
+        private readonly ICollisionCreationService _collisionCreationService;
 
         public Game()
         {
             _objectService = new ObjectService();
             _inputService = new InputService(); 
             _playerEffectManager = new PlayerEffectManager();
-            _playerProjectileCollisionPlanker = new PlayerProjectileCollisionPlanker();
-            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService, _playerProjectileCollisionPlanker);
+            _collisionCreationService = new CollisionCreationService(_objectService);
+            _playerProjectileCollisionPlanker = new PlayerProjectileCollisionPlanker(_collisionCreationService);
+            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService, _playerProjectileCollisionPlanker, _collisionCreationService);
             _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
             _eventService = new EventService();
             _powerUpUpdater = new PowerUpUpdater(_objectService);

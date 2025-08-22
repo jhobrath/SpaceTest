@@ -20,11 +20,14 @@ namespace GalagaFighter.Core.Services
     {
         private readonly IObjectService _objectService;
         private readonly IPlayerProjectileCollisionPlanker _planker;
+        private readonly ICollisionCreationService _collisionCreationService;
 
-        public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker)
+        public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker,
+            ICollisionCreationService collisionCreationService)
         {
             _objectService = objectService;
             _planker = planker;
+            _collisionCreationService = collisionCreationService;
         }
 
         public void HandleCollisions(Player player, EffectModifiers modifiers)
@@ -58,45 +61,8 @@ namespace GalagaFighter.Core.Services
                 return;
             }
 
-            CreateCollision(player, projectile);
+            _collisionCreationService.Create(player, projectile);
             projectile.IsActive = false;
-        }
-
-        private void CreateCollision(Player player, Projectile projectile)
-        {
-            var rect = projectile.Rect;
-            var speed = projectile.Speed;
-
-            bool useRight = speed.X > 0;
-            bool useLeft = speed.X < 0;
-
-            Vector2 position;
-            if (useRight)
-                position = new Vector2(rect.X + rect.Width, rect.Y + rect.Height / 2f);
-            else if (useLeft)
-                position = new Vector2(rect.X, rect.Y + rect.Height / 2f);
-            else
-                position = new Vector2(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
-
-            var size = new Vector2(rect.Width, rect.Height);
-
-            var collisions = projectile.CreateCollisions(player.Id, position, size, new Vector2(speed.X, 0f));
-
-            foreach (var collision in collisions)
-            {
-                collision.Move(x: -collision.Rect.Size.X / 2, y: -collision.Rect.Size.Y / 2);
-
-                var positionXWithinShipBounds = (float)Math.Clamp(collision.Rect.X, 
-                    player.Rect.X, 
-                    player.Rect.X + player.Rect.Width - collision.Rect.Width);
-                var positionYWithinShipBounds = (float)Math.Clamp(collision.Rect.Y,
-                    player.Rect.Y,
-                    player.Rect.Y + player.Rect.Height - collision.Rect.Height);
-
-                collision.MoveTo(x: positionXWithinShipBounds, y: positionYWithinShipBounds);
-                collision.GlueVerticallyTo(player);
-                _objectService.AddGameObject(collision);
-            }
         }
     }
 }

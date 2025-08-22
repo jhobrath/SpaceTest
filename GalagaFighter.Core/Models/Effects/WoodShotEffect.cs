@@ -28,7 +28,7 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
             modifiers.Projectile.WindUpDuration = 1.0f;
             modifiers.Projectile.WindUpSpeed = 250f;
-            modifiers.Projectile.PlankDuration = 10f;
+            modifiers.Projectile.PlankDuration = 7f;
             modifiers.Projectile.PlankStopsMovement = true;
         }
 

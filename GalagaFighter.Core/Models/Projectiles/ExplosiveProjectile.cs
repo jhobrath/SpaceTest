@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
@@ -34,6 +35,11 @@ namespace GalagaFighter.Core.Models.Projectiles
         {
             var texture = TextureService.Get("Sprites/Projectiles/explosion.png"); //Never use frame 2
             return new SpriteWrapper(texture, 2, 1000f);
+        }
+
+        public override List<PlayerEffect> CreateEffects()
+        {
+            return [new BurningEffect()];
         }
     }
 }

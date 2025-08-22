@@ -49,7 +49,16 @@ namespace GalagaFighter.Core.Services
         {
             var effects = projectile.CreateEffects();
             foreach (var effect in effects)
+            {
+                if(effect.MaxCount != 0)
+                {
+                    var soFar = player.Effects.Count(x => x.GetType() == effect.GetType());
+                    if (soFar >= effect.MaxCount)
+                        continue;
+                }
+
                 player.Effects.AddRange(effects);
+            }
 
             player.Health -= projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * 1/modifiers.Stats.Shield;
 

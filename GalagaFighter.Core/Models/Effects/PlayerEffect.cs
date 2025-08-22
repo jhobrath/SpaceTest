@@ -7,6 +7,7 @@ namespace GalagaFighter.Core.Models.Effects
     {
         public abstract string IconPath { get; }
         public virtual bool IsProjectile { get; }
+        public virtual int MaxCount => 0;
         protected virtual float Duration => 0f;
         protected virtual int TotalBullets => 0;
         public bool IsActive { get; private set; } = true;

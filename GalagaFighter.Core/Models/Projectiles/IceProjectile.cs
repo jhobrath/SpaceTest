@@ -12,13 +12,16 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class IceProjectile : Projectile
     {
-        public static Vector2 BaseSize => new(95f, 42f);
-        public static Vector2 BaseSpeed => new(1020f, 0f);
+        private static Vector2 _baseSize => new(95f, 42f);
+        private static Vector2 _baseSpeed => new(1020f, 0f);
+
+        public override Vector2 BaseSize => _baseSize;
+        public override Vector2 BaseSpeed => _baseSpeed; 
         public override int BaseDamage => 0;
         public override Vector2 SpawnOffset => new Vector2(-10, 30);
 
         public IceProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
-            : base(controller, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed , modifiers)
+            : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
         }
 

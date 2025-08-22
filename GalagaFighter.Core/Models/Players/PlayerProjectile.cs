@@ -21,7 +21,6 @@ namespace GalagaFighter.Core.Models.Players
         //State Timers
         public float WindUpDuration { get; set; } = 0f;
         public float WindUpSpeed { get; set; } = 0f;
-        public float WindUpReleaseSpeed { get; set; } = 0f;
         public float PlankDuration { get; set; } = 0f;
         public bool PlankStopsMovement { get; set; } = false;
 
@@ -55,7 +54,6 @@ namespace GalagaFighter.Core.Models.Players
                 PlankDuration = PlankDuration,
                 PlankStopsMovement = PlankStopsMovement,
                 WindUpSpeed = WindUpSpeed,
-                WindUpReleaseSpeed = WindUpReleaseSpeed,
                 OnWindUpReleased = OnWindUpReleased
             };
         }

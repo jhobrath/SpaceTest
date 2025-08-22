@@ -10,8 +10,11 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class WoodProjectile : Projectile
     {
-        public static Vector2 BaseSize => new(150f, 15f);
-        public static Vector2 BaseSpeed => new(-250f, 0f);
+        private static Vector2 _baseSize = new(150f, 15f);
+        private static Vector2 _baseSpeed= new(7000f, 0f);
+
+        public override Vector2 BaseSize => _baseSize;
+        public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => 0;
         public override Vector2 SpawnOffset => new Vector2(-40, 25);
 
@@ -19,13 +22,13 @@ namespace GalagaFighter.Core.Models.Projectiles
         public bool Planked { get; set; } = false;
 
         public WoodProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
-            : base(controller, owner, GetSprite(BaseSize), initialPosition, BaseSize, BaseSpeed, modifiers)
+            : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
         }
 
-        private static SpriteWrapper GetSprite(Vector2 size)
+        private static SpriteWrapper GetSprite()
         {
-            return new SpriteWrapper(SpriteGenerationService.CreateProjectileSprite(ProjectileType.Wall, (int)size.X, (int)size.Y));
+            return new SpriteWrapper(SpriteGenerationService.CreateProjectileSprite(ProjectileType.Wall, (int)_baseSize.X, (int)_baseSize.Y));
         }
 
         public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)

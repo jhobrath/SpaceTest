@@ -44,6 +44,7 @@ namespace GalagaFighter.Core.Services
             {
                 var player = _objectService.GetOwner(projectile);
                 _spawnOffset = player.Rect.Y - projectile.Rect.Y;
+                projectile.HurryTo(x: projectile.Modifiers.WindUpSpeed * (projectile.Speed.X < 0 ? 1 : -1));
             }
 
             var shootState = _inputService.GetShoot(projectile.Owner);
@@ -76,13 +77,13 @@ namespace GalagaFighter.Core.Services
         private void Release(Projectile projectile)
         {
             ChangeSpeed(projectile);
-            projectile.Modifiers.OnWindUpReleased(projectile);
+            projectile.Modifiers.OnWindUpReleased?.Invoke(projectile);
             projectile.Modifiers.WindUpDuration = 0f;
         }
 
         private void ChangeSpeed(Projectile projectile)
         {
-            var newSpeed = Math.Max(1050f, Math.Min(projectile.Modifiers.WindUpReleaseSpeed, (ActualHeldDuration / projectile.Modifiers.WindUpDuration) * projectile.Modifiers.WindUpReleaseSpeed));
+            var newSpeed = Math.Max(1050f, Math.Min(projectile.BaseSpeed.X, (ActualHeldDuration / projectile.Modifiers.WindUpDuration) * projectile.BaseSpeed.X));
             if (projectile.Speed.X < 0)
                 projectile.HurryTo(x: newSpeed);
             else

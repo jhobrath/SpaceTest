@@ -23,6 +23,11 @@ namespace GalagaFighter.Core.Models.Effects
         {
             modifiers.Sprite = _sprite;
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
+
+
+            modifiers.Projectile.WindUpDuration = 1.0f;
+            modifiers.Projectile.WindUpSpeed = 250f;
+            modifiers.Projectile.WindUpReleaseSpeed = 7000f;
         }
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)

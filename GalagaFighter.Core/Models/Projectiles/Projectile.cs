@@ -13,6 +13,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public abstract class Projectile : GameObject
     {
+        public abstract Vector2 BaseSpeed { get; }
+        public abstract Vector2 BaseSize { get; }
         public abstract int BaseDamage { get; }
 
         public abstract Vector2 SpawnOffset { get; }

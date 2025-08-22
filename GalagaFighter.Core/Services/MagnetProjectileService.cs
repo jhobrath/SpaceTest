@@ -29,8 +29,10 @@ namespace GalagaFighter.Core.Services
         public void DeMagnetize(Player player)
         {
             var projectiles = _objectService.GetGameObjects<Projectile>();
+            AudioService.StopMagnetSound();
+            AudioService.PlayMagnetReleaseSound();
 
-            foreach(var projectile in projectiles)
+            foreach (var projectile in projectiles)
             {
                 var offset = (projectile.Center.X - player.Center.X);
                 var distance = Math.Abs(offset);
@@ -50,7 +52,7 @@ namespace GalagaFighter.Core.Services
             foreach(var projectile in projectiles)
             {
                 var magnetPoint = new Vector2(
-                    player.IsPlayer1 ? (player.Center.X + player.Rect.Width/2) : (player.Center.X - player.Rect.Width - projectile.Rect.Width/2),
+                    player.IsPlayer1 ? (player.Rect.X + player.Rect.Width + 100f) : (player.Rect.X - 100f),
                     player.Center.Y);
 
                 var distanceX = magnetPoint.X - projectile.Center.X;

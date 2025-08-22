@@ -15,6 +15,7 @@ namespace GalagaFighter.Core.Models.Collisions
         public IceShotCollision(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialVelocity) 
             : base(owner, new SpriteWrapper(TextureService.Get("Sprites/Collisions/ice.png"), 5, .125f, repeat: false), initialPosition, initialSize, initialVelocity)
         {
+            AudioService.PlayIceHitSound();
         }
     }
 }

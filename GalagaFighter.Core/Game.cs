@@ -59,6 +59,7 @@ namespace GalagaFighter.Core
             InitializeWindow();
             InitializeScale();
             InitializePlayers();
+            AudioService.Initialize();
         }
 
         private static void InitializeWindow()
@@ -204,7 +205,7 @@ namespace GalagaFighter.Core
 
         private void Cleanup()
         {
-            //AudioService.Cleanup();
+            AudioService.Cleanup();
             Raylib.CloseWindow();
         }
     }

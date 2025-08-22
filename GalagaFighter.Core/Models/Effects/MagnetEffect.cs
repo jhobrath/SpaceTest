@@ -13,7 +13,7 @@ namespace GalagaFighter.Core.Models.Effects
     {
         private SpriteWrapper _sprite;
 
-        public override string IconPath => "Sprites/PowerUp/Magnet.png";
+        public override string IconPath => "Sprites/Effects/Magnetshot.png";
         protected override float Duration => 5f;
         public override bool IsProjectile => true;
 

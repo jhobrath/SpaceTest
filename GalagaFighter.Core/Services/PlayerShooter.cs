@@ -66,7 +66,13 @@ namespace GalagaFighter.Core.Services
             var shoot = _inputService.GetShoot(player.Id);
             if (modifiers.Magnetic)
             {
-                if (shoot) return true;
+                if (shoot)
+                {
+                    if (shoot.HeldDuration == Raylib.GetFrameTime())
+                        AudioService.PlayMagnetSound();
+
+                    return true;
+                }
                 else if (shoot.WasReleased)
                 {
                     _magnetProjectileService.DeMagnetize(player);

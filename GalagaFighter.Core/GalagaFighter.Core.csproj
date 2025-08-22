@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Sounds\burning.wav" />
+    <None Remove="Sounds\magnet-release.wav" />
+    <None Remove="Sounds\mudsplat.wav" />
     <None Remove="Sprites\Collisions\burst.png" />
     <None Remove="Sprites\Effects\doubleshot.png" />
     <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
@@ -28,13 +31,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Sounds\burning.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sounds\collision-default.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sounds\explosion_conversion.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\magnet-release.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sounds\magnet.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\mudsplat.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sounds\plank_landing.wav">

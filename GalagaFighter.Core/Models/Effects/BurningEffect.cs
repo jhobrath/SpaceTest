@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 
 namespace GalagaFighter.Core.Models.Effects
 {
@@ -7,6 +8,11 @@ namespace GalagaFighter.Core.Models.Effects
         public override string IconPath => "Sprites/Effects/burning.png";
         public override int MaxCount => 5;
         protected override float Duration => 3f;
+
+        public BurningEffect()
+        {
+            AudioService.PlayBurningSound();
+        }
 
         public override void Apply(EffectModifiers modifiers)
         {

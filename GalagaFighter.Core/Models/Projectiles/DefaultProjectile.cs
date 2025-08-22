@@ -21,6 +21,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public DefaultProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(_baseSize), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
+            AudioService.PlayShootSound();
         }
 
         private static SpriteWrapper GetSprite(Vector2 initialSize)

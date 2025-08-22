@@ -29,6 +29,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public ExplosiveProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
+            AudioService.PlayShootSound();
         }
 
         private static SpriteWrapper GetSprite()

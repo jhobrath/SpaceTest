@@ -20,6 +20,7 @@
     <None Remove="Sounds\burning.wav" />
     <None Remove="Sounds\magnet-release.wav" />
     <None Remove="Sounds\mudsplat.wav" />
+    <None Remove="Sounds\ninjashot.mp3" />
     <None Remove="Sprites\Collisions\burst.png" />
     <None Remove="Sprites\Effects\doubleshot.png" />
     <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
@@ -47,6 +48,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sounds\mudsplat.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\ninjashot.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sounds\plank_landing.wav">

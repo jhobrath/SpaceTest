@@ -16,6 +16,7 @@ namespace GalagaFighter.Core.Services
         private static Sound magnetSound;
         private static Sound mudsplat;
         private static Sound magnetReleaseSound;
+        private static Sound ninjaShot;
 
         public static void Initialize()
         {
@@ -35,6 +36,7 @@ namespace GalagaFighter.Core.Services
             Raylib.UnloadSound(magnetSound);
             Raylib.UnloadSound(mudsplat);
             Raylib.UnloadSound(magnetReleaseSound);
+            Raylib.UnloadSound(ninjaShot);
             Raylib.CloseAudioDevice();
         }
 
@@ -48,6 +50,7 @@ namespace GalagaFighter.Core.Services
         public static void PlayMagnetSound() => Raylib.PlaySound(magnetSound);
         public static void PlayMudSplat() => Raylib.PlaySound(mudsplat);
         public static void PlayMagnetReleaseSound() => Raylib.PlaySound(magnetReleaseSound);
+        public static void PlayNinjaShot() => Raylib.PlaySound(ninjaShot);
 
         private static void CreateSounds()
         {
@@ -64,6 +67,7 @@ namespace GalagaFighter.Core.Services
                 magnetSound = LoadSoundFile("magnet.wav");
                 mudsplat = LoadSoundFile("mudsplat.wav");
                 magnetReleaseSound = LoadSoundFile("magnet-release.wav");
+                ninjaShot = LoadSoundFile("ninjashot.mp3");
 
                 SetSoundVolumes();
                 Console.WriteLine("Audio system initialized with mixed sound sources");
@@ -124,7 +128,7 @@ namespace GalagaFighter.Core.Services
         private static void SetSoundVolumes()
         {
             Raylib.SetSoundVolume(shootSound, 0.01f);  // Very quiet for rapid fire
-            Raylib.SetSoundVolume(iceHitSound, 1.0f);
+            Raylib.SetSoundVolume(iceHitSound, .1f);
             Raylib.SetSoundVolume(wallStickSound, 1.0f);
             Raylib.SetSoundVolume(hitSound, 1.0f);
             Raylib.SetSoundVolume(powerUpSound, .005f);
@@ -133,6 +137,7 @@ namespace GalagaFighter.Core.Services
             Raylib.SetSoundVolume(magnetSound, .05f);
             Raylib.SetSoundVolume(mudsplat, .1f);
             Raylib.SetSoundVolume(magnetReleaseSound, .1f);
+            Raylib.SetSoundVolume(ninjaShot, .1f);
         }
 
         private static Sound CreateBeepSound(float frequency, float duration, float volume)

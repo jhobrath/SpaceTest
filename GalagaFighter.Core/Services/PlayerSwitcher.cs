@@ -1,6 +1,7 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Effects;
 using System.Collections.Generic;
+using Raylib_cs;
 
 namespace GalagaFighter.Core.Services
 {
@@ -41,6 +42,13 @@ namespace GalagaFighter.Core.Services
             var currentIndex = projectileEffects.IndexOf(player.SelectedProjectile);
             var nextIndex = (currentIndex + 1) % projectileEffects.Count;
             player.SelectedProjectile = projectileEffects[nextIndex];
+
+            if(player.SelectedProjectile is MagnetEffect)
+            {
+                var shoot = _inputService.GetShoot(player.Id);
+                if(shoot)
+                    AudioService.PlayMagnetSound();
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public NinjaProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
-            AudioService.PlayShootSound();
+            AudioService.PlayNinjaShot();
         }
 
         private static SpriteWrapper GetSprite()

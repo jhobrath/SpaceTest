@@ -21,14 +21,17 @@ namespace GalagaFighter.Core.Services
         protected readonly IObjectService _objectService;
         private readonly IInputService _inputService;
         private readonly IProjectileController _projectileController;
+        private readonly IMagnetProjectileService _magnetProjectileService;
 
         protected virtual float EffectiveFireRate => 1.2f * (float)Math.Pow(0.8f, 5);
 
-        public PlayerShooter(IInputService inputService, IObjectService objectService, IProjectileController projectileUpdater)
+        public PlayerShooter(IInputService inputService, IObjectService objectService, IProjectileController projectileUpdater,
+            IMagnetProjectileService magnetProjectileService)
         {
             _objectService = objectService;
             _inputService = inputService;
             _projectileController = projectileUpdater;
+            _magnetProjectileService = magnetProjectileService;
         }
 
         public void Shoot(Player player, EffectModifiers modifiers)
@@ -36,6 +39,12 @@ namespace GalagaFighter.Core.Services
             var canShoot = GetCanShoot(player, modifiers);
             if (!canShoot)
                 return;
+
+            if(modifiers.Magnetic)
+            {
+                _magnetProjectileService.Magnetize(player);
+                return;
+            }    
 
             var spawnPosition = GetSpawnPosition(player, modifiers);
             SpawnProjectile(player, modifiers, spawnPosition);
@@ -55,8 +64,18 @@ namespace GalagaFighter.Core.Services
             _fireRateTimer[player.Id] += Raylib.GetFrameTime();
 
             var shoot = _inputService.GetShoot(player.Id);
+            if (modifiers.Magnetic)
+            {
+                if (shoot) return true;
+                else if (shoot.WasReleased)
+                {
+                    _magnetProjectileService.DeMagnetize(player);
+                    return false;
+                }
+            }
+
             if (!shoot)
-                return false;
+                    return false;
 
             var fireRate = modifiers.Stats.FireRateMultiplier * EffectiveFireRate;
             if (_fireRateTimer[player.Id] < fireRate)

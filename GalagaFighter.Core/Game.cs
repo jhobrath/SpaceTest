@@ -116,10 +116,12 @@ namespace GalagaFighter.Core
             _player1.Effects.Add(new ExplosiveShotEffect());
             _player1.Effects.Add(new WoodShotEffect());
             _player1.Effects.Add(new NinjaShotEffect());
+            _player1.Effects.Add(new MagnetEffect());
             _player2.Effects.Add(new IceShotEffect());
             _player2.Effects.Add(new ExplosiveShotEffect());
             _player2.Effects.Add(new WoodShotEffect());
             _player2.Effects.Add(new NinjaShotEffect());
+            _player2.Effects.Add(new MagnetEffect());
 #endif
         }
 

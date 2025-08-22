@@ -34,6 +34,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IProjectileMover, ProjectileMover>();
             services.AddTransient<IProjectileMoverWindUpper, ProjectileMoverWindUpper>();
             services.AddTransient <IProjectileMoverPlanker, ProjectileMoverPlanker>();
+            services.AddTransient <IMagnetProjectileService, MagnetProjectileService>();
 
             _provider = services.BuildServiceProvider();
         }

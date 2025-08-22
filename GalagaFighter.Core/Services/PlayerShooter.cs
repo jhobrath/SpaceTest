@@ -39,6 +39,12 @@ namespace GalagaFighter.Core.Services
 
             var spawnPosition = GetSpawnPosition(player, modifiers);
             SpawnProjectile(player, modifiers, spawnPosition);
+
+            if(modifiers.Stats.DoubleShot)
+            {
+                var spawnPosition2 = GetSpawnPosition(player, modifiers);
+                SpawnProjectile(player, modifiers, spawnPosition2);
+            }
         }
 
         protected virtual bool GetCanShoot(Player player, EffectModifiers modifiers)

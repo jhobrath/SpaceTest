@@ -33,6 +33,16 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.DeactivateOnCollision = false;
             modifiers.Projectile.RotationOffset = 360f;
             modifiers.Projectile.RotationMultiplier = (1/2f);
+
+            modifiers.Projectile.Phases = new List<float> { .95f };
+            modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
+        }
+
+        private void HandlePhaseChange(Projectile projectile, int phase)
+        {
+            projectile.Modifiers.Sprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .04f, repeat: false);
+            projectile.Modifiers.SizeMultiplier = 5.6f;
+            projectile.Modifiers.SpeedMultiplier = .5f;
         }
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)

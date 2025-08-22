@@ -32,15 +32,41 @@ namespace GalagaFighter.Core.Controllers
         {
 
             var frameTime = Raylib.GetFrameTime();
-            projectile.Sprite.Update(frameTime);
-            projectile.Modifiers.OnSpriteUpdate?.Invoke(projectile);
 
+            SetPhase(projectile, frameTime);
+            SetSprite(projectile, frameTime);
 
             _projectileMover.Move(projectile);
             _projectileRotator.Rotate(projectile);
 
             SetSize(projectile);
+
+
             Deactivate(projectile);
+        }
+
+        private void SetSprite(Projectile projectile, float frameTime)
+        {
+            projectile.Sprite = projectile.Modifiers.Sprite ?? projectile.Sprite;
+            projectile.Sprite.Update(frameTime);
+            projectile.Modifiers.OnSpriteUpdate?.Invoke(projectile);
+        }
+
+        private void SetPhase(Projectile projectile, float frameTime)
+        {
+            var originalLifeTime = projectile.Lifetime;
+            projectile.Lifetime += frameTime;
+
+            if (projectile.Modifiers.Phases == null)
+                return;
+
+            for(var i = 0; i < projectile.Modifiers.Phases.Count;i++)
+            {
+                if(originalLifeTime < projectile.Modifiers.Phases[i] && projectile.Lifetime >= projectile.Modifiers.Phases[i])
+                {
+                    projectile.Modifiers.OnPhaseChange?.Invoke(projectile, i+1);
+                }
+            }
         }
 
         private void Deactivate(Projectile projectile)

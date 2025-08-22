@@ -20,19 +20,18 @@ namespace GalagaFighter.Core.Models.Players
         public float GreenAlpha { get; set; } = 1f;
         public float OpacityAlpha { get; set; } = 1f;
         public float RotationMultiplier { get; set; } = 1f;
+        public SpriteWrapper? Sprite { get; set; } = null;
 
         //Offsets
-        public float RotationOffset { get; set; } = 1f;
+        public float RotationOffset { get; set; } = 0f;
 
-        //Events
+        //Movement
         public float WindUpDuration { get; set; } = 0f;
         public float WindUpSpeed { get; set; } = 0f;
         public float PlankDuration { get; set; } = 0f;
         public bool PlankStopsMovement { get; set; } = false;
 
-        //State Management
-        private Dictionary<string, object?> _data { get; set; } = [];
-        public object this[string key] { get { return _data[key] ?? throw new ArgumentNullException(nameof(_data)); } set { _data[key] = value; } }
+        public List<float>? Phases { get; set; } = null;
 
         //Deactivation
         public bool DeactivateOnCollision { get; set; } = true;
@@ -43,12 +42,12 @@ namespace GalagaFighter.Core.Models.Players
         //Creation
         public List<Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile>> Projectiles = [];
 
-
-        //Callbacks
+        //Events
         public Action<Projectile>? OnShoot { get; set; } = null;
         public Action<Projectile>? OnWindUpReleased { get; set; } = null;
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
         public Action<Projectile>? OnSpriteUpdate { get; internal set; }
+        public Action<Projectile, int>? OnPhaseChange { get; set; } = null;
 
         public PlayerProjectile Clone()
         {
@@ -73,7 +72,10 @@ namespace GalagaFighter.Core.Models.Players
                 WindUpSpeed = WindUpSpeed,
                 OnWindUpReleased = OnWindUpReleased,
                 OnSpriteUpdate = OnSpriteUpdate,
-                DeactivateOnCollision = DeactivateOnCollision
+                DeactivateOnCollision = DeactivateOnCollision,
+                Phases = Phases,
+                OnPhaseChange = OnPhaseChange,
+                Sprite = Sprite
             };
         }
     }

@@ -30,23 +30,6 @@ namespace GalagaFighter.Core.Models.Projectiles
         {
         }
 
-        public override void Update(Game game)
-        {
-            base.Update(game);
-         
-            if (_explodeTimer <= 0)
-                return;
-
-            _explodeTimer -= Raylib.GetFrameTime();
-
-            if (_explodeTimer > 0)
-                return;
-
-            Sprite = _explodeSprite;
-            Modifiers.SizeMultiplier = 5.6f;
-            Modifiers.SpeedMultiplier = .5f;
-        }
-
         private static SpriteWrapper GetSprite()
         {
             var texture = TextureService.Get("Sprites/Projectiles/explosion.png"); //Never use frame 2

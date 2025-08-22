@@ -17,15 +17,18 @@ namespace GalagaFighter.Core.Models.Projectiles
         public abstract Vector2 BaseSize { get; }
         public abstract int BaseDamage { get; }
 
+        private readonly IProjectileController _projectileController;
+
         public abstract Vector2 SpawnOffset { get; }
 
         public PlayerProjectile Modifiers { get; private set; }
-        private readonly IProjectileController _projectileController;
 
         public Rectangle CurrentFrameRect { get; set; }
         public Vector2 CurrentFrameSpeed { get; set; }
 
         public virtual SpriteWrapper? CollisionSprite => null;
+
+        public float Lifetime { get; set; } = 0f;
 
         protected Projectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
             : base(owner.Id, sprite, initialPosition, initialSize, new Vector2(initialSpeed.X * (owner.IsPlayer1 ? 1: -1), owner.CurrentFrameSpeed.Y/3))

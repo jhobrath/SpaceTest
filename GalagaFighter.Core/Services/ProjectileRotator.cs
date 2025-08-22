@@ -25,8 +25,11 @@ namespace GalagaFighter.Core.Services
         public void Rotate(Projectile projectile)
         {
             var frameTime = Raylib.GetFrameTime();
-            projectile.Rotation += projectile.Modifiers.RotationOffset * frameTime;
-            projectile.Rotation += (projectile.Rotation * projectile.Modifiers.RotationMultiplier - projectile.Rotation)*frameTime;
+            if(projectile.Modifiers.RotationOffset != 0)
+                projectile.Rotation += projectile.Modifiers.RotationOffset * frameTime;
+
+            if(projectile.Modifiers.RotationMultiplier != 0)
+                projectile.Rotation += (projectile.Rotation * projectile.Modifiers.RotationMultiplier - projectile.Rotation)*frameTime;
         }
     }
 }

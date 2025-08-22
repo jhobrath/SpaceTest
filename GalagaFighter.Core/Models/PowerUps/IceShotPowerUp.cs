@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Effects;
+﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace GalagaFighter.Core.Models.PowerUps
 {
     public class IceShotPowerUp : PowerUp
     {
-        public IceShotPowerUp(IPowerUpUpdater updater, Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
+        public IceShotPowerUp(IPowerUpController updater, Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
             : base(updater, owner, "Sprites/PowerUps/ice.png", initialPosition, initialSize, initialSpeed)
         {
         }

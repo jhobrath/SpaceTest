@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
@@ -24,7 +25,7 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
         }
 
-        private Projectile CreateProjectile(IProjectileUpdater updater, Player owner, Vector2 position, PlayerProjectile modifiers)
-            => new IceProjectile(updater, owner, position, modifiers);
+        private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)
+            => new IceProjectile(controller, owner, position, modifiers);
     }
 }

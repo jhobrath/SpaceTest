@@ -1,28 +1,27 @@
-﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
-using Raylib_cs;
-using System;
+using GalagaFighter.Core.Services;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Controllers
 {
-    public interface IProjectileUpdater
+    public interface IProjectileController
     {
-        IProjectileUpdater Create();
+        IProjectileController Create();
         void Update(Game game, Projectile projectile);
-    }   
-    public class ProjectileUpdater : IProjectileUpdater
+    }
+
+    public class ProjectileController : IProjectileController
     {
         private IProjectileMover _projectileMover;
 
-        public ProjectileUpdater(IProjectileMover projectileMover)
+        public ProjectileController(IProjectileMover projectileMover)
         {
             _projectileMover = projectileMover;
         }
 
-        //Each projectile should have its own updater instance
-        public IProjectileUpdater Create()
+        //Each projectile should have its own controller instance
+        public IProjectileController Create()
         {
-            return new ProjectileUpdater(_projectileMover.Create());
+            return new ProjectileController(_projectileMover.Create());
         }
 
         public void Update(Game game, Projectile projectile)

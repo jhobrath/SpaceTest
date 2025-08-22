@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Projectiles;
+﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace GalagaFighter.Core.Models.Players
         public bool DoubleShot { get; set; } = false;
 
         //Creation
-        public List<Func<IProjectileUpdater, Player, Vector2, PlayerProjectile, Projectile>> Projectiles = [];
+        public List<Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile>> Projectiles = [];
 
         //Callbacks
         public Action<Projectile>? OnShoot { get; set; } = null;

@@ -4,6 +4,7 @@ using Raylib_cs;
 using System;
 using System.Numerics;
 using System.Collections.Generic;
+using GalagaFighter.Core.Controllers;
 
 namespace GalagaFighter.Core.Services
 {
@@ -19,15 +20,15 @@ namespace GalagaFighter.Core.Services
 
         protected readonly IObjectService _objectService;
         private readonly IInputService _inputService;
-        private readonly IProjectileUpdater _projectileUpdater;
+        private readonly IProjectileController _projectileController;
 
         protected virtual float EffectiveFireRate => 1.2f * (float)Math.Pow(0.8f, 5);
 
-        public PlayerShooter(IInputService inputService, IObjectService objectService, IProjectileUpdater projectileUpdater)
+        public PlayerShooter(IInputService inputService, IObjectService objectService, IProjectileController projectileUpdater)
         {
             _objectService = objectService;
             _inputService = inputService;
-            _projectileUpdater = projectileUpdater;
+            _projectileController = projectileUpdater;
         }
 
         public void Shoot(Player player, EffectModifiers modifiers)
@@ -86,7 +87,7 @@ namespace GalagaFighter.Core.Services
             {
                 var projectileModifiers = modifiers.Projectile.Clone();
 
-                var projectile = projectileFunc(_projectileUpdater.Create(), player, spawnPosition, projectileModifiers);
+                var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
                 SetRotation(projectile);
                 
                 projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);

@@ -1,9 +1,8 @@
-﻿using GalagaFighter.Core.Behaviors;
-using GalagaFighter.Core.Behaviors.Players;
-using GalagaFighter.Core.Models;
+﻿using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Controllers;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -35,54 +34,28 @@ namespace GalagaFighter.Core
         private Player _player2;
         private static Random _random = new Random();
 
-        //private PlayerController _player1Controller;
-        //private PlayerController _player2Controller;
-
+        // Services resolved from Registry
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IProjectilePowerUpCollisionService _projectilePowerUpCollisionService;
         private readonly IPlayerPowerUpCollisionService _playerPowerUpCollisionService;
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
-        private readonly IEventService _eventService;
-        //private readonly IPlayerEventService _playerEventService;
-        private readonly IPlayerEffectManager _playerEffectManager;
-        private readonly IPlayerUpdater _playerUpdater;
-        private readonly IPlayerMover _playerMover;
-        private readonly IPlayerShooter _playerShooter;
-        private readonly IProjectileUpdater _projectileUpdater;
-        private readonly IPowerUpUpdater _powerUpUpdater;
-        private readonly IPlayerSwitcher _playerSwitcher;
-        private readonly IProjectileMover _projectileMover;
-        private readonly IProjectileMoverWindUpper _projectileMoverWindUpper;
-        private readonly IProjectileMoverPlanker _projectileMoverPlanker;
-        private readonly IPlayerProjectileCollisionPlanker _playerProjectileCollisionPlanker;
-        private readonly ICollisionCreationService _collisionCreationService;
+        private readonly IPlayerController _playerController;
 
         public Game()
         {
-            _objectService = new ObjectService();
-            _inputService = new InputService(); 
-            _playerEffectManager = new PlayerEffectManager();
-            _collisionCreationService = new CollisionCreationService(_objectService);
-            _playerProjectileCollisionPlanker = new PlayerProjectileCollisionPlanker(_collisionCreationService);
-            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService, _playerProjectileCollisionPlanker, _collisionCreationService);
-            _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
-            _eventService = new EventService();
-            _powerUpUpdater = new PowerUpUpdater(_objectService);
-            _playerPowerUpCollisionService = new PlayerPowerUpCollisionService(_eventService, _objectService, _inputService);
-            _powerUpService = new PowerUpCreationService(_objectService, _powerUpUpdater);
-            //_playerEventService = new PlayerEventService(_eventService, _objectService, _inputService, _playerEffectManager);
-            _playerMover = new PlayerMover(_inputService);
-            _projectileMoverWindUpper = new ProjectileMoverWindUpper(_objectService, _inputService);
-            _projectileMoverPlanker = new ProjectileMoverPlanker();
-            _projectileMover = new ProjectileMover(_projectileMoverWindUpper, _projectileMoverPlanker);
-            _projectileUpdater = new ProjectileUpdater(_projectileMover);
-            _playerShooter = new PlayerShooter(_inputService, _objectService, _projectileUpdater);
-            _playerSwitcher = new PlayerSwitcher(_inputService);
-            _playerUpdater = new PlayerUpdater(_playerMover, _playerShooter, _playerSwitcher, _playerProjectileCollisionService);
-            //_playerEventService.Initialize();
-            UiService.Initialize(_playerEffectManager);
+            Registry.Configure();
+            
+            _objectService = Registry.Get<IObjectService>();
+            _inputService = Registry.Get<IInputService>();
+            _powerUpService = Registry.Get<IPowerUpService>();
+            _playerProjectileCollisionService = Registry.Get<IPlayerProjectileCollisionService>();
+            _projectilePowerUpCollisionService = Registry.Get<IProjectilePowerUpCollisionService>();
+            _playerPowerUpCollisionService = Registry.Get<IPlayerPowerUpCollisionService>();
+            _playerController = Registry.Get<IPlayerController>();
+            
+            UiService.Initialize();
             InitializeWindow();
             InitializeScale();
             InitializePlayers();
@@ -126,31 +99,8 @@ namespace GalagaFighter.Core
             var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left, KeyboardKey.Right);
 
             // 1. Construct players
-            _player1 = new Player(_playerUpdater, rect1, true);
-            _player2 = new Player(_playerUpdater, rect2, false);
-
-            // 2. Construct controllers
-            //_player1Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
-            //_player2Controller = new PlayerController(_playerEffectManager, _inputService, _eventService);
-
-            // 3. Construct default effects and set collision behaviors using lambdas
-            /*var defaultShootEffect1 = new DefaultShootEffect();
-            defaultShootEffect1.SetMovementBehavior(new PlayerMovementBehavior());
-            defaultShootEffect1.SetCollisionBehavior(new PlayerCollisionBehavior(
-                _eventService, _objectService, (player, damage) => _player1Controller.TakeDamage(player, damage)));
-            defaultShootEffect1.SetInputBehavior(new PlayerInputBehavior(_inputService));
-            defaultShootEffect1.SetShootingBehavior(new PlayerShootingBehavior(_objectService));
-
-            var defaultShootEffect2 = new DefaultShootEffect();
-            defaultShootEffect2.SetMovementBehavior(new PlayerMovementBehavior());
-            defaultShootEffect2.SetCollisionBehavior(new PlayerCollisionBehavior(
-                _eventService, _objectService, (player, damage) => _player2Controller.TakeDamage(player, damage)));
-            defaultShootEffect2.SetInputBehavior(new PlayerInputBehavior(_inputService));
-            defaultShootEffect2.SetShootingBehavior(new PlayerShootingBehavior(_objectService));*/
-
-            // 4. Add effects to players
-            //_playerEffectManager.AddEffect(_player1, defaultShootEffect1);
-            //_playerEffectManager.AddEffect(_player2, defaultShootEffect2);
+            _player1 = new Player(_playerController, rect1, true);
+            _player2 = new Player(_playerController, rect2, false);
 
             _objectService.AddGameObject(_player1);
             _objectService.AddGameObject(_player2);
@@ -177,7 +127,6 @@ namespace GalagaFighter.Core
         {
             _projectilePowerUpCollisionService.HandleCollisions();
             _playerPowerUpCollisionService.HandleCollisions();
-            //_playerEffectManager.UpdateEffects(Raylib.GetFrameTime());
             _inputService.Update();
 
             HandleInput();

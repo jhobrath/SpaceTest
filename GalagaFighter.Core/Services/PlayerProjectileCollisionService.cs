@@ -1,5 +1,4 @@
-﻿using GalagaFighter.Core.Behaviors.Projectiles;
-using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 using System;

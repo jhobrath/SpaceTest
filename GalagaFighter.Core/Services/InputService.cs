@@ -1,6 +1,4 @@
-﻿using GalagaFighter.Core.Behaviors.Players;
-using GalagaFighter.Core.Behaviors.Players.Updates;
-using Raylib_cs;
+﻿using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +18,28 @@ namespace GalagaFighter.Core.Services
         ButtonState GetMoveLeft(Guid owner);
         ButtonState GetMoveRight(Guid owner);
         ButtonState GetSwitch(Guid owner);
+    }
+
+    public class ButtonState
+    {
+        public bool IsPressed { get; set; } = false;
+        public bool IsDown { get; set; } = false;
+        public float HeldDuration { get; set; } = 0f;
+
+        public static implicit operator bool(ButtonState state)
+        {
+            return state.IsDown;
+        }
+
+        public static implicit operator ButtonState(bool val)
+        {
+            return new ButtonState
+            {
+                IsPressed = false,
+                IsDown = val,
+                HeldDuration = 0f
+            };
+        }
     }
 
     public class KeyMappings

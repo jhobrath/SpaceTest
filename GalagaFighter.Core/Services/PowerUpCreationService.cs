@@ -1,6 +1,5 @@
-﻿using GalagaFighter.Core.Behaviors.Players;
-using GalagaFighter.Core.Behaviors.PowerUps;
-using GalagaFighter.Core.Models.PowerUps;
+﻿using GalagaFighter.Core.Models.PowerUps;
+using GalagaFighter.Core.Controllers;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -19,15 +18,15 @@ namespace GalagaFighter.Core.Services
     public class PowerUpCreationService : IPowerUpService
     {
         private IObjectService _objectService;
-        private IPowerUpUpdater _powerUpUpdater;
+        private IPowerUpController _powerUpController;
 
-        public PowerUpCreationService(IObjectService objectService, IPowerUpUpdater powerUpUpdater)
+        public PowerUpCreationService(IObjectService objectService, IPowerUpController powerUpController)
         {
             _objectService = objectService;
-            _powerUpUpdater = powerUpUpdater;
+            _powerUpController = powerUpController;
         }
 
-        private readonly static List<Func<IPowerUpUpdater, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<IPowerUpUpdater, Guid, Rectangle, Vector2, PowerUp>>
+        private readonly static List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>>
         {
             (up,o,r,f) => new FireRatePowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
@@ -63,7 +62,7 @@ namespace GalagaFighter.Core.Services
 
             var speed = new Vector2(0, 200f * uniformScale);
 
-            var powerUp = _powerUpTypes[2](_powerUpUpdater, Game.Id, rect, speed);
+            var powerUp = _powerUpTypes[2](_powerUpController, Game.Id, rect, speed);
             return powerUp;
         }
     }

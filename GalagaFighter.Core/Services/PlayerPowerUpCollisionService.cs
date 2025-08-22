@@ -1,5 +1,4 @@
-﻿using GalagaFighter.Core.Events;
-using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.PowerUps;
 using Raylib_cs;
 using System;
@@ -19,13 +18,11 @@ namespace GalagaFighter.Core.Services
     {
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
-        private readonly IEventService _eventService;
 
-        public PlayerPowerUpCollisionService(IEventService eventService, IObjectService objectService, IInputService inputService)
+        public PlayerPowerUpCollisionService(IObjectService objectService, IInputService inputService)
         {
             _objectService = objectService;
             _inputService = inputService;
-            _eventService = eventService;
         }
 
         public void HandleCollisions()

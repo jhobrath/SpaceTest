@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Effects;
+﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace GalagaFighter.Core.Models.PowerUps
     {
         private readonly List<PlayerEffect> _effects = [];
 
-        public FireRatePowerUp(IPowerUpUpdater updater, Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
-            : base(updater, owner, "Sprites/PowerUps/firerate.png", initialPosition, initialSize, initialSpeed)
+        public FireRatePowerUp(IPowerUpController controller, Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) 
+            : base(controller, owner, "Sprites/PowerUps/firerate.png", initialPosition, initialSize, initialSpeed)
         {
         }
 

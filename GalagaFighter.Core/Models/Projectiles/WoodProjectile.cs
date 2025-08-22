@@ -1,3 +1,4 @@
+using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
@@ -17,8 +18,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         public bool Released { get; set; } = false;
         public bool Planked { get; set; } = false;
 
-        public WoodProjectile(IProjectileUpdater updater, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
-            : base(updater, owner, GetSprite(BaseSize), initialPosition, BaseSize, BaseSpeed, modifiers)
+        public WoodProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
+            : base(controller, owner, GetSprite(BaseSize), initialPosition, BaseSize, BaseSpeed, modifiers)
         {
         }
 

@@ -1,3 +1,4 @@
+using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
@@ -16,8 +17,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override int BaseDamage => 0;
         public override Vector2 SpawnOffset => new Vector2(-10, 30);
 
-        public IceProjectile(IProjectileUpdater updater, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
-            : base(updater, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed , modifiers)
+        public IceProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
+            : base(controller, owner, GetSprite(), initialPosition, BaseSize, BaseSpeed , modifiers)
         {
         }
 

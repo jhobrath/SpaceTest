@@ -1,23 +1,24 @@
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Controllers
 {
-    public interface IPlayerUpdater
+    public interface IPlayerController
     {
         void Update(Game game, Player player);
     }
 
-    public class PlayerUpdater : IPlayerUpdater
+    public class PlayerUpdateController : IPlayerController
     {
         private readonly IPlayerMover _playerMover;
         private readonly IPlayerShooter _playerShooter;
         private readonly IPlayerSwitcher _playerSwitcher;
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
 
-        public PlayerUpdater(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher, IPlayerProjectileCollisionService playerProjectileCollisionService)
+        public PlayerUpdateController(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher, IPlayerProjectileCollisionService playerProjectileCollisionService)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;

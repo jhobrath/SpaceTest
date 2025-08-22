@@ -1,4 +1,4 @@
-﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
+﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
@@ -27,12 +27,12 @@ namespace GalagaFighter.Core.Models.Players
         public float CurrentFrameDamage { get; set; } = 1f;
 
         private static readonly SpriteWrapper _defaultSprite = new SpriteWrapper(TextureService.Get("Sprites/Players/Player1.png"));
-        private readonly IPlayerUpdater _playerUpdater;
+        private readonly IPlayerController _playerController;
 
-        public Player(IPlayerUpdater playerUpdater, Rectangle initialPosition, bool isPlayer1)
+        public Player(IPlayerController playerUpdater, Rectangle initialPosition, bool isPlayer1)
             : base(Game.Id, _defaultSprite, initialPosition.Position, initialPosition.Size, new Vector2(0,20f))
         {
-            _playerUpdater = playerUpdater;
+            _playerController = playerUpdater;
 
             IsPlayer1 = isPlayer1;
             CurrentFrameRect = Rect;
@@ -43,7 +43,7 @@ namespace GalagaFighter.Core.Models.Players
 
         public override void Update(Game game)
         {
-            _playerUpdater.Update(game, this);
+            _playerController.Update(game, this);
         }
 
         public override void Draw()

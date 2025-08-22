@@ -7,19 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Behaviors\Players\IceShotShootingBehavior.cs" />
-    <Compile Remove="Behaviors\Players\PlayerCollisionBehavior.cs" />
-    <Compile Remove="Behaviors\Players\PlayerInputBehavior.cs" />
-    <Compile Remove="Behaviors\Players\PlayerMovementBehavior.cs" />
-    <Compile Remove="Behaviors\Players\PlayerShootingBehavior.cs" />
-    <Compile Remove="Behaviors\Players\WoodShotShootingBehavior.cs" />
-    <Compile Remove="Behaviors\Projectiles\IceCollisionBehavior.cs" />
-    <Compile Remove="Behaviors\Projectiles\WoodCollisionBehavior.cs" />
-    <Compile Remove="Behaviors\Projectiles\WoodReleasedDestroyBehavior.cs" />
-    <Compile Remove="Behaviors\Projectiles\WoodReleasedMovementBehavior.cs" />
-    <Compile Remove="Behaviors\Projectiles\WoodUnreleasedMovementBehavior.cs" />
     <Compile Remove="Controllers\PlayerController.cs" />
+    <Compile Remove="Services\EventService.cs" />
+    <Compile Remove="Services\PlayerEffectManager.cs" />
     <Compile Remove="Services\PlayerEventService.cs" />
+    <Compile Remove="Services\PlayerUpdater.cs" />
+    <Compile Remove="Services\PowerUpUpdater.cs" />
+    <Compile Remove="Services\ProjectileUpdater.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -230,12 +224,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
     <PackageReference Include="Raylib-cs" Version="7.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Behaviors\PowerUps\Updates\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

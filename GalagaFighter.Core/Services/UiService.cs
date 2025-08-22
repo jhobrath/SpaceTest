@@ -17,11 +17,9 @@ namespace GalagaFighter.Core.Services
         private static int _controlTextSize = (int)(20 * Game.UniformScale);
         private static int _statusTextSize = (int)(16 * Game.UniformScale);
         private static int _margin = (int)(15 * Game.UniformScale);
-        private static IPlayerEffectManager _effectManager;
 
-        public static void Initialize(IPlayerEffectManager effectManager)
+        public static void Initialize()
         {
-            _effectManager = effectManager;
         }
 
         public static void DrawUi(Player player1, Player player2)

@@ -1,4 +1,6 @@
-﻿using GalagaFighter.Core.Models.PowerUps;
+using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.PowerUps;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -7,20 +9,21 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Controllers
 {
-    public interface IPowerUpUpdater
+    public interface IPowerUpController
     {
         void Update(Game game, PowerUp powerUp);
     }
-    public class PowerUpUpdater : IPowerUpUpdater
+
+    public class PowerUpController : IPowerUpController
     {
         private readonly Dictionary<PowerUp, float> _sinceHitDict = new();
         private readonly Dictionary<PowerUp, Vector2> _originalSizeDict = new();
         private readonly Dictionary<PowerUp, float> _originalDistanceDict = new();
         private readonly IObjectService _objectService;
 
-        public PowerUpUpdater(IObjectService objectService)
+        public PowerUpController(IObjectService objectService)
         {
             _objectService = objectService;
         }
@@ -38,7 +41,7 @@ namespace GalagaFighter.Core.Services
                 UpdateCollectedPowerUp(powerUp, frameTime);
             }
 
-            if(powerUp.IsActive && powerUp.Rect.Y > Game.Height)
+            if (powerUp.IsActive && powerUp.Rect.Y > Game.Height)
                 powerUp.IsActive = false;
 
             RemoveInactiveGlobals();

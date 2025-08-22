@@ -1,4 +1,4 @@
-﻿using GalagaFighter.Core.Behaviors.Players.Interfaces;
+﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
@@ -36,8 +36,8 @@ namespace GalagaFighter.Core.Models.Effects
 
         }
 
-        private Projectile CreateProjectile(IProjectileUpdater projectileUpdater, Player owner, Vector2 position, PlayerProjectile modifiers)
-            => new WoodProjectile(projectileUpdater, owner, position, modifiers);
+        private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)
+            => new WoodProjectile(projectileController, owner, position, modifiers);
 
         private void HandleWoodShotFired(Projectile projectile)
         {

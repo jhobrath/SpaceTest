@@ -24,8 +24,14 @@ namespace GalagaFighter.Core.Models.Effects
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Sprite = _sprite;
-            modifiers.Projectile.OnProjectileDestroyed = HandleWoodShotFired;
+            modifiers.Projectile.OnWindUpReleased = HandleWoodShotFired;
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
+            modifiers.Projectile.WindUpDuration = 1.0f;
+            modifiers.Projectile.WindUpSpeed = -250f;
+            modifiers.Projectile.WindUpReleaseSpeed = 7000f;
+            modifiers.Projectile.PlankDuration = 10f;
+            modifiers.Projectile.PlankStopsMovement = true;
+
         }
 
         private Projectile CreateProjectile(IProjectileUpdater projectileUpdater, Player owner, Vector2 position, PlayerProjectile modifiers)

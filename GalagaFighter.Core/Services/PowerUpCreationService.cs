@@ -63,7 +63,7 @@ namespace GalagaFighter.Core.Services
 
             var speed = new Vector2(0, 200f * uniformScale);
 
-            var powerUp = _powerUpTypes[1](_powerUpUpdater, Game.Id, rect, speed);
+            var powerUp = _powerUpTypes[2](_powerUpUpdater, Game.Id, rect, speed);
             return powerUp;
         }
     }

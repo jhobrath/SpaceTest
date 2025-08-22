@@ -53,13 +53,18 @@ namespace GalagaFighter.Core
         private readonly IProjectileUpdater _projectileUpdater;
         private readonly IPowerUpUpdater _powerUpUpdater;
         private readonly IPlayerSwitcher _playerSwitcher;
+        private readonly IProjectileMover _projectileMover;
+        private readonly IProjectileMoverWindUpper _projectileMoverWindUpper;
+        private readonly IProjectileMoverPlanker _projectileMoverPlanker;
+        private readonly IPlayerProjectileCollisionPlanker _playerProjectileCollisionPlanker;
 
         public Game()
         {
             _objectService = new ObjectService();
             _inputService = new InputService(); 
             _playerEffectManager = new PlayerEffectManager();
-            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService);
+            _playerProjectileCollisionPlanker = new PlayerProjectileCollisionPlanker();
+            _playerProjectileCollisionService = new PlayerProjectileCollisionService(_objectService, _playerProjectileCollisionPlanker);
             _projectilePowerUpCollisionService = new ProjectilePowerUpCollisionService(_objectService);
             _eventService = new EventService();
             _powerUpUpdater = new PowerUpUpdater(_objectService);
@@ -67,7 +72,10 @@ namespace GalagaFighter.Core
             _powerUpService = new PowerUpCreationService(_objectService, _powerUpUpdater);
             //_playerEventService = new PlayerEventService(_eventService, _objectService, _inputService, _playerEffectManager);
             _playerMover = new PlayerMover(_inputService);
-            _projectileUpdater = new ProjectileUpdater();
+            _projectileMoverWindUpper = new ProjectileMoverWindUpper(_objectService, _inputService);
+            _projectileMoverPlanker = new ProjectileMoverPlanker();
+            _projectileMover = new ProjectileMover(_projectileMoverWindUpper, _projectileMoverPlanker);
+            _projectileUpdater = new ProjectileUpdater(_projectileMover);
             _playerShooter = new PlayerShooter(_inputService, _objectService, _projectileUpdater);
             _playerSwitcher = new PlayerSwitcher(_inputService);
             _playerUpdater = new PlayerUpdater(_playerMover, _playerShooter, _playerSwitcher, _playerProjectileCollisionService);

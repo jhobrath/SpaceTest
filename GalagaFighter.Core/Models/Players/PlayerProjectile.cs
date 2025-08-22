@@ -17,6 +17,13 @@ namespace GalagaFighter.Core.Models.Players
         public float GreenAlpha { get; set; } = 1f;
         public float OpacityAlpha { get; set; } = 1f;
 
+        //State Timers
+        public float WindUpDuration { get; set; } = 0f;
+        public float WindUpSpeed { get; set; } = 0f;
+        public float WindUpReleaseSpeed { get; set; } = 0f;
+        public float PlankDuration { get; set; } = 0f;
+        public bool PlankStopsMovement { get; set; } = false;
+
         //Activators
         public bool DoubleShot { get; set; } = false;
 
@@ -25,6 +32,7 @@ namespace GalagaFighter.Core.Models.Players
 
         //Callbacks
         public Action<Projectile>? OnShoot { get; set; } = null;
+        public Action<Projectile>? OnWindUpReleased { get; set; } = null;
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
 
         public PlayerProjectile Clone()
@@ -41,9 +49,14 @@ namespace GalagaFighter.Core.Models.Players
                 DoubleShot = DoubleShot,
                 Projectiles = Projectiles,
                 OnShoot = OnShoot,
-                OnProjectileDestroyed = OnProjectileDestroyed
+                OnProjectileDestroyed = OnProjectileDestroyed,
+                WindUpDuration = WindUpDuration,
+                PlankDuration = PlankDuration,
+                PlankStopsMovement = PlankStopsMovement,
+                WindUpSpeed = WindUpSpeed,
+                WindUpReleaseSpeed = WindUpReleaseSpeed,
+                OnWindUpReleased = OnWindUpReleased
             };
         }
-
     }
 }

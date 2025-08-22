@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Behaviors.Projectiles;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 using System;
@@ -18,10 +19,12 @@ namespace GalagaFighter.Core.Services
     public class PlayerProjectileCollisionService : IPlayerProjectileCollisionService
     {
         private readonly IObjectService _objectService;
+        private readonly IPlayerProjectileCollisionPlanker _planker;
 
-        public PlayerProjectileCollisionService(IObjectService objectService)
+        public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker)
         {
             _objectService = objectService;
+            _planker = planker;
         }
 
         public void HandleCollisions(Player player, EffectModifiers modifiers)
@@ -48,8 +51,14 @@ namespace GalagaFighter.Core.Services
 
             player.Health -= projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * 1/modifiers.Stats.Shield;
 
-            CreateCollision(player, projectile);
+            var planked = _planker.IsPlanked(player, projectile);
+            if (planked)
+            {
+                _planker.HandlePlankCollision(player, projectile);
+                return;
+            }
 
+            CreateCollision(player, projectile);
             projectile.IsActive = false;
         }
 

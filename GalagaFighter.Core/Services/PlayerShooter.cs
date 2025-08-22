@@ -15,6 +15,7 @@ namespace GalagaFighter.Core.Services
     {
         private readonly Dictionary<Guid, float> _fireRateTimer = new();
         private readonly Dictionary<Guid, bool> _lastGunLeft = new();
+        private readonly Dictionary<Guid, Projectile?> _lastProjectile = new();
 
         protected readonly IObjectService _objectService;
         private readonly IInputService _inputService;
@@ -75,11 +76,17 @@ namespace GalagaFighter.Core.Services
             if (!_lastGunLeft.ContainsKey(player.Id))
                 _lastGunLeft[player.Id] = false;
 
+            if (!_lastProjectile.ContainsKey(player.Id))
+                _lastProjectile[player.Id] = null;
+
+            if (_lastProjectile[player.Id] != null && _lastProjectile[player.Id].Modifiers.WindUpDuration > 0f)
+                return;
+
             foreach(var projectileFunc in modifiers.Projectile.Projectiles)
             {
                 var projectileModifiers = modifiers.Projectile.Clone();
 
-                var projectile = projectileFunc(_projectileUpdater, player, spawnPosition, projectileModifiers);
+                var projectile = projectileFunc(_projectileUpdater.Create(), player, spawnPosition, projectileModifiers);
                 SetRotation(projectile);
                 
                 projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);
@@ -88,9 +95,11 @@ namespace GalagaFighter.Core.Services
                 //Undo offset from spawn position
                 projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
                 projectile.Move(y: -(projectile.Rect.Height / 2));
-                
+
                 _objectService.AddGameObject(projectile);
+                _lastProjectile[player.Id] = projectile;
             }
+
             _lastGunLeft[player.Id] = !_lastGunLeft[player.Id];
         }
 

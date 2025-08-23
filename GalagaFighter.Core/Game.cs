@@ -87,7 +87,7 @@ namespace GalagaFighter.Core
         {
             int shipWidth = (int)(160 * _uniformScale);
             int shipHeight = (int)(160 * _uniformScale);
-            int playerMargin = (int)(60 * _uniformScale);
+            int playerMargin = (int)(0 * _uniformScale);
 
             var shipSize = new Vector2(shipWidth, shipHeight);
             var position1 = new Vector2(playerMargin, _height / 2 - shipHeight / 2);

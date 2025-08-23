@@ -12,13 +12,26 @@ namespace GalagaFighter.Core.Models.Effects
     public class WoodShotEffect : PlayerEffect
     {
         private readonly SpriteWrapper _sprite;
+        private readonly SpriteDecorations _decorations;
+
         public override bool IsProjectile => true;
         public override string IconPath => "Sprites/Effects/woodshot.png";
         protected override int TotalBullets => 3;
 
         public WoodShotEffect()
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/WoodShotShip.png"));
+            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood.png"));
+
+            _decorations = new SpriteDecorations()
+            {
+                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootBoth.png"))),
+                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootLeft.png"))),
+                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootRight.png"))),
+                WindUpLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpLeft.png"), 3, .125f)),
+                WindUpRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpRight.png"), 3, .125f)),
+                WindUpBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpBoth.png"), 3, .125f)),
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_Move.png")))
+            };
         }
 
         public override void Apply(EffectModifiers modifiers)
@@ -30,6 +43,8 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.WindUpSpeed = 250f;
             modifiers.Projectile.PlankDuration = 7f;
             modifiers.Projectile.PlankStopsMovement = true;
+
+            modifiers.Decorations = _decorations;
         }
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)

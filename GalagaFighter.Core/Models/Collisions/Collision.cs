@@ -21,8 +21,10 @@ namespace GalagaFighter.Core.Models.Collisions
         private float? _gluedOffsetY;
 
         public Collision(Guid owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
-            : base(owner, sprite, initialPosition, initialSize, initialSpeed)
+            : base(owner, sprite, initialPosition, initialSize, new Vector2(Math.Clamp(initialSpeed.X, -50f, 50f),0f))
         {
+
+
             SetDrawPriority(5);
             
             Rotation = 360f * (float)Game.Random.NextDouble();

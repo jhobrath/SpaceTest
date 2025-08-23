@@ -24,6 +24,8 @@ namespace GalagaFighter.Core.Services
 
         public void Create(Player player, Projectile projectile, Vector2? speedOverride = null)
         {
+            //TODO: Find a way to see if a projectile has collisions before
+            //bothering to calculate their spawn point
             var rect = projectile.CurrentFrameRect;
             var speed = projectile.Speed;
 

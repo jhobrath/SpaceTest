@@ -16,7 +16,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => 5;
-        public override Vector2 SpawnOffset => new Vector2(-10, 30);
+        public override Vector2 SpawnOffset => new Vector2(-60, 42);
 
         public DefaultProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(_baseSize), initialPosition, _baseSize, _baseSpeed, modifiers)

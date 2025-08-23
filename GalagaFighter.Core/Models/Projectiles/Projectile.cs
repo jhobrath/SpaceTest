@@ -31,8 +31,11 @@ namespace GalagaFighter.Core.Models.Projectiles
         public float Lifetime { get; set; } = 0f;
 
         protected Projectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
-            : base(owner.Id, sprite, initialPosition, initialSize, new Vector2(initialSpeed.X * (owner.IsPlayer1 ? 1: -1), owner.CurrentFrameSpeed.Y/3))
+            : base(owner.Id, sprite, initialPosition, initialSize, new Vector2(initialSpeed.X * (owner.IsPlayer1 ? 1: -1), 0f))
         {
+            if (!modifiers.IgnoreShipMovement)
+                HurryTo(y: owner.CurrentFrameSpeed.Y / 3);
+
             _projectileController = controller;
             Modifiers = modifiers;
         }

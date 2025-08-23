@@ -38,11 +38,24 @@ namespace GalagaFighter.Core.Services
                 if (projectile.Owner == player.Id)
                     continue;
 
-                if (!Raylib.CheckCollisionRecs(player.Rect, projectile.Rect))
-                    continue;
-
-                Collide(player, projectile, modifiers);
+                if (CheckEdgeCollision(projectile))
+                    Collide(player, projectile, modifiers);
+                else if(Raylib.CheckCollisionRecs(player.Rect, projectile.Rect))
+                    Collide(player, projectile, modifiers);
             }
+        }
+
+        private bool CheckEdgeCollision(Projectile projectile)
+        {
+            if (projectile.Modifiers.CollideDistanceFromEdge <= 0f)
+                return false;
+
+            var edge= projectile.Speed.X < 0
+                ? projectile.Modifiers.CollideDistanceFromEdge - projectile.Rect.Width/2
+                : Game.Width - projectile.Modifiers.CollideDistanceFromEdge - projectile.Rect.Width/2;
+
+            return (projectile.Speed.X > 0 && projectile.Center.X > edge) ||
+                (projectile.Speed.X < 0 && projectile.Center.X < edge);
         }
 
         private void Collide(Player player, Projectile projectile, EffectModifiers modifiers)
@@ -61,6 +74,9 @@ namespace GalagaFighter.Core.Services
             }
 
             player.Health -= projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * 1/modifiers.Stats.Shield;
+
+            var collisionObjects = projectile.Modifiers.OnCollide?.Invoke(player, projectile);
+            _objectService.AddRange(collisionObjects ?? []);
 
             var planked = _planker.IsPlanked(player, projectile);
             if (planked)

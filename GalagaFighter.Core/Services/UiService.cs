@@ -43,7 +43,10 @@ namespace GalagaFighter.Core.Services
                 : _margin))*Game.UniformScale);
             var healthBarY = _margin + 35; // Just below health bar
             var healthBarPosition = new Vector2(healthBarX, healthBarY);
+
+#if DEBUG
             DebugWriter.DrawPlayerDebug(player, healthBarPosition);
+#endif
         }
 
         private static void DrawEffects(Player player, bool reverse)

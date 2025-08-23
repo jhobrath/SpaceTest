@@ -34,6 +34,10 @@ namespace GalagaFighter.Core.Models.Players
         public float WindUpSpeed { get; set; } = 0f;
         public float PlankDuration { get; set; } = 0f;
         public bool PlankStopsMovement { get; set; } = false;
+        public bool IgnoreShipMovement { get; set; } = false;
+
+        //Edge Collision
+        public float CollideDistanceFromEdge { get; set; } = 0f;
 
         public List<float>? Phases { get; set; } = null;
 
@@ -52,6 +56,7 @@ namespace GalagaFighter.Core.Models.Players
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
         public Action<Projectile>? OnSpriteUpdate { get; internal set; }
         public Action<Projectile, int>? OnPhaseChange { get; set; } = null;
+        public Func<Player, Projectile, List<GameObject>>? OnCollide { get; set; } = null;
 
         public SpriteWrapper? Sprite { get; set; } = null;
 
@@ -70,12 +75,14 @@ namespace GalagaFighter.Core.Models.Players
                 Projectiles = Projectiles,
                 OnShoot = OnShoot,
                 OnProjectileDestroyed = OnProjectileDestroyed,
+                WindUpSpeed = WindUpSpeed,
                 WindUpDuration = WindUpDuration,
                 PlankDuration = PlankDuration,
                 PlankStopsMovement = PlankStopsMovement,
-                WindUpSpeed = WindUpSpeed,
+                CollideDistanceFromEdge = CollideDistanceFromEdge,
                 OnWindUpReleased = OnWindUpReleased,
                 OnSpriteUpdate = OnSpriteUpdate,
+                OnCollide = OnCollide,
                 DeactivateOnCollision = DeactivateOnCollision,
                 Phases = Phases,
                 OnPhaseChange = OnPhaseChange,
@@ -85,7 +92,8 @@ namespace GalagaFighter.Core.Models.Players
                 RotationOffsetMultiplier = RotationOffsetMultiplier,
                 VerticalPositionIncrement = VerticalPositionIncrement,
                 VerticalPositionOffset = VerticalPositionOffset,
-                VerticalPositionMultiplier = VerticalPositionMultiplier
+                VerticalPositionMultiplier = VerticalPositionMultiplier,
+                IgnoreShipMovement = IgnoreShipMovement
             };
         }
     }

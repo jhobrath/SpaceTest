@@ -62,9 +62,9 @@ namespace GalagaFighter.Core.Services
         {
             var movingRotation = 0f;
             if (left)
-                movingRotation = left.HeldDuration * 5f * (player.IsPlayer1 ? -1 : 1);
+                movingRotation = left.HeldDuration * -10f;// * (player.IsPlayer1 ? -1 : 1);
             else if (right)
-                movingRotation = right.HeldDuration * 5f * (player.IsPlayer1 ? 1 : -1);
+                movingRotation = right.HeldDuration * 10f;// * (player.IsPlayer1 ? -1 : 1);
             else
                 movingRotation = 0f;
 

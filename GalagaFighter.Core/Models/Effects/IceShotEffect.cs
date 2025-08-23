@@ -12,17 +12,27 @@ namespace GalagaFighter.Core.Models.Effects
         public override string IconPath => "Sprites/Effects/iceshot.png";
         public override bool IsProjectile => true;
         private readonly SpriteWrapper _sprite;
-        protected override float Duration => 10f; 
+        protected override float Duration => 10f;
+
+        private SpriteDecorations _decorations = new SpriteDecorations();
 
         public IceShotEffect()
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/IceShotShip.png"), 3,  .33f);
+            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce.png"));
+            _decorations = new SpriteDecorations()
+            {
+                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_ShootBoth.png"))),
+                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_ShootLeft.png"))),
+                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_ShootRight.png"))),
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_Move.png")))
+            };
         }
 
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Sprite = _sprite;
             modifiers.Projectile.Projectiles.Add(CreateProjectile);
+            modifiers.Decorations = _decorations;
         }
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)

@@ -18,10 +18,19 @@ namespace GalagaFighter.Core.Models.Effects
         public override bool IsProjectile => true;
         protected override int TotalBullets => 5;
         private SpriteWrapper _sprite;
+        private SpriteDecorations _decorations;
 
         public ExplosiveShotEffect()
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/ExplosiveShotShip.png"), 3,  .12f);
+            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive.png"));
+
+            _decorations = new SpriteDecorations
+            {
+                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_ShootBoth.png"))),
+                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_ShootLeft.png"))),
+                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_ShootRight.png"))),
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_Move.png")))
+            };
         }
 
         public override void Apply(EffectModifiers modifiers)
@@ -36,6 +45,7 @@ namespace GalagaFighter.Core.Models.Effects
 
             modifiers.Projectile.Phases = new List<float> { .95f };
             modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
+            modifiers.Decorations = _decorations;
         }
 
         private void HandlePhaseChange(Projectile projectile, int phase)

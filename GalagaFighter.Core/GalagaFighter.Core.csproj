@@ -29,6 +29,56 @@
     <None Remove="Sprites\Players\mud.pdn" />
     <None Remove="Sprites\Players\Ships.pdn" />
     <None Remove="Sprites\Powerups\powerups.pdn" />
+    <None Remove="Sprites\Projectiles\mud_splat.png" />
+    <None Remove="Sprites\Ships\MainShip.png" />
+    <None Remove="Sprites\Ships\MainShipExplosive.png" />
+    <None Remove="Sprites\Ships\MainShipExplosive_Move.png" />
+    <None Remove="Sprites\Ships\MainShipExplosive_ShootBoth.png" />
+    <None Remove="Sprites\Ships\MainShipExplosive_ShootLeft.png" />
+    <None Remove="Sprites\Ships\MainShipExplosive_ShootRight.png" />
+    <None Remove="Sprites\Ships\MainShipIce.png" />
+    <None Remove="Sprites\Ships\MainShipIce_Move.pdn" />
+    <None Remove="Sprites\Ships\MainShipIce_Move.png" />
+    <None Remove="Sprites\Ships\MainShipIce_Shoot.png" />
+    <None Remove="Sprites\Ships\MainShipIce_ShootBoth.png" />
+    <None Remove="Sprites\Ships\MainShipIce_ShootLeft.png" />
+    <None Remove="Sprites\Ships\MainShipIce_ShootRight.png" />
+    <None Remove="Sprites\Ships\MainShipMud.png" />
+    <None Remove="Sprites\Ships\MainShipMud_move.png" />
+    <None Remove="Sprites\Ships\MainShipMud_ShootBoth.png" />
+    <None Remove="Sprites\Ships\MainShipMud_ShootLeft.png" />
+    <None Remove="Sprites\Ships\MainShipMud_ShootRight.png" />
+    <None Remove="Sprites\Ships\MainShipWood.png" />
+    <None Remove="Sprites\Ships\MainShipWood_Move.png" />
+    <None Remove="Sprites\Ships\MainShipWood_ShootBoth.png" />
+    <None Remove="Sprites\Ships\MainShipWood_ShootLeft.png" />
+    <None Remove="Sprites\Ships\MainShipWood_ShootRight.png" />
+    <None Remove="Sprites\Ships\MainShipWood_WindUpBoth.png" />
+    <None Remove="Sprites\Ships\MainShipWood_WindUpLeft.png" />
+    <None Remove="Sprites\Ships\MainShipWood_WindUpRight.png" />
+    <None Remove="Sprites\Ships\MainShip_Move.png" />
+    <None Remove="Sprites\Ships\MainShip_Shoot.png" />
+    <None Remove="Sprites\Ships\MainShip_ShootBoth.png" />
+    <None Remove="Sprites\Ships\MainShip_ShootLeft.png" />
+    <None Remove="Sprites\Ships\MainShip_ShootRight.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Sprites\Ships\MainShipMud.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipMud_move.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipMud_ShootBoth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipMud_ShootLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipMud_ShootRight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -245,7 +295,82 @@
     <EmbeddedResource Include="Sprites\Projectiles\mud.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Projectiles\mud_splat.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sprites\Projectiles\ninja.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipExplosive.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipExplosive_Move.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipExplosive_ShootBoth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipExplosive_ShootLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipExplosive_ShootRight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipIce.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipIce_Move.pdn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipIce_Move.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipIce_ShootBoth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipIce_ShootLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipIce_ShootRight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood_Move.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood_ShootBoth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood_ShootLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood_ShootRight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood_WindUpBoth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood_WindUpLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShipWood_WindUpRight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShip_Move.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShip_ShootBoth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShip_ShootLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sprites\Ships\MainShip_ShootRight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

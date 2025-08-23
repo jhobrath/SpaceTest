@@ -1,17 +1,31 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 using System;
-using System.Numerics;
 using System.Collections.Generic;
-using GalagaFighter.Core.Controllers;
+using System.Numerics;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace GalagaFighter.Core.Services
 {
     public interface IPlayerShooter
     {
-        void Shoot(Player player, EffectModifiers modifiers);
+        PlayerShootState Shoot(Player player, EffectModifiers modifiers);
     }
+
+    public enum PlayerShootState 
+    {
+        WindUpLeft,
+        WindUpRight,
+        WindUpBoth,
+        ShootLeft,
+        ShootRight,
+        ShootBoth,
+        Magnet,
+        Idle
+    }
+
     public class PlayerShooter : IPlayerShooter
     {
         private readonly Dictionary<Guid, float> _fireRateTimer = new();
@@ -34,17 +48,29 @@ namespace GalagaFighter.Core.Services
             _magnetProjectileService = magnetProjectileService;
         }
 
-        public void Shoot(Player player, EffectModifiers modifiers)
+        public PlayerShootState Shoot(Player player, EffectModifiers modifiers)
         {
-            var canShoot = GetCanShoot(player, modifiers);
+            var canShoot = GetCanShoot(player, modifiers, out ButtonState shoot);
             if (!canShoot)
-                return;
+            {
+                if (shoot.HeldDuration > 0f && modifiers.Projectile.WindUpDuration > 0f)
+                    return _lastGunLeft[player.Id]
+                        ? player.IsPlayer1 ? PlayerShootState.WindUpLeft : PlayerShootState.WindUpRight
+                        : player.IsPlayer1 ? PlayerShootState.WindUpRight : PlayerShootState.WindUpLeft;
 
-            if(modifiers.Magnetic)
+                return PlayerShootState.Idle;
+            }
+
+            if (modifiers.Magnetic)
             {
                 _magnetProjectileService.Magnetize(player);
-                return;
-            }    
+                return PlayerShootState.Magnet;
+            }
+
+            if (_lastProjectile.ContainsKey(player.Id) && (_lastProjectile[player.Id]?.Modifiers.WindUpDuration ?? 0f) > 0f)
+                return _lastGunLeft[player.Id]
+                    ? player.IsPlayer1 ? PlayerShootState.WindUpLeft : PlayerShootState.WindUpRight
+                    : player.IsPlayer1 ? PlayerShootState.WindUpRight : PlayerShootState.WindUpLeft;
 
             var spawnPosition = GetSpawnPosition(player, modifiers);
             SpawnProjectile(player, modifiers, spawnPosition);
@@ -53,35 +79,36 @@ namespace GalagaFighter.Core.Services
             {
                 var spawnPosition2 = GetSpawnPosition(player, modifiers);
                 SpawnProjectile(player, modifiers, spawnPosition2);
+                return PlayerShootState.ShootBoth;
             }
+
+            if(_lastProjectile.GetValueOrDefault(player.Id, null).Modifiers.WindUpDuration > 0f)
+                return _lastGunLeft[player.Id]
+                ? player.IsPlayer1 ? PlayerShootState.ShootRight : PlayerShootState.ShootLeft
+                : player.IsPlayer1 ? PlayerShootState.ShootLeft : PlayerShootState.ShootRight;
+
+            return _lastGunLeft[player.Id]
+                ? player.IsPlayer1 ? PlayerShootState.ShootLeft : PlayerShootState.ShootRight
+                : player.IsPlayer1 ? PlayerShootState.ShootRight : PlayerShootState.ShootLeft;
         }
 
-        protected virtual bool GetCanShoot(Player player, EffectModifiers modifiers)
+        protected virtual bool GetCanShoot(Player player, EffectModifiers modifiers, out ButtonState shoot)
         {
             if (!_fireRateTimer.ContainsKey(player.Id))
                 _fireRateTimer[player.Id] = 0f;
 
             _fireRateTimer[player.Id] += Raylib.GetFrameTime();
 
-            var shoot = _inputService.GetShoot(player.Id);
+            shoot = _inputService.GetShoot(player.Id);
             if (modifiers.Magnetic)
             {
-                if (shoot)
-                {
-                    if (shoot.HeldDuration == Raylib.GetFrameTime())
-                        AudioService.PlayMagnetSound();
-
-                    return true;
-                }
-                else if (shoot.WasReleased)
-                {
-                    _magnetProjectileService.DeMagnetize(player);
-                    return false;
-                }
+                var canMagnet = GetCanShootMagnet(player, shoot);
+                if (canMagnet.HasValue)
+                    return canMagnet.Value;
             }
 
             if (!shoot)
-                    return false;
+                return false;
 
             var fireRate = modifiers.Stats.FireRateMultiplier * EffectiveFireRate;
             if (_fireRateTimer[player.Id] < fireRate)
@@ -89,6 +116,24 @@ namespace GalagaFighter.Core.Services
 
             _fireRateTimer[player.Id] = 0;
             return true;
+        }
+
+        private bool? GetCanShootMagnet(Player player, ButtonState shoot)
+        {
+            if (shoot)
+            {
+                if (shoot.HeldDuration == Raylib.GetFrameTime())
+                    AudioService.PlayMagnetSound();
+
+                return true;
+            }
+            else if (shoot.WasReleased)
+            {
+                _magnetProjectileService.DeMagnetize(player);
+                return false;
+            }
+
+            return null;
         }
 
         private Vector2 GetSpawnPosition(Player player, EffectModifiers modifiers)
@@ -104,15 +149,12 @@ namespace GalagaFighter.Core.Services
         }
 
         private void SpawnProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition)
-        { 
+        {
             if (!_lastGunLeft.ContainsKey(player.Id))
                 _lastGunLeft[player.Id] = false;
 
             if (!_lastProjectile.ContainsKey(player.Id))
                 _lastProjectile[player.Id] = null;
-
-            if (_lastProjectile[player.Id] != null && _lastProjectile[player.Id].Modifiers.WindUpDuration > 0f)
-                return;
 
             foreach(var projectileFunc in modifiers.Projectile.Projectiles)
             {

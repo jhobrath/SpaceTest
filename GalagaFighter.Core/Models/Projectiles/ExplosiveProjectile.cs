@@ -21,10 +21,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 BaseSize => _baseSpeed;
         public override int BaseDamage => 50;
 
-        public override Vector2 SpawnOffset => new Vector2(-50, 15);
-
-        private readonly SpriteWrapper _explodeSprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .04f, repeat: false);
-        private float _explodeTimer = (float)Game.Random.NextDouble() * .3f + 1.1f;
+        public override Vector2 SpawnOffset => new Vector2(-80, 34);
 
         public ExplosiveProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)

@@ -48,7 +48,7 @@ namespace GalagaFighter.Core.Models.Players
 
         public override void Draw()
         {
-            CurrentFrameSprite.Draw(Center, CurrentFrameRotation, CurrentFrameRect.Width, CurrentFrameRect.Height, CurrentFrameColor);
+            _playerController.Draw(this);
         }
     }
 }

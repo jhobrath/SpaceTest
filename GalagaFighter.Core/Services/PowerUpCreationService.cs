@@ -35,7 +35,7 @@ namespace GalagaFighter.Core.Services
             (up,o,r,f) => new ExplosiveShotPowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new DoubleShotPowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new MagnetPowerUp(up,o, r.Position, r.Size, f),
-            //(r,f) => new MudShotPowerUp(r,f)
+            (up,o,r,f) => new MudShotPowerUp(up,o, r.Position, r.Size, f)
         };
 
         public void Roll()

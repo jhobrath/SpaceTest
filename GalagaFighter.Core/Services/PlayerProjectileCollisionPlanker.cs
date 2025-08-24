@@ -37,7 +37,7 @@ namespace GalagaFighter.Core.Services
                 if (!(projectile.CurrentFrameRect.X == 0 || projectile.CurrentFrameRect.X + projectile.CurrentFrameRect.Width == Game.Width))
                 {
                     alreadyStuck = true;
-                    _collisionCreationService.Create(player, projectile, speedOverride: new Vector2(0f,0f));
+                    _collisionCreationService.Create(player, projectile);
                 }
             }
 

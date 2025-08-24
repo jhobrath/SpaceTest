@@ -11,7 +11,7 @@ namespace GalagaFighter.Core.Models.Collisions
 {
     public abstract class Collision : GameObject
     {
-        protected virtual float SpeedDecreaseFactor => 15f;
+        protected virtual float SpeedDecreaseFactor => 5f;
         protected virtual bool FadeOut => true;
 
         private float _lifetimeThusFar = 0f;
@@ -21,10 +21,8 @@ namespace GalagaFighter.Core.Models.Collisions
         private float? _gluedOffsetY;
 
         public Collision(Guid owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
-            : base(owner, sprite, initialPosition, initialSize, new Vector2(Math.Clamp(initialSpeed.X, -50f, 50f),0f))
+            : base(owner, sprite, initialPosition, initialSize, new Vector2(Math.Clamp(initialSpeed.X, -500f, 500f),0f))
         {
-
-
             SetDrawPriority(5);
             
             Rotation = 360f * (float)Game.Random.NextDouble();

@@ -26,7 +26,7 @@ namespace GalagaFighter.Core.Models.Effects
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Sprite = _sprite;
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations = _decorations; 
             modifiers.Projectile.Projectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers));
         }
     }

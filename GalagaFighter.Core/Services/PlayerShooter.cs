@@ -138,8 +138,8 @@ namespace GalagaFighter.Core.Services
 
         private Vector2 GetSpawnPosition(Player player, EffectModifiers modifiers)
         {
-            var playerWidth = player.CurrentFrameRect.Width;
-            var playerHeight = player.CurrentFrameRect.Height;
+            var playerWidth = player.Rect.Width;
+            var playerHeight = player.Rect.Height;
 
             var spawnX = player.IsPlayer1 ? player.Rect.X + playerWidth : player.Rect.X;
             var spawnY = player.Rect.Y + playerHeight / 2;

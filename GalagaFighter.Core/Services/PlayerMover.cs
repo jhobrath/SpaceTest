@@ -23,71 +23,84 @@ namespace GalagaFighter.Core.Services
             var left = _inputService.GetMoveLeft(player.Id);
             var right = _inputService.GetMoveRight(player.Id);
 
-            SetPosition(player, modifiers, left, right);
+            SetSpeed(player, modifiers, left, right);
+            SetPosition(player, modifiers);
             SetSize(player, modifiers);
             SetRotation(player, modifiers, left, right);
         }
 
-        protected void SetPosition(Player player, EffectModifiers modifiers, ButtonState left, ButtonState right)
+        protected void SetSpeed(Player player, EffectModifiers modifiers, ButtonState left, ButtonState right)
         {
-            var newPosition = player.Rect.Position;
-            var speed = player.Speed.Y * modifiers.Stats.SpeedMultiplier;
+            var baseSpeed = 20f * modifiers.Stats.SpeedMultiplier;
 
+            var speedY = 0f;
             if (left)
-            { 
-                newPosition.Y = (newPosition.Y - speed / (1 + left.HeldDuration) * (player.IsPlayer1 ? 1 : -1));
-            }
+                speedY = -baseSpeed / (1 + left.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
+            else if (right)
+                speedY = baseSpeed / (1 + right.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
 
-            if (right)
+            player.HurryTo(x: player.Speed.X, y: speedY);
+
+        }
+
+        private void SetPosition(Player player, EffectModifiers modifiers)
+        {
+            var newY = player.Rect.Y + player.Speed.Y;
+            if (newY < Game.Margin)
             {
-                newPosition.Y = (newPosition.Y + speed / (1 + right.HeldDuration) * (player.IsPlayer1 ? 1 : -1));
+                player.MoveTo(y: Game.Margin);
+                player.HurryTo(y: 0f); // Stop Y movement when hitting boundary
             }
-
-            if (newPosition.Y < Game.Margin)
-                newPosition.Y = Game.Margin;
-
-            var maxY = Game.Height - Game.Margin - player.Rect.Height;
-            if (newPosition.Y > maxY)
-                newPosition.Y = maxY;
-
-            var frameTime = Raylib.GetFrameTime();
-            player.CurrentFrameSpeed = new Vector2(
-                (newPosition.X - player.Rect.X)/frameTime, 
-                (newPosition.Y - player.Rect.Y)/frameTime
-            );
-            player.MoveTo(x: newPosition.X, y: newPosition.Y);
+            else if (newY + player.Rect.Height > Game.Height - Game.Margin)
+            {
+                player.MoveTo(y: Game.Height - Game.Margin - player.Rect.Height);
+                player.HurryTo(y: 0f); // Stop Y movement when hitting boundary
+            }
+            else
+            {
+                // Move the player using the speed-based approach
+                player.MoveTo(x: player.Rect.X + player.Speed.X, y: player.Rect.Y + player.Speed.Y);
+            }
         }
 
         protected void SetRotation(Player player, EffectModifiers modifiers, ButtonState left, ButtonState right)
         {
+            //TODO: Find a way to only use original Rotation here
+            var originalRotation = player.IsPlayer1 ? 90f : -90f;
+
+            var frameTime = Raylib.GetFrameTime();
+
+
             var movingRotation = 0f;
             if (left)
-                movingRotation = left.HeldDuration * -10f;// * (player.IsPlayer1 ? -1 : 1);
+                movingRotation = Math.Min(left.HeldDuration * -10f,-10f);
             else if (right)
-                movingRotation = right.HeldDuration * 10f;// * (player.IsPlayer1 ? -1 : 1);
+                movingRotation = Math.Max(10f, right.HeldDuration * 10f);
             else
                 movingRotation = 0f;
 
             movingRotation = Math.Clamp(movingRotation,-10f, 10f);
 
-            player.CurrentFrameRotation = (player.Rotation * modifiers.Display.RotationMultiplier) + movingRotation + modifiers.Display.RotationOffset;
+            player.Rotation = originalRotation +  movingRotation + modifiers.Display.RotationOffset;
+
+            if(!player.IsPlayer1)
+            DebugWriter.Write(player.Rotation.ToString());
         }
 
         private void SetSize(Player player, EffectModifiers modifiers)
         {
-            var xSize = player.Rect.Size.X * modifiers.Display.SizeMultiplier.X;
-            var ySize = player.Rect.Size.Y * modifiers.Display.SizeMultiplier.Y;
+            //TODO: Find a way to only use original Size here
+            var originalSize = new Vector2(160f, 160f);
+
+            var xSize = originalSize.X * modifiers.Display.SizeMultiplier.X;
+            var ySize = originalSize.Y * modifiers.Display.SizeMultiplier.Y;
 
             var currentSize = new Vector2(xSize, ySize);
-            var currentPositionX = player.Rect.Position.X - xSize / 2;
-            var currentPositionY = player.Rect.Position.Y - ySize / 2;
+            var currentPositionX = player.Rect.Position.X - (xSize - player.Rect.Size.X)/ 2;
+            var currentPositionY = player.Rect.Position.Y - (ySize - player.Rect.Size.Y)/ 2;
 
-            player.CurrentFrameRect = new Rectangle(
-                currentPositionX,
-                currentPositionY,
-                xSize,
-                ySize
-            );
+            player.MoveTo(currentPositionX, currentPositionY);
+            player.ScaleTo(xSize, ySize);
         }
     }
 }

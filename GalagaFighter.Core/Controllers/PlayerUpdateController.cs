@@ -38,39 +38,20 @@ namespace GalagaFighter.Core.Controllers
         {
             var frameTime = Raylib.GetFrameTime();
 
-            var effects = GetModifiers(player, frameTime);
+            var modifiers = GetModifiers(player, frameTime);
 
             player.Rotation = player.IsPlayer1 ? 90f : -90f;
-            player.CurrentFrameSprite = effects.Sprite;
+            player.Sprite = modifiers.Sprite;
 
-            UpdateColors(player, effects);
-
-            _playerMover.Move(player, effects);
-            var shootState = _playerShooter.Shoot(player, effects);
+            _playerMover.Move(player, modifiers);
+            var shootState = _playerShooter.Shoot(player, modifiers);
             _shootStates[player] = shootState;
 
-            _playerSwitcher.Switch(player, effects);
-            _playerProjectileCollisionService.HandleCollisions(player, effects);
+            _playerSwitcher.Switch(player, modifiers);
+            _playerProjectileCollisionService.HandleCollisions(player, modifiers);
 
 
-            player.CurrentFrameSprite.Update(frameTime);
-        }
-
-        private void UpdateColors(Player player, EffectModifiers effects)
-        {
-            player.CurrentFrameColor = Color.White;
-            
-            if(effects.Display.RedAlpha != 1f)
-                player.CurrentFrameColor = player.CurrentFrameColor.ApplyRed(1 - effects.Display.RedAlpha);
-            
-            if(effects.Display.GreenAlpha != 1f)
-                player.CurrentFrameColor = player.CurrentFrameColor.ApplyGreen(1 - effects.Display.GreenAlpha);
-
-            if(effects.Display.BlueAlpha != 1f)
-                player.CurrentFrameColor = player.CurrentFrameColor.ApplyBlue(1 - effects.Display.BlueAlpha);
-
-            if(effects.Display.Opacity != 1f)
-                player.CurrentFrameColor = player.CurrentFrameColor.ApplyAlpha(1 - effects.Display.Opacity);
+            player.Sprite.Update(frameTime);
         }
 
         private EffectModifiers GetModifiers(Player player, float frameTime)
@@ -78,7 +59,7 @@ namespace GalagaFighter.Core.Controllers
             var effects = new EffectModifiers(player.Sprite)
             {
                 Stats = new PlayerStats(),
-                Display = new PlayerDisplay(),
+                Display = new PlayerDisplay() { Rotation = player.Rotation },
                 Projectile = new PlayerProjectile()
             };
 

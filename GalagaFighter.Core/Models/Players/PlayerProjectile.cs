@@ -48,7 +48,8 @@ namespace GalagaFighter.Core.Models.Players
         public bool DoubleShot { get; set; } = false;
 
         //Creation
-        public List<Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile>> Projectiles = [];
+        public List<Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile>> OnShootProjectiles = [];
+        public List<Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile>> OneTimeProjectiles = [];
 
         //Events
         public Action<Projectile>? OnShoot { get; set; } = null;
@@ -72,7 +73,7 @@ namespace GalagaFighter.Core.Models.Players
                 GreenAlpha = GreenAlpha,
                 Opacity = Opacity,
                 DoubleShot = DoubleShot,
-                Projectiles = Projectiles,
+                OnShootProjectiles = OnShootProjectiles,
                 OnShoot = OnShoot,
                 OnProjectileDestroyed = OnProjectileDestroyed,
                 WindUpSpeed = WindUpSpeed,

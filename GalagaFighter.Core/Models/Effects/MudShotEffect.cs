@@ -35,7 +35,7 @@ namespace GalagaFighter.Core.Models.Effects
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Sprite = _sprite;
-            modifiers.Projectile.Projectiles.Add(CreateProjectile);
+            modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Decorations = _decorations;
             
             // ✅ Phase transformation (like explosive)

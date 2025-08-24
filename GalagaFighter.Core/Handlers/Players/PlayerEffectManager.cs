@@ -39,8 +39,27 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             _effects.Add(newEffect);
 
+            ReplaceExistingEffect(newEffect);
             LimitEffectCount(newEffect);
             UpdateModifiers();
+        }
+
+        private void ReplaceExistingEffect(PlayerEffect newEffect)
+        {
+            for(var i = _effects.Count - 2;i >= 0;i--)
+            {
+                if (!_effects[i].IsProjectile)
+                    continue;
+
+                if (_effects[i].GetType() == newEffect.GetType())
+                {
+                    _effects[i] = newEffect;
+                    _effects.RemoveAt(_effects.Count - 1);
+                }
+            }
+
+            if (_effects.All(x => x != _selectedProjectile))
+                _selectedProjectile = newEffect;
         }
 
         private void LimitEffectCount(PlayerEffect newEffect)

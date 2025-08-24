@@ -50,9 +50,12 @@ namespace GalagaFighter.Core.Controllers
             var shootState = _playerShooter.Shoot(player, modifiers);
             _shootState = shootState;
 
+            _playerShooter.ShootOneTime(player, modifiers);
+
             var switchButton = _inputService.GetSwitch(player.Id);
             if (switchButton.IsPressed)
                 effectManager.SwitchEffect();
+
 
             _playerProjectileCollisionService.HandleCollisions(player, modifiers);
         }

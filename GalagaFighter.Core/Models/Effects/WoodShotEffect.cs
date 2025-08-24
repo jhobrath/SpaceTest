@@ -38,7 +38,7 @@ namespace GalagaFighter.Core.Models.Effects
         {
             modifiers.Sprite = _sprite;
             modifiers.Projectile.OnWindUpReleased = HandleShotFired;
-            modifiers.Projectile.Projectiles.Add(CreateProjectile);
+            modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Projectile.WindUpDuration = 1.0f;
             modifiers.Projectile.WindUpSpeed = 250f;
             modifiers.Projectile.PlankDuration = 7f;

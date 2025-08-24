@@ -22,7 +22,7 @@ namespace GalagaFighter.Core.Models.Effects
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Sprite = _sprite;
-            modifiers.Projectile.Projectiles.Add(CreateProjectile);
+            modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Stats.FireRateMultiplier *= .45f;
             modifiers.Projectile.RotationOffset += 10f;
             modifiers.Projectile.VerticalPositionIncrement = -5f + 10f * (float)Game.Random.NextDouble();

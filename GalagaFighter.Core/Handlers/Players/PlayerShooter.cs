@@ -13,6 +13,7 @@ namespace GalagaFighter.Core.Handlers.Players
     public interface IPlayerShooter
     {
         PlayerShootState Shoot(Player player, EffectModifiers modifiers);
+        void ShootOneTime(Player player, EffectModifiers modifiers);
     }
 
     public enum PlayerShootState
@@ -151,33 +152,49 @@ namespace GalagaFighter.Core.Handlers.Players
 
         private void SpawnProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition)
         {
-            foreach (var projectileFunc in modifiers.Projectile.Projectiles)
-            {
-                var projectileModifiers = modifiers.Projectile.Clone();
-
-                var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
-                SetRotation(projectile);
-
-                projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);
-                projectile.Move(y: projectile.SpawnOffset.Y * (_lastGunLeft ? 1 : -1) * modifiers.Display.SizeMultiplier.Y);
-
-                //Undo offset from spawn position
-                projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
-                projectile.Move(y: -(projectile.Rect.Height / 2));
-
-                projectile.Modifiers.OnShoot?.Invoke(projectile);
-
-                _objectService.AddGameObject(projectile);
-                _lastProjectile = projectile;
-            }
+            foreach (var projectileFunc in modifiers.Projectile.OnShootProjectiles)
+                ShootProjectile(player, modifiers, spawnPosition, projectileFunc);
 
             _lastGunLeft = !_lastGunLeft;
+        }
+
+        private void ShootProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition, Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile> projectileFunc)
+        {
+            var projectileModifiers = modifiers.Projectile.Clone();
+
+            var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
+            SetRotation(projectile);
+
+            projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);
+            projectile.Move(y: projectile.SpawnOffset.Y * (_lastGunLeft ? 1 : -1) * modifiers.Display.SizeMultiplier.Y);
+
+            //Undo offset from spawn position
+            projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
+            projectile.Move(y: -(projectile.Rect.Height / 2));
+
+            projectile.Modifiers.OnShoot?.Invoke(projectile);
+
+            _objectService.AddGameObject(projectile);
+            _lastProjectile = projectile;
         }
 
         protected virtual void SetRotation(Projectile projectile)
         {
             if (projectile.Speed.X < 0)
                 projectile.Rotation += -180f;
+        }
+
+        public void ShootOneTime(Player player, EffectModifiers modifiers)
+        {
+            Raylib.DrawRectangleLines((int)player.Rect.X, (int)player.Rect.Y, (int)player.Rect.Width, (int)player.Rect.Height, Color.Red);
+
+            foreach (var projectileFunc in modifiers.Projectile.OneTimeProjectiles)
+            {
+                var projectile = projectileFunc(_projectileController, player, new Vector2(player.Center.X, player.Center.Y), modifiers.Projectile);
+                _objectService.AddGameObject(projectile);
+            }
+
+            modifiers.Projectile.OneTimeProjectiles.Clear();
         }
     }
 }

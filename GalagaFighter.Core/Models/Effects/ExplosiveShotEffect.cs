@@ -38,7 +38,7 @@ namespace GalagaFighter.Core.Models.Effects
         {
             modifiers.Sprite = _sprite;
             modifiers.Projectile.OnShoot = HandleShotFired;
-            modifiers.Projectile.Projectiles.Add(CreateProjectile);
+            modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Projectile.DamageMultiplier *= Raylib.GetFrameTime();
             modifiers.Projectile.DeactivateOnCollision = false;
             modifiers.Projectile.RotationOffsetIncrement = 360f;

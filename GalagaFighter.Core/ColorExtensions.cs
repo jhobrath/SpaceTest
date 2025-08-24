@@ -43,7 +43,7 @@ namespace GalagaFighter.Core
 
         public static Color ApplyAlpha(this Color color, float alpha)
         {
-            var newColor = new Color(color.R/255f, color.G/255f, color.B/255f, alpha * 255f);
+            var newColor = new Color(color.R/255f, color.G/255f, color.B/255f, alpha);
             return newColor;
         }
 

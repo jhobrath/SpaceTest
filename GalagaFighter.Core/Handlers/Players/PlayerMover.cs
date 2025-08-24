@@ -40,8 +40,13 @@ namespace GalagaFighter.Core.Handlers.Players
             }
 
             var speedVariability = 600f;
-            var baseSpeed = 1200f * modifiers.Stats.SpeedMultiplier; // Increased from 20f to maintain similar feel
+            var baseSpeed = 1200f * modifiers.Stats.SpeedMultiplier;
             var speedFactor = baseSpeed - Math.Min(speedVariability, speedVariability * durationFactor);
+
+            if(player.IsPlayer1)
+            { 
+                DebugWriter.Write(speedFactor.ToString());
+            }
             var signFactor = left ^ !player.IsPlayer1 ? -1 : 1;
             var speedY = speedFactor * signFactor;
 
@@ -92,9 +97,6 @@ namespace GalagaFighter.Core.Handlers.Players
             movingRotation = Math.Clamp(movingRotation, -10f, 10f);
 
             player.Rotation = originalRotation + movingRotation + modifiers.Display.RotationOffset;
-
-            if (!player.IsPlayer1)
-                DebugWriter.Write(player.Rotation.ToString());
         }
 
         private void SetSize(Player player, EffectModifiers modifiers)

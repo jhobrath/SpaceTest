@@ -14,11 +14,11 @@ namespace GalagaFighter.Core.Models.Players
         //Multipliers
         public float DamageMultiplier { get; set; } = 1f;
         public float SpeedMultiplier { get; set; } = 1f;
-        public float SizeMultiplier { get; set; } = 1f;
+        public Vector2 SizeMultiplier { get; set; } = new Vector2(1f,1f);
         public float RedAlpha { get; set; } = 1f;
         public float BlueAlpha { get; set; } = 1f;
         public float GreenAlpha { get; set; } = 1f;
-        public float OpacityAlpha { get; set; } = 1f;
+        public float Opacity { get; set; } = 1f;
 
         //Offsets
         public float RotationOffset { get; set; } = 0f; //Always leave at zero in effects
@@ -70,7 +70,7 @@ namespace GalagaFighter.Core.Models.Players
                 RedAlpha = RedAlpha,
                 BlueAlpha = BlueAlpha,
                 GreenAlpha = GreenAlpha,
-                OpacityAlpha = OpacityAlpha,
+                Opacity = Opacity,
                 DoubleShot = DoubleShot,
                 Projectiles = Projectiles,
                 OnShoot = OnShoot,

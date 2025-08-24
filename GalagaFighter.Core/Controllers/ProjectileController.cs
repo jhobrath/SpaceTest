@@ -40,10 +40,21 @@ namespace GalagaFighter.Core.Controllers
             _projectileMover.Move(projectile);
             _projectileRotator.Rotate(projectile);
 
+            SetColor(projectile);
             SetSize(projectile);
-
-
             Deactivate(projectile);
+        }
+
+        private void SetColor(Projectile projectile)
+        {
+            if (projectile.Modifiers.RedAlpha != 1f)
+                projectile.Color = projectile.Color.ApplyRed(projectile.Modifiers.RedAlpha);
+            if (projectile.Modifiers.GreenAlpha != 1f)
+                projectile.Color = projectile.Color.ApplyGreen(projectile.Modifiers.GreenAlpha);
+            if (projectile.Modifiers.BlueAlpha != 1f)
+                projectile.Color = projectile.Color.ApplyBlue(projectile.Modifiers.BlueAlpha);
+            if (projectile.Modifiers.Opacity != 1f)
+                projectile.Color = projectile.Color.ApplyAlpha(projectile.Modifiers.Opacity);
         }
 
         private void SetSprite(Projectile projectile, float frameTime)
@@ -86,8 +97,8 @@ namespace GalagaFighter.Core.Controllers
 
         private void SetSize(Projectile projectile)
         {
-            var currentFrameSizeX = projectile.Rect.Width * projectile.Modifiers.SizeMultiplier;
-            var currentFrameSizeY = projectile.Rect.Height * projectile.Modifiers.SizeMultiplier;
+            var currentFrameSizeX = projectile.Rect.Width * projectile.Modifiers.SizeMultiplier.X;
+            var currentFrameSizeY = projectile.Rect.Height * projectile.Modifiers.SizeMultiplier.Y;
             projectile.CurrentFrameRect = new Rectangle(
                 projectile.Rect.X - (currentFrameSizeX - projectile.Rect.Width) / 2,
                 projectile.Rect.Y - (currentFrameSizeY - projectile.Rect.Height) / 2,

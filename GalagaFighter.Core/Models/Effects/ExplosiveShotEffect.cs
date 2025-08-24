@@ -53,7 +53,7 @@ namespace GalagaFighter.Core.Models.Effects
         {
             AudioService.PlayExplosionConversionSound();
             projectile.Modifiers.Sprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .04f, repeat: false);
-            projectile.Modifiers.SizeMultiplier = 5.6f;
+            projectile.Modifiers.SizeMultiplier = new Vector2(5.6f,5.6f);
             projectile.Modifiers.SpeedMultiplier = .5f;
         }
 

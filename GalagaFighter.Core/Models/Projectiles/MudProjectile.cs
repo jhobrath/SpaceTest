@@ -24,7 +24,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public MudProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
-            AudioService.PlayMudSplat();
+            AudioService.PlayShootSound();
         }
 
         private static SpriteWrapper GetSprite()
@@ -41,7 +41,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override List<PlayerEffect> CreateEffects()
         {
-            return [];
+            return [new MudSlowEffect()];  // ? Short-lived effect, continuously reapplied
         }
     }
 }

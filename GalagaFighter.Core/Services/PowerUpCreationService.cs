@@ -15,15 +15,35 @@ namespace GalagaFighter.Core.Services
         void Roll();
     }
 
+    public interface IPowerUpControllerFactory
+    {
+        IPowerUpController Create();
+    }
+
+    public class PowerUpControllerFactory : IPowerUpControllerFactory
+    {
+        private readonly IObjectService _objectService;
+
+        public PowerUpControllerFactory(IObjectService objectService)
+        {
+            _objectService = objectService;
+        }
+
+        public IPowerUpController Create()
+        {
+            return new PowerUpController(_objectService);
+        }
+    }
+
     public class PowerUpCreationService : IPowerUpService
     {
         private IObjectService _objectService;
-        private IPowerUpController _powerUpController;
+        private IPowerUpControllerFactory _powerUpControllerFactory;
 
-        public PowerUpCreationService(IObjectService objectService, IPowerUpController powerUpController)
+        public PowerUpCreationService(IObjectService objectService, IPowerUpControllerFactory powerUpControllerFactory)
         {
             _objectService = objectService;
-            _powerUpController = powerUpController;
+            _powerUpControllerFactory = powerUpControllerFactory;
         }
 
         private readonly static List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>>
@@ -63,7 +83,9 @@ namespace GalagaFighter.Core.Services
 
             var speed = new Vector2(0, 200f * uniformScale);
 
-            var powerUp = _powerUpTypes[powerUpTypeIndex](_powerUpController, Game.Id, rect, speed);
+            // Create a new controller instance for each power-up
+            var powerUpController = _powerUpControllerFactory.Create();
+            var powerUp = _powerUpTypes[powerUpTypeIndex](powerUpController, Game.Id, rect, speed);
             return powerUp;
         }
     }

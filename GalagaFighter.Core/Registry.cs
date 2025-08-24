@@ -17,6 +17,7 @@ namespace GalagaFighter.Core
             services.AddSingleton<IObjectService, ObjectService>(); // Manages all game objects
             services.AddSingleton<IInputService, InputService>(); // Tracks input state across frames
             services.AddSingleton<IPowerUpService, PowerUpCreationService>();
+            services.AddSingleton<IPowerUpControllerFactory, PowerUpControllerFactory>();
 
             // TRANSIENT - Stateless services that can be created fresh each time
             services.AddTransient<ICollisionCreationService, CollisionCreationService>();

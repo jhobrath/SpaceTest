@@ -89,16 +89,40 @@ namespace GalagaFighter.Core.Controllers
 
         private void Deactivate(Projectile projectile)
         {
-            if (projectile.CurrentFrameRect.X + projectile.CurrentFrameRect.Width < 0f)
+            var reachedEdgeX = (projectile.CurrentFrameRect.X + projectile.CurrentFrameRect.Width < 0f)
+                || (projectile.CurrentFrameRect.X > Game.Width);
+            var reachedEdgeY = (projectile.CurrentFrameRect.Y + projectile.CurrentFrameRect.Height < 0f)
+                || (projectile.CurrentFrameRect.Y > Game.Height);
+
+            if (reachedEdgeX && projectile.Modifiers.CanRicochet)
             {
+                RicochetX(projectile);
+                return;
+            }
+
+            if(reachedEdgeY && projectile.Modifiers.CanRicochet)
+            {
+                RicochetY(projectile);
+                return;
+            }
+         
+            if(reachedEdgeX || reachedEdgeY)
+            { 
                 projectile.IsActive = false;
                 projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
             }
-            else if (projectile.CurrentFrameRect.X > Game.Width)
-            {
-                projectile.IsActive = false;
-                projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
-            }
+        }
+
+        private void RicochetX(Projectile projectile)
+        {
+            projectile.Hurry(x: -1f);
+            projectile.Modifiers.CanRicochet = Game.Random.NextDouble() < .5f;
+        }
+
+        private void RicochetY(Projectile projectile)
+        {
+            projectile.Hurry(y: -1f);
+            projectile.Modifiers.CanRicochet = Game.Random.NextDouble() < .333f;
         }
 
         private void SetSize(Projectile projectile)

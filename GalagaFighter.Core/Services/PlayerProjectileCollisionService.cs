@@ -45,7 +45,6 @@ namespace GalagaFighter.Core.Services
                 // Check both collision types - projectile could hit both edge AND player
                 var hasEdgeCollision = _edgeDetector.HasCollision(projectile);
                 var hasPlayerCollision = _playerDetector.HasCollision(player, projectile);
-
                 if (hasEdgeCollision || hasPlayerCollision)
                 {
                     Collide(player, projectile, modifiers);

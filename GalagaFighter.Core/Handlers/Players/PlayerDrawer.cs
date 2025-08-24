@@ -44,7 +44,7 @@ namespace GalagaFighter.Core.Handlers.Players
         private void DrawPlayer(Player player, EffectModifiers modifiers)
         {
             var color = UpdateColors(Color.White, modifiers);
-            player.Sprite.Draw(player.Center, player.Rotation, player.Rect.Width, player.Rect.Height, color);
+            player.Sprite?.Draw(player.Center, player.Rotation, player.Rect.Width, player.Rect.Height, color);
         }
 
         private void DrawShoot(Player player, EffectModifiers modifiers, PlayerShootState playerShootState)

@@ -2,6 +2,7 @@ using GalagaFighter.Core.Handlers.Players;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 
@@ -17,29 +18,30 @@ namespace GalagaFighter.Core.Controllers
     {
         private readonly IPlayerMover _playerMover;
         private readonly IPlayerShooter _playerShooter;
-        private readonly IPlayerSwitcher _playerSwitcher;
+        private readonly IInputService _inputService;
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IPlayerDrawer _playerDrawer;
+        private readonly IPlayerEffectManagerFactory _playerEffectManagerFactory;
 
         // Per-player instance state (no more dictionaries!)
-        private EffectModifiers? _modifiers;
         private PlayerShootState _shootState = PlayerShootState.Idle;
 
-        public PlayerController(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher, 
-            IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer)
+        public PlayerController(IPlayerMover playerMover, IPlayerShooter playerShooter, IInputService inputService,
+            IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer, IPlayerEffectManagerFactory playerEffectManagerFactory)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;
-            _playerSwitcher = playerSwitcher;
+            _inputService = inputService;
             _playerProjectileCollisionService = playerProjectileCollisionService;
             _playerDrawer = playerDrawer;
+            _playerEffectManagerFactory = playerEffectManagerFactory;
         }
 
         public void Update(Game game, Player player)
         {
             var frameTime = Raylib.GetFrameTime();
-
-            var modifiers = GetModifiers(player, frameTime);
+            var effectManager = _playerEffectManagerFactory.GetEffectManager(player.Id);
+            var modifiers = effectManager.GetModifiers();
 
             player.Rotation = player.IsPlayer1 ? 90f : -90f;
             player.Sprite = modifiers.Sprite;
@@ -48,37 +50,18 @@ namespace GalagaFighter.Core.Controllers
             var shootState = _playerShooter.Shoot(player, modifiers);
             _shootState = shootState;
 
-            _playerSwitcher.Switch(player, modifiers);
+            var switchButton = _inputService.GetSwitch(player.Id);
+            if (switchButton.IsPressed)
+                effectManager.SwitchEffect();
+
             _playerProjectileCollisionService.HandleCollisions(player, modifiers);
-
-            player.Sprite.Update(frameTime);
-        }
-
-        private EffectModifiers GetModifiers(Player player, float frameTime)
-        { 
-            var effects = new EffectModifiers(player.Sprite)
-            {
-                Stats = new PlayerStats(),
-                Display = new PlayerDisplay() { Rotation = player.Rotation },
-                Projectile = new PlayerProjectile()
-            };
-
-            foreach (var effect in player.Effects)
-                if (!effect.IsProjectile || effect == player.SelectedProjectile)
-                    effect.OnUpdate(frameTime);
-
-            foreach (var effect in player.Effects)
-                if (!effect.IsProjectile || effect == player.SelectedProjectile)
-                    effect.Apply(effects);
-
-            _modifiers = effects;
-
-            return effects;
         }
 
         public void Draw(Player player)
         {
-            _playerDrawer.Draw(player, _modifiers!, _shootState);
+            var effectManager = _playerEffectManagerFactory.GetEffectManager(player.Id);
+            var modifiers = effectManager.GetModifiers();
+            _playerDrawer.Draw(player, modifiers!, _shootState);
         }
     }
 }

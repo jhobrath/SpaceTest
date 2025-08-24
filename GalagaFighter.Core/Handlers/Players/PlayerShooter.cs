@@ -64,6 +64,9 @@ namespace GalagaFighter.Core.Handlers.Players
 
             if (modifiers.Magnetic)
             {
+                if(shoot.HeldDuration == Raylib.GetFrameTime())
+                    AudioService.PlayMagnetSound();
+
                 _magnetProjectileService.Magnetize(player);
                 return PlayerShootState.Magnet;
             }

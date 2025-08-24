@@ -4,6 +4,7 @@ using GalagaFighter.Core.Handlers.Collisions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GalagaFighter.Core.Handlers.Players;
 
 namespace GalagaFighter.Core.Services
 {
@@ -17,15 +18,17 @@ namespace GalagaFighter.Core.Services
         private readonly IObjectService _objectService;
         private readonly IPlayerProjectileCollisionPlanker _planker;
         private readonly ICollisionCreationService _collisionCreationService;
+        private readonly IPlayerEffectManagerFactory _playerEffectManagerFactory;
         private readonly EdgeCollisionDetector _edgeDetector;
         private readonly PlayerCollisionDetector _playerDetector;
 
         public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker,
-            ICollisionCreationService collisionCreationService)
+            ICollisionCreationService collisionCreationService, IPlayerEffectManagerFactory playerEffectManagerFactory)
         {
             _objectService = objectService;
             _planker = planker;
             _collisionCreationService = collisionCreationService;
+            _playerEffectManagerFactory = playerEffectManagerFactory;
             _edgeDetector = new EdgeCollisionDetector();
             _playerDetector = new PlayerCollisionDetector();
         }
@@ -52,18 +55,12 @@ namespace GalagaFighter.Core.Services
 
         private void Collide(Player player, Projectile projectile, EffectModifiers modifiers)
         {
+            var effectManager = _playerEffectManagerFactory.GetEffectManager(player);
             var effects = projectile.CreateEffects();
-            foreach (var effect in effects)
-            {
-                if(effect.MaxCount != 0)
-                {
-                    var soFar = player.Effects.Count(x => x.GetType() == effect.GetType());
-                    if (soFar >= effect.MaxCount)
-                        continue;
-                }
 
-                player.Effects.Add(effect);
-            }
+            foreach (var effect in effects)
+                effectManager.AddEffect(effect);
+
 
             player.Health -= projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * (1 / modifiers.Stats.Shield);
 

@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Effects;
+﻿using GalagaFighter.Core.Handlers.Players;
+using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
@@ -15,6 +16,7 @@ namespace GalagaFighter.Core.Static
         private static int _controlTextSize = (int)(20 * Game.UniformScale);
         private static int _statusTextSize = (int)(16 * Game.UniformScale);
         private static int _margin = (int)(15 * Game.UniformScale);
+        private static IPlayerEffectManagerFactory _playerEffectManagerFactory = Registry.Get<IPlayerEffectManagerFactory>();
 
         public static void Initialize()
         {
@@ -49,8 +51,10 @@ namespace GalagaFighter.Core.Static
 
         private static void DrawEffects(Player player, bool reverse)
         {
-            var statusEffects = player.Effects.Where(x => !x.IsProjectile);
-            var projectiles = player.Effects.Where(x => x.IsProjectile); 
+            var effectManager = (IExposedPlayerEffectManager)_playerEffectManagerFactory.GetEffectManager(player);
+            var effects = effectManager.Effects;
+            var statusEffects = effects.Where(x => !x.IsProjectile);
+            var projectiles = effects.Where(x => x.IsProjectile); 
 
             var iconSize = 30f * Game.UniformScale;
             var startX = reverse
@@ -65,7 +69,7 @@ namespace GalagaFighter.Core.Static
 
             icons.Insert(0, "Sprites/Effects/firerate" + (fireRate.Count+1) + ".png");
 
-            var selected = player.SelectedProjectile;
+            var selected = effectManager.SelectedProjectile;
             var isDefaultEffect = selected != null && selected.GetType() == typeof(DefaultShootEffect);
             
             for(var i =0;i < icons.Count;i++)

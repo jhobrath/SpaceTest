@@ -42,6 +42,7 @@ namespace GalagaFighter.Core
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
+        private readonly IPlayerEffectManagerFactory _effectManagerFactory;
 
         // Player-specific controllers
         private readonly IPlayerController _playerController1;
@@ -57,7 +58,8 @@ namespace GalagaFighter.Core
             _playerProjectileCollisionService = Registry.Get<IPlayerProjectileCollisionService>();
             _projectilePowerUpCollisionService = Registry.Get<IProjectilePowerUpCollisionService>();
             _playerPowerUpCollisionService = Registry.Get<IPlayerPowerUpCollisionService>();
-            
+            _effectManagerFactory = Registry.Get<IPlayerEffectManagerFactory>();
+
             // Create separate controller instances for each player
             _playerController1 = Registry.Get<IPlayerController>();
             _playerController2 = Registry.Get<IPlayerController>();
@@ -119,20 +121,22 @@ namespace GalagaFighter.Core
             _player1.SetDrawPriority(0);
             _player2.SetDrawPriority(0);
 
+
 #if DEBUG
-            _player1.Effects.Add(new IceShotEffect());
-            _player1.Effects.Add(new ExplosiveShotEffect());
-            _player1.Effects.Add(new WoodShotEffect());
-            _player1.Effects.Add(new NinjaShotEffect());
-            _player1.Effects.Add(new MagnetEffect());
-            _player1.Effects.Add(new MudShotEffect());
-            _player2.Effects.Add(new IceShotEffect());
-            _player2.Effects.Add(new ExplosiveShotEffect());
-            _player2.Effects.Add(new WoodShotEffect());
-            _player2.Effects.Add(new NinjaShotEffect());
-            _player2.Effects.Add(new MagnetEffect());
-            _player2.Effects.Add(new MudShotEffect());
+            GiveAllEffects(_player1);
+            GiveAllEffects(_player2);
 #endif
+        }
+
+        private void GiveAllEffects(Player player)
+        {
+            var effectManager = _effectManagerFactory.GetEffectManager(player);
+            effectManager.AddEffect(new IceShotEffect());
+            effectManager.AddEffect(new ExplosiveShotEffect());
+            effectManager.AddEffect(new WoodShotEffect());
+            effectManager.AddEffect(new NinjaShotEffect());
+            effectManager.AddEffect(new MagnetEffect());
+            effectManager.AddEffect(new MudShotEffect());
         }
 
         public void Run()

@@ -13,8 +13,6 @@ namespace GalagaFighter.Core.Models.Players
     {
         public float Health { get; set; } = 100f;
         public bool IsPlayer1 { get; private set; }
-        public List<PlayerEffect> Effects { get; set; } = new();
-        public PlayerEffect SelectedProjectile { get; set; }
 
         private readonly IPlayerController _playerController;
 
@@ -23,9 +21,6 @@ namespace GalagaFighter.Core.Models.Players
         {
             _playerController = playerUpdater;
             IsPlayer1 = isPlayer1;
-
-            Effects.Add(new DefaultShootEffect());
-            SelectedProjectile = Effects[0];
         }
 
         public override void Update(Game game)

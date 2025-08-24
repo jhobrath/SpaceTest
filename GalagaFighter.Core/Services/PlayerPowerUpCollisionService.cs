@@ -18,11 +18,13 @@ namespace GalagaFighter.Core.Services
     {
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
+        private readonly IPlayerEffectManagerFactory _effectManagerFactory;
 
-        public PlayerPowerUpCollisionService(IObjectService objectService, IInputService inputService)
+        public PlayerPowerUpCollisionService(IObjectService objectService, IInputService inputService, IPlayerEffectManagerFactory effectManagerFactory)
         {
             _objectService = objectService;
             _inputService = inputService;
+            _effectManagerFactory = effectManagerFactory;
         }
 
         public void HandleCollisions()
@@ -39,7 +41,7 @@ namespace GalagaFighter.Core.Services
             }
         }
 
-        private static void HandleCollision(List<Player> players, PowerUp powerUp)
+        private void HandleCollision(List<Player> players, PowerUp powerUp)
         {
             var player = players.Single(x => x.Id == powerUp.Owner);
 
@@ -47,26 +49,16 @@ namespace GalagaFighter.Core.Services
             if (!powerUpIsClose)
                 return;
 
+            var effectManager = _effectManagerFactory.GetEffectManager(player);
             var newEffects = powerUp.CreateEffects();
+            
             foreach (var newEffect in newEffects)
             {
-                var existingEffect = player.Effects.FirstOrDefault(e => e.GetType() == newEffect.GetType());
-                if (existingEffect != null)
-                    ReplaceExistingEffect(player, newEffect, existingEffect);
-                else
-                    player.Effects.Add(newEffect);
+                // Let the effect manager handle the logic for replacing/stacking effects
+                effectManager.AddEffect(newEffect);
             }
 
             powerUp.IsActive = false;
-        }
-
-        private static void ReplaceExistingEffect(Player player, Models.Effects.PlayerEffect newEffect, Models.Effects.PlayerEffect existingEffect)
-        {
-            var index = player.Effects.IndexOf(existingEffect);
-            player.Effects[index] = newEffect;
-
-            if (player.SelectedProjectile == existingEffect)
-                player.SelectedProjectile = newEffect;
         }
     }
 }

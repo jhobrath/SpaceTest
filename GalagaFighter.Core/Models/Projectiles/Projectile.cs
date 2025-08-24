@@ -24,7 +24,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public PlayerProjectile Modifiers { get; private set; }
 
         public Rectangle CurrentFrameRect { get; set; }
-        public Vector2 CurrentFrameSpeed { get; set; }
+        //public Vector2 CurrentFrameSpeed { get; set; }
 
         public virtual SpriteWrapper? CollisionSprite => null;
 

@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.PowerUps;
 using GalagaFighter.Core.Models.Projectiles;
+using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,7 @@ namespace GalagaFighter.Core.Services
 
         private void Collide(Projectile projectile, PowerUp powerUp)
         {
+            AudioService.PlayPowerUpSound();
             powerUp.Owner = projectile.Owner;
             projectile.IsActive = false;
             projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);

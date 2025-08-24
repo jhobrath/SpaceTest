@@ -32,21 +32,31 @@ namespace GalagaFighter.Core.Handlers.Players
 
         protected void SetSpeed(Player player, EffectModifiers modifiers, ButtonState left, ButtonState right)
         {
-            var baseSpeed = 20f * modifiers.Stats.SpeedMultiplier;
+            var durationFactor = left ? left.HeldDuration : (right ? right.HeldDuration : 0f);
+            if(durationFactor == 0f)
+            {
+                player.HurryTo(player.Speed.X, 0f);
+                return;
+            }
 
-            var speedY = 0f;
-            if (left)
-                speedY = -baseSpeed / (1 + left.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
-            else if (right)
-                speedY = baseSpeed / (1 + right.HeldDuration) * (player.IsPlayer1 ? 1 : -1);
+            var speedVariability = 600f;
+            var baseSpeed = 1200f * modifiers.Stats.SpeedMultiplier; // Increased from 20f to maintain similar feel
+            var speedFactor = baseSpeed - Math.Min(speedVariability, speedVariability * durationFactor);
+            var signFactor = left ^ !player.IsPlayer1 ? -1 : 1;
+            var speedY = speedFactor * signFactor;
 
             player.HurryTo(x: player.Speed.X, y: speedY);
-
         }
 
         private void SetPosition(Player player, EffectModifiers modifiers)
         {
-            var newY = player.Rect.Y + player.Speed.Y;
+            var frameTime = Raylib.GetFrameTime();
+            
+            // Calculate movement for this frame by multiplying speed by frameTime
+            var deltaX = player.Speed.X * frameTime;
+            var deltaY = player.Speed.Y * frameTime;
+            
+            var newY = player.Rect.Y + deltaY;
             if (newY < Game.Margin)
             {
                 player.MoveTo(y: Game.Margin);
@@ -59,8 +69,8 @@ namespace GalagaFighter.Core.Handlers.Players
             }
             else
             {
-                // Move the player using the speed-based approach
-                player.MoveTo(x: player.Rect.X + player.Speed.X, y: player.Rect.Y + player.Speed.Y);
+                player.Move(deltaX, deltaY);
+                // Move the player using frameTime-adjusted movement
             }
         }
 
@@ -70,7 +80,6 @@ namespace GalagaFighter.Core.Handlers.Players
             var originalRotation = player.IsPlayer1 ? 90f : -90f;
 
             var frameTime = Raylib.GetFrameTime();
-
 
             var movingRotation = 0f;
             if (left)

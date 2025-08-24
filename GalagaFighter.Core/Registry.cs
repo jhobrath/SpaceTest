@@ -40,6 +40,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IProjectileMoverPlanker, ProjectileMoverPlanker>();
             services.AddTransient<IPlayerDrawer, PlayerDrawer>();
             services.AddTransient<IPlayerEffectManager, PlayerEffectManager>();
+            services.AddTransient<IProjectileSplitter, ProjectileSplitter>();
             services.AddTransient<IMagnetProjectileService, MagnetProjectileService>();
 
             _provider = services.BuildServiceProvider();

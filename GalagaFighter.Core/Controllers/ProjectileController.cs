@@ -16,17 +16,20 @@ namespace GalagaFighter.Core.Controllers
     {
         private IProjectileMover _projectileMover;
         private IProjectileRotator _projectileRotator;
+        private IProjectileSplitter _projectileSplitter;
 
-        public ProjectileController(IProjectileMover projectileMover, IProjectileRotator projectileRotator)
+        public ProjectileController(IProjectileMover projectileMover, IProjectileRotator projectileRotator,
+            IProjectileSplitter projectileSplitter)
         {
             _projectileMover = projectileMover;
             _projectileRotator = projectileRotator;
+            _projectileSplitter = projectileSplitter;
         }
 
         //Each projectile should have its own controller instance
         public IProjectileController Create()
         {
-            return new ProjectileController(_projectileMover.Create(), _projectileRotator.Create());
+            return new ProjectileController(_projectileMover.Create(), _projectileRotator.Create(), _projectileSplitter);
         }
 
         public void Update(Game game, Projectile projectile)
@@ -39,6 +42,7 @@ namespace GalagaFighter.Core.Controllers
 
             _projectileMover.Move(projectile);
             _projectileRotator.Rotate(projectile);
+            _projectileSplitter.Split(projectile, Create());
 
             SetColor(projectile);
             SetSize(projectile);

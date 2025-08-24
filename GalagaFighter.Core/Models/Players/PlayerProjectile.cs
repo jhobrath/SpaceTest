@@ -60,6 +60,7 @@ namespace GalagaFighter.Core.Models.Players
         public Func<Player, Projectile, List<GameObject>>? OnCollide { get; set; } = null;
 
         public SpriteWrapper? Sprite { get; set; } = null;
+        public bool CanSplit { get; internal set; }
 
         public PlayerProjectile Clone()
         {
@@ -94,7 +95,8 @@ namespace GalagaFighter.Core.Models.Players
                 VerticalPositionIncrement = VerticalPositionIncrement,
                 VerticalPositionOffset = VerticalPositionOffset,
                 VerticalPositionMultiplier = VerticalPositionMultiplier,
-                IgnoreShipMovement = IgnoreShipMovement
+                IgnoreShipMovement = IgnoreShipMovement,
+                CanSplit = CanSplit
             };
         }
     }

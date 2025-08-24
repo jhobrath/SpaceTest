@@ -29,7 +29,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IProjectileController, ProjectileController>();
             services.AddTransient<IPlayerShooter, PlayerShooter>();
             services.AddTransient<IPlayerSwitcher, PlayerSwitcher>();
-            services.AddTransient<IPlayerController, PlayerUpdateController>();
+            services.AddTransient<IPlayerController, PlayerController>();
             services.AddTransient<IProjectileRotator, ProjectileRotator>();
             services.AddTransient<IProjectileMover, ProjectileMover>();
             services.AddTransient<IProjectileMoverWindUpper, ProjectileMoverWindUpper>();

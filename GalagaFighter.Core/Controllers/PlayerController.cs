@@ -3,7 +3,6 @@ using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
-using System.Collections.Generic;
 
 namespace GalagaFighter.Core.Controllers
 {
@@ -13,7 +12,7 @@ namespace GalagaFighter.Core.Controllers
         void Update(Game game, Player player);
     }
 
-    public class PlayerUpdateController : IPlayerController
+    public class PlayerController : IPlayerController
     {
         private readonly IPlayerMover _playerMover;
         private readonly IPlayerShooter _playerShooter;
@@ -21,10 +20,11 @@ namespace GalagaFighter.Core.Controllers
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IPlayerDrawer _playerDrawer;
 
-        private readonly Dictionary<Player, EffectModifiers> _modifiers = [];
-        private readonly Dictionary<Player, PlayerShootState> _shootStates = [];
+        // Per-player instance state (no more dictionaries!)
+        private EffectModifiers? _modifiers;
+        private PlayerShootState _shootState = PlayerShootState.Idle;
 
-        public PlayerUpdateController(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher, 
+        public PlayerController(IPlayerMover playerMover, IPlayerShooter playerShooter, IPlayerSwitcher playerSwitcher, 
             IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer)
         {
             _playerMover = playerMover;
@@ -45,11 +45,10 @@ namespace GalagaFighter.Core.Controllers
 
             _playerMover.Move(player, modifiers);
             var shootState = _playerShooter.Shoot(player, modifiers);
-            _shootStates[player] = shootState;
+            _shootState = shootState;
 
             _playerSwitcher.Switch(player, modifiers);
             _playerProjectileCollisionService.HandleCollisions(player, modifiers);
-
 
             player.Sprite.Update(frameTime);
         }
@@ -71,14 +70,14 @@ namespace GalagaFighter.Core.Controllers
                 if (!effect.IsProjectile || effect == player.SelectedProjectile)
                     effect.Apply(effects);
 
-            _modifiers[player] = effects;
+            _modifiers = effects;
 
             return effects;
         }
 
         public void Draw(Player player)
         {
-            _playerDrawer.Draw(player, _modifiers[player], _shootStates.GetValueOrDefault(player, PlayerShootState.Idle));
+            _playerDrawer.Draw(player, _modifiers!, _shootState);
         }
     }
 }

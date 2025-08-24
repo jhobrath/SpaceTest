@@ -3,9 +3,7 @@ using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.InteropServices.JavaScript;
 
 namespace GalagaFighter.Core.Services
 {
@@ -28,9 +26,9 @@ namespace GalagaFighter.Core.Services
 
     public class PlayerShooter : IPlayerShooter
     {
-        private readonly Dictionary<Guid, float> _fireRateTimer = new();
-        private readonly Dictionary<Guid, bool> _lastGunLeft = new();
-        private readonly Dictionary<Guid, Projectile?> _lastProjectile = new();
+        private float _fireRateTimer = 0f;
+        private bool _lastGunLeft = false;
+        private Projectile? _lastProjectile = null;
 
         protected readonly IObjectService _objectService;
         private readonly IInputService _inputService;
@@ -54,7 +52,7 @@ namespace GalagaFighter.Core.Services
             if (!canShoot)
             {
                 if (shoot.HeldDuration > 0f && modifiers.Projectile.WindUpDuration > 0f)
-                    return _lastGunLeft[player.Id]
+                    return _lastGunLeft
                         ? player.IsPlayer1 ? PlayerShootState.WindUpLeft : PlayerShootState.WindUpRight
                         : player.IsPlayer1 ? PlayerShootState.WindUpRight : PlayerShootState.WindUpLeft;
 
@@ -67,8 +65,8 @@ namespace GalagaFighter.Core.Services
                 return PlayerShootState.Magnet;
             }
 
-            if (_lastProjectile.ContainsKey(player.Id) && (_lastProjectile[player.Id]?.Modifiers.WindUpDuration ?? 0f) > 0f)
-                return _lastGunLeft[player.Id]
+            if (_lastProjectile != null && (_lastProjectile?.Modifiers.WindUpDuration ?? 0f) > 0f)
+                return _lastGunLeft
                     ? player.IsPlayer1 ? PlayerShootState.WindUpLeft : PlayerShootState.WindUpRight
                     : player.IsPlayer1 ? PlayerShootState.WindUpRight : PlayerShootState.WindUpLeft;
 
@@ -82,22 +80,19 @@ namespace GalagaFighter.Core.Services
                 return PlayerShootState.ShootBoth;
             }
 
-            if(_lastProjectile.GetValueOrDefault(player.Id, null).Modifiers.WindUpDuration > 0f)
-                return _lastGunLeft[player.Id]
+            if(_lastProjectile?.Modifiers.WindUpDuration > 0f)
+                return _lastGunLeft
                 ? player.IsPlayer1 ? PlayerShootState.ShootRight : PlayerShootState.ShootLeft
                 : player.IsPlayer1 ? PlayerShootState.ShootLeft : PlayerShootState.ShootRight;
 
-            return _lastGunLeft[player.Id]
+            return _lastGunLeft
                 ? player.IsPlayer1 ? PlayerShootState.ShootLeft : PlayerShootState.ShootRight
                 : player.IsPlayer1 ? PlayerShootState.ShootRight : PlayerShootState.ShootLeft;
         }
 
         protected virtual bool GetCanShoot(Player player, EffectModifiers modifiers, out ButtonState shoot)
         {
-            if (!_fireRateTimer.ContainsKey(player.Id))
-                _fireRateTimer[player.Id] = 0f;
-
-            _fireRateTimer[player.Id] += Raylib.GetFrameTime();
+            _fireRateTimer += Raylib.GetFrameTime();
 
             shoot = _inputService.GetShoot(player.Id);
             if (modifiers.Magnetic)
@@ -111,10 +106,10 @@ namespace GalagaFighter.Core.Services
                 return false;
 
             var fireRate = modifiers.Stats.FireRateMultiplier * EffectiveFireRate;
-            if (_fireRateTimer[player.Id] < fireRate)
+            if (_fireRateTimer < fireRate)
                 return false;
 
-            _fireRateTimer[player.Id] = 0;
+            _fireRateTimer = 0;
             return true;
         }
 
@@ -150,12 +145,6 @@ namespace GalagaFighter.Core.Services
 
         private void SpawnProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition)
         {
-            if (!_lastGunLeft.ContainsKey(player.Id))
-                _lastGunLeft[player.Id] = false;
-
-            if (!_lastProjectile.ContainsKey(player.Id))
-                _lastProjectile[player.Id] = null;
-
             foreach(var projectileFunc in modifiers.Projectile.Projectiles)
             {
                 var projectileModifiers = modifiers.Projectile.Clone();
@@ -164,7 +153,7 @@ namespace GalagaFighter.Core.Services
                 SetRotation(projectile);
                 
                 projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);
-                projectile.Move(y: projectile.SpawnOffset.Y * (_lastGunLeft[player.Id] ? 1 : -1) * modifiers.Display.SizeMultiplier.Y);
+                projectile.Move(y: projectile.SpawnOffset.Y * (_lastGunLeft ? 1 : -1) * modifiers.Display.SizeMultiplier.Y);
 
                 //Undo offset from spawn position
                 projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
@@ -173,10 +162,10 @@ namespace GalagaFighter.Core.Services
                 projectile.Modifiers.OnShoot?.Invoke(projectile);
 
                 _objectService.AddGameObject(projectile);
-                _lastProjectile[player.Id] = projectile;
+                _lastProjectile = projectile;
             }
 
-            _lastGunLeft[player.Id] = !_lastGunLeft[player.Id];
+            _lastGunLeft = !_lastGunLeft;
         }
 
         protected virtual void SetRotation(Projectile projectile)

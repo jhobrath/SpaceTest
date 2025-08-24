@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\PlayerController.cs" />
     <Compile Remove="Services\EventService.cs" />
     <Compile Remove="Services\PlayerEffectManager.cs" />
     <Compile Remove="Services\PlayerEventService.cs" />

@@ -41,7 +41,10 @@ namespace GalagaFighter.Core
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
-        private readonly IPlayerController _playerController;
+
+        // Player-specific controllers
+        private readonly IPlayerController _playerController1;
+        private readonly IPlayerController _playerController2;
 
         public Game()
         {
@@ -53,7 +56,10 @@ namespace GalagaFighter.Core
             _playerProjectileCollisionService = Registry.Get<IPlayerProjectileCollisionService>();
             _projectilePowerUpCollisionService = Registry.Get<IProjectilePowerUpCollisionService>();
             _playerPowerUpCollisionService = Registry.Get<IPlayerPowerUpCollisionService>();
-            _playerController = Registry.Get<IPlayerController>();
+            
+            // Create separate controller instances for each player
+            _playerController1 = Registry.Get<IPlayerController>();
+            _playerController2 = Registry.Get<IPlayerController>();
             
             UiService.Initialize();
             InitializeWindow();
@@ -99,9 +105,9 @@ namespace GalagaFighter.Core
             var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
             var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left, KeyboardKey.Right);
 
-            // 1. Construct players
-            _player1 = new Player(_playerController, rect1, true);
-            _player2 = new Player(_playerController, rect2, false);
+            // 1. Construct players with their own controllers
+            _player1 = new Player(_playerController1, rect1, true);
+            _player2 = new Player(_playerController2, rect2, false);
 
             _objectService.AddGameObject(_player1);
             _objectService.AddGameObject(_player2);

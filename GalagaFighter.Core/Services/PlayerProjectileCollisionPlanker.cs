@@ -1,11 +1,7 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Services
 {
@@ -17,13 +13,12 @@ namespace GalagaFighter.Core.Services
     public class PlayerProjectileCollisionPlanker : IPlayerProjectileCollisionPlanker
     {
         private readonly ICollisionCreationService _collisionCreationService;
+        private Projectile? _stuckProjectile = null;
 
         public PlayerProjectileCollisionPlanker(ICollisionCreationService collisionCreationService)
         {
             _collisionCreationService = collisionCreationService;
         }
-
-        private Dictionary<Player, Projectile> _stuckProjectile = [];
 
         public bool IsPlanked(Player player, Projectile projectile)
         {
@@ -31,7 +26,7 @@ namespace GalagaFighter.Core.Services
             if (!isPlanked)
                 return false;
 
-            var alreadyStuck = _stuckProjectile.ContainsKey(player) && _stuckProjectile[player] == projectile;
+            var alreadyStuck = _stuckProjectile == projectile;
             if(!alreadyStuck)
             {
                 if (!(projectile.CurrentFrameRect.X == 0 || projectile.CurrentFrameRect.X + projectile.CurrentFrameRect.Width == Game.Width))
@@ -42,7 +37,7 @@ namespace GalagaFighter.Core.Services
             }
 
             if(alreadyStuck)
-                _stuckProjectile[player] = projectile;
+                _stuckProjectile = projectile;
 
             return isPlanked;
         }
@@ -52,7 +47,7 @@ namespace GalagaFighter.Core.Services
             if (player.Id == projectile.Owner)
                 return;
 
-            if(_stuckProjectile.TryGetValue(player, out Projectile? value) && value == projectile)
+            if(_stuckProjectile == projectile)
             {
                 player.MoveTo(y: projectile.Center.Y - player.Rect.Height/2);
                 return;
@@ -60,7 +55,7 @@ namespace GalagaFighter.Core.Services
 
             if(projectile.Modifiers.PlankStopsMovement)
             {     
-                var playerIsStuck = _stuckProjectile.ContainsKey(player) && _stuckProjectile[player] == projectile;
+                var playerIsStuck = _stuckProjectile == projectile;
                 if (player.Center.Y < projectile.CurrentFrameRect.Y && !playerIsStuck)
                     player.MoveTo(y: projectile.CurrentFrameRect.Y - player.Rect.Height);
                 else if(player.Rect.Y + player.Rect.Height > projectile.Center.Y && !playerIsStuck)

@@ -18,10 +18,12 @@ namespace GalagaFighter.Core.Controllers
 
     public class PowerUpController : IPowerUpController
     {
-        private readonly Dictionary<PowerUp, float> _sinceHitDict = new();
-        private readonly Dictionary<PowerUp, Vector2> _originalSizeDict = new();
-        private readonly Dictionary<PowerUp, float> _originalDistanceDict = new();
         private readonly IObjectService _objectService;
+
+        // Per-PowerUp instance state (no more dictionaries!)
+        private float _sinceHit = 0f;
+        private Vector2? _originalSize = null;
+        private float? _originalDistance = null;
 
         public PowerUpController(IObjectService objectService)
         {
@@ -43,21 +45,6 @@ namespace GalagaFighter.Core.Controllers
 
             if (powerUp.IsActive && powerUp.Rect.Y > Game.Height)
                 powerUp.IsActive = false;
-
-            RemoveInactiveGlobals();
-        }
-
-        private void RemoveInactiveGlobals()
-        {
-            RemoveInactiveKeys(_sinceHitDict);
-            RemoveInactiveKeys(_originalSizeDict);
-            RemoveInactiveKeys(_originalDistanceDict);
-        }
-
-        private void RemoveInactiveKeys<T>(Dictionary<PowerUp, T> dict)
-        {
-            var keys = dict.Keys.Where(x => !x.IsActive).ToList();
-            keys.ForEach(x => dict.Remove(x));
         }
 
         private void UpdateUncollectedPowerUp(PowerUp powerUp, float frameTime)
@@ -86,23 +73,22 @@ namespace GalagaFighter.Core.Controllers
 
         private void StoreOriginalSizeAndDistanceIfNeeded(PowerUp powerUp)
         {
-            if (!_originalSizeDict.ContainsKey(powerUp))
+            if (_originalSize == null)
             {
-                _originalSizeDict[powerUp] = new Vector2(powerUp.Rect.Width, powerUp.Rect.Height);
+                _originalSize = new Vector2(powerUp.Rect.Width, powerUp.Rect.Height);
             }
             var player = _objectService.GetOwner(powerUp);
-            if (player != null && !_originalDistanceDict.ContainsKey(powerUp))
+            if (player != null && _originalDistance == null)
             {
-                _originalDistanceDict[powerUp] = Math.Abs(powerUp.Center.X - player.Center.X) + Math.Abs(powerUp.Center.Y - player.Center.Y);
+                _originalDistance = Math.Abs(powerUp.Center.X - player.Center.X) + Math.Abs(powerUp.Center.Y - player.Center.Y);
             }
         }
 
         private float GetSinceHit(PowerUp powerUp)
         {
             var frameTime = Raylib.GetFrameTime();
-            float sinceHit = _sinceHitDict.TryGetValue(powerUp, out var val) ? val + frameTime : frameTime;
-            _sinceHitDict[powerUp] = sinceHit;
-            return sinceHit;
+            _sinceHit += frameTime;
+            return _sinceHit;
         }
 
         private Vector2 GetCollectedMovement(PowerUp powerUp, GameObject player)
@@ -117,8 +103,8 @@ namespace GalagaFighter.Core.Controllers
 
         private Vector2 GetCollectedSize(PowerUp powerUp, GameObject player)
         {
-            var originalSize = _originalSizeDict.TryGetValue(powerUp, out var size) ? size : new Vector2(powerUp.Rect.Width, powerUp.Rect.Height);
-            var originalDistance = _originalDistanceDict.TryGetValue(powerUp, out var dist) ? dist : 1f;
+            var originalSize = _originalSize ?? new Vector2(powerUp.Rect.Width, powerUp.Rect.Height);
+            var originalDistance = _originalDistance ?? 1f;
             var currentDistance = Math.Abs(powerUp.Center.X - player.Center.X) + Math.Abs(powerUp.Center.Y - player.Center.Y);
             var pct = originalDistance > 0 ? currentDistance / originalDistance : 0f;
             var xScale = Math.Min(originalSize.X, originalSize.X * pct);

@@ -34,15 +34,17 @@ namespace GalagaFighter.Core.Handlers.Projectiles
             AudioService.StopMagnetSound();
             AudioService.PlayMagnetReleaseSound();
 
-            foreach (var projectile in projectiles)
+            foreach (var projectile in projectiles.Where(x => x.IsMagnetic))
             {
                 var offset = (projectile.Center.X - player.Center.X);
                 var distance = Math.Abs(offset);
 
                 if (distance < 500f)
                 {
+                    projectile.Modifiers.RedAlpha = 1f;
+                    projectile.Modifiers.BlueAlpha = 1f;
                     projectile.SetOwner(player.Id);
-                    projectile.HurryTo(7000f * (player.IsPlayer1 ? 1 : -1), 0f);
+                    projectile.HurryTo(1000f * (player.IsPlayer1 ? 1 : -1), 0f);
                 }
             }
         }
@@ -51,7 +53,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
         {
             var projectiles = _objectService.GetGameObjects<Projectile>();
 
-            foreach(var projectile in projectiles)
+            foreach(var projectile in projectiles.Where(x => x.IsMagnetic))
             {
                 var magnetPoint = new Vector2(
                     player.IsPlayer1 ? (player.Rect.X + player.Rect.Width + 100f) : (player.Rect.X - 100f),
@@ -69,13 +71,28 @@ namespace GalagaFighter.Core.Handlers.Projectiles
                 var amountToMoveX = pctX * totalAmountToMove;
                 var amountToMoveY = pctY * totalAmountToMove;
 
-                projectile.Move(amountToMoveX - projectile.Speed.X*Raylib.GetFrameTime(), amountToMoveY - projectile.Speed.Y * Raylib.GetFrameTime());
+                var frameTime = Raylib.GetFrameTime();
+
+                projectile.Modifiers.VerticalPositionIncrement = 0f;
+                projectile.Modifiers.VerticalPositionMultiplier = 1f;
+                projectile.HurryTo(amountToMoveX/frameTime, amountToMoveY / frameTime);
+
+
+                var offset = (projectile.Center.X - player.Center.X);
+                var distance = Math.Abs(offset);
+                if(distance < 500f)
+                {
+                    projectile.Modifiers.RedAlpha = .7f;
+                    projectile.Modifiers.BlueAlpha = .9f;
+                }
+
+                projectile.Move(amountToMoveX - projectile.Speed.X * frameTime, amountToMoveY - projectile.Speed.Y * Raylib.GetFrameTime());
 
                 if(player.IsPlayer1 && projectile.Rect.X < magnetPoint.X)
                     projectile.MoveTo(x: magnetPoint.X);
 
-                if(!player.IsPlayer1 && projectile.Rect.X + projectile.Rect.Width > magnetPoint.X)
-                        projectile.MoveTo(x: magnetPoint.X - projectile.Rect.Width);
+                if (!player.IsPlayer1 && projectile.Rect.X + projectile.Rect.Width > magnetPoint.X)
+                    projectile.MoveTo(x: magnetPoint.X - projectile.Rect.Width);
             }
         }
     }

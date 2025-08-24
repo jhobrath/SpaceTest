@@ -47,6 +47,8 @@ namespace GalagaFighter.Core.Controllers
 
         private void SetColor(Projectile projectile)
         {
+            projectile.Color = Color.White;
+
             if (projectile.Modifiers.RedAlpha != 1f)
                 projectile.Color = projectile.Color.ApplyRed(projectile.Modifiers.RedAlpha);
             if (projectile.Modifiers.GreenAlpha != 1f)

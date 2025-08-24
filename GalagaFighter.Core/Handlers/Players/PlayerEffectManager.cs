@@ -43,17 +43,17 @@ namespace GalagaFighter.Core.Handlers.Players
             UpdateModifiers();
         }
 
-        private void LimitEffectCount<T>(T newEffect)
-            where T : PlayerEffect
+        private void LimitEffectCount(PlayerEffect newEffect)
         {
             if (newEffect.MaxCount == 0)
                 return;
 
-            var ofType = _effects.Count(x => x.GetType() == typeof(T));
-            if (ofType < newEffect.MaxCount)
+            var effectType = newEffect.GetType();
+            var ofType = _effects.Count(x => x.GetType() == effectType);
+            if (ofType <= newEffect.MaxCount)
                 return;
 
-            var first = _effects.First(x => x.GetType() == typeof(T));
+            var first = _effects.First(x => x.GetType() == effectType);
             _effects.Remove(first);
         }
 
@@ -97,7 +97,7 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             _effects.RemoveAll(x => x.IsActive == false);
 
-            var modifiers = new EffectModifiers
+            var modifiers = new EffectModifiers 
             {
                 Stats = new PlayerStats(),
                 Display = new PlayerDisplay() {  },

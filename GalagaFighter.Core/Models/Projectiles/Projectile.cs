@@ -16,17 +16,14 @@ namespace GalagaFighter.Core.Models.Projectiles
         public abstract Vector2 BaseSpeed { get; }
         public abstract Vector2 BaseSize { get; }
         public abstract int BaseDamage { get; }
-
-        private readonly IProjectileController _projectileController;
-
         public abstract Vector2 SpawnOffset { get; }
 
-        public PlayerProjectile Modifiers { get; private set; }
+        public virtual bool IsMagnetic { get; set; } = true;
 
+        private readonly IProjectileController _projectileController;
+        public PlayerProjectile Modifiers { get; private set; }
         public Rectangle CurrentFrameRect { get; set; }
         //public Vector2 CurrentFrameSpeed { get; set; }
-
-        public virtual SpriteWrapper? CollisionSprite => null;
 
         public float Lifetime { get; set; } = 0f;
 

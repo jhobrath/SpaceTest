@@ -44,17 +44,25 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.RotationOffsetIncrement = 360f;
             modifiers.Projectile.RotationOffsetMultiplier = (1/2f);
 
-            modifiers.Projectile.Phases = new List<float> { .95f };
+            modifiers.Projectile.Phases = new List<float> { 1.45f, 2.25f };
             modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
             modifiers.Decorations = _decorations;
         }
 
         private void HandlePhaseChange(Projectile projectile, int phase)
         {
-            AudioService.PlayExplosionConversionSound();
-            projectile.Modifiers.Sprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .04f, repeat: false);
-            projectile.Modifiers.SizeMultiplier = new Vector2(5.6f,5.6f);
-            projectile.Modifiers.SpeedMultiplier = .5f;
+            if(phase == 1)
+            { 
+                AudioService.PlayExplosionConversionSound();
+                projectile.Modifiers.Sprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .02f, repeat: false);
+                projectile.Modifiers.SizeMultiplier = new Vector2(5.6f,5.6f);
+                projectile.Modifiers.SpeedMultiplier = .33f;
+                projectile.IsMagnetic = false;
+            }
+            else
+            {
+                projectile.IsActive = false;
+            }
         }
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)

@@ -58,6 +58,7 @@ namespace GalagaFighter.Core.Models.Effects
                 projectile.Modifiers.SizeMultiplier = new Vector2(3f,6f);   // Make it huge
                 projectile.Modifiers.SpeedMultiplier = 0f;   // Make it immobile
                 projectile.Modifiers.Opacity = .5f;
+                projectile.IsMagnetic = false;
             }
             else if(phase == 2)
                 projectile.Modifiers.Opacity = .4f;

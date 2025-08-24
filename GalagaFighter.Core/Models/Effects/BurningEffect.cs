@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Static;
 
 namespace GalagaFighter.Core.Models.Effects
 {

@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models.Projectiles;
+﻿using GalagaFighter.Core.Handlers.Projectiles;
+using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Projectiles
 {
     public interface IProjectileMover
     {
@@ -36,7 +37,7 @@ namespace GalagaFighter.Core.Services
         public void Move(Projectile projectile)
         {
             var frameTime = Raylib.GetFrameTime();
-            
+
             if (projectile.Modifiers.WindUpDuration > 0)
                 _projectileMoverWindUpper.WindUp(projectile);
             else if (projectile.Modifiers.PlankDuration > 0)

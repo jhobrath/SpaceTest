@@ -1,7 +1,7 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Collisions
 {
     public class EdgeCollisionDetector
     {

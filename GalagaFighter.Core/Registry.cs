@@ -1,6 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Handlers.Collisions;
+using GalagaFighter.Core.Handlers.Players;
+using GalagaFighter.Core.Handlers.Projectiles;
 using System;
 
 namespace GalagaFighter.Core
@@ -34,9 +37,9 @@ namespace GalagaFighter.Core
             services.AddTransient<IProjectileRotator, ProjectileRotator>();
             services.AddTransient<IProjectileMover, ProjectileMover>();
             services.AddTransient<IProjectileMoverWindUpper, ProjectileMoverWindUpper>();
-            services.AddTransient <IProjectileMoverPlanker, ProjectileMoverPlanker>();
-            services.AddTransient <IPlayerDrawer, PlayerDrawer>();
-            services.AddTransient <IMagnetProjectileService, MagnetProjectileService>();
+            services.AddTransient<IProjectileMoverPlanker, ProjectileMoverPlanker>();
+            services.AddTransient<IPlayerDrawer, PlayerDrawer>();
+            services.AddTransient<IMagnetProjectileService, MagnetProjectileService>();
 
             _provider = services.BuildServiceProvider();
         }

@@ -1,9 +1,12 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
+using GalagaFighter.Core.Handlers.Collisions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Collisions
 {
     public interface IPlayerProjectileCollisionPlanker
     {

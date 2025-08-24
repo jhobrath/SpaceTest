@@ -2,7 +2,7 @@ using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using Raylib_cs;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Collisions
 {
     public class PlayerCollisionDetector
     {

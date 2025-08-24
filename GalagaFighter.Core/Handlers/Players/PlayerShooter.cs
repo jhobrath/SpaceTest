@@ -1,18 +1,21 @@
 ﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Handlers.Projectiles;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
+using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Players
 {
     public interface IPlayerShooter
     {
         PlayerShootState Shoot(Player player, EffectModifiers modifiers);
     }
 
-    public enum PlayerShootState 
+    public enum PlayerShootState
     {
         WindUpLeft,
         WindUpRight,
@@ -73,14 +76,14 @@ namespace GalagaFighter.Core.Services
             var spawnPosition = GetSpawnPosition(player, modifiers);
             SpawnProjectile(player, modifiers, spawnPosition);
 
-            if(modifiers.Stats.DoubleShot)
+            if (modifiers.Stats.DoubleShot)
             {
                 var spawnPosition2 = GetSpawnPosition(player, modifiers);
                 SpawnProjectile(player, modifiers, spawnPosition2);
                 return PlayerShootState.ShootBoth;
             }
 
-            if(_lastProjectile?.Modifiers.WindUpDuration > 0f)
+            if (_lastProjectile?.Modifiers.WindUpDuration > 0f)
                 return _lastGunLeft
                 ? player.IsPlayer1 ? PlayerShootState.ShootRight : PlayerShootState.ShootLeft
                 : player.IsPlayer1 ? PlayerShootState.ShootLeft : PlayerShootState.ShootRight;
@@ -145,13 +148,13 @@ namespace GalagaFighter.Core.Services
 
         private void SpawnProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition)
         {
-            foreach(var projectileFunc in modifiers.Projectile.Projectiles)
+            foreach (var projectileFunc in modifiers.Projectile.Projectiles)
             {
                 var projectileModifiers = modifiers.Projectile.Clone();
 
                 var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
                 SetRotation(projectile);
-                
+
                 projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);
                 projectile.Move(y: projectile.SpawnOffset.Y * (_lastGunLeft ? 1 : -1) * modifiers.Display.SizeMultiplier.Y);
 

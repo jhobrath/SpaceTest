@@ -3,6 +3,7 @@ using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Static;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

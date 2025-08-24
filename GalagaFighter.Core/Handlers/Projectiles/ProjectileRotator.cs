@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Projectiles
 {
     public interface IProjectileRotator
     {

@@ -2,7 +2,7 @@ using Raylib_cs;
 using System;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Static
 {
     public static class SpriteGenerationService
     {

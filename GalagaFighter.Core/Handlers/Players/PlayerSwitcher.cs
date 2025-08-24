@@ -1,9 +1,10 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Effects;
 using System.Collections.Generic;
-using Raylib_cs;
+using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Static;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Players
 {
     public interface IPlayerSwitcher
     {
@@ -21,7 +22,7 @@ namespace GalagaFighter.Core.Services
         public void Switch(Player player, EffectModifiers modifiers)
         {
             player.Effects.RemoveAll(x => x.IsActive == false);
-            if (!player.SelectedProjectile.IsActive) 
+            if (!player.SelectedProjectile.IsActive)
                 player.SelectedProjectile = player.Effects[0];
 
             var switchButton = _inputService.GetSwitch(player.Id);
@@ -35,18 +36,18 @@ namespace GalagaFighter.Core.Services
                 if (effect.IsProjectile)
                     projectileEffects.Add(effect);
             }
-            
+
             if (projectileEffects.Count == 0)
                 return;
-            
+
             var currentIndex = projectileEffects.IndexOf(player.SelectedProjectile);
             var nextIndex = (currentIndex + 1) % projectileEffects.Count;
             player.SelectedProjectile = projectileEffects[nextIndex];
 
-            if(player.SelectedProjectile is MagnetEffect)
+            if (player.SelectedProjectile is MagnetEffect)
             {
                 var shoot = _inputService.GetShoot(player.Id);
-                if(shoot)
+                if (shoot)
                     AudioService.PlayMagnetSound();
             }
         }

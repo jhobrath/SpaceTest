@@ -1,9 +1,10 @@
 ﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Services
+namespace GalagaFighter.Core.Handlers.Players
 {
     public interface IPlayerMover
     {
@@ -73,18 +74,18 @@ namespace GalagaFighter.Core.Services
 
             var movingRotation = 0f;
             if (left)
-                movingRotation = Math.Min(left.HeldDuration * -10f,-10f);
+                movingRotation = Math.Min(left.HeldDuration * -10f, -10f);
             else if (right)
                 movingRotation = Math.Max(10f, right.HeldDuration * 10f);
             else
                 movingRotation = 0f;
 
-            movingRotation = Math.Clamp(movingRotation,-10f, 10f);
+            movingRotation = Math.Clamp(movingRotation, -10f, 10f);
 
-            player.Rotation = originalRotation +  movingRotation + modifiers.Display.RotationOffset;
+            player.Rotation = originalRotation + movingRotation + modifiers.Display.RotationOffset;
 
-            if(!player.IsPlayer1)
-            DebugWriter.Write(player.Rotation.ToString());
+            if (!player.IsPlayer1)
+                DebugWriter.Write(player.Rotation.ToString());
         }
 
         private void SetSize(Player player, EffectModifiers modifiers)
@@ -96,8 +97,8 @@ namespace GalagaFighter.Core.Services
             var ySize = originalSize.Y * modifiers.Display.SizeMultiplier.Y;
 
             var currentSize = new Vector2(xSize, ySize);
-            var currentPositionX = player.Rect.Position.X - (xSize - player.Rect.Size.X)/ 2;
-            var currentPositionY = player.Rect.Position.Y - (ySize - player.Rect.Size.Y)/ 2;
+            var currentPositionX = player.Rect.Position.X - (xSize - player.Rect.Size.X) / 2;
+            var currentPositionY = player.Rect.Position.Y - (ySize - player.Rect.Size.Y) / 2;
 
             player.MoveTo(currentPositionX, currentPositionY);
             player.ScaleTo(xSize, ySize);

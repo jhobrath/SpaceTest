@@ -383,4 +383,8 @@
     <Page Include="Sprites\Effects\doubleshot.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Handlers\Player\" />
+  </ItemGroup>
+
 </Project>

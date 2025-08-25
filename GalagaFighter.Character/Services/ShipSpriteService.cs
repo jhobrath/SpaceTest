@@ -556,11 +556,14 @@ namespace GalagaFighter.CharacterScreen.Services
             {
                 // Pure red and variations
                 new ColorRange(new Color(255, 0, 0, 255), 30),     // Pure red with tolerance
-                new ColorRange(new Color(200, 0, 0, 255), 25),     // Dark red
+                new ColorRange(new Color(200, 0, 0, 255), 30),     // Dark red (increased tolerance)
                 new ColorRange(new Color(255, 50, 50, 255), 35),   // Light red
                 new ColorRange(new Color(220, 20, 20, 255), 30),   // Medium red
-                new ColorRange(new Color(180, 0, 0, 255), 20),     // Very dark red
+                new ColorRange(new Color(180, 0, 0, 255), 25),     // Very dark red (increased tolerance)
                 new ColorRange(new Color(255, 100, 100, 255), 40), // Pink-ish red
+                new ColorRange(new Color(150, 0, 0, 255), 25),     // Even darker red
+                new ColorRange(new Color(120, 0, 0, 255), 25),     // Very dark red
+                new ColorRange(new Color(100, 0, 0, 255), 20),     // Deepest red
             };
             
             // Create a new image with the same dimensions
@@ -618,15 +621,18 @@ namespace GalagaFighter.CharacterScreen.Services
         {
             // Skip transparent pixels
             if (pixel.A == 0) return false;
-            
+
             int rDiff = Math.Abs(pixel.R - targetColor.R);
             int gDiff = Math.Abs(pixel.G - targetColor.G);
             int bDiff = Math.Abs(pixel.B - targetColor.B);
-            
+
             // Use Euclidean distance for better color matching
             double distance = Math.Sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
-            
-            return distance <= tolerance;
+
+            // General catch-all for dark reds: R > 80, R much greater than G/B
+            bool isGeneralDarkRed = pixel.R > 80 && pixel.R > pixel.G + 40 && pixel.R > pixel.B + 40;
+
+            return distance <= tolerance || isGeneralDarkRed;
         }
         
         private static float GetPixelBrightness(Color pixel)

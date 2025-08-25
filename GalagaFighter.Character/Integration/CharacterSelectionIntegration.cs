@@ -1,4 +1,5 @@
 using GalagaFighter.CharacterScreen.Models;
+using Character = GalagaFighter.CharacterScreen.Models.Character;
 
 namespace GalagaFighter.CharacterScreen.Integration
 {
@@ -10,8 +11,8 @@ namespace GalagaFighter.CharacterScreen.Integration
         public bool SelectionCancelled { get; set; }
         
         // Legacy properties for backwards compatibility
-        public Character? Player1Character => Player1Selection?.SelectedCharacter;
-        public Character? Player2Character => Player2Selection?.SelectedCharacter;
+        public Models.Character? Player1Character => Player1Selection?.SelectedCharacter;
+        public Models.Character? Player2Character => Player2Selection?.SelectedCharacter;
         
         // New properties for effects
         public OffensiveEffect? Player1Effect => Player1Selection?.SelectedEffect;

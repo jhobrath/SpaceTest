@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Raylib_cs;
 using System.Numerics;
+using GalagaFighter.Character.Utility;
 
 namespace GalagaFighter.CharacterScreen.Utility
 {
@@ -124,10 +125,10 @@ namespace GalagaFighter.CharacterScreen.Utility
         public static Color Desaturate(Color color, float saturation)
         {
             float h, s, v;
-            GalagaFighter.Core.ColorExtensions.RgbToHsv(color.R, color.G, color.B, out h, out s, out v);
+            ColorExtensions.RgbToHsv(color.R, color.G, color.B, out h, out s, out v);
             s = saturation;
             byte r, g, b;
-            GalagaFighter.Core.ColorExtensions.HsvToRgb(h, s, v, out r, out g, out b);
+            ColorExtensions.HsvToRgb(h, s, v, out r, out g, out b);
             return new Color(r, g, b, color.A);
         }
     }

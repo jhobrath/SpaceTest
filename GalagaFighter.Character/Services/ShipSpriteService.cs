@@ -1,8 +1,8 @@
 using Raylib_cs;
-using GalagaFighter.Core;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using GalagaFighter.Character.Utility;
 
 namespace GalagaFighter.CharacterScreen.Services
 {

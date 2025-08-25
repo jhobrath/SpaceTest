@@ -6,34 +6,34 @@ namespace GalagaFighter.CharacterScreen.Services
 {
     public interface ICharacterService
     {
-        List<Character> GetAvailableCharacters();
-        Character? GetCharacterById(string id);
+        List<Models.Character> GetAvailableCharacters();
+        Models.Character? GetCharacterById(string id);
     }
 
     public class CharacterService : ICharacterService
     {
-        private readonly List<Character> _characters;
+        private readonly List<Models.Character> _characters;
 
         public CharacterService()
         {
             _characters = InitializeShipVariants();
         }
 
-        public List<Character> GetAvailableCharacters()
+        public List<Models.Character> GetAvailableCharacters()
         {
             return _characters;
         }
 
-        public Character? GetCharacterById(string id)
+        public Models.Character? GetCharacterById(string id)
         {
             return _characters.Find(c => c.Id == id);
         }
 
-        private List<Character> InitializeShipVariants()
+        private List<Models.Character> InitializeShipVariants()
         {
-            return new List<Character>
+            return new List<Models.Character>
             {
-                new Character
+                new Models.Character
                 {
                     Id = "ship_blue",
                     Name = "Azure Wing",
@@ -53,7 +53,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     ShipTintColor = Color.SkyBlue,
                     VisualEffect = ShipEffectType.Magnet // Add magnetic effects!
                 },
-                new Character
+                new  Models.Character
                 {
                     Id = "ship_red",
                     Name = "Crimson Hawk",
@@ -72,7 +72,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     StartingEffects = new List<string> { "FireBoost" },
                     ShipTintColor = Color.Red
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_green",
                     Name = "Emerald Dart",
@@ -92,7 +92,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     ShipTintColor = Color.Lime,
                     VisualEffect = ShipEffectType.Wood // Add wooden armor effects!
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_purple",
                     Name = "Void Hunter",
@@ -111,7 +111,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     StartingEffects = new List<string> { "Stealth" },
                     ShipTintColor = Color.Purple
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_orange",
                     Name = "Solar Flare",
@@ -131,7 +131,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     ShipTintColor = Color.Orange,
                     VisualEffect = ShipEffectType.Explosive // Flame trails and explosive effects!
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_cyan",
                     Name = "Ice Phantom",
@@ -151,7 +151,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     ShipTintColor = new Color(0, 255, 255, 255), // Cyan color
                     VisualEffect = ShipEffectType.Ice // Ice crystals and frost effects!
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_yellow",
                     Name = "Lightning Strike",
@@ -171,7 +171,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     ShipTintColor = Color.Yellow,
                     VisualEffect = ShipEffectType.Mud // Add battle damage effects!
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_white",
                     Name = "Ghost Ship",
@@ -190,7 +190,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     StartingEffects = new List<string> { "Shield" },
                     ShipTintColor = Color.White
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_pink",
                     Name = "Rose Phantom",
@@ -209,7 +209,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     StartingEffects = new List<string> { "Precision" },
                     ShipTintColor = Color.Pink
                 },
-                new Character
+                new Models.Character
                 {
                     Id = "ship_dark",
                     Name = "Shadow Reaper",

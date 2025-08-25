@@ -5,6 +5,7 @@ using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Character = GalagaFighter.CharacterScreen.Models.Character;
 
 namespace GalagaFighter.CharacterScreen
 {
@@ -20,7 +21,7 @@ namespace GalagaFighter.CharacterScreen
         private readonly ICharacterService _characterService;
         private readonly IEffectService _effectService;
         private readonly CharacterSelectionUI _ui;
-        private readonly List<Character> _availableCharacters;
+        private readonly List<Models.Character> _availableCharacters;
         private readonly List<OffensiveEffect> _availableEffects;
         
         private PlayerSelection _player1Selection = new PlayerSelection();

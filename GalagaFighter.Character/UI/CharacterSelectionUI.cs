@@ -1,12 +1,12 @@
 using GalagaFighter.CharacterScreen.Models;
 using GalagaFighter.CharacterScreen.Services;
-using GalagaFighter.Core;
 using GalagaFighter.CharacterScreen.UI;
 using GalagaFighter.CharacterScreen.Utility;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Character = GalagaFighter.CharacterScreen.Models.Character;
 
 namespace GalagaFighter.CharacterScreen.UI
 {
@@ -38,7 +38,7 @@ namespace GalagaFighter.CharacterScreen.UI
             }
         }
 
-        public void PreloadShipSprites(List<Character> characters)
+        public void PreloadShipSprites(List<Models.Character> characters)
         {
             foreach (var character in characters)
             {
@@ -81,7 +81,7 @@ namespace GalagaFighter.CharacterScreen.UI
             TextUtility.DrawTextAutoFont(title, new Vector2(posX, posY), fontSize, 1, Color.White);
         }
 
-        public void DrawPlayerShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady, bool isPlayer1)
+        public void DrawPlayerShipSelection(List<Models.Character> characters, int selectedIndex, Models.Character? selection, bool isReady, bool isPlayer1)
         {
             DrawPlayerShipSelectionInternal(characters, selectedIndex, selection, isReady, isPlayer1);
         }
@@ -91,7 +91,7 @@ namespace GalagaFighter.CharacterScreen.UI
             DrawPlayerEffectSelectionInternal(effects, selectedIndex, selection, isReady, isPlayer1);
         }
 
-        private void DrawPlayerShipSelectionInternal(List<Character> characters, int selectedIndex, Character? selection, bool isReady, bool isPlayer1)
+        private void DrawPlayerShipSelectionInternal(List<Models.Character> characters, int selectedIndex, Models.Character? selection, bool isReady, bool isPlayer1)
         {
             float uniformScale = GetUniformScale();
             var (startX, centerY, itemSpacing) = _layoutHelper.GetShipPanelLayout(isPlayer1);
@@ -132,7 +132,7 @@ namespace GalagaFighter.CharacterScreen.UI
             }
         }
 
-        private void DrawShipItem(Character character, int x, int y, bool isSelected, float alpha, Color playerColor, Character? selection, bool isReady, bool isCenter, int shipWidth, int shipHeight, float uniformScale)
+        private void DrawShipItem(Models.Character character, int x, int y, bool isSelected, float alpha, Color playerColor, Models.Character? selection, bool isReady, bool isCenter, int shipWidth, int shipHeight, float uniformScale)
         {
             Color fadedColor = MakeColor(255, 255, 255, alpha);
             Color textColor = isSelected ? playerColor : Color.White;
@@ -239,7 +239,7 @@ namespace GalagaFighter.CharacterScreen.UI
             }
         }
 
-        public void DrawSelectedShips(Character? player1Ship, Character? player2Ship)
+        public void DrawSelectedShips(Models.Character? player1Ship, Models.Character? player2Ship)
         {
             if (player1Ship != null)
             {

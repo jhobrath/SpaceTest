@@ -1,7 +1,7 @@
 using GalagaFighter.CharacterScreen.Models;
 using Character = GalagaFighter.CharacterScreen.Models.Character;
 
-namespace GalagaFighter.CharacterScreen.Integration
+namespace GalagaFighter.CharacterScreen.Integrations
 {
     public class CharacterSelectionResult
     {

@@ -40,13 +40,18 @@ namespace GalagaFighter.CharacterScreen.UI
 
         public void PreloadShipSprites(List<Models.Character> characters)
         {
+            float uniformScale = GetUniformScale();
+            int shipHeight = (int)(140 * uniformScale);
+            int targetSize = shipHeight + 10; // This matches what we actually draw
+            
             foreach (var character in characters)
             {
                 if (!_shipPortraits.ContainsKey(character.Id))
                 {
-                    _shipPortraits[character.Id] = ShipSpriteService.CreateShipPortrait(
+                    // Use the cached texture approach with the exact target size
+                    _shipPortraits[character.Id] = ShipSpriteService.GetShipTexture(
                         character.ShipTintColor, 
-                        100,
+                        targetSize,
                         character.VisualEffect);
                 }
             }

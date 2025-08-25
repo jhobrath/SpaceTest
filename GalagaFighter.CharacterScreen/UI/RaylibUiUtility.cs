@@ -7,9 +7,16 @@ namespace GalagaFighter.CharacterScreen.UI
     {
         public static void DrawTextureCentered(Texture2D texture, Vector2 center, int width, int height, float rotation, Color color)
         {
+            // Apply bilinear filtering for smoother scaling and rotation
+            if (texture.Id != 0)
+            {
+                Raylib.SetTextureFilter(texture, TextureFilter.Bilinear);
+            }
+            
             Rectangle src = new Rectangle(0, 0, texture.Width, texture.Height);
             Rectangle dest = new Rectangle(center.X, center.Y, width, height);
             Vector2 origin = new Vector2(width / 2f, height / 2f);
+            
             Raylib.DrawTexturePro(texture, src, dest, origin, rotation, color);
         }
 

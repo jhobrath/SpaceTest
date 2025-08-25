@@ -1,5 +1,6 @@
 using GalagaFighter.CharacterScreen.Models;
 using GalagaFighter.CharacterScreen.Services;
+using GalagaFighter.Core;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -104,6 +105,47 @@ namespace GalagaFighter.CharacterScreen.UI
             DrawShipItem(characters[prevIndex], startX, centerY - itemSpacing, false, 0.4f, playerColor, selection, isReady, false, shipWidth, shipHeight, uniformScale);
             DrawShipItem(characters[selectedIndex], startX, centerY, true, 1.0f, playerColor, selection, isReady, true, shipWidth, shipHeight, uniformScale);
             DrawShipItem(characters[nextIndex], startX, centerY + itemSpacing, false, 0.4f, playerColor, selection, isReady, false, shipWidth, shipHeight, uniformScale);
+
+            // --- Ship selection indicator squares ---
+            int indicatorCount = 10;
+            int indicatorSize = (int)(22 * uniformScale);
+            int indicatorSpacing = 0;
+            int indicatorAreaHeight = itemSpacing * 2 + shipHeight;
+            if (indicatorCount > 1)
+                indicatorSpacing = (indicatorAreaHeight - indicatorSize) / (indicatorCount - 1);
+            int indicatorStartY = centerY - itemSpacing;
+            int indicatorX = isPlayer1
+                ? startX - (int)(40 * uniformScale)
+                : startX + shipWidth + (int)(300 * uniformScale); // was 260, now 300 for +40 units
+            for (int i = 0; i < indicatorCount; i++)
+            {
+                int y = indicatorStartY + i * indicatorSpacing;
+                Color baseColor = characters[i].ShipTintColor;
+                bool isSelectedIndicator = (i == selectedIndex);
+                Color fillColor;
+                if (isSelectedIndicator)
+                {
+                    fillColor = MakeColor(baseColor, 0.71f); // semi-transparent, matches alpha 180
+                }
+                else
+                {
+                    // Less saturated and more translucent for non-selected
+                    // Manual HSV conversion using ColorExtensions
+                    float h, s, v;
+                    GalagaFighter.Core.ColorExtensions.RgbToHsv(baseColor.R, baseColor.G, baseColor.B, out h, out s, out v);
+                    s = 0.25f; // Lower saturation
+                    byte r, g, b;
+                    GalagaFighter.Core.ColorExtensions.HsvToRgb(h, s, v, out r, out g, out b);
+                    var lessSaturated = new Color(r, g, b, baseColor.A);
+                    fillColor = MakeColor(lessSaturated, 0.47f); // alpha ~120
+                }
+                Raylib.DrawRectangle(indicatorX, y, indicatorSize, indicatorSize, fillColor);
+                if (isSelectedIndicator)
+                {
+                    Color borderColor = isPlayer1 ? Color.Blue : Color.Red;
+                    Raylib.DrawRectangleLines(indicatorX, y, indicatorSize, indicatorSize, borderColor);
+                }
+            }
 
             if (isReady && selection != null)
             {

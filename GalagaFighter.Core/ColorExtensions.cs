@@ -133,7 +133,7 @@ namespace GalagaFighter.Core
         /// <summary>
         /// Convert RGB to HSV
         /// </summary>
-        private static void RgbToHsv(byte r, byte g, byte b, out float h, out float s, out float v)
+        public static void RgbToHsv(byte r, byte g, byte b, out float h, out float s, out float v)
         {
             float rf = r / 255f;
             float gf = g / 255f;
@@ -166,7 +166,7 @@ namespace GalagaFighter.Core
         /// <summary>
         /// Convert HSV to RGB
         /// </summary>
-        private static void HsvToRgb(float h, float s, float v, out byte r, out byte g, out byte b)
+        public static void HsvToRgb(float h, float s, float v, out byte r, out byte g, out byte b)
         {
             float c = v * s;
             float x = c * (1 - Math.Abs((h / 60) % 2 - 1));

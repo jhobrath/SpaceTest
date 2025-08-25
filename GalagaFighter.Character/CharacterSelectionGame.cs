@@ -37,9 +37,9 @@ namespace GalagaFighter.CharacterScreen
             _effectService = new EffectService();
             _availableCharacters = _characterService.GetAvailableCharacters();
             _availableEffects = _effectService.GetAvailableEffects();
+            InitializeWindow();
             _ui = new CharacterSelectionUI();
             
-            InitializeWindow();
             InitializeSprites();
         }
 

@@ -15,12 +15,36 @@ namespace GalagaFighter.CharacterScreen.UI
         private readonly Font _titleFont;
         private readonly Font _textFont;
         private readonly Dictionary<string, Texture2D> _shipPortraits;
+        private Font _font14;
+        private Font _font16;
+        private Font _font18;
+        private Font _font22;
+        private Font _font28;
+        private Font _font40;
+        private Font _font72;
 
         public CharacterSelectionUI()
         {
-            _titleFont = Raylib.GetFontDefault();
-            _textFont = Raylib.GetFontDefault();
+            LoadFonts();
             _shipPortraits = new Dictionary<string, Texture2D>();
+        }
+
+        private void LoadFonts()
+        {
+            _font14 = Raylib.LoadFontEx(@"Fonts\Roboto-Regular.ttf", 14, [], 0);
+            _font16 = Raylib.LoadFontEx(@"Fonts\Roboto-Regular.ttf", 16, [], 0);
+            _font18 = Raylib.LoadFontEx(@"Fonts\Roboto-Regular.ttf", 18, [], 0);
+            _font22 = Raylib.LoadFontEx(@"Fonts\Roboto-Regular.ttf", 22, [], 0);
+            _font28 = Raylib.LoadFontEx(@"Fonts\Roboto-Regular.ttf", 28, [], 0);
+            _font40 = Raylib.LoadFontEx(@"Fonts\Roboto-Regular.ttf", 40, [], 0);
+            _font72 = Raylib.LoadFontEx(@"Fonts\Roboto-Regular.ttf", 72, [], 0);
+            Raylib.SetTextureFilter(_font14.Texture, TextureFilter.Point);
+            Raylib.SetTextureFilter(_font16.Texture, TextureFilter.Point);
+            Raylib.SetTextureFilter(_font18.Texture, TextureFilter.Point);
+            Raylib.SetTextureFilter(_font22.Texture, TextureFilter.Point);
+            Raylib.SetTextureFilter(_font28.Texture, TextureFilter.Point);
+            Raylib.SetTextureFilter(_font40.Texture, TextureFilter.Point);
+            Raylib.SetTextureFilter(_font72.Texture, TextureFilter.Point);
         }
 
         public void PreloadShipSprites(List<Character> characters)
@@ -59,13 +83,13 @@ namespace GalagaFighter.CharacterScreen.UI
         {
             float uniformScale = GetUniformScale();
             int fontSize = (int)(72 * uniformScale);
-            int textWidth = Raylib.MeasureText(title, fontSize);
+            var textDimensions = Raylib.MeasureTextEx(_font72, title, fontSize, 1);
             float centerX = (_screenWidth * uniformScale) / 2f;
-            int posX = (int)(centerX - textWidth / 2f);
+            int posX = (int)(centerX - textDimensions.X/2);
             int posY = (int)(50 * uniformScale);
             // Draw title with glow effect, both centered
-            Raylib.DrawText(title, posX + 2, posY + 2, fontSize, Color.DarkBlue);
-            Raylib.DrawText(title, posX, posY, fontSize, Color.White);
+            DrawTextEx( title, new Vector2(posX + 2, posY + 2), fontSize, 1, Color.DarkBlue);
+            DrawTextEx(title,new Vector2( posX, posY), fontSize,1, Color.White);
         }
 
         public void DrawPlayer1ShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady)
@@ -86,14 +110,14 @@ namespace GalagaFighter.CharacterScreen.UI
             // Move ships up and away from center horizontally
             int startX = isPlayer1
                 ? (int)((baseScreenWidth / 2 - 670) * uniformScale) // Player 1 left of center
-                : (int)((baseScreenWidth / 2 + 250) * uniformScale); // Player 2 right of center
+                : (int)((baseScreenWidth / 2 + 175) * uniformScale); // Player 2 right of center
             int centerY = (int)((baseScreenHeight / 2.25) * uniformScale); // Move up vertically
             int itemSpacing = (int)((baseScreenHeight * 0.17f) * uniformScale);
 
             string playerLabel = isPlayer1 ? "PLAYER 1" : "PLAYER 2";
             int labelFontSize = (int)(40 * uniformScale);
             Color playerColor = isPlayer1 ? Color.Blue : Color.Red;
-            Raylib.DrawText(playerLabel, startX + 110, (int)(200 * uniformScale), labelFontSize, playerColor);
+            DrawTextEx( playerLabel, new Vector2(startX + 150 + (isPlayer1 ? 0 : 50), (int)(200 * uniformScale)), labelFontSize, 1, playerColor);
 
             int count = characters.Count;
             int prevIndex = (selectedIndex - 1 + count) % count;
@@ -125,7 +149,7 @@ namespace GalagaFighter.CharacterScreen.UI
                 Color fillColor;
                 if (isSelectedIndicator)
                 {
-                    fillColor = MakeColor(baseColor, 0.71f); // semi-transparent, matches alpha 180
+                    fillColor = MakeColor(baseColor, 0.84f); // semi-transparent, matches alpha 180
                 }
                 else
                 {
@@ -210,8 +234,8 @@ namespace GalagaFighter.CharacterScreen.UI
                 Raylib.DrawRectangleLines(x - (int)(4 * uniformScale), y - (int)(4 * uniformScale), shipWidth + (int)(8 * uniformScale), shipHeight + (int)(8 * uniformScale), Color.Green);
             }
 
-            Raylib.DrawText(character.Name, x + shipWidth + (int)(18 * uniformScale), y + (int)(8 * uniformScale), (int)(22 * uniformScale), textColor);
-            Raylib.DrawText($"Type: {character.Type}", x + shipWidth + (int)(18 * uniformScale), y + (int)(32 * uniformScale), (int)(16 * uniformScale), Color.LightGray);
+            DrawTextEx(character.Name,new Vector2( x + shipWidth + (int)(18 * uniformScale), y + (int)(8 * uniformScale)), (int)(22 * uniformScale),1, textColor);
+            DrawTextEx($"Type: {character.Type}",new Vector2( x + shipWidth + (int)(18 * uniformScale), y + (int)(32 * uniformScale)), (int)(16 * uniformScale),1, Color.LightGray);
             DrawStatsPreview(character.Stats, x + shipWidth + (int)(18 * uniformScale), y + (int)(54 * uniformScale), textColor);
             // Increase font size and wrap description
             DrawWrappedText(character.Description, x + shipWidth + (int)(18 * uniformScale), y + (int)(76 * uniformScale), (int)(180 * uniformScale), (int)(18 * uniformScale), Color.LightGray);
@@ -236,7 +260,7 @@ namespace GalagaFighter.CharacterScreen.UI
             // Draw player label
             int labelFontSize = 36;
             Color playerColor = isPlayer1 ? Color.Blue : Color.Red;
-            Raylib.DrawText(playerLabel, startX, startY, labelFontSize, playerColor);
+            DrawTextEx(playerLabel,new Vector2( startX, startY), labelFontSize,1, playerColor);
             
             // Draw effect list
             for (int i = 0; i < effects.Count; i++)
@@ -270,11 +294,11 @@ namespace GalagaFighter.CharacterScreen.UI
                 // Draw effect icon placeholder
                 Raylib.DrawRectangle(startX, itemY, 80, 80, new Color(60, 60, 60, 255));
                 Raylib.DrawRectangleLines(startX, itemY, 80, 80, textColor);
-                Raylib.DrawText("FX", startX + 25, itemY + 30, 20, textColor);
+                DrawTextEx("FX",new Vector2( startX + 25, itemY + 30), 20,1, textColor);
                 
                 // Draw effect name and category
-                Raylib.DrawText(effect.Name, startX + 90, itemY, 24, textColor);
-                Raylib.DrawText($"Category: {effect.Category}", startX + 90, itemY + 25, 16, Color.LightGray);
+                DrawTextEx(effect.Name,new Vector2( startX + 90, itemY), 24,1, textColor);
+                DrawTextEx($"Category: {effect.Category}",new Vector2( startX + 90, itemY + 25), 16,1, Color.LightGray);
                 
                 // Draw description
                 DrawWrappedText(effect.Description, startX + 90, itemY + 50, 280, 14, Color.LightGray);
@@ -295,24 +319,24 @@ namespace GalagaFighter.CharacterScreen.UI
             // Draw small previews of selected ships in corners during effect selection
             if (player1Ship != null)
             {
-                Raylib.DrawText("P1 Ship:", 50, 50, 20, Color.Blue);
+                DrawTextEx("P1 Ship:",new Vector2( 50, 50), 20,1, Color.Blue);
                 if (_shipPortraits.ContainsKey(player1Ship.Id))
                 {
                     var texture = _shipPortraits[player1Ship.Id];
                     Raylib.DrawTextureEx(texture, new Vector2(50, 80), 0, 0.5f, Color.White);
                 }
-                Raylib.DrawText(player1Ship.Name, 50, 130, 16, Color.White);
+                DrawTextEx(player1Ship.Name,new Vector2( 50, 130), 16,1, Color.White);
             }
             
             if (player2Ship != null)
             {
-                Raylib.DrawText("P2 Ship:", _screenWidth - 150, 50, 20, Color.Red);
+                DrawTextEx("P2 Ship:",new Vector2( _screenWidth - 150, 50), 20,1, Color.Red);
                 if (_shipPortraits.ContainsKey(player2Ship.Id))
                 {
                     var texture = _shipPortraits[player2Ship.Id];
                     Raylib.DrawTextureEx(texture, new Vector2(_screenWidth - 150, 80), 0, 0.5f, Color.White);
                 }
-                Raylib.DrawText(player2Ship.Name, _screenWidth - 150, 130, 16, Color.White);
+                DrawTextEx(player2Ship.Name,new Vector2( _screenWidth - 150, 130), 16,1, Color.White);
             }
         }
 
@@ -324,7 +348,7 @@ namespace GalagaFighter.CharacterScreen.UI
             // Player 1 final selection
             if (player1.SelectedCharacter != null && player1.SelectedEffect != null)
             {
-                Raylib.DrawText("PLAYER 1", centerX - 400, centerY - 200, 36, Color.Blue);
+                DrawTextEx("PLAYER 1",new Vector2( centerX - 400, centerY - 200), 36,1, Color.Blue);
                 
                 // Ship
                 if (_shipPortraits.ContainsKey(player1.SelectedCharacter.Id))
@@ -332,19 +356,19 @@ namespace GalagaFighter.CharacterScreen.UI
                     var texture = _shipPortraits[player1.SelectedCharacter.Id];
                     Raylib.DrawTexture(texture, centerX - 400, centerY - 150, Color.White);
                 }
-                Raylib.DrawText(player1.SelectedCharacter.Name, centerX - 400, centerY - 40, 24, Color.White);
+                DrawTextEx(player1.SelectedCharacter.Name,new Vector2( centerX - 400, centerY - 40), 24,1, Color.White);
                 
                 // Effect
                 Raylib.DrawRectangle(centerX - 400, centerY + 20, 80, 80, new Color(60, 60, 60, 255));
                 Raylib.DrawRectangleLines(centerX - 400, centerY + 20, 80, 80, Color.Blue);
-                Raylib.DrawText("FX", centerX - 375, centerY + 50, 20, Color.Blue);
-                Raylib.DrawText(player1.SelectedEffect.Name, centerX - 400, centerY + 110, 20, Color.White);
+                DrawTextEx("FX",new Vector2( centerX - 375, centerY + 50), 20,1, Color.Blue);
+                DrawTextEx(player1.SelectedEffect.Name,new Vector2( centerX - 400, centerY + 110), 20,1, Color.White);
             }
             
             // Player 2 final selection
             if (player2.SelectedCharacter != null && player2.SelectedEffect != null)
             {
-                Raylib.DrawText("PLAYER 2", centerX + 200, centerY - 200, 36, Color.Red);
+                DrawTextEx("PLAYER 2",new Vector2( centerX + 200, centerY - 200), 36,1, Color.Red);
                 
                 // Ship
                 if (_shipPortraits.ContainsKey(player2.SelectedCharacter.Id))
@@ -352,13 +376,13 @@ namespace GalagaFighter.CharacterScreen.UI
                     var texture = _shipPortraits[player2.SelectedCharacter.Id];
                     Raylib.DrawTexture(texture, centerX + 200, centerY - 150, Color.White);
                 }
-                Raylib.DrawText(player2.SelectedCharacter.Name, centerX + 200, centerY - 40, 24, Color.White);
+                DrawTextEx(player2.SelectedCharacter.Name,new Vector2( centerX + 200, centerY - 40), 24,1, Color.White);
                 
                 // Effect
                 Raylib.DrawRectangle(centerX + 200, centerY + 20, 80, 80, new Color(60, 60, 60, 255));
                 Raylib.DrawRectangleLines(centerX + 200, centerY + 20, 80, 80, Color.Red);
-                Raylib.DrawText("FX", centerX + 225, centerY + 50, 20, Color.Red);
-                Raylib.DrawText(player2.SelectedEffect.Name, centerX + 200, centerY + 110, 20, Color.White);
+                DrawTextEx("FX",new Vector2( centerX + 225, centerY + 50), 20,1, Color.Red);
+                DrawTextEx(player2.SelectedEffect.Name,new Vector2( centerX + 200, centerY + 110), 20,1, Color.White);
             }
         }
 
@@ -367,7 +391,7 @@ namespace GalagaFighter.CharacterScreen.UI
             int fontSize = 14;
             Color statColor = new Color((int)color.R, (int)color.G, (int)color.B, 180);
             
-            Raylib.DrawText($"HP:{stats.Health:F0} SPD:{stats.Speed:F1} FR:{stats.FireRate:F1} DMG:{stats.Damage:F1}", x, y, fontSize, statColor);
+            DrawTextEx($"HP:{stats.Health:F0} SPD:{stats.Speed:F1} FR:{stats.FireRate:F1} DMG:{stats.Damage:F1}",new Vector2( x, y), fontSize,1, statColor);
         }
 
         private void DrawWrappedText(string text, int x, int y, int maxWidth, int fontSize, Color color)
@@ -383,7 +407,7 @@ namespace GalagaFighter.CharacterScreen.UI
                 int testWidth = Raylib.MeasureText(testLine, fontSize);
                 if (testWidth > maxWidth && line.Length > 0)
                 {
-                    Raylib.DrawText(line, x, curY, fontSize, color);
+                    DrawTextEx(line,new Vector2( x, curY), fontSize,1, color);
                     curY += lineHeight;
                     line = word;
                 }
@@ -394,7 +418,7 @@ namespace GalagaFighter.CharacterScreen.UI
             }
             if (line.Length > 0)
             {
-                Raylib.DrawText(line, x, curY, fontSize, color);
+                DrawTextEx(line,new Vector2( x, curY), fontSize,1, color);
             }
         }
 
@@ -406,14 +430,14 @@ namespace GalagaFighter.CharacterScreen.UI
                 "PLAYER 2: UP/DOWN to navigate, LEFT to select, RIGHT to cancel"
             };
             int instructionY = (int)(_screenHeight * uniformScale - 100 * uniformScale);
-            int fontSize = (int)(20 * uniformScale);
+            int fontSize = (int)(22 * uniformScale);
             for (int i = 0; i < instructions.Length; i++)
             {
-                int textWidth = Raylib.MeasureText(instructions[i], fontSize);
+                var textWidth = Raylib.MeasureTextEx(_font22, instructions[i], fontSize, 1f).X;
                 float centerX = (_screenWidth * uniformScale) / 2f;
                 int posX = (int)(centerX - textWidth / 2f);
-                int posY = instructionY + (int)(i * 30 * uniformScale);
-                Raylib.DrawText(instructions[i], posX, posY, fontSize, Color.LightGray);
+                int posY = instructionY + (int)(i * 35 * uniformScale);
+                DrawTextEx(instructions[i],new Vector2( posX, posY), fontSize,1, Color.LightGray);
             }
         }
 
@@ -426,15 +450,15 @@ namespace GalagaFighter.CharacterScreen.UI
                 "PLAYER 2: UP/DOWN to navigate, LEFT to select, RIGHT to cancel"
             };
             int instructionY = (int)(_screenHeight * uniformScale - 120 * uniformScale);
-            int fontSize = (int)(20 * uniformScale);
+            int fontSize = (int)(22 * uniformScale);
             for (int i = 0; i < instructions.Length; i++)
             {
-                int textWidth = Raylib.MeasureText(instructions[i], fontSize);
+                var textWidth = Raylib.MeasureTextEx(_font22, instructions[i], fontSize, 1f).X;
                 float centerX = (_screenWidth * uniformScale) / 2f;
                 int posX = (int)(centerX - textWidth / 2f);
-                int posY = instructionY + (int)(i * 30 * uniformScale);
+                int posY = instructionY + (int)(i * 35 * uniformScale);
                 Color color = i == 0 ? Color.Yellow : Color.LightGray;
-                Raylib.DrawText(instructions[i], posX, posY, fontSize, color);
+                DrawTextEx(instructions[i],new Vector2( posX, posY), fontSize,1, color);
             }
         }
 
@@ -447,7 +471,7 @@ namespace GalagaFighter.CharacterScreen.UI
             Vector2 position = new Vector2((_screenWidth * uniformScale - textSize.X) / 2, _screenHeight * uniformScale - 100 * uniformScale);
             float pulse = (float)Math.Sin(Raylib.GetTime() * 4) * 0.3f + 0.7f;
             Color promptColor = new Color((int)(255 * pulse), (int)(255 * pulse), 0, 255);
-            Raylib.DrawTextEx(_textFont, prompt, position, fontSize, 1, promptColor);
+            DrawTextEx(prompt, position, fontSize, 1, promptColor);
         }
 
         public void Cleanup()
@@ -458,6 +482,13 @@ namespace GalagaFighter.CharacterScreen.UI
                 Raylib.UnloadTexture(texture);
             }
             _shipPortraits.Clear();
+            Raylib.UnloadFont(_font14);
+            Raylib.UnloadFont(_font16);
+            Raylib.UnloadFont(_font18);
+            Raylib.UnloadFont(_font22);
+            Raylib.UnloadFont(_font28);
+            Raylib.UnloadFont(_font40);
+            Raylib.UnloadFont(_font72);
         }
 
         // Helper to create Color with correct overload
@@ -475,6 +506,29 @@ namespace GalagaFighter.CharacterScreen.UI
             int actualWidth = Raylib.GetScreenWidth();
             int actualHeight = Raylib.GetScreenHeight();
             return Math.Min(actualWidth / 1920f, actualHeight / 1080f);
+        }
+
+        private void DrawTextEx(string prompt, Vector2 position, float fontSize, float fontSpacing, Color color)
+        {
+            Font font;
+            if (fontSize >= 72)
+                font = _font72;
+            else if (fontSize >= 40)
+                font = _font40;
+            else if (fontSize >= 28)
+                font = _font28;
+            else if (fontSize >= 22)
+                font = _font22;
+            else if (fontSize >= 18)
+                font = _font18;
+            else if (fontSize >= 16)
+                font = _font16;
+            else if (fontSize >= 14)
+                font = _font14;
+            else
+                font = _font14;
+
+                Raylib.DrawTextEx(font, prompt, position, fontSize, fontSpacing, color);
         }
     }
 }

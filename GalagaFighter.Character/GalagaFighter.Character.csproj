@@ -28,11 +28,20 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Fonts\Roboto-Regular.ttf" />
+  </ItemGroup>
+
   <!-- Copy MainShip.png from Core project -->
   <ItemGroup>
     <Content Include="..\GalagaFighter.Core\Sprites\Ships\MainShip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>Sprites\Ships\MainShip.png</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

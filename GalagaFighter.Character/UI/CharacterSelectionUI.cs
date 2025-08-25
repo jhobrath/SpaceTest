@@ -213,7 +213,8 @@ namespace GalagaFighter.CharacterScreen.UI
             Raylib.DrawText(character.Name, x + shipWidth + (int)(18 * uniformScale), y + (int)(8 * uniformScale), (int)(22 * uniformScale), textColor);
             Raylib.DrawText($"Type: {character.Type}", x + shipWidth + (int)(18 * uniformScale), y + (int)(32 * uniformScale), (int)(16 * uniformScale), Color.LightGray);
             DrawStatsPreview(character.Stats, x + shipWidth + (int)(18 * uniformScale), y + (int)(54 * uniformScale), textColor);
-            DrawWrappedText(character.Description, x + shipWidth + (int)(18 * uniformScale), y + (int)(76 * uniformScale), (int)(180 * uniformScale), (int)(12 * uniformScale), Color.LightGray);
+            // Increase font size and wrap description
+            DrawWrappedText(character.Description, x + shipWidth + (int)(18 * uniformScale), y + (int)(76 * uniformScale), (int)(180 * uniformScale), (int)(18 * uniformScale), Color.LightGray);
         }
 
         public void DrawPlayer1EffectSelection(List<OffensiveEffect> effects, int selectedIndex, OffensiveEffect? selection, bool isReady)
@@ -371,12 +372,30 @@ namespace GalagaFighter.CharacterScreen.UI
 
         private void DrawWrappedText(string text, int x, int y, int maxWidth, int fontSize, Color color)
         {
-            // Simple text wrapping - in a real implementation you'd want more sophisticated word wrapping
-            if (text.Length > 40)
+            // Improved word wrapping
+            string[] words = text.Split(' ');
+            string line = "";
+            int lineHeight = fontSize + 2;
+            int curY = y;
+            foreach (var word in words)
             {
-                text = text.Substring(0, 37) + "...";
+                string testLine = line.Length == 0 ? word : line + " " + word;
+                int testWidth = Raylib.MeasureText(testLine, fontSize);
+                if (testWidth > maxWidth && line.Length > 0)
+                {
+                    Raylib.DrawText(line, x, curY, fontSize, color);
+                    curY += lineHeight;
+                    line = word;
+                }
+                else
+                {
+                    line = testLine;
+                }
             }
-            Raylib.DrawText(text, x, y, fontSize, color);
+            if (line.Length > 0)
+            {
+                Raylib.DrawText(line, x, curY, fontSize, color);
+            }
         }
 
         public void DrawShipInstructions()

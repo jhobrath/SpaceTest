@@ -34,12 +34,6 @@
 
   <!-- Copy MainShip.png from Core project -->
   <ItemGroup>
-    <Content Include="..\GalagaFighter.Core\Sprites\Ships\MainShip.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Sprites\Ships\MainShip.png</Link>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Fonts\Roboto-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -55,6 +49,11 @@
     <Content Include="Sprites\Augments\timedbarrage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Sprites\Ships\MainShip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

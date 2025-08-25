@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using Raylib_cs;
 using System.Numerics;
-using GalagaFighter.Character.Utility;
 
-namespace GalagaFighter.CharacterScreen.Utility
+namespace GalagaFighter.CharacterScreen.Utilities
 {
     public static class TextUtility
     {

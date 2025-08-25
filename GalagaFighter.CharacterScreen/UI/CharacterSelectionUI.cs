@@ -1,7 +1,7 @@
 using GalagaFighter.CharacterScreen.Models;
 using GalagaFighter.CharacterScreen.Services;
 using GalagaFighter.CharacterScreen.UI;
-using GalagaFighter.CharacterScreen.Utility;
+using GalagaFighter.CharacterScreen.Utilities;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;

@@ -2,7 +2,7 @@ using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using GalagaFighter.Character.Utility;
+using GalagaFighter.CharacterScreen.Utilities;
 
 namespace GalagaFighter.CharacterScreen.Services
 {

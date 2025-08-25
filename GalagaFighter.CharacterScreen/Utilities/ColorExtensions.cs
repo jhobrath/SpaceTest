@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Character.Utility
+namespace GalagaFighter.CharacterScreen.Utilities
 {
     public static class ColorExtensions
     {

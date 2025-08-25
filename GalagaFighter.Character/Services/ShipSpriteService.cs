@@ -84,15 +84,15 @@ namespace GalagaFighter.CharacterScreen.Services
             
             // Apply visual effects if specified
             Texture2D finalTexture;
-            if (effectType != ShipEffectType.None)
-            {
-                finalTexture = ApplyVisualEffects(paletteSwappedTexture, effectType, width, height);
-                Raylib.UnloadTexture(paletteSwappedTexture); // Clean up intermediate texture
-            }
-            else
-            {
+            //if (effectType != ShipEffectType.None)
+            //{
+            //    finalTexture = ApplyVisualEffects(paletteSwappedTexture, effectType, width, height);
+            //    Raylib.UnloadTexture(paletteSwappedTexture); // Clean up intermediate texture
+            //}
+            //else
+            //{
                 finalTexture = paletteSwappedTexture;
-            }
+            //}
             
             // If we need to resize, do that now
             if (width != finalTexture.Width || height != finalTexture.Height)

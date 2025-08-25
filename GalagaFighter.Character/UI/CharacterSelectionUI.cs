@@ -39,16 +39,16 @@ namespace GalagaFighter.CharacterScreen.UI
 
         public void DrawBackground()
         {
-            // Draw a gradient background
-            Raylib.DrawRectangleGradientV(0, 0, _screenWidth, _screenHeight, 
+            float uniformScale = GetUniformScale();
+            int actualWidth = (int)(_screenWidth * uniformScale);
+            int actualHeight = (int)(_screenHeight * uniformScale);
+            Raylib.DrawRectangleGradientV(0, 0, actualWidth, actualHeight, 
                 new Color(20, 20, 40, 255), new Color(5, 5, 15, 255));
-            
-            // Draw some decorative stars
-            var random = new Random(42); // Fixed seed for consistent star positions
+            var random = new Random(42);
             for (int i = 0; i < 100; i++)
             {
-                var x = random.Next(0, _screenWidth);
-                var y = random.Next(0, _screenHeight);
+                var x = random.Next(0, actualWidth);
+                var y = random.Next(0, actualHeight);
                 var brightness = random.Next(100, 255);
                 Raylib.DrawPixel(x, y, new Color(brightness, brightness, brightness, 255));
             }
@@ -56,13 +56,15 @@ namespace GalagaFighter.CharacterScreen.UI
 
         public void DrawTitle(string title = "SHIP SELECTION")
         {
-            int fontSize = 72;
-            Vector2 textSize = Raylib.MeasureTextEx(_titleFont, title, fontSize, 2);
-            Vector2 position = new Vector2((_screenWidth - textSize.X) / 2, 50);
-            
-            // Draw title with glow effect
-            Raylib.DrawTextEx(_titleFont, title, new Vector2(position.X + 2, position.Y + 2), fontSize, 2, Color.DarkBlue);
-            Raylib.DrawTextEx(_titleFont, title, position, fontSize, 2, Color.White);
+            float uniformScale = GetUniformScale();
+            int fontSize = (int)(72 * uniformScale);
+            int textWidth = Raylib.MeasureText(title, fontSize);
+            float centerX = (_screenWidth * uniformScale) / 2f;
+            int posX = (int)(centerX - textWidth / 2f);
+            int posY = (int)(50 * uniformScale);
+            // Draw title with glow effect, both centered
+            Raylib.DrawText(title, posX + 2, posY + 2, fontSize, Color.DarkBlue);
+            Raylib.DrawText(title, posX, posY, fontSize, Color.White);
         }
 
         public void DrawPlayer1ShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady)
@@ -77,78 +79,99 @@ namespace GalagaFighter.CharacterScreen.UI
 
         private void DrawPlayerShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady, bool isPlayer1)
         {
-            string playerLabel = isPlayer1 ? "PLAYER 1" : "PLAYER 2";
-            int startX = isPlayer1 ? 100 : _screenWidth - 500;
-            int startY = 200;
-            
-            // Draw player label
-            int labelFontSize = 36;
-            Color playerColor = isPlayer1 ? Color.Blue : Color.Red;
-            Raylib.DrawText(playerLabel, startX, startY, labelFontSize, playerColor);
-            
-            // Draw character list
-            for (int i = 0; i < characters.Count; i++)
-            {
-                var character = characters[i];
-                int itemY = startY + 80 + (i * 130);
+            float uniformScale = GetUniformScale();
+            int baseScreenWidth = 1920;
+            int baseScreenHeight = 1080;
+            // Move ships up and away from center horizontally
+            int startX = isPlayer1
+                ? (int)((baseScreenWidth / 2 - 670) * uniformScale) // Player 1 left of center
+                : (int)((baseScreenWidth / 2 + 250) * uniformScale); // Player 2 right of center
+            int centerY = (int)((baseScreenHeight / 2.25) * uniformScale); // Move up vertically
+            int itemSpacing = (int)((baseScreenHeight * 0.17f) * uniformScale);
 
-                // Highlight selected character
-                Color backgroundColor = new Color(255, 255, 255, 0);
-                Color textColor = Color.White;
-                
-                if (i == selectedIndex && !isReady)
-                {
-                    backgroundColor = new Color((int)playerColor.R, (int)playerColor.G, (int)playerColor.B, 50);
-                    textColor = playerColor;
-                    // Draw selection glow around ship
-                    Raylib.DrawRectangleLines(startX - 5, itemY - 5, 110, 110, playerColor);
-                }
-                else if (selection == character && isReady)
-                {
-                    backgroundColor = new Color(0, 255, 0, 50);
-                    textColor = Color.Green;
-                    // Draw ready glow around ship
-                    Raylib.DrawRectangleLines(startX - 5, itemY - 5, 110, 110, Color.Green);
-                }
-                
-                // Draw background
-                if (backgroundColor.A > 0)
-                {
-                    Raylib.DrawRectangle(startX - 10, itemY - 10, 400, 120, backgroundColor);
-                }
-                
-                // Draw ship portrait
-                if (_shipPortraits.ContainsKey(character.Id))
-                {
-                    var shipTexture = _shipPortraits[character.Id];
-                    Raylib.DrawTexture(shipTexture, startX, itemY, Color.White);
-                }
-                else
-                {
-                    // Fallback rectangle if texture not loaded
-                    Raylib.DrawRectangle(startX, itemY, 100, 100, character.ShipTintColor);
-                    Raylib.DrawRectangleLines(startX, itemY, 100, 100, textColor);
-                }
-                
-                // Draw character name and type
-                Raylib.DrawText(character.Name, startX + 120, itemY, 24, textColor);
-                Raylib.DrawText($"Type: {character.Type}", startX + 120, itemY + 25, 16, Color.LightGray);
-                
-                // Draw stats preview
-                DrawStatsPreview(character.Stats, startX + 120, itemY + 50, textColor);
-                
-                // Draw description
-                DrawWrappedText(character.Description, startX + 120, itemY + 75, 260, 14, Color.LightGray);
-            }
-            
-            // Draw selection status
+            string playerLabel = isPlayer1 ? "PLAYER 1" : "PLAYER 2";
+            int labelFontSize = (int)(40 * uniformScale);
+            Color playerColor = isPlayer1 ? Color.Blue : Color.Red;
+            Raylib.DrawText(playerLabel, startX + 110, (int)(200 * uniformScale), labelFontSize, playerColor);
+
+            int count = characters.Count;
+            int prevIndex = (selectedIndex - 1 + count) % count;
+            int nextIndex = (selectedIndex + 1) % count;
+
+            int shipWidth = (int)(220 * uniformScale);
+            int shipHeight = (int)(140 * uniformScale);
+
+            DrawShipItem(characters[prevIndex], startX, centerY - itemSpacing, false, 0.4f, playerColor, selection, isReady, false, shipWidth, shipHeight, uniformScale);
+            DrawShipItem(characters[selectedIndex], startX, centerY, true, 1.0f, playerColor, selection, isReady, true, shipWidth, shipHeight, uniformScale);
+            DrawShipItem(characters[nextIndex], startX, centerY + itemSpacing, false, 0.4f, playerColor, selection, isReady, false, shipWidth, shipHeight, uniformScale);
+
             if (isReady && selection != null)
             {
                 string readyText = "READY!";
-                Vector2 readySize = Raylib.MeasureTextEx(_textFont, readyText, 32, 1);
-                Vector2 readyPos = new Vector2(startX + (400 - readySize.X) / 2, startY + 80 + (characters.Count * 130) + 20);
-                Raylib.DrawTextEx(_textFont, readyText, readyPos, 32, 1, Color.Green);
+                Vector2 readySize = Raylib.MeasureTextEx(_textFont, readyText, (int)(32 * uniformScale), 1);
+                Vector2 readyPos = new Vector2(startX + (shipWidth - readySize.X) / 2, centerY + (int)(itemSpacing * 1.1f));
+                Raylib.DrawTextEx(_textFont, readyText, readyPos, (int)(32 * uniformScale), 1, Color.Green);
             }
+        }
+
+        private void DrawShipItem(Character character, int x, int y, bool isSelected, float alpha, Color playerColor, Character? selection, bool isReady, bool isCenter, int shipWidth, int shipHeight, float uniformScale)
+        {
+            Color fadedColor = MakeColor(255, 255, 255, alpha);
+            Color textColor = isSelected ? playerColor : Color.White;
+            Color bgColor = isSelected ? MakeColor(playerColor, 0.31f * alpha) : MakeColor(255, 255, 255, 0.12f * alpha);
+
+            // Make the filled rectangle cover the entire ship selection area (sprite + text)
+            int fillPad = (int)(8 * uniformScale); // Equal margin on all sides
+            int extraPad = (int)(60 * uniformScale); // Additional width to ensure full coverage
+            int textOffset = (int)(18 * uniformScale);
+            int textWidth = (int)(180 * uniformScale);
+            int fillWidth = shipWidth + textOffset + textWidth + extraPad + fillPad * 2;
+            int fillHeight = shipHeight + fillPad * 2;
+            int fillX = x - fillPad;
+            int fillY = y - fillPad;
+            Raylib.DrawRectangle(fillX, fillY, fillWidth, fillHeight, bgColor);
+
+            // Draw border rectangle around the ship sprite only
+            Raylib.DrawRectangleLines(x, y, shipWidth, shipHeight, fadedColor);
+
+            if (_shipPortraits.ContainsKey(character.Id))
+            {
+                var shipTexture = _shipPortraits[character.Id];
+                float scale = Math.Min((float)shipWidth / shipTexture.Width, (float)shipHeight / shipTexture.Height);
+                int drawWidth = (int)(shipTexture.Width * scale);
+                int drawHeight = (int)(shipTexture.Height * scale);
+                // Center the ship in the rectangle: destination rect top-left is (x + (shipWidth-drawWidth)/2, y + (shipHeight-drawHeight)/2)
+                float destX = x + (shipWidth - drawWidth) / 2f;
+                float destY = y + (shipHeight - drawHeight) / 2f;
+                Vector2 origin = new Vector2(drawWidth / 2f, drawHeight / 2f);
+                Raylib.DrawTexturePro(
+                    shipTexture,
+                    new Rectangle(0, 0, shipTexture.Width, shipTexture.Height),
+                    new Rectangle(destX + drawWidth / 2f, destY + drawHeight / 2f, drawWidth, drawHeight),
+                    origin,
+                    180f,
+                    fadedColor
+                );
+            }
+            else
+            {
+                Raylib.DrawRectangle(x, y, shipWidth, shipHeight, character.ShipTintColor);
+                Raylib.DrawRectangleLines(x, y, shipWidth, shipHeight, fadedColor);
+            }
+
+            if (isSelected && !isReady)
+            {
+                Raylib.DrawRectangleLines(x - (int)(4 * uniformScale), y - (int)(4 * uniformScale), shipWidth + (int)(8 * uniformScale), shipHeight + (int)(8 * uniformScale), playerColor);
+            }
+            else if (selection == character && isReady)
+            {
+                Raylib.DrawRectangleLines(x - (int)(4 * uniformScale), y - (int)(4 * uniformScale), shipWidth + (int)(8 * uniformScale), shipHeight + (int)(8 * uniformScale), Color.Green);
+            }
+
+            Raylib.DrawText(character.Name, x + shipWidth + (int)(18 * uniformScale), y + (int)(8 * uniformScale), (int)(22 * uniformScale), textColor);
+            Raylib.DrawText($"Type: {character.Type}", x + shipWidth + (int)(18 * uniformScale), y + (int)(32 * uniformScale), (int)(16 * uniformScale), Color.LightGray);
+            DrawStatsPreview(character.Stats, x + shipWidth + (int)(18 * uniformScale), y + (int)(54 * uniformScale), textColor);
+            DrawWrappedText(character.Description, x + shipWidth + (int)(18 * uniformScale), y + (int)(76 * uniformScale), (int)(180 * uniformScale), (int)(12 * uniformScale), Color.LightGray);
         }
 
         public void DrawPlayer1EffectSelection(List<OffensiveEffect> effects, int selectedIndex, OffensiveEffect? selection, bool isReady)
@@ -316,53 +339,53 @@ namespace GalagaFighter.CharacterScreen.UI
 
         public void DrawShipInstructions()
         {
+            float uniformScale = GetUniformScale();
             string[] instructions = {
                 "PLAYER 1: W/S to navigate, D to select, A to cancel",
                 "PLAYER 2: UP/DOWN to navigate, LEFT to select, RIGHT to cancel"
             };
-            
-            int instructionY = _screenHeight - 100;
-            int fontSize = 20;
-            
+            int instructionY = (int)(_screenHeight * uniformScale - 100 * uniformScale);
+            int fontSize = (int)(20 * uniformScale);
             for (int i = 0; i < instructions.Length; i++)
             {
-                Vector2 textSize = Raylib.MeasureTextEx(_textFont, instructions[i], fontSize, 1);
-                Vector2 position = new Vector2((_screenWidth - textSize.X) / 2, instructionY + (i * 30));
-                Raylib.DrawTextEx(_textFont, instructions[i], position, fontSize, 1, Color.LightGray);
+                int textWidth = Raylib.MeasureText(instructions[i], fontSize);
+                float centerX = (_screenWidth * uniformScale) / 2f;
+                int posX = (int)(centerX - textWidth / 2f);
+                int posY = instructionY + (int)(i * 30 * uniformScale);
+                Raylib.DrawText(instructions[i], posX, posY, fontSize, Color.LightGray);
             }
         }
 
         public void DrawEffectInstructions()
         {
+            float uniformScale = GetUniformScale();
             string[] instructions = {
                 "Select your offensive augment effect",
                 "PLAYER 1: W/S to navigate, D to select, A to cancel",
                 "PLAYER 2: UP/DOWN to navigate, LEFT to select, RIGHT to cancel"
             };
-            
-            int instructionY = _screenHeight - 120;
-            int fontSize = 20;
-            
+            int instructionY = (int)(_screenHeight * uniformScale - 120 * uniformScale);
+            int fontSize = (int)(20 * uniformScale);
             for (int i = 0; i < instructions.Length; i++)
             {
-                Vector2 textSize = Raylib.MeasureTextEx(_textFont, instructions[i], fontSize, 1);
-                Vector2 position = new Vector2((_screenWidth - textSize.X) / 2, instructionY + (i * 30));
+                int textWidth = Raylib.MeasureText(instructions[i], fontSize);
+                float centerX = (_screenWidth * uniformScale) / 2f;
+                int posX = (int)(centerX - textWidth / 2f);
+                int posY = instructionY + (int)(i * 30 * uniformScale);
                 Color color = i == 0 ? Color.Yellow : Color.LightGray;
-                Raylib.DrawTextEx(_textFont, instructions[i], position, fontSize, 1, color);
+                Raylib.DrawText(instructions[i], posX, posY, fontSize, color);
             }
         }
 
         public void DrawStartPrompt()
         {
+            float uniformScale = GetUniformScale();
             string prompt = "BOTH PLAYERS READY - PRESS SPACE TO START";
-            int fontSize = 32;
+            int fontSize = (int)(32 * uniformScale);
             Vector2 textSize = Raylib.MeasureTextEx(_textFont, prompt, fontSize, 1);
-            Vector2 position = new Vector2((_screenWidth - textSize.X) / 2, _screenHeight - 100);
-            
-            // Pulsing effect
+            Vector2 position = new Vector2((_screenWidth * uniformScale - textSize.X) / 2, _screenHeight * uniformScale - 100 * uniformScale);
             float pulse = (float)Math.Sin(Raylib.GetTime() * 4) * 0.3f + 0.7f;
             Color promptColor = new Color((int)(255 * pulse), (int)(255 * pulse), 0, 255);
-            
             Raylib.DrawTextEx(_textFont, prompt, position, fontSize, 1, promptColor);
         }
 
@@ -374,6 +397,23 @@ namespace GalagaFighter.CharacterScreen.UI
                 Raylib.UnloadTexture(texture);
             }
             _shipPortraits.Clear();
+        }
+
+        // Helper to create Color with correct overload
+        private Color MakeColor(int r, int g, int b, float alpha)
+        {
+            return new Color((byte)r, (byte)g, (byte)b, (byte)(255 * alpha));
+        }
+        private Color MakeColor(Color baseColor, float alpha)
+        {
+            return new Color(baseColor.R, baseColor.G, baseColor.B, (byte)(255 * alpha));
+        }
+
+        public float GetUniformScale()
+        {
+            int actualWidth = Raylib.GetScreenWidth();
+            int actualHeight = Raylib.GetScreenHeight();
+            return Math.Min(actualWidth / 1920f, actualHeight / 1080f);
         }
     }
 }

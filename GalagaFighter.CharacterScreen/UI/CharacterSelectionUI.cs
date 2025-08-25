@@ -154,9 +154,9 @@ namespace GalagaFighter.CharacterScreen.UI
                 var shipTexture = _shipPortraits[character.Id];
                 RaylibUiUtility.DrawTextureCentered(
                     shipTexture,
-                    new Vector2(x + shipWidth / 2f, y + shipHeight / 2f),
-                    shipWidth,
-                    shipHeight,
+                    new Vector2(x + shipWidth / 2f, y + shipHeight / 2f + 5),
+                    shipHeight+10,
+                    shipHeight+10,
                     180f,
                     fadedColor
                 );
@@ -178,14 +178,14 @@ namespace GalagaFighter.CharacterScreen.UI
 
             TextUtility.DrawTextAutoFont(
                 character.Name,
-                new Vector2(x + shipWidth + (int)(18 * uniformScale) + 90, y + (int)(8 * uniformScale) + 11),
+                new Vector2(x + shipWidth + (int)(18 * uniformScale), y + (int)(8 * uniformScale)),
                 (int)(22 * uniformScale),
                 1,
                 textColor
             );
             TextUtility.DrawTextAutoFont(
                 $"Type: {character.Type}",
-                new Vector2(x + shipWidth + (int)(18 * uniformScale) + 90, y + (int)(32 * uniformScale) + 8),
+                new Vector2(x + shipWidth + (int)(18 * uniformScale), y + (int)(32 * uniformScale)),
                 (int)(16 * uniformScale),
                 1,
                 Color.LightGray

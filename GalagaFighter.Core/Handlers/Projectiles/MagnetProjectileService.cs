@@ -44,7 +44,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
                     projectile.Modifiers.RedAlpha = 1f;
                     projectile.Modifiers.BlueAlpha = 1f;
                     projectile.SetOwner(player.Id);
-                    projectile.HurryTo(1000f * (player.IsPlayer1 ? 1 : -1), 0f);
+                    projectile.HurryTo(7000f * (player.IsPlayer1 ? 1 : -1), 0f);
                 }
             }
         }

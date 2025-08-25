@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GalagaFighter.Character": {
+      "commandName": "Project",
+      "commandLineArgs": "--test"
+    }
+  }
+}

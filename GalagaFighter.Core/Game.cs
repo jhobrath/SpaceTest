@@ -131,7 +131,7 @@ namespace GalagaFighter.Core
         private void GiveAllEffects(Player player)
         {
             var effectManager = _effectManagerFactory.GetEffectManager(player);
-            effectManager.AddEffect(new RicochetEffect());
+            //effectManager.AddEffect(new RicochetEffect());
             //effectManager.AddEffect(new IceShotEffect());
             //effectManager.AddEffect(new ExplosiveShotEffect());
             //effectManager.AddEffect(new WoodShotEffect());

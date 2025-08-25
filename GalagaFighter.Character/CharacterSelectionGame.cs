@@ -85,15 +85,72 @@ namespace GalagaFighter.CharacterScreen
             }
         }
 
+        private void HandlePlayerShipInput(int playerIndex, PlayerSelection selection, ref int index, KeyboardKey upKey, KeyboardKey downKey, KeyboardKey selectKey, KeyboardKey cancelKey)
+        {
+            if (selection.CharacterReady) 
+            {
+                if (Raylib.IsKeyPressed(cancelKey))
+                {
+                    selection.CharacterReady = false;
+                    selection.SelectedCharacter = null;
+                    PlayNavigationSound();
+                }
+                return;
+            }
+            if (Raylib.IsKeyPressed(upKey))
+            {
+                index = (index - 1 + _availableCharacters.Count) % _availableCharacters.Count;
+                PlayNavigationSound();
+            }
+            else if (Raylib.IsKeyPressed(downKey))
+            {
+                index = (index + 1) % _availableCharacters.Count;
+                PlayNavigationSound();
+            }
+            if (Raylib.IsKeyPressed(selectKey))
+            {
+                selection.SelectedCharacter = _availableCharacters[index];
+                selection.CharacterReady = true;
+                PlaySelectionSound();
+            }
+        }
+
+        private void HandlePlayerEffectInput(int playerIndex, PlayerSelection selection, ref int index, KeyboardKey upKey, KeyboardKey downKey, KeyboardKey selectKey, KeyboardKey cancelKey)
+        {
+            if (selection.EffectReady) 
+            {
+                if (Raylib.IsKeyPressed(cancelKey))
+                {
+                    selection.EffectReady = false;
+                    selection.SelectedEffect = null;
+                    PlayNavigationSound();
+                }
+                return;
+            }
+            if (Raylib.IsKeyPressed(upKey))
+            {
+                index = (index - 1 + _availableEffects.Count) % _availableEffects.Count;
+                PlayNavigationSound();
+            }
+            else if (Raylib.IsKeyPressed(downKey))
+            {
+                index = (index + 1) % _availableEffects.Count;
+                PlayNavigationSound();
+            }
+            if (Raylib.IsKeyPressed(selectKey))
+            {
+                selection.SelectedEffect = _availableEffects[index];
+                selection.EffectReady = true;
+                PlaySelectionSound();
+            }
+        }
+
         private void HandleShipSelection()
         {
-            HandlePlayer1ShipInput();
-            HandlePlayer2ShipInput();
-            
-            // Check if both players have selected ships
+            HandlePlayerShipInput(1, _player1Selection, ref _player1Index, KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
+            HandlePlayerShipInput(2, _player2Selection, ref _player2Index, KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
             if (_player1Selection.CharacterReady && _player2Selection.CharacterReady)
             {
-                // Transition to effect selection
                 _currentPhase = SelectionPhase.EffectSelection;
                 _player1Index = 0;
                 _player2Index = 0;
@@ -103,10 +160,8 @@ namespace GalagaFighter.CharacterScreen
 
         private void HandleEffectSelection()
         {
-            HandlePlayer1EffectInput();
-            HandlePlayer2EffectInput();
-            
-            // Check if both players have selected effects
+            HandlePlayerEffectInput(1, _player1Selection, ref _player1Index, KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
+            HandlePlayerEffectInput(2, _player2Selection, ref _player2Index, KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
             if (_player1Selection.EffectReady && _player2Selection.EffectReady)
             {
                 _currentPhase = SelectionPhase.Complete;
@@ -122,178 +177,31 @@ namespace GalagaFighter.CharacterScreen
             }
         }
 
-        private void HandlePlayer1ShipInput()
-        {
-            if (_player1Selection.CharacterReady) 
-            {
-                // Allow canceling selection
-                if (Raylib.IsKeyPressed(KeyboardKey.A))
-                {
-                    _player1Selection.CharacterReady = false;
-                    _player1Selection.SelectedCharacter = null;
-                    PlayNavigationSound();
-                }
-                return;
-            }
-
-            // Navigation
-            if (Raylib.IsKeyPressed(KeyboardKey.W))
-            {
-                _player1Index = (_player1Index - 1 + _availableCharacters.Count) % _availableCharacters.Count;
-                PlayNavigationSound();
-            }
-            else if (Raylib.IsKeyPressed(KeyboardKey.S))
-            {
-                _player1Index = (_player1Index + 1) % _availableCharacters.Count;
-                PlayNavigationSound();
-            }
-
-            // Selection
-            if (Raylib.IsKeyPressed(KeyboardKey.D))
-            {
-                _player1Selection.SelectedCharacter = _availableCharacters[_player1Index];
-                _player1Selection.CharacterReady = true;
-                PlaySelectionSound();
-            }
-        }
-
-        private void HandlePlayer2ShipInput()
-        {
-            if (_player2Selection.CharacterReady) 
-            {
-                // Allow canceling selection
-                if (Raylib.IsKeyPressed(KeyboardKey.Right))
-                {
-                    _player2Selection.CharacterReady = false;
-                    _player2Selection.SelectedCharacter = null;
-                    PlayNavigationSound();
-                }
-                return;
-            }
-
-            // Navigation
-            if (Raylib.IsKeyPressed(KeyboardKey.Up))
-            {
-                _player2Index = (_player2Index - 1 + _availableCharacters.Count) % _availableCharacters.Count;
-                PlayNavigationSound();
-            }
-            else if (Raylib.IsKeyPressed(KeyboardKey.Down))
-            {
-                _player2Index = (_player2Index + 1) % _availableCharacters.Count;
-                PlayNavigationSound();
-            }
-
-            // Selection
-            if (Raylib.IsKeyPressed(KeyboardKey.Left))
-            {
-                _player2Selection.SelectedCharacter = _availableCharacters[_player2Index];
-                _player2Selection.CharacterReady = true;
-                PlaySelectionSound();
-            }
-        }
-
-        private void HandlePlayer1EffectInput()
-        {
-            if (_player1Selection.EffectReady) 
-            {
-                // Allow canceling selection
-                if (Raylib.IsKeyPressed(KeyboardKey.A))
-                {
-                    _player1Selection.EffectReady = false;
-                    _player1Selection.SelectedEffect = null;
-                    PlayNavigationSound();
-                }
-                return;
-            }
-
-            // Navigation
-            if (Raylib.IsKeyPressed(KeyboardKey.W))
-            {
-                _player1Index = (_player1Index - 1 + _availableEffects.Count) % _availableEffects.Count;
-                PlayNavigationSound();
-            }
-            else if (Raylib.IsKeyPressed(KeyboardKey.S))
-            {
-                _player1Index = (_player1Index + 1) % _availableEffects.Count;
-                PlayNavigationSound();
-            }
-
-            // Selection
-            if (Raylib.IsKeyPressed(KeyboardKey.D))
-            {
-                _player1Selection.SelectedEffect = _availableEffects[_player1Index];
-                _player1Selection.EffectReady = true;
-                PlaySelectionSound();
-            }
-        }
-
-        private void HandlePlayer2EffectInput()
-        {
-            if (_player2Selection.EffectReady) 
-            {
-                // Allow canceling selection
-                if (Raylib.IsKeyPressed(KeyboardKey.Right))
-                {
-                    _player2Selection.EffectReady = false;
-                    _player2Selection.SelectedEffect = null;
-                    PlayNavigationSound();
-                }
-                return;
-            }
-
-            // Navigation
-            if (Raylib.IsKeyPressed(KeyboardKey.Up))
-            {
-                _player2Index = (_player2Index - 1 + _availableEffects.Count) % _availableEffects.Count;
-                PlayNavigationSound();
-            }
-            else if (Raylib.IsKeyPressed(KeyboardKey.Down))
-            {
-                _player2Index = (_player2Index + 1) % _availableEffects.Count;
-                PlayNavigationSound();
-            }
-
-            // Selection
-            if (Raylib.IsKeyPressed(KeyboardKey.Left))
-            {
-                _player2Selection.SelectedEffect = _availableEffects[_player2Index];
-                _player2Selection.EffectReady = true;
-                PlaySelectionSound();
-            }
-        }
-
         private void Draw()
         {
             Raylib.BeginDrawing();
-            
             _ui.DrawBackground();
-            
             switch (_currentPhase)
             {
                 case SelectionPhase.ShipSelection:
                     _ui.DrawTitle("SHIP SELECTION");
-                    _ui.DrawPlayer1ShipSelection(_availableCharacters, _player1Index, _player1Selection.SelectedCharacter, _player1Selection.CharacterReady);
-                    _ui.DrawPlayer2ShipSelection(_availableCharacters, _player2Index, _player2Selection.SelectedCharacter, _player2Selection.CharacterReady);
+                    _ui.DrawPlayerShipSelection(_availableCharacters, _player1Index, _player1Selection.SelectedCharacter, _player1Selection.CharacterReady, true);
+                    _ui.DrawPlayerShipSelection(_availableCharacters, _player2Index, _player2Selection.SelectedCharacter, _player2Selection.CharacterReady, false);
                     _ui.DrawShipInstructions();
                     break;
-                    
                 case SelectionPhase.EffectSelection:
                     _ui.DrawTitle("EFFECT SELECTION");
-                    _ui.DrawPlayer1EffectSelection(_availableEffects, _player1Index, _player1Selection.SelectedEffect, _player1Selection.EffectReady);
-                    _ui.DrawPlayer2EffectSelection(_availableEffects, _player2Index, _player2Selection.SelectedEffect, _player2Selection.EffectReady);
+                    _ui.DrawPlayerEffectSelection(_availableEffects, _player1Index, _player1Selection.SelectedEffect, _player1Selection.EffectReady, true);
+                    _ui.DrawPlayerEffectSelection(_availableEffects, _player2Index, _player2Selection.SelectedEffect, _player2Selection.EffectReady, false);
                     _ui.DrawEffectInstructions();
-                    
-                    // Show selected ships in corner
                     _ui.DrawSelectedShips(_player1Selection.SelectedCharacter, _player2Selection.SelectedCharacter);
                     break;
-                    
                 case SelectionPhase.Complete:
                     _ui.DrawTitle("READY TO LAUNCH");
                     _ui.DrawFinalSelections(_player1Selection, _player2Selection);
                     _ui.DrawStartPrompt();
                     break;
             }
-            
             Raylib.EndDrawing();
         }
 

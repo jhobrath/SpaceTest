@@ -101,17 +101,17 @@ namespace GalagaFighter.CharacterScreen.UI
             DrawTextEx(title,new Vector2( posX, posY), fontSize,1, Color.White);
         }
 
-        public void DrawPlayer1ShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady)
+        public void DrawPlayerShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady, bool isPlayer1)
         {
-            DrawPlayerShipSelection(characters, selectedIndex, selection, isReady, true);
+            DrawPlayerShipSelectionInternal(characters, selectedIndex, selection, isReady, isPlayer1);
         }
 
-        public void DrawPlayer2ShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady)
+        public void DrawPlayerEffectSelection(List<OffensiveEffect> effects, int selectedIndex, OffensiveEffect? selection, bool isReady, bool isPlayer1)
         {
-            DrawPlayerShipSelection(characters, selectedIndex, selection, isReady, false);
+            DrawPlayerEffectSelectionInternal(effects, selectedIndex, selection, isReady, isPlayer1);
         }
 
-        private void DrawPlayerShipSelection(List<Character> characters, int selectedIndex, Character? selection, bool isReady, bool isPlayer1)
+        private void DrawPlayerShipSelectionInternal(List<Character> characters, int selectedIndex, Character? selection, bool isReady, bool isPlayer1)
         {
             float uniformScale = GetUniformScale();
             int baseScreenWidth = 1920;
@@ -250,17 +250,7 @@ namespace GalagaFighter.CharacterScreen.UI
             DrawWrappedText(character.Description, x + shipWidth + (int)(18 * uniformScale), y + (int)(76 * uniformScale), (int)(180 * uniformScale), (int)(18 * uniformScale), Color.LightGray);
         }
 
-        public void DrawPlayer1EffectSelection(List<OffensiveEffect> effects, int selectedIndex, OffensiveEffect? selection, bool isReady)
-        {
-            DrawPlayerEffectSelection(effects, selectedIndex, selection, isReady, true);
-        }
-
-        public void DrawPlayer2EffectSelection(List<OffensiveEffect> effects, int selectedIndex, OffensiveEffect? selection, bool isReady)
-        {
-            DrawPlayerEffectSelection(effects, selectedIndex, selection, isReady, false);
-        }
-
-        private void DrawPlayerEffectSelection(List<OffensiveEffect> effects, int selectedIndex, OffensiveEffect? selection, bool isReady, bool isPlayer1)
+        private void DrawPlayerEffectSelectionInternal(List<OffensiveEffect> effects, int selectedIndex, OffensiveEffect? selection, bool isReady, bool isPlayer1)
         {
             string playerLabel = isPlayer1 ? "PLAYER 1" : "PLAYER 2";
             int startX = isPlayer1 ? 200 : _screenWidth - 600;

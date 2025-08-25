@@ -30,6 +30,10 @@
 
   <ItemGroup>
     <None Remove="Fonts\Roboto-Regular.ttf" />
+    <None Remove="Sprites\Augments\ricochet.png" />
+    <None Remove="Sprites\Augments\splitter.png" />
+    <None Remove="Sprites\Augments\surprise.png" />
+    <None Remove="Sprites\Augments\timedbarrage.png" />
   </ItemGroup>
 
   <!-- Copy MainShip.png from Core project -->
@@ -41,6 +45,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Augments\ricochet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Augments\splitter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Augments\surprise.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Augments\timedbarrage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

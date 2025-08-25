@@ -23,6 +23,8 @@ namespace GalagaFighter.CharacterScreen.UI
         private Font _font40;
         private Font _font72;
 
+        private static Dictionary<string, Texture2D> _effectIcons = new Dictionary<string, Texture2D>();
+
         public CharacterSelectionUI()
         {
             LoadFonts();
@@ -45,6 +47,13 @@ namespace GalagaFighter.CharacterScreen.UI
             Raylib.SetTextureFilter(_font28.Texture, TextureFilter.Point);
             Raylib.SetTextureFilter(_font40.Texture, TextureFilter.Point);
             Raylib.SetTextureFilter(_font72.Texture, TextureFilter.Point);
+
+            var effectService = new EffectService();
+            var effects = effectService.GetAvailableEffects();
+            foreach(var effect in effects)
+            {
+                _effectIcons.Add(effect.IconPath, Raylib.LoadTexture(effect.IconPath));
+            }
         }
 
         public void PreloadShipSprites(List<Character> characters)
@@ -292,12 +301,12 @@ namespace GalagaFighter.CharacterScreen.UI
                 }
                 
                 // Draw effect icon placeholder
-                Raylib.DrawRectangle(startX, itemY, 80, 80, new Color(60, 60, 60, 255));
-                Raylib.DrawRectangleLines(startX, itemY, 80, 80, textColor);
-                DrawTextEx("FX",new Vector2( startX + 25, itemY + 30), 20,1, textColor);
+                Raylib.DrawTexturePro(_effectIcons[effect.IconPath], 
+                    new Rectangle(0, 0, _effectIcons[effect.IconPath].Width, _effectIcons[effect.IconPath].Height),
+                    new Rectangle(startX, itemY, 80, 80), new Vector2(0, 0), 0f, Color.White);// new Vector2(startX, startY), 0f, .33f, Color.White);
                 
                 // Draw effect name and category
-                DrawTextEx(effect.Name,new Vector2( startX + 90, itemY), 24,1, textColor);
+                DrawTextEx(effect.Name,new Vector2( startX + 90, itemY), 22,1, textColor);
                 DrawTextEx($"Category: {effect.Category}",new Vector2( startX + 90, itemY + 25), 16,1, Color.LightGray);
                 
                 // Draw description
@@ -348,7 +357,7 @@ namespace GalagaFighter.CharacterScreen.UI
             // Player 1 final selection
             if (player1.SelectedCharacter != null && player1.SelectedEffect != null)
             {
-                DrawTextEx("PLAYER 1",new Vector2( centerX - 400, centerY - 200), 36,1, Color.Blue);
+                DrawTextEx("PLAYER 1",new Vector2( centerX - 415, centerY - 200), 36,1, Color.Blue);
                 
                 // Ship
                 if (_shipPortraits.ContainsKey(player1.SelectedCharacter.Id))
@@ -359,30 +368,38 @@ namespace GalagaFighter.CharacterScreen.UI
                 DrawTextEx(player1.SelectedCharacter.Name,new Vector2( centerX - 400, centerY - 40), 24,1, Color.White);
                 
                 // Effect
-                Raylib.DrawRectangle(centerX - 400, centerY + 20, 80, 80, new Color(60, 60, 60, 255));
-                Raylib.DrawRectangleLines(centerX - 400, centerY + 20, 80, 80, Color.Blue);
-                DrawTextEx("FX",new Vector2( centerX - 375, centerY + 50), 20,1, Color.Blue);
-                DrawTextEx(player1.SelectedEffect.Name,new Vector2( centerX - 400, centerY + 110), 20,1, Color.White);
+                //Raylib.DrawRectangle(centerX - 400, centerY + 20, 80, 80, new Color(60, 60, 60, 255));
+                //Raylib.DrawRectangleLines(centerX - 400, centerY + 20, 80, 80, Color.Blue);
+                //DrawTextEx("FX",new Vector2( centerX - 375, centerY + 50), 20,1, Color.Blue);
+                //DrawTextEx(player1.SelectedEffect.Name,new Vector2( centerX - 390, centerY + 110), 22,1, Color.White);
+                // Draw effect icon placeholder
+                Raylib.DrawTexturePro(_effectIcons[player1.SelectedEffect.IconPath],
+                    new Rectangle(0, 0, _effectIcons[player1.SelectedEffect.IconPath].Width, _effectIcons[player1.SelectedEffect.IconPath].Height),
+                    new Rectangle(centerX - 390, centerY + 20, 80, 80), new Vector2(0, 0), 0f, Color.White);// new Vector2(startX, startY), 0f, .33f, Color.White);
+
             }
-            
+
             // Player 2 final selection
             if (player2.SelectedCharacter != null && player2.SelectedEffect != null)
             {
-                DrawTextEx("PLAYER 2",new Vector2( centerX + 200, centerY - 200), 36,1, Color.Red);
+                DrawTextEx("PLAYER 2",new Vector2( centerX + 270, centerY - 200), 36,1, Color.Red);
                 
                 // Ship
                 if (_shipPortraits.ContainsKey(player2.SelectedCharacter.Id))
                 {
                     var texture = _shipPortraits[player2.SelectedCharacter.Id];
-                    Raylib.DrawTexture(texture, centerX + 200, centerY - 150, Color.White);
+                    Raylib.DrawTexture(texture, centerX + 290, centerY - 150, Color.White);
                 }
-                DrawTextEx(player2.SelectedCharacter.Name,new Vector2( centerX + 200, centerY - 40), 24,1, Color.White);
-                
+                DrawTextEx(player2.SelectedCharacter.Name,new Vector2( centerX + 290, centerY - 40), 22,1, Color.White);
+
                 // Effect
-                Raylib.DrawRectangle(centerX + 200, centerY + 20, 80, 80, new Color(60, 60, 60, 255));
-                Raylib.DrawRectangleLines(centerX + 200, centerY + 20, 80, 80, Color.Red);
-                DrawTextEx("FX",new Vector2( centerX + 225, centerY + 50), 20,1, Color.Red);
-                DrawTextEx(player2.SelectedEffect.Name,new Vector2( centerX + 200, centerY + 110), 20,1, Color.White);
+                //Raylib.DrawRectangle(centerX + 200, centerY + 20, 80, 80, new Color(60, 60, 60, 255));
+                //Raylib.DrawRectangleLines(centerX + 200, centerY + 20, 80, 80, Color.Red);
+                //DrawTextEx("FX",new Vector2( centerX + 225, centerY + 50), 20,1, Color.Red);
+                //DrawTextEx(player2.SelectedEffect.Name,new Vector2( centerX + 200, centerY + 110), 22,1, Color.White);
+                Raylib.DrawTexturePro(_effectIcons[player2.SelectedEffect.IconPath],
+                    new Rectangle(0, 0, _effectIcons[player2.SelectedEffect.IconPath].Width, _effectIcons[player1.SelectedEffect.IconPath].Height),
+                    new Rectangle(centerX + 300, centerY + 20, 80, 80), new Vector2(0, 0), 0f, Color.White);// new Vector2(startX, startY), 0f, .33f, Color.White);
             }
         }
 
@@ -468,7 +485,7 @@ namespace GalagaFighter.CharacterScreen.UI
             string prompt = "BOTH PLAYERS READY - PRESS SPACE TO START";
             int fontSize = (int)(32 * uniformScale);
             Vector2 textSize = Raylib.MeasureTextEx(_textFont, prompt, fontSize, 1);
-            Vector2 position = new Vector2((_screenWidth * uniformScale - textSize.X) / 2, _screenHeight * uniformScale - 100 * uniformScale);
+            Vector2 position = new Vector2((_screenWidth * uniformScale - textSize.X) / 3, _screenHeight * uniformScale - 100 * uniformScale);
             float pulse = (float)Math.Sin(Raylib.GetTime() * 4) * 0.3f + 0.7f;
             Color promptColor = new Color((int)(255 * pulse), (int)(255 * pulse), 0, 255);
             DrawTextEx(prompt, position, fontSize, 1, promptColor);

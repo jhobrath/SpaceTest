@@ -37,7 +37,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     Id = "surprise_shot",
                     Name = "Surprise Shot",
                     Description = "Randomly fires additional bullets during combat",
-                    IconPath = "Sprites/Effects/surprise.png",
+                    IconPath = "Sprites/Augments/surprise.png",
                     EffectClassName = "GalagaFighter.Core.Models.Effects.SurpriseShotEffect",
                     Category = EffectCategory.Offensive
                 },
@@ -46,7 +46,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     Id = "timed_barrage",
                     Name = "Timed Barrage",
                     Description = "Periodically unleashes rapid-fire bullet bursts",
-                    IconPath = "Sprites/Effects/barrage.png",
+                    IconPath = "Sprites/Augments/timedbarrage.png",
                     EffectClassName = "GalagaFighter.Core.Models.Effects.TimedBarrageEffect",
                     Category = EffectCategory.Offensive
                 },
@@ -55,7 +55,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     Id = "ricochet",
                     Name = "Ricochet",
                     Description = "Bullets bounce off walls to hit enemies",
-                    IconPath = "Sprites/Effects/ricochet.png",
+                    IconPath = "Sprites/Augments/ricochet.png",
                     EffectClassName = "GalagaFighter.Core.Models.Effects.RicochetEffect",
                     Category = EffectCategory.Offensive
                 },
@@ -64,7 +64,7 @@ namespace GalagaFighter.CharacterScreen.Services
                     Id = "splitter",
                     Name = "Splitter",
                     Description = "Bullets split into multiple projectiles on impact",
-                    IconPath = "Sprites/Effects/splitter.png",
+                    IconPath = "Sprites/Augments/splitter.png",
                     EffectClassName = "GalagaFighter.Core.Models.Effects.SplitterEffect",
                     Category = EffectCategory.Offensive
                 }

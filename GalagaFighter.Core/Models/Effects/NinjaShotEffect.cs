@@ -26,7 +26,7 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Stats.FireRateMultiplier *= .45f;
             modifiers.Projectile.RotationOffset += 10f;
             modifiers.Projectile.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
-            modifiers.Projectile.OnClone = () => modifiers.Projectile.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
+            modifiers.Projectile.OnClone = (projMods) => projMods.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
             //modifiers.Projectile.VerticalPositionMultiplier = 1.5f;
         }
 

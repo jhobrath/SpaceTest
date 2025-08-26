@@ -163,7 +163,7 @@ namespace GalagaFighter.Core.Handlers.Players
             var projectileModifiers = modifiers.Projectile.Clone();
 
             projectileModifiers.DamageMultiplier *= player.BaseStats.Damage;
-            projectileModifiers.OnClone?.Invoke();
+            projectileModifiers.OnClone?.Invoke(projectileModifiers);
 
             var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
             SetRotation(projectile);

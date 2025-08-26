@@ -63,7 +63,7 @@ namespace GalagaFighter.Core.Models.Players
         public SpriteWrapper? Sprite { get; set; } = null;
         public bool CanSplit { get; set; }
         public bool CanRicochet { get; set; }
-        public Action? OnClone { get; set; }
+        public Action<PlayerProjectile>? OnClone { get; set; }
         public Action<Projectile, Projectile, Player, Player>? OnNearProjectile { get; set; }
         public float Homing { get; internal set; }
 

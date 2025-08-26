@@ -16,7 +16,7 @@ namespace GalagaFighter.Core.Models.Effects
         {
                modifiers.Projectile.Phases.Add(this, Roll());
                modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
-               modifiers.Projectile.OnClone = () => Roll();
+               modifiers.Projectile.OnClone = (projMods) => projMods.Phases[this] = Roll();
         }
 
         private List<float> Roll()

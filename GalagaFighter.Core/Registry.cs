@@ -42,6 +42,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IPlayerEffectManager, PlayerEffectManager>();
             services.AddTransient<IProjectileSplitter, ProjectileSplitter>();
             services.AddTransient<IMagnetProjectileService, MagnetProjectileService>();
+            services.AddTransient<IProjectileProjectileCollisionService, ProjectileProjectileCollisionService>();
 
             _provider = services.BuildServiceProvider();
         }

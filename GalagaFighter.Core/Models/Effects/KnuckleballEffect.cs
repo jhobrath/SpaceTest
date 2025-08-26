@@ -14,10 +14,9 @@ namespace GalagaFighter.Core.Models.Effects
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Projectile.Phases.Add(this, Roll());
-            modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
-            modifiers.Projectile.OnClone = () => Roll();
-            base.Apply(modifiers);
+               modifiers.Projectile.Phases.Add(this, Roll());
+               modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
+               modifiers.Projectile.OnClone = () => Roll();
         }
 
         private List<float> Roll()

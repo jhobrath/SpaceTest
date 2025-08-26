@@ -44,6 +44,7 @@ namespace GalagaFighter.Core
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
         private readonly IPlayerEffectManagerFactory _effectManagerFactory;
+        private readonly IProjectileProjectileCollisionService _projectileProjectileCollisionService;
 
         // Player-specific controllers
         private readonly IPlayerController _playerController1;
@@ -62,6 +63,7 @@ namespace GalagaFighter.Core
             _projectilePowerUpCollisionService = Registry.Get<IProjectilePowerUpCollisionService>();
             _playerPowerUpCollisionService = Registry.Get<IPlayerPowerUpCollisionService>();
             _effectManagerFactory = Registry.Get<IPlayerEffectManagerFactory>();
+            _projectileProjectileCollisionService = Registry.Get<IProjectileProjectileCollisionService>();
 
             // Create separate controller instances for each player
             _playerController1 = Registry.Get<IPlayerController>();
@@ -230,7 +232,8 @@ namespace GalagaFighter.Core
 
                 var effectManager = _effectManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect(color));
-                effectManager.AddEffect(new KnuckleballEffect());
+                if(player == _player2)
+                    effectManager.AddEffect(new NinjaShotEffect());
 
                 //var effect = parts[1];
                 //if (effect == "SurpriseShot")
@@ -248,6 +251,7 @@ namespace GalagaFighter.Core
         {
             _projectilePowerUpCollisionService.HandleCollisions();
             _playerPowerUpCollisionService.HandleCollisions();
+            _projectileProjectileCollisionService.HandleCollisions();
             _inputService.Update();
 
             HandleInput();

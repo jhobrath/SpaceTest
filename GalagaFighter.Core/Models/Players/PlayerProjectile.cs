@@ -64,6 +64,7 @@ namespace GalagaFighter.Core.Models.Players
         public bool CanSplit { get; set; }
         public bool CanRicochet { get; set; }
         public Action? OnClone { get; set; }
+        public Action<Projectile, Projectile, Player, Player>? OnNearProjectile { get; set; }
 
         public PlayerProjectile Clone()
         {
@@ -101,7 +102,13 @@ namespace GalagaFighter.Core.Models.Players
                 IgnoreShipMovement = IgnoreShipMovement,
                 CanSplit = CanSplit,
                 CanRicochet = CanRicochet,
-                OnClone = OnClone
+                OnClone = OnClone,
+                OnNearProjectile = OnNearProjectile,
+
+
+
+                //Don't include
+                OneTimeProjectiles = []
             };
         }
     }

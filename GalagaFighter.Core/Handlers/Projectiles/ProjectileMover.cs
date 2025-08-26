@@ -45,10 +45,10 @@ namespace GalagaFighter.Core.Handlers.Projectiles
 
             var currentFrameSpeed = projectile.Modifiers.SpeedMultiplier * projectile.Speed;
 
-            projectile.Modifiers.VerticalPositionIncrement += ((projectile.Modifiers.VerticalPositionMultiplier * projectile.Modifiers.VerticalPositionIncrement) - projectile.Modifiers.VerticalPositionIncrement) * frameTime;
+            //projectile.Modifiers.VerticalPositionIncrement += ((projectile.Modifiers.VerticalPositionMultiplier * projectile.Modifiers.VerticalPositionIncrement) - projectile.Modifiers.VerticalPositionIncrement) * frameTime;
             projectile.Modifiers.VerticalPositionOffset += projectile.Modifiers.VerticalPositionIncrement * frameTime;
 
-            projectile.Move(currentFrameSpeed.X * frameTime, currentFrameSpeed.Y * frameTime + projectile.Modifiers.VerticalPositionOffset);
+            projectile.Move(currentFrameSpeed.X * frameTime, currentFrameSpeed.Y * frameTime + projectile.Modifiers.VerticalPositionOffset*frameTime);
         }
     }
 }

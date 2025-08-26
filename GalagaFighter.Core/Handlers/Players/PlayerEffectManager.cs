@@ -32,7 +32,6 @@ namespace GalagaFighter.Core.Handlers.Players
 
         public PlayerEffectManager()
         {
-            AddEffect(_selectedProjectile);
         }
 
         public void AddEffect(PlayerEffect newEffect)

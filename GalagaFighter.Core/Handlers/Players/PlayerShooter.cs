@@ -188,8 +188,6 @@ namespace GalagaFighter.Core.Handlers.Players
 
         public void ShootOneTime(Player player, EffectModifiers modifiers)
         {
-            Raylib.DrawRectangleLines((int)player.Rect.X, (int)player.Rect.Y, (int)player.Rect.Width, (int)player.Rect.Height, Color.Red);
-
             foreach (var projectileFunc in modifiers.Projectile.OneTimeProjectiles)
             {
                 var projectile = projectileFunc(_projectileController, player, new Vector2(player.Center.X, player.Center.Y), modifiers.Projectile);

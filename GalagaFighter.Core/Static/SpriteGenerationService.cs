@@ -59,7 +59,7 @@ namespace GalagaFighter.Core.Static
             return renderTexture.Texture;
         }
         
-        public static Texture2D CreateProjectileSprite(ProjectileType type, int width = 10, int height = 5)
+        public static Texture2D CreateProjectileSprite(ProjectileType type, int width = 10, int height = 5, Color? color = null)
         {
             RenderTexture2D renderTexture = Raylib.LoadRenderTexture(width, height);
             
@@ -76,7 +76,7 @@ namespace GalagaFighter.Core.Static
                     int bulletHeight = (int)(2 * scaleY);
                     int tipRadius = (int)(1 * Math.Min(scaleX, scaleY));
                     
-                    Raylib.DrawRectangle(0, height / 2 - bulletHeight / 2, width, bulletHeight, Color.Yellow);
+                    Raylib.DrawRectangle(0, height / 2 - bulletHeight / 2, width, bulletHeight, color ?? Color.Yellow);
                     Raylib.DrawCircle(width - tipRadius, height / 2, tipRadius, Color.White);
                     break;
                     

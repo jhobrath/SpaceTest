@@ -37,6 +37,14 @@ namespace GalagaFighter.Core
             Texture = TextureService.Get(texturePath);
         }
 
+        // For still image with palette swap
+        public SpriteWrapper(string texturePath, Color paletteSwapColor)
+        {
+            Mode = SpriteMode.StillImage;
+            var originalTexture = TextureService.Get(texturePath);
+            Texture = PaletteSwapService.CreatePaletteSwappedTexture(originalTexture, paletteSwapColor);
+        }
+
         // For still image
         public SpriteWrapper(Texture2D texture)
         {

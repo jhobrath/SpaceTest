@@ -10,7 +10,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public class SurpriseShotEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/Effects/firerate1.png";
+        public override string IconPath => "Sprites/Effects/surprise.png";
         public override bool IsProjectile => false;
 
         private float _lifetime = 0f;
@@ -38,7 +38,7 @@ namespace GalagaFighter.Core.Models.Effects
 
         private Projectile CreateInstantaneousBullet(IProjectileController updater, Player owner, Vector2 position, PlayerProjectile modifiers)
         {
-            var proj = new DefaultProjectile(updater, owner, position, modifiers);
+            var proj = new DefaultProjectile(updater, owner, position, modifiers, owner.PalleteSwap);
              proj.Move(y:-proj.Rect.Height / 2);
             proj.Hurry(x: 5f);
             return proj;

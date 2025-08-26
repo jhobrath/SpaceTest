@@ -36,7 +36,7 @@ namespace GalagaFighter.CharacterScreen
             
             Console.WriteLine("\nLook for ships marked with ? - they should have visual effects!");
             Console.WriteLine("Press any key to start the selection screen...");
-            Console.ReadKey();
+            //Console.ReadKey();
             
             var characterSelection = new CharacterSelectionGame();
             characterSelection.Run();

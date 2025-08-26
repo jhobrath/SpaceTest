@@ -10,6 +10,7 @@ namespace GalagaFighter.Core
 #if DEBUG
         public static void DrawPlayerDebug(Player player, Vector2 healthBarPosition)
         {
+            return;
             var rect = player.Rect;
             var rotation = player.Rotation;
             string debugText = $"Size: {rect.Size}\nPos: {rect.Position}\nRot: {rotation:F2}";
@@ -26,6 +27,7 @@ namespace GalagaFighter.Core
 
         internal static void Write(string text)
         {
+            return;
             int fontSize = 12;
             int lineHeight = 14;
             int x = 400;

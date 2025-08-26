@@ -236,14 +236,20 @@ namespace GalagaFighter.CharacterScreen
                 
                 Console.WriteLine($"Launching: {coreExePath}");
                 
-                // Launch the core game with arguments
+                // Get the directory of the Core executable to set as working directory
+                var coreDirectory = Path.GetDirectoryName(coreExePath);
+                
+                // Launch the core game with arguments and correct working directory
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = coreExePath,
                     Arguments = $"--player1 \"{player1Arg}\" --player2 \"{player2Arg}\"",
                     UseShellExecute = false,
-                    CreateNoWindow = false
+                    CreateNoWindow = false,
+                    WorkingDirectory = coreDirectory
                 };
+                
+                Console.WriteLine($"Setting working directory to: {coreDirectory}");
                 
                 Process.Start(startInfo);
                 

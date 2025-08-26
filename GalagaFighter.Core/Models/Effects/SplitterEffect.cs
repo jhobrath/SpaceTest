@@ -10,7 +10,7 @@ namespace GalagaFighter.Core.Models.Effects
 {
     public class SplitterEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/Effects/firerate1.png";
+        public override string IconPath => "Sprites/Effects/splitter.png";
         public override bool IsProjectile => false;
 
         public SplitterEffect()

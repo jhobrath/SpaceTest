@@ -14,7 +14,7 @@ namespace GalagaFighter.Core.Models.Players
         public float Health { get; set; } = 100f;
 
         public PlayerStats BaseStats { get; private set; } = new PlayerStats();
-        public Color PalleteSwap { get; set; } = Color.White;
+        public Color? PalleteSwap { get; set; }
 
         public bool IsPlayer1 { get; private set; }
 

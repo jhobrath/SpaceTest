@@ -12,6 +12,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using GalagaFighter.Core.Handlers.Players;
 
 namespace GalagaFighter.Core
 {
@@ -47,6 +48,8 @@ namespace GalagaFighter.Core
         // Player-specific controllers
         private readonly IPlayerController _playerController1;
         private readonly IPlayerController _playerController2;
+
+        private string[] _args = [];
 
         public Game()
         {
@@ -155,6 +158,8 @@ namespace GalagaFighter.Core
 
         private void InitializePlayersFromArgs(string[] args)
         {
+            _args = args;
+
             string player1Args = null;
             string player2Args = null;
 
@@ -176,10 +181,21 @@ namespace GalagaFighter.Core
             {
                 InitializePlayer(_player1, player1Args);
             }
+            else
+            {
+                var effectManager = _effectManagerFactory.GetEffectManager(_player1);
+                effectManager.AddEffect(new DefaultShootEffect());
+            }
 
             if (!string.IsNullOrEmpty(player2Args))
             {
                 InitializePlayer(_player2, player2Args);
+            }
+            else
+            {
+                var effectManager = _effectManagerFactory.GetEffectManager(_player2);
+                effectManager.AddEffect(new DefaultShootEffect());
+
             }
         }
 
@@ -192,7 +208,7 @@ namespace GalagaFighter.Core
                 var stats = new PlayerStats
                 {
                     SpeedMultiplier = float.Parse(parts[3]),
-                    FireRateMultiplier = float.Parse(parts[4]),
+                    FireRateMultiplier = 1/float.Parse(parts[4]),
                     Damage = float.Parse(parts[5]),
                     Shield = float.Parse(parts[6])
                 };
@@ -211,6 +227,19 @@ namespace GalagaFighter.Core
                     _ => Color.White
                 };
                 player.Initialize(health, stats, color);
+
+                var effectManager = _effectManagerFactory.GetEffectManager(player);
+                effectManager.AddEffect(new DefaultShootEffect(color));
+
+                var effect = parts[1];
+                if (effect == "SurpriseShot")
+                    effectManager.AddEffect(new SurpriseShotEffect());
+                else if (effect == "Splitter")
+                    effectManager.AddEffect(new SplitterEffect());
+                else if (effect == "Ricochet")
+                    effectManager.AddEffect(new RicochetEffect());
+                else if(effect == "TimedBarrage")
+                    effectManager.AddEffect(new TimedBarrageEffect());
             }
         }
 
@@ -242,6 +271,8 @@ namespace GalagaFighter.Core
             {
                 _objectService.Reset();
                 InitializePlayers();
+                if (_args.Length > 0)
+                    InitializePlayersFromArgs(_args);
             }
         }
 

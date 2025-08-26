@@ -49,20 +49,20 @@ namespace GalagaFighter.Core.Services
         private readonly static List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>>
         {
             (up,o,r,f) => new FireRatePowerUp(up,o, r.Position, r.Size, f),
-            (up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
-            (up,o,r,f) => new WoodShotPowerUp(up,o,r.Position,r.Size,f),
-            (up,o,r,f) => new NinjaShotPowerUp(up,o,r.Position,r.Size,f),
-            (up,o,r,f) => new ExplosiveShotPowerUp(up,o, r.Position, r.Size, f),
+            //(up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
+            //(up,o,r,f) => new WoodShotPowerUp(up,o,r.Position,r.Size,f),
+            //(up,o,r,f) => new NinjaShotPowerUp(up,o,r.Position,r.Size,f),
+            //(up,o,r,f) => new ExplosiveShotPowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new DoubleShotPowerUp(up,o, r.Position, r.Size, f),
-            (up,o,r,f) => new MagnetPowerUp(up,o, r.Position, r.Size, f),
-            (up,o,r,f) => new MudShotPowerUp(up,o, r.Position, r.Size, f)
+            //(up,o,r,f) => new MagnetPowerUp(up,o, r.Position, r.Size, f),
+            //(up,o,r,f) => new MudShotPowerUp(up,o, r.Position, r.Size, f)
         };
 
         public void Roll()
         {
             var output = new List<GameObject>();
 
-            if (Game.Random.Next(0, 60 * 5) != 1)
+            if (Game.Random.Next(0, 60 * 10) != 1)
                 return;
 
             var powerUp = Create();

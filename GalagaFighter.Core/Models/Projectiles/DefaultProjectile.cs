@@ -19,15 +19,15 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override int BaseDamage => 5;
         public override Vector2 SpawnOffset => new Vector2(-60, 42);
 
-        public DefaultProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
-            : base(controller, owner, GetSprite(_baseSize), initialPosition, _baseSize, _baseSpeed, modifiers)
+        public DefaultProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers, Color? color)
+            : base(controller, owner, GetSprite(_baseSize, color), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
             AudioService.PlayShootSound();
         }
 
-        private static SpriteWrapper GetSprite(Vector2 initialSize)
+        private static SpriteWrapper GetSprite(Vector2 initialSize, Color? color)
         {
-            return new SpriteWrapper(SpriteGenerationService.CreateProjectileSprite(ProjectileType.Normal, (int)initialSize.X, (int)initialSize.Y));
+            return new SpriteWrapper(SpriteGenerationService.CreateProjectileSprite(ProjectileType.Normal, (int)initialSize.X, (int)initialSize.Y, color));
         }
 
         public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)

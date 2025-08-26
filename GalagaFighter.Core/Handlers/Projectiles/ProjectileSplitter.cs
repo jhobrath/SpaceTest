@@ -34,7 +34,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
             if (projectile.Lifetime < .5f)
                 return;
 
-            if (Game.Random.NextDouble() < .99f)
+            if (Game.Random.NextDouble() < .98f)
                 return;
 
             // Get the owner of the projectile

@@ -10,6 +10,7 @@
         public PlayerProjectile Projectile { get; set; } = new();
         
         public bool Magnetic { get; set; }
+        public bool Untouchable { get; set; }
 
         public EffectModifiers()
         {

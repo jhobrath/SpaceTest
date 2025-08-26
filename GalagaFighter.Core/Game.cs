@@ -233,7 +233,7 @@ namespace GalagaFighter.Core
                 var effectManager = _effectManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect(color));
                 if(player == _player2)
-                    effectManager.AddEffect(new FadingBulletEffect());
+                    effectManager.AddEffect(new DefensiveDuckEffect());
 
                 //var effect = parts[1];
                 //if (effect == "SurpriseShot")

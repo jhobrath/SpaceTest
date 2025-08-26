@@ -101,7 +101,12 @@ namespace GalagaFighter.Core.Handlers.Players
 
         private void UpdateEffects()
         {
-            _effects.RemoveAll(x => x.IsActive == false);
+            var effectsToRemove = _effects.Where(x => x.IsActive == false).ToList();
+            if (effectsToRemove.Any())
+            {
+                _effects.RemoveAll(x => x.IsActive == false);
+                UpdateModifiers();
+            }
 
             if (!_selectedProjectile.IsActive)
                 _selectedProjectile = _effects[0];

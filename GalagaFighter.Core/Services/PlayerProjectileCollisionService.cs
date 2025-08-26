@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GalagaFighter.Core.Handlers.Players;
+using System.Reflection.Metadata.Ecma335;
 
 namespace GalagaFighter.Core.Services
 {
@@ -54,6 +55,9 @@ namespace GalagaFighter.Core.Services
 
         private void Collide(Player player, Projectile projectile, EffectModifiers modifiers)
         {
+            if (modifiers.Untouchable)
+                return;
+            
             var effectManager = _playerEffectManagerFactory.GetEffectManager(player);
             var effects = projectile.CreateEffects();
 

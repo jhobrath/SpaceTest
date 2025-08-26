@@ -21,7 +21,7 @@ namespace GalagaFighter.Core
             services.AddSingleton<IInputService, InputService>(); // Tracks input state across frames
             services.AddSingleton<IPowerUpService, PowerUpCreationService>();
             services.AddSingleton<IPowerUpControllerFactory, PowerUpControllerFactory>();
-            services.AddSingleton<IPlayerEffectManagerFactory, PlayerEffectManagerFactory>(); // Maps players to their effect managers
+            services.AddSingleton<IPlayerManagerFactory, PlayerEffectManagerFactory>(); // Maps players to their effect managers
 
             // TRANSIENT - Stateless services that can be created fresh each time
             services.AddTransient<ICollisionCreationService, CollisionCreationService>();
@@ -43,6 +43,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IProjectileSplitter, ProjectileSplitter>();
             services.AddTransient<IMagnetProjectileService, MagnetProjectileService>();
             services.AddTransient<IProjectileProjectileCollisionService, ProjectileProjectileCollisionService>();
+            services.AddTransient<IPlayerSpender, PlayerSpender>();
 
             _provider = services.BuildServiceProvider();
         }

@@ -16,7 +16,7 @@ namespace GalagaFighter.Core.Static
         private static int _controlTextSize = (int)(20 * Game.UniformScale);
         private static int _statusTextSize = (int)(16 * Game.UniformScale);
         private static int _margin = (int)(15 * Game.UniformScale);
-        private static IPlayerEffectManagerFactory _playerEffectManagerFactory = Registry.Get<IPlayerEffectManagerFactory>();
+        private static IPlayerManagerFactory _playerManagerFactory = Registry.Get<IPlayerManagerFactory>();
 
         public static void Initialize()
         {
@@ -26,6 +26,8 @@ namespace GalagaFighter.Core.Static
         {
             DrawPlayerHealth(player1, false);
             DrawPlayerHealth(player2, true);
+            DrawPlayerResources(player1, false);
+            DrawPlayerResources(player2, true);
             DrawWinner(player1, player2);
             DrawEffects(player1, false);
             DrawEffects(player2, true);
@@ -51,7 +53,7 @@ namespace GalagaFighter.Core.Static
 
         private static void DrawEffects(Player player, bool reverse)
         {
-            var effectManager = (IExposedPlayerEffectManager)_playerEffectManagerFactory.GetEffectManager(player);
+            var effectManager = (IExposedPlayerEffectManager)_playerManagerFactory.GetEffectManager(player);
             var effects = effectManager.Effects;
             var statusEffects = effects.Where(x => !x.IsProjectile);
             var projectiles = effects.Where(x => x.IsProjectile); 
@@ -78,7 +80,8 @@ namespace GalagaFighter.Core.Static
                 var row = (int)Math.Floor(i / 6f);
 
                 var texture = new SpriteWrapper(TextureService.Get(icons[i]));
-                var position = new Vector2(startX + col * iconSize, _margin + iconSize + row * iconSize + iconSize / 2);
+                // Move icons down by adding extra space for resource bar (30 pixels + some padding)
+                var position = new Vector2(startX + col * iconSize, _margin + iconSize + row * iconSize + iconSize / 2 + 40);
                 var center = new Vector2(position.X + iconSize / 2, position.Y + iconSize / 2);
                 texture.Draw(center, 0f, iconSize, iconSize, Color.White);
                 if(
@@ -104,6 +107,29 @@ namespace GalagaFighter.Core.Static
 
             Raylib.DrawRectangle(remainingHealthStartX, _margin, (int)(player.Health*500*Game.UniformScale/100f), 30, Color.Red);
             Raylib.DrawRectangleLines(healthBarLinesStart, _margin, 500, 30, Color.White);
+        }
+
+        public static void DrawPlayerResources(Player player, bool reverse)
+        {
+            var resourceManager = _playerManagerFactory.GetResourceManager(player);
+            var currentResources = resourceManager.CurrentAmount;
+            var maxResources = PlayerResourceManager.MaxAmount;
+            
+            var resourcePercentage = currentResources / maxResources;
+            
+            var remainingResourceStartX = (int)(((reverse 
+                ? Game.Width - (_margin + (resourcePercentage * 500)) 
+                : _margin))*Game.UniformScale);
+
+            var resourceBarLinesStart = (int)((reverse
+                ? Game.Width - (_margin + 500)
+                : _margin)*Game.UniformScale);
+
+            // Draw resource bar directly under health bar (health bar is at _margin, so resource bar is at _margin + 35)
+            var resourceBarY = _margin + 35;
+            
+            Raylib.DrawRectangle(remainingResourceStartX, resourceBarY, (int)(resourcePercentage*500*Game.UniformScale), 30, Color.Blue);
+            Raylib.DrawRectangleLines(resourceBarLinesStart, resourceBarY, 500, 30, Color.White);
         }
 
         public static void DrawWinner(Player player1, Player player2)

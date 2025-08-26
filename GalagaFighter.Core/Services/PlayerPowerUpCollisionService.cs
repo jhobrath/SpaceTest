@@ -18,9 +18,9 @@ namespace GalagaFighter.Core.Services
     {
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
-        private readonly IPlayerEffectManagerFactory _effectManagerFactory;
+        private readonly IPlayerManagerFactory _effectManagerFactory;
 
-        public PlayerPowerUpCollisionService(IObjectService objectService, IInputService inputService, IPlayerEffectManagerFactory effectManagerFactory)
+        public PlayerPowerUpCollisionService(IObjectService objectService, IInputService inputService, IPlayerManagerFactory effectManagerFactory)
         {
             _objectService = objectService;
             _inputService = inputService;

@@ -43,7 +43,7 @@ namespace GalagaFighter.Core
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
-        private readonly IPlayerEffectManagerFactory _effectManagerFactory;
+        private readonly IPlayerManagerFactory _effectManagerFactory;
         private readonly IProjectileProjectileCollisionService _projectileProjectileCollisionService;
 
         // Player-specific controllers
@@ -62,7 +62,7 @@ namespace GalagaFighter.Core
             _playerProjectileCollisionService = Registry.Get<IPlayerProjectileCollisionService>();
             _projectilePowerUpCollisionService = Registry.Get<IProjectilePowerUpCollisionService>();
             _playerPowerUpCollisionService = Registry.Get<IPlayerPowerUpCollisionService>();
-            _effectManagerFactory = Registry.Get<IPlayerEffectManagerFactory>();
+            _effectManagerFactory = Registry.Get<IPlayerManagerFactory>();
             _projectileProjectileCollisionService = Registry.Get<IProjectileProjectileCollisionService>();
 
             // Create separate controller instances for each player

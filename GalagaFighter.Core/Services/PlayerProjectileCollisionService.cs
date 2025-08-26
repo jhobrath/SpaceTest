@@ -19,17 +19,17 @@ namespace GalagaFighter.Core.Services
         private readonly IObjectService _objectService;
         private readonly IPlayerProjectileCollisionPlanker _planker;
         private readonly ICollisionCreationService _collisionCreationService;
-        private readonly IPlayerEffectManagerFactory _playerEffectManagerFactory;
+        private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly EdgeCollisionDetector _edgeDetector;
         private readonly PlayerCollisionDetector _playerDetector;
 
         public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker,
-            ICollisionCreationService collisionCreationService, IPlayerEffectManagerFactory playerEffectManagerFactory)
+            ICollisionCreationService collisionCreationService, IPlayerManagerFactory playerManagerFactory)
         {
             _objectService = objectService;
             _planker = planker;
             _collisionCreationService = collisionCreationService;
-            _playerEffectManagerFactory = playerEffectManagerFactory;
+            _playerManagerFactory = playerManagerFactory;
             _edgeDetector = new EdgeCollisionDetector();
             _playerDetector = new PlayerCollisionDetector();
         }
@@ -58,7 +58,7 @@ namespace GalagaFighter.Core.Services
             if (modifiers.Untouchable)
                 return;
             
-            var effectManager = _playerEffectManagerFactory.GetEffectManager(player);
+            var effectManager = _playerManagerFactory.GetEffectManager(player);
             var effects = projectile.CreateEffects();
 
             foreach (var effect in effects)

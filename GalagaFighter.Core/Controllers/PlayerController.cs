@@ -21,26 +21,29 @@ namespace GalagaFighter.Core.Controllers
         private readonly IInputService _inputService;
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IPlayerDrawer _playerDrawer;
-        private readonly IPlayerEffectManagerFactory _playerEffectManagerFactory;
+        private readonly IPlayerManagerFactory _playerManagerFactory;
+        private readonly IPlayerSpender _playerSpender;
 
         // Per-player instance state (no more dictionaries!)
         private PlayerShootState _shootState = PlayerShootState.Idle;
 
         public PlayerController(IPlayerMover playerMover, IPlayerShooter playerShooter, IInputService inputService,
-            IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer, IPlayerEffectManagerFactory playerEffectManagerFactory)
+            IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer, 
+            IPlayerManagerFactory playerManagerFactory, IPlayerSpender playerSpender)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;
             _inputService = inputService;
             _playerProjectileCollisionService = playerProjectileCollisionService;
             _playerDrawer = playerDrawer;
-            _playerEffectManagerFactory = playerEffectManagerFactory;
+            _playerManagerFactory = playerManagerFactory;
+            _playerSpender = playerSpender;
         }
 
         public void Update(Game game, Player player)
         {
             var frameTime = Raylib.GetFrameTime();
-            var effectManager = _playerEffectManagerFactory.GetEffectManager(player.Id);
+            var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
             var modifiers = effectManager.GetModifiers();
 
             player.Rotation = player.IsPlayer1 ? 90f : -90f;
@@ -52,17 +55,21 @@ namespace GalagaFighter.Core.Controllers
 
             _playerShooter.ShootOneTime(player, modifiers);
 
-            var switchButton = _inputService.GetSwitch(player.Id);
-            if (switchButton.IsPressed)
-                effectManager.SwitchEffect();
-
+            //var switchButton = _inputService.GetSwitch(player.Id);
+            //if (switchButton.IsPressed)
+            //    effectManager.SwitchEffect();
 
             _playerProjectileCollisionService.HandleCollisions(player, modifiers);
+
+            var resourceManager = _playerManagerFactory.GetResourceManager(player);
+            resourceManager.Update();
+
+            _playerSpender.Spend(player, modifiers);
         }
 
         public void Draw(Player player)
         {
-            var effectManager = _playerEffectManagerFactory.GetEffectManager(player.Id);
+            var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
             var modifiers = effectManager.GetModifiers();
             _playerDrawer.Draw(player, modifiers!, _shootState);
         }

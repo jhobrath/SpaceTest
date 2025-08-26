@@ -112,7 +112,7 @@ namespace GalagaFighter.Core.Handlers.Players
             if (!shoot)
                 return false;
 
-            var fireRate = modifiers.Stats.FireRateMultiplier * EffectiveFireRate;
+            var fireRate = modifiers.Stats.FireRateMultiplier * EffectiveFireRate * player.BaseStats.FireRateMultiplier;
             if (_fireRateTimer < fireRate)
                 return false;
 
@@ -161,6 +161,8 @@ namespace GalagaFighter.Core.Handlers.Players
         private void ShootProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition, Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile> projectileFunc)
         {
             var projectileModifiers = modifiers.Projectile.Clone();
+
+            projectileModifiers.DamageMultiplier *= player.BaseStats.Damage;
 
             var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
             SetRotation(projectile);

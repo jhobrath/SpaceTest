@@ -140,8 +140,10 @@ namespace GalagaFighter.Core
             //effectManager.AddEffect(new MudShotEffect());
         }
 
-        public void Run()
+        public void Run(string[] args)
         {
+            InitializePlayersFromArgs(args);
+
             while (!Raylib.WindowShouldClose())
             {
                 Update();
@@ -149,6 +151,67 @@ namespace GalagaFighter.Core
             }
 
             Cleanup();
+        }
+
+        private void InitializePlayersFromArgs(string[] args)
+        {
+            string player1Args = null;
+            string player2Args = null;
+
+            // Parse command line arguments looking for --player1 and --player2
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] == "--player1" && i + 1 < args.Length)
+                {
+                    player1Args = args[i + 1];
+                }
+                else if (args[i] == "--player2" && i + 1 < args.Length)
+                {
+                    player2Args = args[i + 1];
+                }
+            }
+
+            // Parse and apply player configurations
+            if (!string.IsNullOrEmpty(player1Args))
+            {
+                InitializePlayer(_player1, player1Args);
+            }
+
+            if (!string.IsNullOrEmpty(player2Args))
+            {
+                InitializePlayer(_player2, player2Args);
+            }
+        }
+
+        private void InitializePlayer(Player player, string configString)
+        {
+            var parts = configString.Split(',');
+            if (parts.Length == 7)
+            {
+                var health = float.Parse(parts[2]);
+                var stats = new PlayerStats
+                {
+                    SpeedMultiplier = float.Parse(parts[3]),
+                    FireRateMultiplier = float.Parse(parts[4]),
+                    Damage = float.Parse(parts[5]),
+                    Shield = float.Parse(parts[6])
+                };
+                var color = parts[0] switch
+                {
+                    "SkyBlue" => Color.SkyBlue,
+                    "Red" => Color.Red,
+                    "Lime" => Color.Lime,
+                    "Purple" => Color.Purple,
+                    "Orange" => Color.Orange,
+                    "Cyan" => new Color(0, 255, 255, 255),
+                    "Yellow" => Color.Yellow,
+                    "White" => Color.White,
+                    "Pink" => Color.Pink,
+                    "DarkGray" => Color.DarkGray,
+                    _ => Color.White
+                };
+                player.Initialize(health, stats, color);
+            }
         }
 
         private void Update()

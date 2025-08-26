@@ -4,6 +4,8 @@ using GalagaFighter.CharacterScreen.UI;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Numerics;
 using Character = GalagaFighter.CharacterScreen.Models.Character;
 
@@ -20,6 +22,7 @@ namespace GalagaFighter.CharacterScreen
     {
         private readonly ICharacterService _characterService;
         private readonly IEffectService _effectService;
+        private readonly ICommandLineArgumentService _argumentService;
         private readonly CharacterSelectionUI _ui;
         private readonly List<Models.Character> _availableCharacters;
         private readonly List<OffensiveEffect> _availableEffects;
@@ -36,6 +39,7 @@ namespace GalagaFighter.CharacterScreen
         {
             _characterService = new CharacterService();
             _effectService = new EffectService();
+            _argumentService = new CommandLineArgumentService();
             _availableCharacters = _characterService.GetAvailableCharacters();
             _availableEffects = _effectService.GetAvailableEffects();
             InitializeWindow();
@@ -208,15 +212,77 @@ namespace GalagaFighter.CharacterScreen
 
         private void StartMainGame()
         {
-            // For now, just mark the game as complete
-            // In a full implementation, this would transition to the main game
-            // with the selected ships and effects
-            
-            Console.WriteLine($"Starting game with:");
-            Console.WriteLine($"Player 1: {_player1Selection.SelectedCharacter?.Name} + {_player1Selection.SelectedEffect?.Name}");
-            Console.WriteLine($"Player 2: {_player2Selection.SelectedCharacter?.Name} + {_player2Selection.SelectedEffect?.Name}");
+            try
+            {
+                Console.WriteLine($"Starting game with:");
+                Console.WriteLine($"Player 1: {_player1Selection.SelectedCharacter?.Name} + {_player1Selection.SelectedEffect?.Name}");
+                Console.WriteLine($"Player 2: {_player2Selection.SelectedCharacter?.Name} + {_player2Selection.SelectedEffect?.Name}");
+                
+                // Format command line arguments
+                var player1Arg = _argumentService.FormatPlayerArgument(_player1Selection);
+                var player2Arg = _argumentService.FormatPlayerArgument(_player2Selection);
+                
+                Console.WriteLine($"Player 1 argument: {player1Arg}");
+                Console.WriteLine($"Player 2 argument: {player2Arg}");
+                
+                // Find the GalagaFighter.Core executable
+                var coreExePath = FindCoreExecutable();
+                if (string.IsNullOrEmpty(coreExePath))
+                {
+                    Console.WriteLine("Error: Could not find GalagaFighter.Core executable");
+                    _gameComplete = true;
+                    return;
+                }
+                
+                Console.WriteLine($"Launching: {coreExePath}");
+                
+                // Launch the core game with arguments
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = coreExePath,
+                    Arguments = $"--player1 \"{player1Arg}\" --player2 \"{player2Arg}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = false
+                };
+                
+                Process.Start(startInfo);
+                
+                Console.WriteLine("Core game launched successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error launching core game: {ex.Message}");
+            }
             
             _gameComplete = true;
+        }
+        
+        private string FindCoreExecutable()
+        {
+            // Look for the executable in common locations relative to this project
+            var possiblePaths = new []
+            {
+                // Debug build in adjacent project
+                "../../../../GalagaFighter.Core/bin/Debug/net8.0/GalagaFighter.Core.exe",
+                "../GalagaFighter.Core/bin/Debug/net8.0/GalagaFighter.Core.exe",
+                // Release build in adjacent project
+                "../GalagaFighter.Core/bin/Release/net8.0/GalagaFighter.Core.exe",
+                // Same directory
+                "./GalagaFighter.Core.exe",
+                // Parent directory
+                "../GalagaFighter.Core.exe"
+            };
+            
+            foreach (var path in possiblePaths)
+            {
+                var fullPath = Path.GetFullPath(path);
+                if (File.Exists(fullPath))
+                {
+                    return fullPath;
+                }
+            }
+            
+            return string.Empty;
         }
 
         private void PlayNavigationSound()

@@ -1,5 +1,6 @@
 using GalagaFighter.CharacterScreen;
 using GalagaFighter.CharacterScreen.Services;
+using GalagaFighter.CharacterScreen.Tests;
 using Raylib_cs;
 using System;
 
@@ -11,6 +12,10 @@ namespace GalagaFighter.CharacterScreen
         {
             Console.WriteLine("?? Enhanced Ship Selection System");
             Console.WriteLine("=================================");
+            
+            // Test command line argument formatting
+            CommandLineArgumentTest.TestArgumentFormatting();
+            Console.WriteLine();
             
             // Debug: Show which ships have visual effects
             var characterService = new CharacterService();
@@ -31,7 +36,7 @@ namespace GalagaFighter.CharacterScreen
             
             Console.WriteLine("\nLook for ships marked with ? - they should have visual effects!");
             Console.WriteLine("Press any key to start the selection screen...");
-            //Console.ReadKey();
+            Console.ReadKey();
             
             var characterSelection = new CharacterSelectionGame();
             characterSelection.Run();

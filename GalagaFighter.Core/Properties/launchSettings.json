@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GalagaFighter.Core": {
+      "commandName": "Project",
+      "commandLineArgs": "--player1 \"Pink,SurpriseShot,95.0,1.1,1.0,1.1,1.0\" --player2 \"Lime,Splitter,85.0,1.3,1.0,0.9,0.9\""
+    }
+  }
+}

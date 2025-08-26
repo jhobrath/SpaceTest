@@ -12,15 +12,30 @@ namespace GalagaFighter.Core.Models.Players
     public class Player : GameObject
     {
         public float Health { get; set; } = 100f;
+
+        public PlayerStats BaseStats { get; private set; } = new PlayerStats();
+        public Color PalleteSwap { get; set; } = Color.White;
+
         public bool IsPlayer1 { get; private set; }
 
         private readonly IPlayerController _playerController;
 
         public Player(IPlayerController playerUpdater, Rectangle initialPosition, bool isPlayer1)
-            : base(Game.Id, new SpriteWrapper("Sprites/Ships/MainShip.png"), initialPosition.Position, initialPosition.Size, new Vector2(0,20f))
+            : base(Game.Id, 
+                  new SpriteWrapper("Sprites/Ships/MainShip.png"), 
+                  initialPosition.Position, 
+                  initialPosition.Size, 
+                  new Vector2(0,20f))
         {
             _playerController = playerUpdater;
             IsPlayer1 = isPlayer1;
+        }
+
+        public void Initialize(float health, PlayerStats stats, Color palleteSwap)
+        {
+            Health = health;
+            BaseStats = stats;
+            PalleteSwap = palleteSwap;
         }
 
         public override void Update(Game game)

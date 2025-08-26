@@ -65,6 +65,7 @@ namespace GalagaFighter.Core.Models.Players
         public bool CanRicochet { get; set; }
         public Action? OnClone { get; set; }
         public Action<Projectile, Projectile, Player, Player>? OnNearProjectile { get; set; }
+        public float Homing { get; internal set; }
 
         public PlayerProjectile Clone()
         {
@@ -104,7 +105,7 @@ namespace GalagaFighter.Core.Models.Players
                 CanRicochet = CanRicochet,
                 OnClone = OnClone,
                 OnNearProjectile = OnNearProjectile,
-
+                Homing = Homing,
 
 
                 //Don't include

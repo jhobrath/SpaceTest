@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
@@ -39,7 +40,7 @@ namespace GalagaFighter.Core.Models.Players
         //Edge Collision
         public float CollideDistanceFromEdge { get; set; } = 0f;
 
-        public List<float>? Phases { get; set; } = null;
+        public Dictionary<PlayerEffect, List<float>> Phases { get; set; } = [];
 
         //Deactivation
         public bool DeactivateOnCollision { get; set; } = true;
@@ -56,12 +57,13 @@ namespace GalagaFighter.Core.Models.Players
         public Action<Projectile>? OnWindUpReleased { get; set; } = null;
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
         public Action<Projectile>? OnSpriteUpdate { get; internal set; }
-        public Action<Projectile, int>? OnPhaseChange { get; set; } = null;
+        public Action<Projectile, PlayerEffect, int>? OnPhaseChange { get; set; } = null;
         public Func<Player, Projectile, List<GameObject>>? OnCollide { get; set; } = null;
 
         public SpriteWrapper? Sprite { get; set; } = null;
         public bool CanSplit { get; set; }
         public bool CanRicochet { get; set; }
+        public Action? OnClone { get; set; }
 
         public PlayerProjectile Clone()
         {
@@ -98,7 +100,8 @@ namespace GalagaFighter.Core.Models.Players
                 VerticalPositionMultiplier = VerticalPositionMultiplier,
                 IgnoreShipMovement = IgnoreShipMovement,
                 CanSplit = CanSplit,
-                CanRicochet = CanRicochet
+                CanRicochet = CanRicochet,
+                OnClone = OnClone
             };
         }
     }

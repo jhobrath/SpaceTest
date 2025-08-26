@@ -230,16 +230,17 @@ namespace GalagaFighter.Core
 
                 var effectManager = _effectManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect(color));
+                effectManager.AddEffect(new KnuckleballEffect());
 
-                var effect = parts[1];
-                if (effect == "SurpriseShot")
-                    effectManager.AddEffect(new SurpriseShotEffect());
-                else if (effect == "Splitter")
-                    effectManager.AddEffect(new SplitterEffect());
-                else if (effect == "Ricochet")
-                    effectManager.AddEffect(new RicochetEffect());
-                else if(effect == "TimedBarrage")
-                    effectManager.AddEffect(new TimedBarrageEffect());
+                //var effect = parts[1];
+                //if (effect == "SurpriseShot")
+                //    effectManager.AddEffect(new SurpriseShotEffect());
+                //else if (effect == "Splitter")
+                //    effectManager.AddEffect(new SplitterEffect());
+                //else if (effect == "Ricochet")
+                //    effectManager.AddEffect(new RicochetEffect());
+                //else if(effect == "TimedBarrage")
+                //    effectManager.AddEffect(new TimedBarrageEffect());
             }
         }
 

@@ -1,8 +1,6 @@
 using GalagaFighter.Core.Handlers.Projectiles;
 using GalagaFighter.Core.Models.Projectiles;
-using GalagaFighter.Core.Services;
 using Raylib_cs;
-using System;
 
 namespace GalagaFighter.Core.Controllers
 {
@@ -75,16 +73,10 @@ namespace GalagaFighter.Core.Controllers
             var originalLifeTime = projectile.Lifetime;
             projectile.Lifetime += frameTime;
 
-            if (projectile.Modifiers.Phases == null)
-                return;
-
-            for(var i = 0; i < projectile.Modifiers.Phases.Count;i++)
-            {
-                if(originalLifeTime < projectile.Modifiers.Phases[i] && projectile.Lifetime >= projectile.Modifiers.Phases[i])
-                {
-                    projectile.Modifiers.OnPhaseChange?.Invoke(projectile, i+1);
-                }
-            }
+            foreach(var phaseList in projectile.Modifiers.Phases)
+                for(var i = 0; i < phaseList.Value.Count;i++)
+                    if(originalLifeTime < phaseList.Value[i] && projectile.Lifetime >= phaseList.Value[i])
+                        projectile.Modifiers.OnPhaseChange?.Invoke(projectile, phaseList.Key, i+1);
         }
 
         private void Deactivate(Projectile projectile)

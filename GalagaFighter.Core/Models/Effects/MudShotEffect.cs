@@ -18,8 +18,6 @@ namespace GalagaFighter.Core.Models.Effects
 
         private SpriteDecorations _decorations;
 
-        private float _mudSplatOpacity = 0.5f;
-
         public MudShotEffect()
         {
             _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMud.png"));
@@ -39,13 +37,16 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Decorations = _decorations;
             
             // ✅ Phase transformation (like explosive)
-            modifiers.Projectile.Phases = new List<float> { 2f, 4f, 4.25f, 4.5f, 4.75f, 5f };  // Transform at 95% completion
+            modifiers.Projectile.Phases.Add(this, new List<float> { 2f, 4f, 4.25f, 4.5f, 4.75f, 5f });  // Transform at 95% completion
             modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
             modifiers.Projectile.DeactivateOnCollision = false;      // Stay active for continuous collision
         }
 
-        private void HandlePhaseChange(Projectile projectile, int phase)
+        private void HandlePhaseChange(Projectile projectile, PlayerEffect playerEffect, int phase)
         {
+            if (playerEffect != this)
+                return;
+
             if(phase == 1)
             { 
                 AudioService.PlayMudSplat();

@@ -163,6 +163,7 @@ namespace GalagaFighter.Core.Handlers.Players
             var projectileModifiers = modifiers.Projectile.Clone();
 
             projectileModifiers.DamageMultiplier *= player.BaseStats.Damage;
+            projectileModifiers.OnClone?.Invoke();
 
             var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
             SetRotation(projectile);
@@ -190,7 +191,7 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             foreach (var projectileFunc in modifiers.Projectile.OneTimeProjectiles)
             {
-                var projectile = projectileFunc(_projectileController, player, new Vector2(player.Center.X, player.Center.Y), modifiers.Projectile);
+                var projectile = projectileFunc(_projectileController, player, new Vector2(player.Center.X, player.Center.Y), modifiers.Projectile.Clone());
                 _objectService.AddGameObject(projectile);
             }
 

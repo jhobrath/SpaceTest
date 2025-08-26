@@ -44,13 +44,16 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.RotationOffsetIncrement = 360f;
             modifiers.Projectile.RotationOffsetMultiplier = (1/2f);
 
-            modifiers.Projectile.Phases = new List<float> { 1.45f, 2.25f };
+            modifiers.Projectile.Phases.Add(this, new List<float> { 1.45f, 2.25f });
             modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
             modifiers.Decorations = _decorations;
         }
 
-        private void HandlePhaseChange(Projectile projectile, int phase)
+        private void HandlePhaseChange(Projectile projectile, PlayerEffect playerEffect, int phase)
         {
+            if (playerEffect.GetType() != GetType())
+                return;
+
             if(phase == 1)
             { 
                 AudioService.PlayExplosionConversionSound();

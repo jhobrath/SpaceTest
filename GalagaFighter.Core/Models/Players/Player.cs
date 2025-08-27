@@ -1,7 +1,6 @@
 ﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
-using GalagaFighter.Core.Models.Projectiles;
-using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Models.Collisions;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -31,6 +30,13 @@ namespace GalagaFighter.Core.Models.Players
         {
             _playerController = playerUpdater;
             IsPlayer1 = isPlayer1;
+            
+            // Set the hitbox for this player to use triangle collision with percentage coordinates
+            Hitbox = new HitboxTriangle([
+                new Vector2(0.045f, 0.685f),  // Left wing: 4.5% in, 68.5% down
+                new Vector2(0.955f, 0.685f),  // Right wing: 95.5% in, 68.5% down
+                new Vector2(0.5f, 0.08f)      // Ship tip: 50% in, 8% down
+            ]);
         }
 
         public void Initialize(float health, PlayerStats stats, Color palleteSwap)

@@ -2,8 +2,6 @@
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Handlers.Collisions

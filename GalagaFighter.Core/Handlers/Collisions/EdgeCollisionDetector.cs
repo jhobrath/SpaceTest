@@ -1,12 +1,15 @@
-using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 
 namespace GalagaFighter.Core.Handlers.Collisions
 {
     public class EdgeCollisionDetector
     {
-        public bool HasCollision(Projectile projectile)
+        public bool HasCollision(GameObject gameObject)
         {
+            // Only projectiles currently have edge collision logic
+            if (gameObject is not Projectile projectile)
+                return false;
+
             if (projectile.Modifiers.CollideDistanceFromEdge <= 0f)
                 return false;
 

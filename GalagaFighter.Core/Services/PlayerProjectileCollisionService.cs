@@ -1,11 +1,6 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Handlers.Collisions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using GalagaFighter.Core.Handlers.Players;
-using System.Reflection.Metadata.Ecma335;
 
 namespace GalagaFighter.Core.Services
 {
@@ -21,7 +16,7 @@ namespace GalagaFighter.Core.Services
         private readonly ICollisionCreationService _collisionCreationService;
         private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly EdgeCollisionDetector _edgeDetector;
-        private readonly PlayerCollisionDetector _playerDetector;
+        private readonly ContactCollisionDetector _contactDetector;
 
         public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker,
             ICollisionCreationService collisionCreationService, IPlayerManagerFactory playerManagerFactory)
@@ -31,7 +26,7 @@ namespace GalagaFighter.Core.Services
             _collisionCreationService = collisionCreationService;
             _playerManagerFactory = playerManagerFactory;
             _edgeDetector = new EdgeCollisionDetector();
-            _playerDetector = new PlayerCollisionDetector();
+            _contactDetector = new ContactCollisionDetector();
         }
 
         public void HandleCollisions(Player player, EffectModifiers modifiers)
@@ -45,7 +40,7 @@ namespace GalagaFighter.Core.Services
 
                 // Check both collision types - projectile could hit both edge AND player
                 var hasEdgeCollision = _edgeDetector.HasCollision(projectile);
-                var hasPlayerCollision = _playerDetector.HasCollision(player, projectile);
+                var hasPlayerCollision = _contactDetector.HasCollision(player, projectile);
                 if (hasEdgeCollision || hasPlayerCollision)
                 {
                     Collide(player, projectile, modifiers);

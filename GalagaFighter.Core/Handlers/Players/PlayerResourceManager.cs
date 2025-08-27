@@ -12,13 +12,35 @@ namespace GalagaFighter.Core.Handlers.Players
     {
         public const float MaxAmount = 100f;
         public const float FillRate = 10f; // per second
-        public float CurrentAmount { get; private set; } = 0f;
+        public float CurrentAmount { get; private set; } = 50f;
+
+        private float _amountLeftToSpend = 0f;
 
         public void Update()
         {
-            CurrentAmount += FillRate * Raylib.GetFrameTime();
-            if (CurrentAmount > MaxAmount)
-                CurrentAmount = MaxAmount;
+            if(_amountLeftToSpend > 0f)
+            {
+                var amountToRemove = FillRate * Raylib.GetFrameTime() * 3;
+                CurrentAmount -= amountToRemove;
+                if (CurrentAmount < 0f) 
+                    CurrentAmount = 0f;
+
+                _amountLeftToSpend -= amountToRemove;
+            }
+            else 
+            { 
+                if(CurrentAmount < 10)
+                    CurrentAmount += FillRate * Raylib.GetFrameTime()/4f;
+                else if (CurrentAmount < 20)
+                    CurrentAmount += FillRate * Raylib.GetFrameTime() /3f;
+                else if (CurrentAmount < 30)
+                    CurrentAmount += FillRate * Raylib.GetFrameTime() / 2f;
+                else
+                    CurrentAmount += FillRate * Raylib.GetFrameTime();
+
+                if (CurrentAmount > MaxAmount)
+                    CurrentAmount = MaxAmount;
+            }
         }
 
         public bool Spend(float amount)
@@ -28,7 +50,11 @@ namespace GalagaFighter.Core.Handlers.Players
             if (amount > CurrentAmount)
                 return false;
 
-            CurrentAmount -= amount;
+            if (amount > 20)
+                _amountLeftToSpend = amount;
+            else
+                CurrentAmount -= amount;
+                
             return true;
         }
     }

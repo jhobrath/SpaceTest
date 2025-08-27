@@ -13,6 +13,7 @@ namespace GalagaFighter.Core.Models.Effects
         public override string IconPath => "Sprites/effects/fadingbullet.png";
 
         private List<float> _fadeLocations = [];
+        protected override float Duration => 10f;
 
         public override void Apply(EffectModifiers modifiers)
         {

@@ -10,7 +10,7 @@ namespace GalagaFighter.Core.Models.Effects
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Display.SizeMultiplier = new System.Numerics.Vector2(.85f, .85f);
-            modifiers.Display.Opacity = .8f;
+            modifiers.Display.Opacity = .6f;
             modifiers.Untouchable = true;
         }
     }

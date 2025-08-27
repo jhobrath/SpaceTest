@@ -6,7 +6,8 @@ namespace GalagaFighter.Core.Handlers.Players
 {
     public interface IPlayerSpender
     {
-        void Spend(Player player, EffectModifiers modifiers);
+        void HandleDefensiveSpend(Player player, EffectModifiers modifiers);
+        void HandleOffensiveSpend(Player player, EffectModifiers modifiers);
     }
     public class PlayerSpender : IPlayerSpender
     {
@@ -19,8 +20,29 @@ namespace GalagaFighter.Core.Handlers.Players
             _inputService = inputService;
         }
 
-        public void Spend(Player player, EffectModifiers modifiers)
+        public void HandleOffensiveSpend(Player player, EffectModifiers modifiers)
         {
+            if (player.OffensiveAugment == null)
+                return;
+
+            var switchPress = _inputService.GetShoot(player.Id);
+            if (!switchPress.IsDoublePressed)
+                return;
+
+            var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
+            var didSpend = resourceManager.Spend(100f);
+            if (!didSpend)
+                return;
+
+            var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
+            effectManager.AddEffect(player.OffensiveAugment());
+        }
+
+        public void HandleDefensiveSpend(Player player, EffectModifiers modifiers)
+        {
+            if (player.DefensiveAugment == null)
+                return;
+
             var switchPress = _inputService.GetSwitch(player.Id);
             if (!switchPress.IsPressed)
                 return;
@@ -31,7 +53,7 @@ namespace GalagaFighter.Core.Handlers.Players
                 return;
 
             var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
-            effectManager.AddEffect(new DefensiveDuckEffect());
+            effectManager.AddEffect(player.DefensiveAugment());
         }
     }
 }

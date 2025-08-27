@@ -11,6 +11,7 @@ namespace GalagaFighter.Core.Models.Effects
     public class RicochetEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/Effects/ricochet.png";
+        protected override float Duration => 10f;
         public override bool IsProjectile => false;
 
         public RicochetEffect()

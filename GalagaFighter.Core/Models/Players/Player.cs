@@ -15,8 +15,10 @@ namespace GalagaFighter.Core.Models.Players
 
         public PlayerStats BaseStats { get; private set; } = new PlayerStats();
         public Color? PalleteSwap { get; set; }
-
         public bool IsPlayer1 { get; private set; }
+
+        public Func<PlayerEffect>? OffensiveAugment { get; set; }
+        public Func<PlayerEffect>? DefensiveAugment { get; set; }
 
         private readonly IPlayerController _playerController;
 

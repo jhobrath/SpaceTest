@@ -12,6 +12,7 @@ namespace GalagaFighter.Core.Models.Effects
     {
         public override string IconPath => "Sprites/Effects/surprise.png";
         public override bool IsProjectile => false;
+        protected override float Duration => 10f;
 
         private float _lifetime = 0f;
 

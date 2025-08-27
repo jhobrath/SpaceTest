@@ -1,10 +1,6 @@
 ﻿using Raylib_cs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Services
 {
@@ -26,6 +22,7 @@ namespace GalagaFighter.Core.Services
         public bool IsDown { get; set; } = false;
         public float HeldDuration { get; set; } = 0f;
         public bool WasReleased { get; set; } = false;
+        public bool IsDoublePressed { get; set; } = false;
 
         public static implicit operator bool(ButtonState state)
         {
@@ -39,7 +36,8 @@ namespace GalagaFighter.Core.Services
                 IsPressed = false,
                 IsDown = val,
                 HeldDuration = 0f,
-                WasReleased = false
+                WasReleased = false,
+                IsDoublePressed = false
             };
         }
     }
@@ -60,129 +58,127 @@ namespace GalagaFighter.Core.Services
         }
     }
 
+    // Consolidated button tracking data
+    internal class ButtonData
+    {
+        public float HeldDuration { get; set; } = 0f;
+        public bool WasReleased { get; set; } = false;
+        public bool IsPressed { get; set; } = false;
+        public bool IsDoublePressed { get; set; } = false;
+        public float LastPressTime { get; set; } = -1f;
+        public int PressCount { get; set; } = 0;
+        
+        private const float DOUBLE_PRESS_WINDOW = 0.3f; // 300ms window for double press
+        
+        public void Update(bool isDown, float frameTime, float currentTime)
+        {
+            bool wasDown = HeldDuration > 0f;
+            
+            if (isDown)
+            {
+                if (!wasDown) // Just pressed
+                {
+                    IsPressed = true;
+                    
+                    // Check for double press
+                    if (currentTime - LastPressTime <= DOUBLE_PRESS_WINDOW)
+                    {
+                        PressCount++;
+                        if (PressCount >= 2)
+                        {
+                            IsDoublePressed = true;
+                            PressCount = 0; // Reset after registering double press
+                        }
+                    }
+                    else
+                    {
+                        PressCount = 1; // Start new press sequence
+                    }
+                    
+                    LastPressTime = currentTime;
+                }
+                else
+                {
+                    IsPressed = false;
+                    IsDoublePressed = false;
+                }
+                
+                HeldDuration += frameTime;
+                WasReleased = false;
+            }
+            else
+            {
+                if (wasDown) // Just released
+                {
+                    WasReleased = true;
+                }
+                else
+                {
+                    WasReleased = false;
+                }
+                
+                IsPressed = false;
+                IsDoublePressed = false;
+                HeldDuration = 0f;
+                
+                // Reset double press detection after window expires
+                if (currentTime - LastPressTime > DOUBLE_PRESS_WINDOW)
+                {
+                    PressCount = 0;
+                }
+            }
+        }
+        
+        public ButtonState ToButtonState()
+        {
+            return new ButtonState
+            {
+                IsPressed = IsPressed,
+                IsDown = HeldDuration > 0f,
+                HeldDuration = HeldDuration,
+                WasReleased = WasReleased,
+                IsDoublePressed = IsDoublePressed
+            };
+        }
+    }
+
+    // Player input data consolidated into single structure
+    internal class PlayerInputData
+    {
+        public KeyMappings Mappings { get; set; }
+        public ButtonData MoveLeft { get; set; } = new();
+        public ButtonData MoveRight { get; set; } = new();
+        public ButtonData Shoot { get; set; } = new();
+        public ButtonData Switch { get; set; } = new();
+    }
 
     public class InputService : IInputService
     {
-        private Dictionary<Guid, KeyMappings> _mappings = [];
-        private Dictionary<Guid, float> _movingLeftDuration = [];
-        private Dictionary<Guid, float> _movingRightDuration = [];
-        private Dictionary<Guid, float> _shootingDuration = [];
-        private Dictionary<Guid, float> _switchingDuration = [];
-
-        private Dictionary<Guid, bool> _rightWasReleased = [];
-        private Dictionary<Guid, bool> _leftWasReleased = [];
-        private Dictionary<Guid, bool> _shootWasReleased = [];
-        private Dictionary<Guid, bool> _switchWasReleased = [];
-        public InputService()
-        {
-        }
+        private readonly Dictionary<Guid, PlayerInputData> _players = new();
+        private float _gameTime = 0f;
 
         public void AddPlayer(Guid owner, KeyMappings mappings)
         {
-            _mappings.Add(owner, mappings);
-            _movingLeftDuration.Add(owner, 0f);
-            _movingRightDuration.Add(owner, 0f);
-            _shootingDuration.Add(owner, 0f);
-            _switchingDuration.Add(owner, 0f);
-            _rightWasReleased.Add(owner, false);
-            _leftWasReleased.Add(owner, false);
-            _shootWasReleased.Add(owner, false);
-            _switchWasReleased.Add(owner, false);
+            _players[owner] = new PlayerInputData { Mappings = mappings };
         }
-
-        public ButtonState GetMoveRight(Guid owner) => GetButton(_mappings[owner].MoveRight, _movingRightDuration[owner], _rightWasReleased[owner]);
-        public ButtonState GetMoveLeft(Guid owner) => GetButton(_mappings[owner].MoveLeft, _movingLeftDuration[owner], _leftWasReleased[owner]);
-        public ButtonState GetShoot(Guid owner) => GetButton(_mappings[owner].Shoot, _shootingDuration[owner], _shootWasReleased[owner]);
-        public ButtonState GetSwitch(Guid owner) => GetButton(_mappings[owner].Switch, _switchingDuration[owner], _switchWasReleased[owner]);
 
         public void Update()
         {
-            foreach(var mapping in _mappings)
-            {
-                UpdateMovingLeft(mapping.Key);
-                UpdateMovingRight(mapping.Key);
-                UpdateIsShooting(mapping.Key);
-                UpdateIsSwitching(mapping.Key);
-            }
-        }
-
-        private ButtonState GetButton(KeyboardKey key, float duration, bool wasReleased)
-        {
             var frameTime = Raylib.GetFrameTime();
-            var state = new ButtonState
+            _gameTime += frameTime;
+
+            foreach (var player in _players.Values)
             {
-                HeldDuration = duration,
-                IsDown = Raylib.IsKeyDown(key),
-                IsPressed = Math.Abs(duration - frameTime) < .001,
-                WasReleased = wasReleased
-            };
-
-            return state;
-        }
-
-        public void UpdateMovingLeft(Guid owner)
-        {
-            if (!_mappings.TryGetValue(owner, out KeyMappings? mappings))
-                return;
-
-            var isMovingLeft = Raylib.IsKeyDown(mappings.MoveLeft);
-
-
-            if (!isMovingLeft)
-            {
-                _leftWasReleased[owner] = _movingLeftDuration[owner] != 0f;
-                _movingLeftDuration[owner] = 0f;
+                player.MoveLeft.Update(Raylib.IsKeyDown(player.Mappings.MoveLeft), frameTime, _gameTime);
+                player.MoveRight.Update(Raylib.IsKeyDown(player.Mappings.MoveRight), frameTime, _gameTime);
+                player.Shoot.Update(Raylib.IsKeyDown(player.Mappings.Shoot), frameTime, _gameTime);
+                player.Switch.Update(Raylib.IsKeyDown(player.Mappings.Switch), frameTime, _gameTime);
             }
-            else
-                _movingLeftDuration[owner] += Raylib.GetFrameTime();
         }
 
-        public void UpdateMovingRight(Guid owner)
-        {
-            if (!_mappings.TryGetValue(owner, out KeyMappings? mappings))
-                return;
-
-            var _isMovingRight = Raylib.IsKeyDown(mappings.MoveRight);
-
-            if (!_isMovingRight)
-            {
-                _rightWasReleased[owner] = _movingRightDuration[owner] != 0f;
-                _movingRightDuration[owner] = 0f;
-            }
-            else
-                _movingRightDuration[owner] += Raylib.GetFrameTime();
-        }
-
-        public void UpdateIsShooting(Guid owner)
-        {
-            if (!_mappings.TryGetValue(owner, out KeyMappings? mappings))
-                return;
-
-            var isShooting = Raylib.IsKeyDown(mappings.Shoot);
-
-            if (!isShooting)
-            {
-                _shootWasReleased[owner] = _shootingDuration[owner] != 0f;
-                _shootingDuration[owner] = 0f;
-            }
-            else
-                _shootingDuration[owner] += Raylib.GetFrameTime();
-        }
-
-        public void UpdateIsSwitching(Guid owner)
-        {
-            if (!_mappings.TryGetValue(owner, out KeyMappings? mappings))
-                return;
-
-            var isSwitching = Raylib.IsKeyDown(mappings.Switch);
-
-            if (!isSwitching)
-            {
-                _switchWasReleased[owner] = _switchingDuration[owner] != 0f;
-                _switchingDuration[owner] = 0f;
-            }
-            else
-                _switchingDuration[owner] += Raylib.GetFrameTime();
-        }
+        public ButtonState GetMoveLeft(Guid owner) => _players[owner].MoveLeft.ToButtonState();
+        public ButtonState GetMoveRight(Guid owner) => _players[owner].MoveRight.ToButtonState();
+        public ButtonState GetShoot(Guid owner) => _players[owner].Shoot.ToButtonState();
+        public ButtonState GetSwitch(Guid owner) => _players[owner].Switch.ToButtonState();
     }
 }

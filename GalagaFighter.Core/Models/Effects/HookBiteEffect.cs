@@ -7,6 +7,7 @@ namespace GalagaFighter.Core.Models.Effects
     public class HookBiteEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/hookbite.png";
+        protected override float Duration => 10f;
 
         public override void Apply(EffectModifiers modifiers)
         {

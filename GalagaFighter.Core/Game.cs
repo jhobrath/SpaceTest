@@ -232,18 +232,19 @@ namespace GalagaFighter.Core
 
                 var effectManager = _effectManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect(color));
-                if(player == _player2)
-                    effectManager.AddEffect(new DefensiveDuckEffect());
 
-                //var effect = parts[1];
-                //if (effect == "SurpriseShot")
-                //    effectManager.AddEffect(new SurpriseShotEffect());
-                //else if (effect == "Splitter")
-                //    effectManager.AddEffect(new SplitterEffect());
-                //else if (effect == "Ricochet")
-                //    effectManager.AddEffect(new RicochetEffect());
-                //else if(effect == "TimedBarrage")
-                //    effectManager.AddEffect(new TimedBarrageEffect());
+
+                var effect = parts[1];
+                if (effect == "SurpriseShot")
+                    player.OffensiveAugment = () => new SurpriseShotEffect();
+                else if (effect == "Splitter")
+                    player.OffensiveAugment = () => new SplitterEffect();
+                else if (effect == "Ricochet")
+                    player.OffensiveAugment = () => new RicochetEffect();
+                else if(effect == "TimedBarrage")
+                    player.OffensiveAugment = () => new TimedBarrageEffect();
+
+                player.DefensiveAugment = () => new DefensiveDuckEffect();
             }
         }
 

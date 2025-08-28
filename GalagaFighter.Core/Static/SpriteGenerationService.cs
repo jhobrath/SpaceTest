@@ -183,26 +183,53 @@ namespace GalagaFighter.Core.Static
         public static Texture2D GenerateMagnetShieldSprite(int width = 200, int height = 20)
         {
             RenderTexture2D renderTexture = Raylib.LoadRenderTexture(width, height);
-            
             Raylib.BeginTextureMode(renderTexture);
             Raylib.ClearBackground(Color.Blank); // Transparent background
             
-            // Draw a simple parabolic curve - center extends farthest from ship
+            // --- MAIN SHIELD ARC ---
             for (int x = 0; x < width; x++)
             {
-                float progress = (float)x / width; // 0 to 1
-                
-                // Simple parabolic curve: center is farthest from ship (at TOP now)
-                float curve = 1f - (progress - 0.5f) * (progress - 0.5f) * 4f; // Parabola, max at center
-                int y = (int)(curve * (height - 1)); // Center at TOP, edges at bottom
-                
-                // Draw the shield curve
-                for (int thickness = 0; thickness < 3 && y + thickness < height; thickness++)
+                float progress = (float)x / width;
+                float curve = 1f - (progress - 0.5f) * (progress - 0.5f) * 4f;
+                int baseY = (int)(curve * (height - 6));
+                for (int thickness = 0; thickness < 6; thickness++)
                 {
-                    Raylib.DrawPixel(x, y + thickness, Color.White);
+                    int y = baseY + thickness;
+                    if (y < height)
+                    {
+                        Color shieldColor;
+                        if (thickness <= 1)
+                            shieldColor = new Color(255, 255, 255, 255);
+                        else if (thickness <= 3)
+                            shieldColor = new Color(0, 200, 255, 255);
+                        else
+                            shieldColor = new Color(0, 100, 200, 180);
+                        Raylib.DrawPixel(x, y, shieldColor);
+                    }
                 }
             }
-            
+            // Edge pillars
+            for (int edge = 0; edge < 4; edge++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    float edgeIntensity = 1f - (float)y / height;
+                    int alpha = (int)(200 * edgeIntensity);
+                    Color leftEdge = new Color(0, 150, 255, alpha);
+                    Raylib.DrawPixel(edge, y, leftEdge);
+                    Raylib.DrawPixel(width - 1 - edge, y, leftEdge);
+                }
+            }
+            // Energy nodes at quarter points
+            for (int node = 1; node <= 3; node++)
+            {
+                int nodeX = (width / 4) * node;
+                float nodeProgress = (float)nodeX / width;
+                float nodeCurve = 1f - (nodeProgress - 0.5f) * (nodeProgress - 0.5f) * 4f;
+                int nodeBaseY = (int)(nodeCurve * (height - 6));
+                if (nodeBaseY + 1 < height)
+                    Raylib.DrawPixel(nodeX, nodeBaseY + 1, new Color(255, 255, 255, 255));
+            }
             Raylib.EndTextureMode();
             return renderTexture.Texture;
         }

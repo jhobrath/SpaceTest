@@ -39,6 +39,22 @@ namespace GalagaFighter.Core.Handlers.Players
             DrawShoot(player, modifiers, playerShootState);
             DrawMove(modifiers, player);
             DrawPlayer(player, modifiers);
+
+            foreach(var decoration in modifiers.Decorations?.Other ?? new List<SpriteDecoration>())
+            {
+                // Apply rotation transformation to the offset
+                Vector2 originalOffset = decoration.Offset;
+                float rotationRadians = player.Rotation * (float)Math.PI / 180f;
+                float cos = (float)Math.Cos(rotationRadians);
+                float sin = (float)Math.Sin(rotationRadians);
+                
+                Vector2 rotatedOffset = new Vector2(
+                    originalOffset.X * cos - originalOffset.Y * sin,
+                    originalOffset.X * sin + originalOffset.Y * cos
+                );
+                
+                decoration.Sprite.Draw(player.Center + rotatedOffset, player.Rotation, decoration.Size!.Value.X, decoration.Size!.Value.Y, Color.White);
+            }
         }
 
         private void DrawPlayer(Player player, EffectModifiers modifiers)

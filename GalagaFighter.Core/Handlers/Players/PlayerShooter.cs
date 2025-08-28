@@ -69,7 +69,7 @@ namespace GalagaFighter.Core.Handlers.Players
                     AudioService.PlayMagnetSound();
 
                 _magnetProjectileService.Magnetize(player);
-                return PlayerShootState.Magnet;
+                return PlayerShootState.Magnet; 
             }
 
             if (_lastProjectile != null && (_lastProjectile?.Modifiers.WindUpDuration ?? 0f) > 0f)

@@ -17,6 +17,14 @@ namespace GalagaFighter.Core
         public SpriteDecoration? WindUpRight { get => this.GetValueOrDefault(nameof(WindUpRight)); set => this[nameof(WindUpRight)] = value; }
         public SpriteDecoration? WindUpBoth { get => this.GetValueOrDefault(nameof(WindUpBoth)); set => this[nameof(WindUpBoth)] = value; }
         public SpriteDecoration? Move { get => this.GetValueOrDefault(nameof(Move)); set => this[nameof(Move)] = value; }
+
+        public List<SpriteDecoration> Other => this.Where(kv => 
+            kv.Key != nameof(ShootLeft) && kv.Key != nameof(ShootRight) && kv.Key != nameof(ShootBoth) &&
+            kv.Key != nameof(WindUpLeft) && kv.Key != nameof(WindUpRight) && kv.Key != nameof(WindUpBoth) &&
+            kv.Key != nameof(Move))
+            .Select(kv => kv.Value)
+            .Where(v => v != null)
+            .ToList()!;
     }
 
     public class SpriteDecoration

@@ -12,6 +12,6 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Display.SizeMultiplier = new System.Numerics.Vector2(.85f, .85f);
             modifiers.Display.Opacity = .6f;
             modifiers.Untouchable = true;
-        }
+        }   
     }
 }

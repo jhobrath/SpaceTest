@@ -1,4 +1,5 @@
 using GalagaFighter.Core.Handlers.Players;
+using GalagaFighter.Core.Handlers.Projectiles;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
@@ -23,13 +24,14 @@ namespace GalagaFighter.Core.Controllers
         private readonly IPlayerDrawer _playerDrawer;
         private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly IPlayerSpender _playerSpender;
+        private readonly IRepulsionProjectileService _repulsionProjectileService;
 
         // Per-player instance state (no more dictionaries!)
         private PlayerShootState _shootState = PlayerShootState.Idle;
 
         public PlayerController(IPlayerMover playerMover, IPlayerShooter playerShooter, IInputService inputService,
-            IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer, 
-            IPlayerManagerFactory playerManagerFactory, IPlayerSpender playerSpender)
+            IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer,
+            IPlayerManagerFactory playerManagerFactory, IPlayerSpender playerSpender, IRepulsionProjectileService repulsionProjectileService)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;
@@ -38,6 +40,7 @@ namespace GalagaFighter.Core.Controllers
             _playerDrawer = playerDrawer;
             _playerManagerFactory = playerManagerFactory;
             _playerSpender = playerSpender;
+            _repulsionProjectileService = repulsionProjectileService;
         }
 
         public void Update(Game game, Player player)
@@ -55,6 +58,8 @@ namespace GalagaFighter.Core.Controllers
 
             _playerShooter.ShootOneTime(player, modifiers);
 
+            if (modifiers.IsRepulsive)
+                _repulsionProjectileService.Repulse(player);
             //var switchButton = _inputService.GetSwitch(player.Id);
             //if (switchButton.IsPressed)
             //    effectManager.SwitchEffect();

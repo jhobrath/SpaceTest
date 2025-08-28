@@ -180,66 +180,31 @@ namespace GalagaFighter.Core.Static
             return renderTexture.Texture;
         }
         
-        /*
-        public static Texture2D CreatePowerUpSprite<T>(T powerUpType, int width = 20, int height = 20)
-            where T : PowerUp
+        public static Texture2D GenerateMagnetShieldSprite(int width = 200, int height = 20)
         {
             RenderTexture2D renderTexture = Raylib.LoadRenderTexture(width, height);
-
+            
             Raylib.BeginTextureMode(renderTexture);
-            Raylib.ClearBackground(Color.Blank);
-
-            Color baseColor = Color.White;
-            if (typeof(T) == typeof(FireRatePowerUp))
-                baseColor = Color.White;
-            else if (typeof(T) == typeof(IceShotPowerUp))
-                baseColor = Color.Blue;
-            else if (typeof(T) == typeof(WallPowerUp))
-                baseColor = Color.Brown;
-            else if (typeof(T) == typeof(NinjaPowerUp))
-                baseColor = Color.DarkGray;
-            else
-                baseColor = Color.White;
-
-                // Draw a rotating diamond shape
-                Vector2 center = new Vector2(width / 2, height / 2);
-            float radius = width / 3;
-
-            Vector2[] points = new Vector2[4]
-            {
-                new Vector2(center.X, center.Y - radius),     // Top
-                new Vector2(center.X + radius, center.Y),     // Right
-                new Vector2(center.X, center.Y + radius),     // Bottom
-                new Vector2(center.X - radius, center.Y)      // Left
-            };
+            Raylib.ClearBackground(Color.Blank); // Transparent background
             
-            // Draw diamond
-            for (int i = 0; i < 4; i++)
+            // Draw a simple parabolic curve - center extends farthest from ship
+            for (int x = 0; x < width; x++)
             {
-                int next = (i + 1) % 4;
-                Raylib.DrawTriangle(center, points[i], points[next], baseColor);
+                float progress = (float)x / width; // 0 to 1
+                
+                // Simple parabolic curve: center is farthest from ship (at TOP now)
+                float curve = 1f - (progress - 0.5f) * (progress - 0.5f) * 4f; // Parabola, max at center
+                int y = (int)(curve * (height - 1)); // Center at TOP, edges at bottom
+                
+                // Draw the shield curve
+                for (int thickness = 0; thickness < 3 && y + thickness < height; thickness++)
+                {
+                    Raylib.DrawPixel(x, y + thickness, Color.White);
+                }
             }
-            
-            // Add inner glow
-            Raylib.DrawCircle((int)center.X, (int)center.Y, radius / 2, Color.White);
-            
-            // Add type-specific symbol
-            //switch (type)
-            //{
-            //    case PowerUpFactory.FireRate: 
-            //        Raylib.DrawText("B", (int)center.X - 3, (int)center.Y - 4, 8, Color.Black);
-            //        break;
-            //    case PowerUpFactory.IceShot:
-            //        Raylib.DrawText("I", (int)center.X - 2, (int)center.Y - 4, 8, Color.Black);
-            //        break;
-            //    case PowerUpFactory.Wall:
-            //        Raylib.DrawText("W", (int)center.X - 4, (int)center.Y - 4, 8, Color.Black);
-            //        break;
-            //}
             
             Raylib.EndTextureMode();
             return renderTexture.Texture;
         }
-        */
     }
 }

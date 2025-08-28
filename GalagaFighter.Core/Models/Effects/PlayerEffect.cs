@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
+using System.Collections.Generic;
 
 namespace GalagaFighter.Core.Models.Effects
 {
@@ -15,6 +16,7 @@ namespace GalagaFighter.Core.Models.Effects
         private float _remainingTime;
         private int _remainingBullets;
 
+        public virtual List<string> DecorationKeys => new List<string>();
 
         public PlayerEffect()
         {

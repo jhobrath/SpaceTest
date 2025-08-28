@@ -7,7 +7,7 @@ namespace GalagaFighter.Core.Handlers.Collisions
     public class ContactCollisionDetector
     {
         // Cache for rotated percentage vertices to avoid recalculating same rotations
-        private static readonly Dictionary<(float rotation, int verticesHash), Vector2[]> _rotationCache = new();
+        private static readonly Dictionary<(float rotation, int verticesHash), Vector2[]> _rotationCache = [];
 
         public bool HasCollision(GameObject obj1, GameObject obj2)
         {

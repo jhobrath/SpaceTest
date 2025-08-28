@@ -1,15 +1,11 @@
 ﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Effects.Statuses;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
-using Raylib_cs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Projectiles
 {
@@ -22,7 +18,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 BaseSize => _baseSpeed;
         public override int BaseDamage => 50;
 
-        public override Vector2 SpawnOffset => new Vector2(-80, 34);
+        public override Vector2 SpawnOffset => new(-80, 34);
 
         public ExplosiveProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)

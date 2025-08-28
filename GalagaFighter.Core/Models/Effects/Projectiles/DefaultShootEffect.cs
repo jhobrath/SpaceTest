@@ -3,7 +3,7 @@ using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class DefaultShootEffect : PlayerEffect
     {

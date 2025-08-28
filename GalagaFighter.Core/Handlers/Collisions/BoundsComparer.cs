@@ -21,11 +21,11 @@ namespace GalagaFighter.Core.Handlers.Collisions
             // Check multiple points of the rectangle for better accuracy
             var rectPoints = new Vector2[]
             {
-                new Vector2(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f), // Center
-                new Vector2(rect.X, rect.Y), // Top-left
-                new Vector2(rect.X + rect.Width, rect.Y), // Top-right
-                new Vector2(rect.X, rect.Y + rect.Height), // Bottom-left
-                new Vector2(rect.X + rect.Width, rect.Y + rect.Height) // Bottom-right
+                new(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f), // Center
+                new(rect.X, rect.Y), // Top-left
+                new(rect.X + rect.Width, rect.Y), // Top-right
+                new(rect.X, rect.Y + rect.Height), // Bottom-left
+                new(rect.X + rect.Width, rect.Y + rect.Height) // Bottom-right
             };
 
             foreach (var point in rectPoints)

@@ -2,7 +2,7 @@
 using GalagaFighter.Core.Models.Projectiles;
 using System;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class HookBiteEffect : PlayerEffect
     {

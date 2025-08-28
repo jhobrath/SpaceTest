@@ -16,8 +16,8 @@ namespace GalagaFighter.Core.Services
     public class PlayerEffectManagerFactory : IPlayerManagerFactory
     {
         // Store the mapping between players and their effect managers
-        protected readonly Dictionary<Guid, IPlayerEffectManager> _playerEffectManagers = new();
-        protected readonly Dictionary<Guid, IPlayerResourceManager> _playerResourceManagers = new();
+        protected readonly Dictionary<Guid, IPlayerEffectManager> _playerEffectManagers = [];
+        protected readonly Dictionary<Guid, IPlayerResourceManager> _playerResourceManagers = [];
 
         public IPlayerEffectManager GetEffectManager(Player player)
         {

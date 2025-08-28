@@ -2,10 +2,9 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
-using System;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class IceShotEffect : PlayerEffect
     {
@@ -14,7 +13,7 @@ namespace GalagaFighter.Core.Models.Effects
         private readonly SpriteWrapper _sprite;
         protected override float Duration => 10f;
 
-        private SpriteDecorations _decorations = new SpriteDecorations();
+        private SpriteDecorations _decorations = [];
 
         public IceShotEffect()
         {

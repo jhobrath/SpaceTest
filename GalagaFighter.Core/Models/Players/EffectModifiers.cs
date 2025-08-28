@@ -1,7 +1,4 @@
-﻿using GalagaFighter.Core.Models.Projectiles;
-using System;
-
-namespace GalagaFighter.Core.Models.Players
+﻿namespace GalagaFighter.Core.Models.Players
 {
     public class EffectModifiers
     {

@@ -1,12 +1,6 @@
-﻿using GalagaFighter.Core.Controllers;
-using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Models.Projectiles;
-using GalagaFighter.Core.Services;
-using Raylib_cs;
-using System;
-using System.Numerics;
+﻿using GalagaFighter.Core.Models.Players;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Offensive
 {
     public class RicochetEffect : PlayerEffect
     {

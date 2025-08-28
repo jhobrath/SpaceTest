@@ -215,7 +215,7 @@ namespace GalagaFighter.Core.Static
                 {
                     float edgeIntensity = 1f - (float)y / height;
                     int alpha = (int)(200 * edgeIntensity);
-                    Color leftEdge = new Color(0, 150, 255, alpha);
+                    Color leftEdge = new(0, 150, 255, alpha);
                     Raylib.DrawPixel(edge, y, leftEdge);
                     Raylib.DrawPixel(width - 1 - edge, y, leftEdge);
                 }

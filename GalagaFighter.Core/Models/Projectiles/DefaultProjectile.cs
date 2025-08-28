@@ -1,7 +1,6 @@
 using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
@@ -17,7 +16,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => 5;
-        public override Vector2 SpawnOffset => new Vector2(-60, 42);
+        public override Vector2 SpawnOffset => new(-60, 42);
 
         public DefaultProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers, Color? color)
             : base(controller, owner, GetSprite(_baseSize, color), initialPosition, _baseSize, _baseSpeed, modifiers)
@@ -32,10 +31,10 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            return new List<Collision>
-            {
+            return
+            [
                 new DefaultCollision(owner, initialPosition, initialSize, initialSpeed)
-            };
+            ];
         }
     }
 }

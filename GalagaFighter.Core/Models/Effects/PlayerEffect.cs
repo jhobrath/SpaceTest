@@ -16,7 +16,7 @@ namespace GalagaFighter.Core.Models.Effects
         private float _remainingTime;
         private int _remainingBullets;
 
-        public virtual List<string> DecorationKeys => new List<string>();
+        public virtual List<string> DecorationKeys => [];
 
         public PlayerEffect()
         {

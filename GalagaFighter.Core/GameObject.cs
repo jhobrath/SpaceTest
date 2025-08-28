@@ -7,7 +7,7 @@ namespace GalagaFighter.Core
 {
     public abstract class GameObject
     {
-        public Vector2 Center => new Vector2(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f);
+        public Vector2 Center => new(Rect.X + Rect.Width / 2f, Rect.Y + Rect.Height / 2f);
         public Vector2 Position => Rect.Position;
 
         public Guid Id { get; set; } = Guid.NewGuid();

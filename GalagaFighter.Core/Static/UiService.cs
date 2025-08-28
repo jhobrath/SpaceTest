@@ -1,10 +1,10 @@
 ﻿using GalagaFighter.Core.Handlers.Players;
-using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Effects.Projectiles;
+using GalagaFighter.Core.Models.Effects.Statuses;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 

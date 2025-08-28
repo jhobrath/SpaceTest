@@ -1,12 +1,9 @@
 ﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
-using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Models.Effects.Statuses;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.PowerUps
 {

@@ -1,19 +1,17 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Static;
-using Raylib_cs;
-using System;
 using System.Collections.Generic;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class DefensiveBurstEffect : PlayerEffect
+    public class BurstEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/defensive_duck.png";
         protected override float Duration => 1f;
-        public override List<string> DecorationKeys => new List<string> { "RepulseShield" };
+        public override List<string> DecorationKeys => ["RepulseShield"];
 
         private readonly SpriteDecoration _sprite;
-        public DefensiveBurstEffect()
+        public BurstEffect()
         {
             _sprite = new SpriteDecoration(
                 SpriteGenerationService.CreateAnimatedMagnetShieldSprite()

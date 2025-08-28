@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Effects.Projectiles;
 using GalagaFighter.Core.Models.Players;
 using Raylib_cs;
 using System;
@@ -26,7 +27,7 @@ namespace GalagaFighter.Core.Handlers.Players
         List<PlayerEffect> IExposedPlayerEffectManager.Effects => _effects; 
         PlayerEffect IExposedPlayerEffectManager.SelectedProjectile => _selectedProjectile;
 
-        private EffectModifiers _modifiers = new EffectModifiers();
+        private EffectModifiers _modifiers = new();
         private PlayerEffect _selectedProjectile = new DefaultShootEffect();
         private readonly List<PlayerEffect> _effects = [];
 
@@ -132,7 +133,7 @@ namespace GalagaFighter.Core.Handlers.Players
                 Stats = new PlayerStats(),
                 Display = new PlayerDisplay() {  },
                 Projectile = new PlayerProjectile(),
-                Decorations = new SpriteDecorations()
+                Decorations = []
             };
 
             foreach (var effect in _effects)

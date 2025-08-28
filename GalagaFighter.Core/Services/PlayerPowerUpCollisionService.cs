@@ -1,11 +1,8 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.PowerUps;
-using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Services
 {

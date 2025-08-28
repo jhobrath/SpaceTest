@@ -1,8 +1,8 @@
 ﻿using GalagaFighter.Core.Models.Players;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class DefensiveDuckEffect : PlayerEffect
+    public class DuckEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/defensive_duck.png";
 

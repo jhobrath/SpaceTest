@@ -1,6 +1,6 @@
 using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
-using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Models.Effects.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Numerics;

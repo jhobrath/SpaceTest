@@ -3,11 +3,10 @@ using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class MudShotEffect : PlayerEffect
     {

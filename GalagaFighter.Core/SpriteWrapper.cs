@@ -1,4 +1,3 @@
-using GalagaFighter;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
@@ -120,7 +119,7 @@ namespace GalagaFighter.Core
         private void DrawAnimated(Vector2 position, float rotation, float width, float height, Color? color = null)
         {
             float frameWidth = Texture.Width / (float)_frameCount;
-            Rectangle source = new Rectangle(frameWidth * _currentFrame, 0, frameWidth, Texture.Height);
+            Rectangle source = new(frameWidth * _currentFrame, 0, frameWidth, Texture.Height);
             Raylib.DrawTexturePro(
                 Texture,
                 source,

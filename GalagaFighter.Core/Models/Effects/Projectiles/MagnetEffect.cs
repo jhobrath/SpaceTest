@@ -1,13 +1,7 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class MagnetEffect : PlayerEffect
     {

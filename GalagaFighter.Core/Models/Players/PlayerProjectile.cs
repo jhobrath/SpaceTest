@@ -1,12 +1,9 @@
 ﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Projectiles;
-using GalagaFighter.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
 
 namespace GalagaFighter.Core.Models.Players
 {

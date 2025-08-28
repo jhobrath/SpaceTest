@@ -2,10 +2,9 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
-using System;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class NinjaShotEffect : PlayerEffect
     {

@@ -3,10 +3,7 @@ using GalagaFighter.Core.Controllers;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Services
 {
@@ -46,8 +43,8 @@ namespace GalagaFighter.Core.Services
             _powerUpControllerFactory = powerUpControllerFactory;
         }
 
-        private readonly static List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes = new List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>>
-        {
+        private readonly static List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes =
+        [
             //(up,o,r,f) => new FireRatePowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
             //(up,o,r,f) => new WoodShotPowerUp(up,o,r.Position,r.Size,f),
@@ -56,7 +53,7 @@ namespace GalagaFighter.Core.Services
             //(up,o,r,f) => new DoubleShotPowerUp(up,o, r.Position, r.Size, f),
             //(up,o,r,f) => new MagnetPowerUp(up,o, r.Position, r.Size, f),
             (up,o,r,f) => new MudShotPowerUp(up,o, r.Position, r.Size, f)
-        };
+        ];
 
         public void Roll()
         {

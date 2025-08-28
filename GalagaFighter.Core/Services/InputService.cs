@@ -154,7 +154,7 @@ namespace GalagaFighter.Core.Services
 
     public class InputService : IInputService
     {
-        private readonly Dictionary<Guid, PlayerInputData> _players = new();
+        private readonly Dictionary<Guid, PlayerInputData> _players = [];
         private float _gameTime = 0f;
 
         public void AddPlayer(Guid owner, KeyMappings mappings)

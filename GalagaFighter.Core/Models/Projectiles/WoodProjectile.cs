@@ -1,7 +1,6 @@
 using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => 0;
-        public override Vector2 SpawnOffset => new Vector2(-40, 45);
+        public override Vector2 SpawnOffset => new(-40, 45);
 
         public bool Released { get; set; } = false;
         public bool Planked { get; set; } = false;
@@ -34,10 +33,10 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            return new List<Collision>
-            {
+            return
+            [
                 new DefaultCollision(owner, initialPosition, initialSize, initialSpeed)
-            };
+            ];
         }
     }
 }

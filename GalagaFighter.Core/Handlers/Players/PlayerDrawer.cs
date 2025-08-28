@@ -1,5 +1,4 @@
 ﻿using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
@@ -33,14 +32,14 @@ namespace GalagaFighter.Core.Handlers.Players
             _lastShotLeft[player] = playerShootState == PlayerShootState.ShootLeft ? 0f : _lastShotLeft.GetValueOrDefault(player, 100f) + frameTime;
             _lastShotRight[player] = playerShootState == PlayerShootState.ShootRight ? 0f : _lastShotRight.GetValueOrDefault(player, 100f) + frameTime;
 
-            foreach (var decoration in modifiers.Decorations ?? new SpriteDecorations())
+            foreach (var decoration in modifiers.Decorations ?? [])
                 decoration.Value?.Sprite.Update(frameTime);
 
             DrawShoot(player, modifiers, playerShootState);
             DrawMove(modifiers, player);
             DrawPlayer(player, modifiers);
 
-            foreach(var decoration in modifiers.Decorations?.Other ?? new List<SpriteDecoration>())
+            foreach(var decoration in modifiers.Decorations?.Other ?? [])
             {
                 // Apply rotation transformation to the offset
                 Vector2 originalOffset = decoration.Offset;
@@ -48,7 +47,7 @@ namespace GalagaFighter.Core.Handlers.Players
                 float cos = (float)Math.Cos(rotationRadians);
                 float sin = (float)Math.Sin(rotationRadians);
                 
-                Vector2 rotatedOffset = new Vector2(
+                Vector2 rotatedOffset = new(
                     originalOffset.X * cos - originalOffset.Y * sin,
                     originalOffset.X * sin + originalOffset.Y * cos
                 );

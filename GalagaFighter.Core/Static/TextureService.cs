@@ -5,7 +5,7 @@ namespace GalagaFighter.Core.Services
 {
     public static class TextureService
     {
-        public static Dictionary<string, Texture2D> _library = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, Texture2D> _library = [];
 
         public static Texture2D Get(string path)
         {
@@ -32,7 +32,7 @@ namespace GalagaFighter.Core.Services
             int frameWidth = texture.Width / frameCount;
             int frameHeight = texture.Height;
             Image image = Raylib.LoadImageFromTexture(texture);
-            Rectangle sourceRec = new Rectangle(frameWidth * frameIndex, 0, frameWidth, frameHeight);
+            Rectangle sourceRec = new(frameWidth * frameIndex, 0, frameWidth, frameHeight);
             Image frameImage = Raylib.ImageFromImage(image, sourceRec);
             Texture2D frameTexture = Raylib.LoadTextureFromImage(frameImage);
             Raylib.UnloadImage(image);

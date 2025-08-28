@@ -1,18 +1,14 @@
-﻿using GalagaFighter.Core.Models;
-using GalagaFighter.Core.Models.Effects;
-using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using GalagaFighter.Core.Handlers.Players;
+using GalagaFighter.Core.Models.Effects.Defensives;
+using GalagaFighter.Core.Models.Effects.Offensive;
+using GalagaFighter.Core.Models.Effects.Projectiles;
 
 namespace GalagaFighter.Core
 {
@@ -34,7 +30,7 @@ namespace GalagaFighter.Core
 
         private Player _player1;
         private Player _player2;
-        private static Random _random = new Random();
+        private static Random _random = new();
 
         // Services resolved from Registry
         private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
@@ -249,7 +245,7 @@ namespace GalagaFighter.Core
                 else if(effect == "TimedBarrage")
                     player.OffensiveAugment = () => new TimedBarrageEffect();
 
-                player.DefensiveAugment = () => new DefensiveBurstEffect();
+                player.DefensiveAugment = () => new BurstEffect();
             }
         }
 

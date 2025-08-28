@@ -1,11 +1,8 @@
 using GalagaFighter.Core.Handlers.Players;
 using GalagaFighter.Core.Handlers.Projectiles;
-using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
-using GalagaFighter.Core.Static;
 using Raylib_cs;
-using System;
 
 namespace GalagaFighter.Core.Controllers
 {

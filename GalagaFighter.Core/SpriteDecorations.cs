@@ -1,10 +1,7 @@
 ﻿using Raylib_cs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core
 {
@@ -30,7 +27,7 @@ namespace GalagaFighter.Core
     public class SpriteDecoration
     {
         public SpriteWrapper Sprite { get; set; }
-        public Vector2 Offset = new Vector2(0, 0);
+        public Vector2 Offset = new(0, 0);
         public Vector2? Size = new Vector2(0, 0);
 
         public SpriteDecoration(SpriteWrapper sprite) 

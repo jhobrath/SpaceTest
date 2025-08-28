@@ -2,13 +2,7 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
-using Raylib_cs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Handlers.Projectiles
 {

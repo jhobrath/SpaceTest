@@ -5,22 +5,19 @@ using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Projectiles
 {
     public class NinjaProjectile : Projectile
     {
-        private static readonly Vector2 _baseSpeed = new Vector2(1080f, 40f);
-        private static readonly Vector2 _baseSize = new Vector2(38.8f, 27.77f);
+        private static readonly Vector2 _baseSpeed = new(1080f, 40f);
+        private static readonly Vector2 _baseSize = new(38.8f, 27.77f);
         
         public override Vector2 BaseSpeed => _baseSpeed;
         public override Vector2 BaseSize => _baseSize;
         public override int BaseDamage => 7;
-        public override Vector2 SpawnOffset => new Vector2(-50, 15);
+        public override Vector2 SpawnOffset => new(-50, 15);
 
 
         public NinjaProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
@@ -40,10 +37,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             var collision = new BurstCollision(owner, initialPosition, initialSize, initialSpeed);
             collision.Color = collision.Color.ShiftHueForTexture(40f);
             collision.Color = collision.Color.Darken(.4f);
-            return new List<Collision>
-            {
+            return
+            [
                 collision
-            };
+            ];
         }
 
     }

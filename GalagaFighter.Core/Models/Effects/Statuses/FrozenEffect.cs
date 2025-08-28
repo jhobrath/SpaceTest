@@ -1,6 +1,6 @@
 ﻿using GalagaFighter.Core.Models.Players;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Statuses
 {
     public class FrozenEffect : PlayerEffect
     {

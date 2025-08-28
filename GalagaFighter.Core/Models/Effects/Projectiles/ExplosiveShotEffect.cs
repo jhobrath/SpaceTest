@@ -4,14 +4,10 @@ using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GalagaFighter.Core.Models.Effects
+namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class ExplosiveShotEffect : PlayerEffect
     {
@@ -42,7 +38,7 @@ namespace GalagaFighter.Core.Models.Effects
             modifiers.Projectile.DamageMultiplier *= Raylib.GetFrameTime();
             modifiers.Projectile.DeactivateOnCollision = false;
             modifiers.Projectile.RotationOffsetIncrement = 360f;
-            modifiers.Projectile.RotationOffsetMultiplier = (1/2f);
+            modifiers.Projectile.RotationOffsetMultiplier = 1/2f;
 
             modifiers.Projectile.Phases.Add(this, new List<float> { 1.45f, 2.25f });
             modifiers.Projectile.OnPhaseChange = HandlePhaseChange;

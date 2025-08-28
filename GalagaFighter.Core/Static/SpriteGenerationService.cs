@@ -233,5 +233,52 @@ namespace GalagaFighter.Core.Static
             Raylib.EndTextureMode();
             return renderTexture.Texture;
         }
+
+        public static SpriteWrapper CreateAnimatedMagnetShieldSprite(int frameCount = 24, float frameDuration = 0.05f, int width = 200, int height = 20)
+        {
+            return new SpriteWrapper(
+                (position, rotation, drawWidth, drawHeight, scale, frame) =>
+                {
+                    float pulse = 1f + 0.2f * (float)Math.Sin((frame / (float)frameCount) * Math.PI * 2);
+                    int arcHeight = (int)(height * scale * pulse);
+                    int arcWidth = (int)(width * scale);
+                    int yOffset = (int)(drawHeight / 2 - arcHeight / 2);
+                    int xOffset = (int)(drawWidth / 2 - arcWidth / 2);
+                    float radians = rotation * (float)Math.PI / 180f;
+                    float centerX = position.X;
+                    float centerY = position.Y;
+                    for (int x = 0; x < arcWidth; x++)
+                    {
+                        float progress = (float)x / arcWidth;
+                        float curve = ((progress - 0.5f) * (progress - 0.5f) * 4f) - 1f;
+                        int baseY = (int)(curve * (arcHeight - 10));
+                        for (int thickness = 0; thickness < 10; thickness++) // Thicker lines
+                        {
+                            int y = baseY + thickness + yOffset;
+                            int drawX = x + xOffset;
+                            float localX = drawX - drawWidth / 2f;
+                            float localY = y - drawHeight / 2f;
+                            float rotatedX = localX * (float)Math.Cos(radians) - localY * (float)Math.Sin(radians);
+                            float rotatedY = localX * (float)Math.Sin(radians) + localY * (float)Math.Cos(radians);
+                            int finalX = (int)(centerX + rotatedX);
+                            int finalY = (int)(centerY + rotatedY);
+                            if (finalX >= 0 && finalX < Raylib.GetScreenWidth() && finalY >= 0 && finalY < Raylib.GetScreenHeight())
+                            {
+                                Color shieldColor;
+                                if (thickness <= 2)
+                                    shieldColor = new Color(220, 40, 40, 255); // Less saturated red
+                                else if (thickness <= 6)
+                                    shieldColor = new Color(120, 30, 60, 200); // Muted dark red
+                                else
+                                    shieldColor = new Color(120, 180, 255, 230); // Silvery blue
+                                Raylib.DrawPixel(finalX, finalY, shieldColor);
+                            }
+                        }
+                    }
+                },
+                frameCount,
+                frameDuration
+            );
+        }
     }
 }

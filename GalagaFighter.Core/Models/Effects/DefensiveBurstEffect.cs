@@ -1,5 +1,7 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Static;
+using Raylib_cs;
+using System;
 using System.Collections.Generic;
 
 namespace GalagaFighter.Core.Models.Effects
@@ -13,9 +15,11 @@ namespace GalagaFighter.Core.Models.Effects
         private readonly SpriteDecoration _sprite;
         public DefensiveBurstEffect()
         {
-            _sprite = new SpriteDecoration(new SpriteWrapper(SpriteGenerationService.GenerateMagnetShieldSprite()))
+            _sprite = new SpriteDecoration(
+                SpriteGenerationService.CreateAnimatedMagnetShieldSprite()
+            )
             {
-                Offset = new System.Numerics.Vector2(0, -80), // Vertical ship offset - will be rotated based on player orientation
+                Offset = new System.Numerics.Vector2(0, -80),
                 Size = new System.Numerics.Vector2(200, 20)
             };
         }

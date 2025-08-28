@@ -126,6 +126,11 @@ namespace GalagaFighter.Core
             _player1.SetDrawPriority(0);
             _player2.SetDrawPriority(0);
 
+            _player1.DefensiveAugment = null;
+            _player1.OffensiveAugment = null;
+            _player2.DefensiveAugment = null;
+            _player2.OffensiveAugment = null;
+
 
 #if DEBUG
             GiveAllEffects(_player1);

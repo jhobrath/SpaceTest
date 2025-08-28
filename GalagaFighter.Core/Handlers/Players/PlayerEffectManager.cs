@@ -24,7 +24,7 @@ namespace GalagaFighter.Core.Handlers.Players
     public class PlayerEffectManager : IPlayerEffectManager, IExposedPlayerEffectManager
     {
         List<PlayerEffect> IExposedPlayerEffectManager.Effects => _effects; 
-        PlayerEffect IExposedPlayerEffectManager.SelectedProjectile => _selectedProjectile; 
+        PlayerEffect IExposedPlayerEffectManager.SelectedProjectile => _selectedProjectile;
 
         private EffectModifiers _modifiers = new EffectModifiers();
         private PlayerEffect _selectedProjectile = new DefaultShootEffect();

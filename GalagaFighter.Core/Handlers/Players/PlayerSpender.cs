@@ -14,6 +14,8 @@ namespace GalagaFighter.Core.Handlers.Players
         private readonly IInputService _inputService;
         private readonly IPlayerManagerFactory _playerManagerFactory;
 
+        private PlayerEffect? _lastDefensiveAugment = null;
+
         public PlayerSpender(IInputService inputService, IPlayerManagerFactory playerManagerFactory)
         {
             _playerManagerFactory = playerManagerFactory;
@@ -44,7 +46,10 @@ namespace GalagaFighter.Core.Handlers.Players
                 return;
 
             var switchPress = _inputService.GetSwitch(player.Id);
-            if (!switchPress.IsPressed)
+            if (!switchPress.IsDown)
+                return;
+
+            if (_lastDefensiveAugment?.IsActive ?? false)
                 return;
 
             var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
@@ -53,7 +58,8 @@ namespace GalagaFighter.Core.Handlers.Players
                 return;
 
             var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
-            effectManager.AddEffect(player.DefensiveAugment());
+            _lastDefensiveAugment = player.DefensiveAugment();
+            effectManager.AddEffect(_lastDefensiveAugment);
         }
     }
 }

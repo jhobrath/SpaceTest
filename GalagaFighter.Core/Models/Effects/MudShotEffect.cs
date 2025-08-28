@@ -51,10 +51,12 @@ namespace GalagaFighter.Core.Models.Effects
             { 
                 AudioService.PlayMudSplat();
                 // Transform into immobile mud splat
-                var mudSplatSprite = new SpriteWrapper(TextureService.Get("Sprites/Projectiles/mud_splat.png"), 3, 10f); // 10 second frame duration
-                mudSplatSprite.CurrentFrame = Game.Random.Next(0, 3); // Randomly pick frame 0, 1, or 2
+                int frameIndex = Game.Random.Next(0, 3); // Randomly pick frame 0, 1, or 2
+                var baseTexture = TextureService.Get("Sprites/Projectiles/mud_splat.png");
+                var mudSplatTexture = TextureService.GetFrame(baseTexture, 3, frameIndex); // Extract the frame as Texture2D
+                var mudSplatSprite = new SpriteWrapper(mudSplatTexture);
                 mudSplatSprite.Color = Raylib_cs.Color.White.ApplyAlpha(.8f);
-            
+                
                 projectile.Modifiers.Sprite = mudSplatSprite;
                 projectile.Modifiers.SizeMultiplier = new Vector2(3f,6f);   // Make it huge
                 projectile.Modifiers.SpeedMultiplier = 0f;   // Make it immobile

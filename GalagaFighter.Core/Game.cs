@@ -111,12 +111,12 @@ namespace GalagaFighter.Core
             var rect2 = new Rectangle(position2, shipSize);
 
             var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
-            var player2Mappings = new KeyMappings(KeyboardKey.Down, KeyboardKey.Up, KeyboardKey.Left, KeyboardKey.Right);
+            var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6);
 
             // 1. Construct players with their own controllers
             _player1 = new Player(_playerController1, rect1, true);
             _player2 = new Player(_playerController2, rect2, false);
-
+            
             _objectService.AddGameObject(_player1);
             _objectService.AddGameObject(_player2);
 
@@ -279,6 +279,19 @@ namespace GalagaFighter.Core
                 InitializePlayers();
                 if (_args.Length > 0)
                     InitializePlayersFromArgs(_args);
+            }
+
+            if(Raylib.IsKeyPressed(KeyboardKey.E))
+            {
+                var factory = Registry.Get<IPlayerManagerFactory>();
+                var effectManager = factory.GetEffectManager(_player1);
+                effectManager.SwitchEffect();
+            }
+            else if(Raylib.IsKeyPressed(KeyboardKey.Kp7))
+            {
+                var factory = Registry.Get<IPlayerManagerFactory>();
+                var effectManager = factory.GetEffectManager(_player2);
+                effectManager.SwitchEffect();
             }
         }
 

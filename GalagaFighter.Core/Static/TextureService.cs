@@ -19,5 +19,25 @@ namespace GalagaFighter.Core.Services
         {
             _library[path] = texture;
         }
+
+        public static SpriteWrapper GetFrame(string texturePath, int frameCount, int frameIndex)
+        {
+            var texture = Get(texturePath);
+            return new SpriteWrapper(texture, frameIndex, frameCount);
+        }
+
+        // Extract a single frame from a spritesheet as a new Texture2D
+        public static Texture2D GetFrame(Texture2D texture, int frameCount, int frameIndex)
+        {
+            int frameWidth = texture.Width / frameCount;
+            int frameHeight = texture.Height;
+            Image image = Raylib.LoadImageFromTexture(texture);
+            Rectangle sourceRec = new Rectangle(frameWidth * frameIndex, 0, frameWidth, frameHeight);
+            Image frameImage = Raylib.ImageFromImage(image, sourceRec);
+            Texture2D frameTexture = Raylib.LoadTextureFromImage(frameImage);
+            Raylib.UnloadImage(image);
+            Raylib.UnloadImage(frameImage);
+            return frameTexture;
+        }
     }
 }

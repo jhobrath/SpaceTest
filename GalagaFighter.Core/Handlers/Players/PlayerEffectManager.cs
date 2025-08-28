@@ -110,11 +110,13 @@ namespace GalagaFighter.Core.Handlers.Players
                             _modifiers.Decorations?.Remove(key);
 
                 _effects.RemoveAll(x => x.IsActive == false);
+
+                if (!_selectedProjectile.IsActive)
+                    _selectedProjectile = _effects[0];
+                
                 UpdateModifiers();
             }
 
-            if (!_selectedProjectile.IsActive)
-                _selectedProjectile = _effects[0];
 
             foreach (var effect in _effects)
                 if (!effect.IsProjectile || effect == _selectedProjectile)

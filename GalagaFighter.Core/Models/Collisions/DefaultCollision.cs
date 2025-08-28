@@ -9,10 +9,15 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Collisions
 {
-    public class DefaultCollision : Collision
+    public class DefaultCollision : AnimatedCollision
     {
         public DefaultCollision(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialVelocity)
-            : base(owner, new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .02f, repeat: false), initialPosition, GetSquare(initialSize), initialVelocity)
+            : base(owner,
+                   TextureService.Get("Sprites/Collisions/default.png"),
+                   initialPosition,
+                   GetSquare(initialSize),
+                   initialVelocity,
+                   38, .02f)
         {
         }
 

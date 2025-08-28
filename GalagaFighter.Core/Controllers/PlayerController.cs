@@ -3,6 +3,8 @@ using GalagaFighter.Core.Handlers.Projectiles;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
+using System;
+using System.Linq;
 
 namespace GalagaFighter.Core.Controllers
 {
@@ -16,8 +18,6 @@ namespace GalagaFighter.Core.Controllers
     {
         private readonly IPlayerMover _playerMover;
         private readonly IPlayerShooter _playerShooter;
-        private readonly IInputService _inputService;
-        private readonly IPlayerProjectileCollisionService _playerProjectileCollisionService;
         private readonly IPlayerDrawer _playerDrawer;
         private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly IPlayerSpender _playerSpender;
@@ -26,14 +26,12 @@ namespace GalagaFighter.Core.Controllers
         // Per-player instance state (no more dictionaries!)
         private PlayerShootState _shootState = PlayerShootState.Idle;
 
-        public PlayerController(IPlayerMover playerMover, IPlayerShooter playerShooter, IInputService inputService,
-            IPlayerProjectileCollisionService playerProjectileCollisionService, IPlayerDrawer playerDrawer,
-            IPlayerManagerFactory playerManagerFactory, IPlayerSpender playerSpender, IRepulsionProjectileService repulsionProjectileService)
+        public PlayerController(IPlayerMover playerMover, IPlayerShooter playerShooter,
+            IPlayerDrawer playerDrawer,IPlayerManagerFactory playerManagerFactory, 
+            IPlayerSpender playerSpender, IRepulsionProjectileService repulsionProjectileService)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;
-            _inputService = inputService;
-            _playerProjectileCollisionService = playerProjectileCollisionService;
             _playerDrawer = playerDrawer;
             _playerManagerFactory = playerManagerFactory;
             _playerSpender = playerSpender;
@@ -46,6 +44,9 @@ namespace GalagaFighter.Core.Controllers
             var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
             var modifiers = effectManager.GetModifiers();
 
+            //TODO: THIS IS NOT THE PLACE FOR THIS
+            UpdatePhantoms(player, modifiers);
+
             player.Rotation = player.IsPlayer1 ? 90f : -90f;
             player.Sprite = modifiers.Sprite;
 
@@ -57,17 +58,22 @@ namespace GalagaFighter.Core.Controllers
 
             if (modifiers.IsRepulsive)
                 _repulsionProjectileService.Repulse(player);
-            //var switchButton = _inputService.GetSwitch(player.Id);
-            //if (switchButton.IsPressed)
-            //    effectManager.SwitchEffect();
-
-            _playerProjectileCollisionService.HandleCollisions(player, modifiers);
 
             var resourceManager = _playerManagerFactory.GetResourceManager(player);
             resourceManager.Update();
 
             _playerSpender.HandleDefensiveSpend(player, modifiers);
             _playerSpender.HandleOffensiveSpend(player, modifiers);
+        }
+
+        private void UpdatePhantoms(Player player, EffectModifiers modifiers)
+        {
+            if(modifiers.PhantomCount != modifiers.Phantoms.Count)
+            {
+                modifiers.Phantoms.Clear();
+                for (var i = 0; i < modifiers.PhantomCount; i++)
+                    modifiers.Phantoms.Add(new Phantom(player));
+            }
         }
 
         public void Draw(Player player)

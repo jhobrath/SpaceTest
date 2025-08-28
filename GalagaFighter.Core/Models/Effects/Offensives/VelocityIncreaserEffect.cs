@@ -1,6 +1,6 @@
 ﻿using GalagaFighter.Core.Models.Players;
 
-namespace GalagaFighter.Core.Models.Effects.Offensive
+namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class TimedBarrageEffect : PlayerEffect
     {

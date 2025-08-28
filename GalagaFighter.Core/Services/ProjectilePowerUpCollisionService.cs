@@ -31,6 +31,9 @@ namespace GalagaFighter.Core.Services
                     if (powerUp.Owner == projectile.Owner)
                         continue;
 
+                    if (projectile.Modifiers.Untouchable)
+                        continue;
+
                     if (!Raylib.CheckCollisionRecs(projectile.Rect, powerUp.Rect))
                         continue;
                  

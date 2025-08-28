@@ -28,6 +28,29 @@ namespace GalagaFighter.Core.Handlers.Players
             SetPosition(player, modifiers);
             SetSize(player, modifiers);
             SetRotation(player, modifiers, left, right);
+
+            SetPhantomSpeed(player, modifiers, left, right);
+        }
+
+        private void SetPhantomSpeed(Player player, EffectModifiers modifiers, ButtonState left, ButtonState right)
+        {
+            foreach(var phantom in modifiers.Phantoms)
+            {
+                if (left.IsPressed || right.IsPressed)
+                {
+                    var opposeDirection = Game.Random.Next(0, 2) == 1;
+                    phantom.HurryTo(y: player.Speed.Y * (opposeDirection ? -1f : 1f));
+                }
+                else if (left.IsDown || right.IsDown)
+                {
+                    var directionOpposed = (player.Speed.Y > 0 && phantom.Speed.Y < 0) || (player.Speed.Y < 0 && phantom.Speed.Y > 0);
+                    phantom.HurryTo(y: player.Speed.Y * (directionOpposed ? -1 : 1));
+                }
+                else
+                    phantom.HurryTo(y: player.Speed.Y);
+
+                phantom.Update();
+            }
         }
 
         protected void SetSpeed(Player player, EffectModifiers modifiers, ButtonState left, ButtonState right)
@@ -57,7 +80,6 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             var frameTime = Raylib.GetFrameTime();
             
-            // Calculate movement for this frame by multiplying speed by frameTime
             var deltaX = player.Speed.X * frameTime;
             var deltaY = player.Speed.Y * frameTime;
             
@@ -65,7 +87,7 @@ namespace GalagaFighter.Core.Handlers.Players
             if (newY < Game.Margin)
             {
                 player.MoveTo(y: Game.Margin);
-                player.HurryTo(y: 0f); // Stop Y movement when hitting boundary
+                player.HurryTo(y: 0f);
             }
             else if (newY + player.Rect.Height > Game.Height - Game.Margin)
             {
@@ -75,7 +97,6 @@ namespace GalagaFighter.Core.Handlers.Players
             else
             {
                 player.Move(deltaX, deltaY);
-                // Move the player using frameTime-adjusted movement
             }
         }
 

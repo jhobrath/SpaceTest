@@ -4,6 +4,7 @@ using Raylib_cs;
 using System;
 using System.Numerics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GalagaFighter.Core.Handlers.Players
 {
@@ -58,45 +59,66 @@ namespace GalagaFighter.Core.Handlers.Players
 
         private void DrawPlayer(Player player, EffectModifiers modifiers)
         {
-            var color = UpdateColors(Color.White, modifiers);
-            player.Sprite?.Draw(player.Center, player.Rotation, player.Rect.Width, player.Rect.Height, color);
+            DrawWithPhantoms(player, modifiers, p =>
+            {
+                var color = UpdateColors(Color.White, modifiers);
+                player.Sprite?.Draw(p.Center, p.Rotation, player.Rect.Width, player.Rect.Height, color);
+            });
         }
 
         private void DrawShoot(Player player, EffectModifiers modifiers, PlayerShootState playerShootState)
         {
             if (modifiers.Decorations?.WindUpLeft != null && playerShootState == PlayerShootState.WindUpLeft)
-                DrawWindUp(modifiers.Decorations.WindUpLeft, player);
+                DrawWindUp(modifiers.Decorations.WindUpLeft, player, modifiers);
             else if (modifiers.Decorations?.ShootLeft != null && _lastShotLeft[player] < .25f)
-                DrawShoot(modifiers.Decorations.ShootLeft, _lastShotLeft, player);
+                DrawShoot(modifiers.Decorations.ShootLeft, _lastShotLeft, player, modifiers);
 
             if (modifiers.Decorations?.WindUpRight != null && playerShootState == PlayerShootState.WindUpRight)
-                DrawWindUp(modifiers.Decorations.WindUpRight, player);
+                DrawWindUp(modifiers.Decorations.WindUpRight, player, modifiers);
             else if (modifiers.Decorations?.ShootRight != null && _lastShotRight[player] < .25f)
-                DrawShoot(modifiers.Decorations.ShootRight, _lastShotRight, player);
+                DrawShoot(modifiers.Decorations.ShootRight, _lastShotRight, player, modifiers);
 
             else if (modifiers.Decorations?.WindUpBoth != null && playerShootState == PlayerShootState.WindUpBoth)
-                DrawWindUp(modifiers.Decorations.WindUpBoth, player);
+                DrawWindUp(modifiers.Decorations.WindUpBoth, player, modifiers);
             else if (modifiers.Decorations?.ShootBoth != null && _lastShotBoth[player] < .25f)
-                DrawShoot(modifiers.Decorations.ShootBoth, _lastShotBoth, player);
+                DrawShoot(modifiers.Decorations.ShootBoth, _lastShotBoth, player, modifiers);
         }
 
         private void DrawMove(EffectModifiers modifiers, Player player)
         {
-            var left = _inputService.GetMoveLeft(player.Id);
-            var right = _inputService.GetMoveRight(player.Id);
-            if (modifiers.Decorations?.Move != null && (right || left))
-                modifiers.Decorations.Move.Draw(player.Center, new Vector2(player.Rect.Width, player.Rect.Height), player.Rotation, Color.White);
-
+            DrawWithPhantoms(player, modifiers, p =>
+            {
+                var left = _inputService.GetMoveLeft(player.Id);
+                var right = _inputService.GetMoveRight(player.Id);
+                if (modifiers.Decorations?.Move != null && (right || left))
+                    modifiers.Decorations.Move.Draw(
+                        p.Center,
+                        new Vector2(player.Rect.Width, player.Rect.Height),
+                        p.Rotation, Color.White);
+            });
         }
 
-        private void DrawShoot(SpriteDecoration sprite, Dictionary<Player, float> lastShot, Player player)
+        private void DrawShoot(SpriteDecoration sprite, Dictionary<Player, float> lastShot, Player player, EffectModifiers modifiers)
         {
-            sprite.Draw(player.Center, new Vector2(player.Rect.Width, player.Rect.Height), player.Rotation, GetShootAlpha(lastShot[player]));
+            DrawWithPhantoms(player, modifiers, p =>
+            {
+                sprite.Draw(p.Center, new Vector2(player.Rect.Width, player.Rect.Height), p.Rotation, GetShootAlpha(lastShot[player]));
+            });
         }
 
-        private void DrawWindUp(SpriteDecoration sprite, Player player)
+        private void DrawWindUp(SpriteDecoration sprite, Player player, EffectModifiers modifiers)
         {
-            sprite.Draw(player.Center, new Vector2(player.Rect.Width, player.Rect.Height), player.Rotation, Color.White);
+            DrawWithPhantoms(player, modifiers, p =>
+            {
+                sprite.Draw(player.Center, new Vector2(player.Rect.Width, player.Rect.Height), player.Rotation, Color.White);
+            });
+        }
+
+        private void DrawWithPhantoms(Player player, EffectModifiers modifiers, Action<IDrawnPlayer> drawAction)
+        {
+            var playersToDraw = modifiers.Phantoms.Cast<IDrawnPlayer>().Concat([player]);
+            foreach (var playerToDraw in playersToDraw)
+                drawAction(playerToDraw);
         }
 
         private Color GetShootAlpha(float duration)

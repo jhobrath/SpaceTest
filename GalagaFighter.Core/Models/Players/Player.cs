@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Handlers.Players;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Effects;
 using Raylib_cs;
@@ -7,7 +8,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Players
 {
-    public class Player : GameObject
+    public class Player : GameObject, IDrawnPlayer
     {
         public float Health { get; set; } = 100f;
 
@@ -53,6 +54,58 @@ namespace GalagaFighter.Core.Models.Players
         public override void Draw()
         {
             _playerController.Draw(this);
+        }
+    }
+
+
+    public interface IDrawnPlayer
+    {
+        public Vector2 Center { get; }
+        public Vector2 Speed { get; }
+        public float Rotation { get; }
+    }
+
+    public class Phantom : IDrawnPlayer
+    {
+        private Vector2 _center;
+        private Vector2 _speed;
+        private readonly Player _owner;
+
+        public Vector2 Center => _center;
+        public Vector2 Speed => _speed;
+        public float Rotation => GetRotation();
+
+        private float GetRotation()
+        {
+            if (_speed.Y < 0 && _owner.Speed.Y > 0)
+                return _owner.Rotation - 90f * (_owner.IsPlayer1 ? 1 : -1);
+            else if(_speed.Y > 0 && _owner.Speed.Y < 0)
+                return _owner.Rotation + 90f * (_owner.IsPlayer1 ? 1 : -1);
+            else
+                return _owner.Rotation;
+        }
+
+        public Phantom(Player owner)
+        {
+            _owner = owner;
+            _center = owner.Center;
+            _speed = owner.Speed;
+        }
+
+        public void HurryTo(float? x = null, float? y = null)
+        {
+            _speed = new Vector2(x ?? _speed.X, y ?? _speed.Y);
+        }
+
+        public void Update()
+        {
+            var newY = _center.Y + _speed.Y * Raylib.GetFrameTime();
+            if (newY - 160f < 0)
+                _speed = new Vector2(_speed.X, -_speed.Y);
+            else if (newY > Game.Height - 50f)
+                _speed = new Vector2(_speed.X, -_speed.Y);
+
+            _center = _center + _speed * Raylib.GetFrameTime();
         }
     }
 }

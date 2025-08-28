@@ -118,7 +118,6 @@ namespace GalagaFighter.Core.Handlers.Players
                 UpdateModifiers();
             }
 
-
             foreach (var effect in _effects)
                 if (!effect.IsProjectile || effect == _selectedProjectile)
                     effect.OnUpdate(Raylib.GetFrameTime());

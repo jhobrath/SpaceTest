@@ -12,7 +12,7 @@ namespace GalagaFighter.Core.Handlers.Players
     {
         public const float MaxAmount = 100f;
         public const float FillRate = 10f; // per second
-        public float CurrentAmount { get; private set; } = 50f;
+        public float CurrentAmount { get; private set; } = 100f;
 
         private float _amountLeftToSpend = 0f;
 

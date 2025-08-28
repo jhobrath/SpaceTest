@@ -6,6 +6,7 @@ using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
+using System.Linq;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Handlers.Players
@@ -77,14 +78,26 @@ namespace GalagaFighter.Core.Handlers.Players
                     ? player.IsPlayer1 ? PlayerShootState.WindUpLeft : PlayerShootState.WindUpRight
                     : player.IsPlayer1 ? PlayerShootState.WindUpRight : PlayerShootState.WindUpLeft;
 
-            var spawnPosition = GetSpawnPosition(player, modifiers);
-            SpawnProjectile(player, modifiers, spawnPosition);
 
-            if (modifiers.Stats.DoubleShot)
-            {
-                var spawnPosition2 = GetSpawnPosition(player, modifiers);
-                SpawnProjectile(player, modifiers, spawnPosition2);
-                return PlayerShootState.ShootBoth;
+            return CreateProjectiles(player, modifiers);
+        }
+
+        private PlayerShootState CreateProjectiles(Player player, EffectModifiers modifiers)
+        {
+            var shooters = modifiers.Phantoms.Select(x => new { IsPhantom = true, x.Center }).ToList();
+            shooters.Add(new { IsPhantom = false, player.Center });
+
+            foreach(var shooter in shooters)
+            { 
+                var spawnPosition = GetSpawnPosition(player, modifiers, shooter.Center);
+                SpawnProjectile(player, modifiers, spawnPosition, shooter.IsPhantom);
+
+                if (modifiers.Stats.DoubleShot)
+                {
+                    var spawnPosition2 = GetSpawnPosition(player, modifiers, shooter.Center);
+                    SpawnProjectile(player, modifiers, spawnPosition2, shooter.IsPhantom);
+                    return PlayerShootState.ShootBoth;
+                }
             }
 
             if (_lastProjectile?.Modifiers.WindUpDuration > 0f)
@@ -138,27 +151,29 @@ namespace GalagaFighter.Core.Handlers.Players
             return null;
         }
 
-        private Vector2 GetSpawnPosition(Player player, EffectModifiers modifiers)
+        private Vector2 GetSpawnPosition(Player player, EffectModifiers modifiers, Vector2? center = null)
         {
+            center ??= player.Center;
             var playerWidth = player.Rect.Width;
             var playerHeight = player.Rect.Height;
 
             var spawnX = player.IsPlayer1 ? player.Rect.X + playerWidth : player.Rect.X;
-            var spawnY = player.Rect.Y + playerHeight / 2;
+            var spawnY = center.Value.Y;
 
             var position = new Vector2(spawnX, spawnY);
             return position;
         }
 
-        private void SpawnProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition)
+        private void SpawnProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition, bool isPhantom)
         {
             foreach (var projectileFunc in modifiers.Projectile.OnShootProjectiles)
-                ShootProjectile(player, modifiers, spawnPosition, projectileFunc);
+                ShootProjectile(player, modifiers, spawnPosition, projectileFunc, isPhantom);
 
-            _lastGunLeft = !_lastGunLeft;
+            if(!isPhantom)
+                _lastGunLeft = !_lastGunLeft;
         }
 
-        private void ShootProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition, Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile> projectileFunc)
+        private void ShootProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition, Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile> projectileFunc, bool isPhantom)
         {
             var projectileModifiers = modifiers.Projectile.Clone();
 
@@ -176,6 +191,7 @@ namespace GalagaFighter.Core.Handlers.Players
             projectile.Move(y: -(projectile.Rect.Height / 2));
 
             projectile.Modifiers.OnShoot?.Invoke(projectile);
+            projectile.Modifiers.Untouchable = isPhantom;
 
             _objectService.AddGameObject(projectile);
             _lastProjectile = projectile;

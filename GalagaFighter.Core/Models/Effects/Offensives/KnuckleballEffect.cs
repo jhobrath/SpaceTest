@@ -3,7 +3,7 @@ using GalagaFighter.Core.Models.Projectiles;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GalagaFighter.Core.Models.Effects.Offensive
+namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class KnuckleballEffect : PlayerEffect
     {

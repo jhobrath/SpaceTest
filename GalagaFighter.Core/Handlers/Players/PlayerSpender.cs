@@ -27,8 +27,8 @@ namespace GalagaFighter.Core.Handlers.Players
             if (player.OffensiveAugment == null)
                 return;
 
-            var switchPress = _inputService.GetShoot(player.Id);
-            if (!switchPress.IsDoublePressed)
+            var shootPress = _inputService.GetShoot(player.Id);
+            if (!shootPress.IsDoublePressed)
                 return;
 
             var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);

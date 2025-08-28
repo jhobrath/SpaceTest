@@ -3,7 +3,7 @@ using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using System.Numerics;
 
-namespace GalagaFighter.Core.Models.Effects.Offensive
+namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class SurpriseShotEffect : PlayerEffect
     {

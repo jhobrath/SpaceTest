@@ -6,7 +6,7 @@ namespace GalagaFighter.Core.Services
 {
     public interface IPlayerProjectileCollisionService
     {
-        void HandleCollisions(Player player, EffectModifiers modifiers);
+        void HandleCollisions();
     }
 
     public class PlayerProjectileCollisionService : IPlayerProjectileCollisionService
@@ -29,7 +29,19 @@ namespace GalagaFighter.Core.Services
             _contactDetector = new ContactCollisionDetector();
         }
 
-        public void HandleCollisions(Player player, EffectModifiers modifiers)
+        public void HandleCollisions()
+        {
+            var players = _objectService.GetGameObjects<Player>();
+            foreach (var player in players)
+            {
+                var effectManager = _playerManagerFactory.GetEffectManager(player);
+                var modifiers = effectManager.GetModifiers();
+                HandleCollisions(player, modifiers);
+            }
+        }
+
+
+        private void HandleCollisions(Player player, EffectModifiers modifiers)
         {
             var projectiles = _objectService.GetGameObjects<Projectile>();
 
@@ -50,7 +62,7 @@ namespace GalagaFighter.Core.Services
 
         private void Collide(Player player, Projectile projectile, EffectModifiers modifiers)
         {
-            if (modifiers.Untouchable)
+            if (modifiers.Untouchable || projectile.Modifiers.Untouchable)
                 return;
             
             var effectManager = _playerManagerFactory.GetEffectManager(player);

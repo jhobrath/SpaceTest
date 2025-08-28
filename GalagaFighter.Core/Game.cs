@@ -7,8 +7,8 @@ using System;
 using System.Linq;
 using System.Numerics;
 using GalagaFighter.Core.Models.Effects.Defensives;
-using GalagaFighter.Core.Models.Effects.Offensive;
 using GalagaFighter.Core.Models.Effects.Projectiles;
+using GalagaFighter.Core.Models.Effects.Offensives;
 
 namespace GalagaFighter.Core
 {
@@ -235,16 +235,16 @@ namespace GalagaFighter.Core
                 effectManager.AddEffect(new DefaultShootEffect(color));
 
 
-                var effect = parts[1];
-                if (effect == "SurpriseShot")
-                    player.OffensiveAugment = () => new SurpriseShotEffect();
-                else if (effect == "Splitter")
-                    player.OffensiveAugment = () => new SplitterEffect();
-                else if (effect == "Ricochet")
-                    player.OffensiveAugment = () => new RicochetEffect();
-                else if(effect == "TimedBarrage")
-                    player.OffensiveAugment = () => new TimedBarrageEffect();
-
+                //var effect = parts[1];
+                //if (effect == "SurpriseShot")
+                //    player.OffensiveAugment = () => new SurpriseShotEffect();
+                //else if (effect == "Splitter")
+                //    player.OffensiveAugment = () => new SplitterEffect();
+                //else if (effect == "Ricochet")
+                //    player.OffensiveAugment = () => new RicochetEffect();
+                //else if(effect == "TimedBarrage")
+                //    player.OffensiveAugment = () => new TimedBarrageEffect();
+                player.OffensiveAugment = () => new PhantomsEffect();
                 player.DefensiveAugment = () => new BurstEffect();
             }
         }
@@ -254,6 +254,7 @@ namespace GalagaFighter.Core
             _projectilePowerUpCollisionService.HandleCollisions();
             _playerPowerUpCollisionService.HandleCollisions();
             _projectileProjectileCollisionService.HandleCollisions();
+            _playerProjectileCollisionService.HandleCollisions();
             _inputService.Update();
 
             HandleInput();

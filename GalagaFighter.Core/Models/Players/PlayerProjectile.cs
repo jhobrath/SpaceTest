@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.Handlers.Players;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Projectiles;
 using System;
@@ -62,7 +63,8 @@ namespace GalagaFighter.Core.Models.Players
         public bool CanRicochet { get; set; }
         public Action<PlayerProjectile>? OnClone { get; set; }
         public Action<Projectile, Projectile, Player, Player>? OnNearProjectile { get; set; }
-        public float Homing { get; internal set; }
+        public float Homing { get; set; }
+        public bool Untouchable { get; set; }
 
         public PlayerProjectile Clone()
         {

@@ -58,13 +58,14 @@ namespace GalagaFighter.Core.Handlers.Players
             var durationFactor = left ? left.HeldDuration : (right ? right.HeldDuration : 0f);
             if(durationFactor == 0f)
             {
-                player.HurryTo(player.Speed.X, 0f);
+                var newYFactor = player.Speed.Y - (player.Speed.Y * 10f * Raylib.GetFrameTime());
+                player.HurryTo(player.Speed.X, newYFactor);
                 return;
             }
 
             var speedVariability = 600f;
             var baseSpeed = 1200f*player.BaseStats.SpeedMultiplier * modifiers.Stats.SpeedMultiplier;
-            var speedFactor = baseSpeed - Math.Min(speedVariability, speedVariability * durationFactor);
+            var speedFactor = baseSpeed - Math.Min(speedVariability, speedVariability/durationFactor);
 
             if(player.IsPlayer1)
             { 

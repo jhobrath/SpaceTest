@@ -29,7 +29,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             : base(owner.Id, sprite, initialPosition, initialSize, new Vector2(initialSpeed.X * (owner.IsPlayer1 ? 1: -1), 0f))
         {
             if (!modifiers.IgnoreShipMovement)
-                HurryTo(y: owner.Speed.Y / 3);
+                HurryTo(y: owner.Speed.Y / 6);
 
             _projectileController = controller;
             Modifiers = modifiers;

@@ -14,19 +14,31 @@ namespace GalagaFighter.Core
         public Texture2D Texture { get; }
         public Color Color { get; set; }
 
-        private int _frameCount { get; }
-        private float _frameDuration { get; }
-        private bool _framesComplete { get; set; } = false;
-        private int _currentFrame { get; set; } = 0;
+        private int _frameCount;
+        private float _frameDuration;
+        private int _currentFrame;
         private float _animationTimer;
-        private bool _frameRepeat;
         private readonly Action<Vector2, float, float, float, float>? _drawAction = null;
+        private readonly Action<Vector2, float, float, float, float, int>? _drawAnimatedAction = null;
 
-        // For drawn mode
+        // For static drawn mode
         public SpriteWrapper(Action<Vector2, float, float, float, float> drawAction)
         {
             Mode = SpriteMode.Drawn;
             _drawAction = drawAction;
+            _frameCount = 1;
+            _frameDuration = 0f;
+            _currentFrame = 0;
+        }
+
+        // For animated drawn mode
+        public SpriteWrapper(Action<Vector2, float, float, float, float, int> drawAnimatedAction, int frameCount, float frameDuration)
+        {
+            Mode = SpriteMode.Drawn;
+            _drawAnimatedAction = drawAnimatedAction;
+            _frameCount = frameCount;
+            _frameDuration = frameDuration;
+            _currentFrame = 0;
         }
 
         // For still image
@@ -52,44 +64,24 @@ namespace GalagaFighter.Core
         }
 
         // For animation
-        public SpriteWrapper(Texture2D texture, int frameCount, float frameDuration, bool repeat = true)
+        public SpriteWrapper(Texture2D texture, int frameCount, float frameDuration, bool repeat = false)
         {
             Mode = SpriteMode.Animation;
             Texture = texture;
             _frameCount = frameCount;
             _frameDuration = frameDuration;
-            _frameRepeat = repeat;
-            _animationTimer = 0f;
-        }
-
-        // For rendering a specific frame of a texture (static frame from a spritesheet)
-        public SpriteWrapper(Texture2D texture, int frameIndex, int frameCount)
-        {
-            Mode = SpriteMode.StillImage;
-            Texture = texture;
-            _frameCount = frameCount;
-            _currentFrame = frameIndex;
+            _currentFrame = 0;
         }
 
         public void Update(float frameTime)
         {
-            if (Mode == SpriteMode.Animation)
+            if ((Mode == SpriteMode.Animation || (Mode == SpriteMode.Drawn && _frameCount > 1)) && _frameCount > 1)
             {
-                if (_framesComplete)
-                    return;
-
                 _animationTimer += frameTime;
                 if (_animationTimer >= _frameDuration)
                 {
                     _animationTimer -= _frameDuration;
-                    _currentFrame++;
-                    if (!_frameRepeat && _currentFrame >= _frameCount)
-                    {
-                        _framesComplete = true;
-                        _currentFrame = _frameCount - 1;
-                        return;
-                    }
-                    _currentFrame %= _frameCount;
+                    _currentFrame = (_currentFrame + 1) % _frameCount;
                 }
             }
         }
@@ -105,32 +97,19 @@ namespace GalagaFighter.Core
             switch (Mode)
             {
                 case SpriteMode.Drawn:
-                    _drawAction?.Invoke(position, rotation, width, height, 1f);
+                    if (_drawAnimatedAction != null)
+                        _drawAnimatedAction.Invoke(position, rotation, width, height, 1f, _currentFrame);
+                    else
+                        _drawAction?.Invoke(position, rotation, width, height, 1f);
                     break;
                 case SpriteMode.StillImage:
-                    // If _frameCount > 1, draw only the specified frame
-                    if (_frameCount > 1)
-                    {
-                        float frameWidth = Texture.Width / (float)_frameCount;
-                        Rectangle source = new Rectangle(frameWidth * _currentFrame, 0, frameWidth, Texture.Height);
-                        Raylib.DrawTexturePro(
-                            Texture,
-                            source,
-                            new Rectangle(position.X, position.Y, width, height),
-                            new Vector2(width / 2, height / 2),
-                            rotation,
-                            color ?? Color.White);
-                    }
-                    else
-                    {
-                        Raylib.DrawTexturePro(
-                            Texture,
-                            new Rectangle(0, 0, Texture.Width, Texture.Height),
-                            new Rectangle(position.X, position.Y, width, height),
-                            new Vector2(width / 2, height / 2),
-                            rotation,
-                            color ?? Color.White);
-                    }
+                    Raylib.DrawTexturePro(
+                        Texture,
+                        new Rectangle(0, 0, Texture.Width, Texture.Height),
+                        new Rectangle(position.X, position.Y, width, height),
+                        new Vector2(width / 2, height / 2),
+                        rotation,
+                        color ?? Color.White);
                     break;
                 case SpriteMode.Animation:
                     DrawAnimated(position, rotation, width, height, color);

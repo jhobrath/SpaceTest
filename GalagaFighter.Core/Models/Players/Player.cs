@@ -77,18 +77,16 @@ namespace GalagaFighter.Core.Models.Players
 
         private float GetRotation()
         {
-            if (_speed.Y < 0 && _owner.Speed.Y > 0)
-                return _owner.Rotation - 90f * (_owner.IsPlayer1 ? 1 : -1);
-            else if(_speed.Y > 0 && _owner.Speed.Y < 0)
-                return _owner.Rotation + 90f * (_owner.IsPlayer1 ? 1 : -1);
-            else
                 return _owner.Rotation;
         }
 
-        public Phantom(Player owner)
+        public Phantom(Player owner, int index = 0)
         {
             _owner = owner;
-            _center = owner.Center;
+
+            var distance = (index / 2) * 160f;
+            var sign = index % 2 == 0 ? 1 : -1;
+            _center = new Vector2(owner.Center.X, owner.Center.Y - distance*sign);
             _speed = owner.Speed;
         }
 
@@ -99,12 +97,6 @@ namespace GalagaFighter.Core.Models.Players
 
         public void Update()
         {
-            var newY = _center.Y + _speed.Y * Raylib.GetFrameTime();
-            if (newY - 160f < 0)
-                _speed = new Vector2(_speed.X, -_speed.Y);
-            else if (newY > Game.Height - 50f)
-                _speed = new Vector2(_speed.X, -_speed.Y);
-
             _center = _center + _speed * Raylib.GetFrameTime();
         }
     }

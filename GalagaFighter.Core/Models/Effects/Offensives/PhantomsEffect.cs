@@ -9,7 +9,7 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.PhantomCount += 4;
+            modifiers.PhantomCount += 12;
             base.Apply(modifiers);
         }
     }

@@ -36,19 +36,7 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             foreach(var phantom in modifiers.Phantoms)
             {
-                if (left.IsPressed || right.IsPressed)
-                {
-                    var opposeDirection = Game.Random.Next(0, 2) == 1;
-                    phantom.HurryTo(y: player.Speed.Y * (opposeDirection ? -1f : 1f));
-                }
-                else if (left.IsDown || right.IsDown)
-                {
-                    var directionOpposed = (player.Speed.Y > 0 && phantom.Speed.Y < 0) || (player.Speed.Y < 0 && phantom.Speed.Y > 0);
-                    phantom.HurryTo(y: player.Speed.Y * (directionOpposed ? -1 : 1));
-                }
-                else
-                    phantom.HurryTo(y: player.Speed.Y);
-
+                phantom.HurryTo(y: player.Speed.Y);
                 phantom.Update();
             }
         }

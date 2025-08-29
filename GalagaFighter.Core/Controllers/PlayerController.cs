@@ -72,7 +72,7 @@ namespace GalagaFighter.Core.Controllers
             {
                 modifiers.Phantoms.Clear();
                 for (var i = 0; i < modifiers.PhantomCount; i++)
-                    modifiers.Phantoms.Add(new Phantom(player));
+                    modifiers.Phantoms.Add(new Phantom(player, i));
             }
         }
 

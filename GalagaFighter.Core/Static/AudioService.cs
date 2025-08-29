@@ -130,7 +130,7 @@ namespace GalagaFighter.Core.Static
             Raylib.SetSoundVolume(shootSound, 0.01f);  // Very quiet for rapid fire
             Raylib.SetSoundVolume(iceHitSound, .02f);
             Raylib.SetSoundVolume(wallStickSound, .1f);
-            Raylib.SetSoundVolume(hitSound, 1.0f);
+            Raylib.SetSoundVolume(hitSound, .1f);
             Raylib.SetSoundVolume(powerUpSound, .005f);
             Raylib.SetSoundVolume(explosionConversionSound, .015f);
             Raylib.SetSoundVolume(burningSound, .1f);

@@ -15,6 +15,13 @@ namespace GalagaFighter.Core.Services
             return _library[path];
         }
 
+        public static bool TryGetFromKey(string path, out Texture2D texture)
+        {
+            var exists = _library.TryGetValue(path, out Texture2D value);
+            texture = value;
+            return exists;
+        }
+
         public static void Set(string path, Texture2D texture)
         {
             _library[path] = texture;

@@ -1,5 +1,6 @@
 using Raylib_cs;
 using System;
+using System.Collections.Generic;
 
 namespace GalagaFighter.Core.Services
 {
@@ -7,6 +8,10 @@ namespace GalagaFighter.Core.Services
     {
         public static Texture2D CreatePaletteSwappedTexture(Texture2D sourceTexture, Color newRedColor)
         {
+            string key = $"{sourceTexture.Id}|{newRedColor.R},{newRedColor.G},{newRedColor.B},{newRedColor.A}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return texture;
+
             // Get the image data from the texture
             Image sourceImage = Raylib.LoadImageFromTexture(sourceTexture);
             
@@ -70,6 +75,7 @@ namespace GalagaFighter.Core.Services
             Raylib.UnloadImage(sourceImage);
             Raylib.UnloadImage(newImage);
             
+            TextureService.Set(key, newTexture);
             return newTexture;
         }
         

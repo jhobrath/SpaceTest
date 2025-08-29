@@ -20,10 +20,10 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
                 projMods.Phases[this] = Roll();
                 _fadeLocations = Enumerable.Range(1, 1).Select(x => 100 + (float)Game.Random.NextDouble() * (Game.Width - 200)).ToList();
             };
-            modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
+            modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
         }
 
-        private void HandlePhaseChange(Projectile projectile, PlayerEffect effect, int arg3)
+        private void HandlePhaseChange(Projectile projectile, int arg3)
         {
             var distanceForCalc = Math.Max(0, Math.Min(400, _fadeLocations.Min(x => Math.Abs(projectile.Center.X - x))) - 100);
             var alpha = distanceForCalc / 300f;

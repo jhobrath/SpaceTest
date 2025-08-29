@@ -38,7 +38,9 @@ namespace GalagaFighter.Core.Models.Players
         //Edge Collision
         public float CollideDistanceFromEdge { get; set; } = 0f;
 
+        //Phases
         public Dictionary<PlayerEffect, List<float>> Phases { get; set; } = [];
+        public Dictionary<PlayerEffect, Action<Projectile, int>> OnPhaseChange { get; set; } = [];
 
         //Deactivation
         public bool DeactivateOnCollision { get; set; } = true;
@@ -55,7 +57,6 @@ namespace GalagaFighter.Core.Models.Players
         public Action<Projectile>? OnWindUpReleased { get; set; } = null;
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
         public Action<Projectile>? OnSpriteUpdate { get; internal set; }
-        public Action<Projectile, PlayerEffect, int>? OnPhaseChange { get; set; } = null;
         public Func<Player, Projectile, List<GameObject>>? OnCollide { get; set; } = null;
 
         public SpriteWrapper? Sprite { get; set; } = null;

@@ -15,27 +15,30 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
 
         public override void Apply(EffectModifiers modifiers)
         {
-               modifiers.Projectile.Phases.Add(this, Roll());
-               modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
-               modifiers.Projectile.OnClone = (projMods) => projMods.Phases[this] = Roll();
+            modifiers.Stats.FireRateMultiplier = .75f;
+            modifiers.Projectile.SpeedMultiplier *= 1.25f;
+            modifiers.Projectile.Phases.Add(this, Roll());
+            modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
+            modifiers.Projectile.OnClone = (projMods) =>
+            {
+                projMods.Phases[this] = Roll();
+                projMods.RotationOffsetIncrement = (float)Game.Random.NextDouble() * 150f;
+            };
         }
 
         private List<float> Roll()
         {
-            return [.. Enumerable.Range(1, 40).Select(x => x * (float)Game.Random.NextDouble() / 20f).OrderBy(x => x)];
+            return [.. Enumerable.Range(1, 10).Select(x => (float)Game.Random.NextDouble() * 1.5f).OrderBy(x => x)];
         }
 
-        private void HandlePhaseChange(Projectile projectile, PlayerEffect playerEffect, int phase)
+        private void HandlePhaseChange(Projectile projectile, int phase)
         {
-            if (playerEffect != this)
-                return;
-
             //Phase often, but exit most of the time
             //Otherwise each bullet would knuckle the same way at the same time
-            if (Game.Random.NextDouble() > .2f)
+            if (Game.Random.NextDouble() > .5f)
                 return;
 
-            var ySpeeds = new List<float>([0f, 10f, 20f, -10f, -20f]);
+            var ySpeeds = new List<float>([0f, 15f, 30f, -15f, -30f]);
             projectile.HurryTo(y: ySpeeds[Game.Random.Next(0,5)]*10f);
         }
     }

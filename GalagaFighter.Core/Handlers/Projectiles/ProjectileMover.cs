@@ -51,6 +51,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
             projectile.Modifiers.VerticalPositionOffset += projectile.Modifiers.VerticalPositionIncrement * frameTime;
 
             projectile.Move(currentFrameSpeed.X * frameTime, currentFrameSpeed.Y * frameTime + projectile.Modifiers.VerticalPositionOffset*frameTime);
+            projectile.HurryTo(x: currentFrameSpeed.X);
         }
 
         private void AdjustFromHoming(Projectile projectile)

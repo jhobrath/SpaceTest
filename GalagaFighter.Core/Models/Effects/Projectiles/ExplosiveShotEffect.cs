@@ -44,23 +44,40 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.RotationOffsetIncrement = 360f;
             modifiers.Projectile.RotationOffsetMultiplier = 1/2f;
 
-            modifiers.Projectile.Phases.Add(this, new List<float> { 1.45f, 2.25f });
-            modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
+            modifiers.Projectile.Phases.Add(this, new List<float> { 1.6f, 1.65f, 2.0f, 2.05f, 2.15f, 2.25f });
+            modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
             modifiers.Decorations = _decorations;
         }
 
-        private void HandlePhaseChange(Projectile projectile, PlayerEffect playerEffect, int phase)
+        private void HandlePhaseChange(Projectile projectile, int phase)
         {
-            if (playerEffect.GetType() != GetType())
-                return;
-
             if(phase == 1)
             { 
                 AudioService.PlayExplosionConversionSound();
                 projectile.Modifiers.Sprite = new SpriteWrapper(TextureService.Get("Sprites/Collisions/default.png"), 38, .02f, repeat: false);
                 projectile.Modifiers.SizeMultiplier = new Vector2(5.6f,5.6f);
-                projectile.Modifiers.SpeedMultiplier = .33f;
+                projectile.Modifiers.DamageMultiplier = 1;
+                projectile.Modifiers.SpeedMultiplier = .95f;
                 projectile.IsMagnetic = false;
+                projectile.Modifiers.OnCollide = (a, b) =>
+                {
+                    projectile.Modifiers.DamageMultiplier = 0f;
+                    return [];
+                };
+            }
+            else if(phase == 2)
+            {
+                projectile.Modifiers.DamageMultiplier = Raylib.GetFrameTime();
+                projectile.Modifiers.OnCollide = null;
+            }
+            else if (phase == 2)
+            {
+                projectile.Modifiers.DamageMultiplier = Raylib.GetFrameTime();
+                projectile.Modifiers.Opacity = .7f;
+            }
+            else if (phase == 3)
+            {
+                projectile.Modifiers.Opacity = .3f;
             }
             else
             {

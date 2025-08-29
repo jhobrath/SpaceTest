@@ -252,7 +252,7 @@ namespace GalagaFighter.Core
                 //    player.OffensiveAugment = () => new RicochetEffect();
                 //else if(effect == "TimedBarrage")
                 //    player.OffensiveAugment = () => new TimedBarrageEffect();
-                player.OffensiveAugment = () => new PhantomsEffect();
+                player.OffensiveAugment = () => new KnuckleballEffect();
                 player.DefensiveAugment = () => new BurstEffect();
             }
         }

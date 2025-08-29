@@ -39,15 +39,12 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             
             // ✅ Phase transformation (like explosive)
             modifiers.Projectile.Phases.Add(this, new List<float> { 2f, 4f, 4.25f, 4.5f, 4.75f, 5f });  // Transform at 95% completion
-            modifiers.Projectile.OnPhaseChange = HandlePhaseChange;
+            modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
             modifiers.Projectile.DeactivateOnCollision = false;      // Stay active for continuous collision
         }
 
-        private void HandlePhaseChange(Projectile projectile, PlayerEffect playerEffect, int phase)
+        private void HandlePhaseChange(Projectile projectile, int phase)
         {
-            if (playerEffect != this)
-                return;
-
             if(phase == 1)
             { 
                 AudioService.PlayMudSplat();

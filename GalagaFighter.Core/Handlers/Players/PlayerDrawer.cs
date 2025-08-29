@@ -60,9 +60,9 @@ namespace GalagaFighter.Core.Handlers.Players
 
         private void DrawPlayer(Player player, EffectModifiers modifiers)
         {
+            var color = UpdateColors(Color.White, modifiers);
             DrawWithPhantoms(player, modifiers, p =>
             {
-                var color = UpdateColors(Color.White, modifiers);
                 player.Sprite?.Draw(p.Center, p.Rotation, player.Rect.Width, player.Rect.Height, color);
             });
         }

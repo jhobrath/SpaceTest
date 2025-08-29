@@ -17,16 +17,20 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private SpriteWrapper _sprite;
         private SpriteDecorations _decorations;
 
-        public ExplosiveShotEffect()
+        public ExplosiveShotEffect(Color? color)
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive.png"));
+            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
 
-            _decorations = new SpriteDecorations
+            _decorations = new SpriteDecorations()
             {
-                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_ShootBoth.png"))),
-                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_ShootLeft.png"))),
-                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_ShootRight.png"))),
-                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosive_Move.png")))
+                Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosiveGuns.png"))),
+                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootBoth.png"))),
+                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootLeft.png"))),
+                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootRight.png"))),
+                //WindUpLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpLeft.png"), 3, .125f)),
+                //WindUpRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpRight.png"), 3, .125f)),
+                //WindUpBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpBoth.png"), 3, .125f)),
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png")))
             };
         }
 

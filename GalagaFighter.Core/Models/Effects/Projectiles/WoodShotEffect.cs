@@ -2,6 +2,7 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
+using Raylib_cs;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
@@ -15,19 +16,20 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override string IconPath => "Sprites/Effects/woodshot.png";
         protected override int TotalBullets => 3;
 
-        public WoodShotEffect()
+        public WoodShotEffect(Color? color)
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood.png"));
+            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
 
             _decorations = new SpriteDecorations()
             {
-                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootBoth.png"))),
-                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootLeft.png"))),
-                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootRight.png"))),
-                WindUpLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpLeft.png"), 3, .125f)),
-                WindUpRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpRight.png"), 3, .125f)),
-                WindUpBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpBoth.png"), 3, .125f)),
-                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_Move.png")))
+                Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWoodGuns.png"))),
+                //ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootBoth.png"))),
+                //ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootLeft.png"))),
+                //ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_ShootRight.png"))),
+                //WindUpLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpLeft.png"), 3, .125f)),
+                //WindUpRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpRight.png"), 3, .125f)),
+                //WindUpBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpBoth.png"), 3, .125f)),
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png")))
             };
         }
 
@@ -40,7 +42,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.WindUpSpeed = 250f;
             modifiers.Projectile.PlankDuration = 7f;
             modifiers.Projectile.PlankStopsMovement = true;
-
+            modifiers.Projectile.IgnoreShipMovement = true;
             modifiers.Decorations = _decorations;
         }
 

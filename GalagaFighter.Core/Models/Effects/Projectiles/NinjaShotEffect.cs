@@ -2,6 +2,7 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
+using Raylib_cs;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
@@ -13,9 +14,20 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private readonly SpriteWrapper _sprite;
         protected override float Duration => 10f;
 
-        public NinjaShotEffect()
+        private readonly SpriteDecorations _decorations;
+
+        public NinjaShotEffect(Color? color)
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/NinjaShotShip.png"), 3, .12f);
+            //_sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/NinjaShotShip.png"), 3, .12f);
+            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
+            _decorations = new SpriteDecorations
+            {
+                Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns.png"))),
+                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootBoth.png"))),
+                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootLeft.png"))),
+                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootRight.png"))),
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png")))
+            };
         }
 
         public override void Apply(EffectModifiers modifiers)
@@ -26,6 +38,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.RotationOffset += 10f;
             modifiers.Projectile.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
             modifiers.Projectile.OnClone = (projMods) => projMods.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
+            modifiers.Decorations = _decorations;
             //modifiers.Projectile.VerticalPositionMultiplier = 1.5f;
         }
 

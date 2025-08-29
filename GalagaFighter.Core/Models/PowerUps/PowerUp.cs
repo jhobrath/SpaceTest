@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -27,6 +29,6 @@ namespace GalagaFighter.Core.Models.PowerUps
             Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
         }
 
-        public abstract List<PlayerEffect> CreateEffects();
+        public abstract List<PlayerEffect> CreateEffects(Player player);
     }
 }

@@ -47,7 +47,7 @@ namespace GalagaFighter.Core.Services
                 return;
 
             var effectManager = _effectManagerFactory.GetEffectManager(player);
-            var newEffects = powerUp.CreateEffects();
+            var newEffects = powerUp.CreateEffects(player);
             
             foreach (var newEffect in newEffects)
             {

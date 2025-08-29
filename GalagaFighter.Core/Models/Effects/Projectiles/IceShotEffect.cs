@@ -2,6 +2,7 @@
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
+using Raylib_cs;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
@@ -15,15 +16,16 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private SpriteDecorations _decorations = [];
 
-        public IceShotEffect()
+        public IceShotEffect(Color? color)
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce.png"));
+            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
             _decorations = new SpriteDecorations()
             {
-                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_ShootBoth.png"))),
-                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_ShootLeft.png"))),
-                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_ShootRight.png"))),
-                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIce_Move.png")))
+                Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIceGuns.png"))),
+                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIceGuns_ShootBoth.png"))),
+                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIceGuns_ShootLeft.png"))),
+                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipIceGuns_ShootRight.png"))),
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png")))
             };
         }
 

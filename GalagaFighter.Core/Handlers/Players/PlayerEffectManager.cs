@@ -31,6 +31,8 @@ namespace GalagaFighter.Core.Handlers.Players
         private PlayerEffect _selectedProjectile = new DefaultShootEffect();
         private readonly List<PlayerEffect> _effects = [];
 
+        private long _lastFrameIndex = -1;
+
         public PlayerEffectManager()
         {
         }
@@ -117,6 +119,11 @@ namespace GalagaFighter.Core.Handlers.Players
                 
                 UpdateModifiers();
             }
+
+            if (Game.FrameCounter == _lastFrameIndex)
+                return;
+
+            _lastFrameIndex = Game.FrameCounter;
 
             foreach (var effect in _effects)
                 if (!effect.IsProjectile || effect == _selectedProjectile)

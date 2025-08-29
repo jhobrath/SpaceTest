@@ -39,6 +39,7 @@ namespace GalagaFighter.Core.Handlers.Players
             DrawShoot(player, modifiers, playerShootState);
             DrawMove(modifiers, player);
             DrawPlayer(player, modifiers);
+            DrawGuns(player, modifiers);
 
             foreach(var decoration in modifiers.Decorations?.Other ?? [])
             {
@@ -111,6 +112,15 @@ namespace GalagaFighter.Core.Handlers.Players
             DrawWithPhantoms(player, modifiers, p =>
             {
                 sprite.Draw(player.Center, new Vector2(player.Rect.Width, player.Rect.Height), player.Rotation, Color.White);
+            });
+        }
+
+
+        private void DrawGuns(Player player, EffectModifiers modifiers)
+        {
+            DrawWithPhantoms(player, modifiers, p =>
+            {
+                modifiers.Decorations?.Guns?.Draw(p.Center, new Vector2(player.Rect.Width, player.Rect.Height), p.Rotation, Color.White);
             });
         }
 

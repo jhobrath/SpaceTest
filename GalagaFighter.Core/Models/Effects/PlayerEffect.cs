@@ -26,6 +26,11 @@ namespace GalagaFighter.Core.Models.Effects
 
         public virtual void OnUpdate(float frameTime)
         {
+            if(IsProjectile)
+            {
+                DebugWriter.Write(_remainingTime.ToString());
+            }
+
             if (Duration > 0f)
             {
                 _remainingTime -= frameTime;

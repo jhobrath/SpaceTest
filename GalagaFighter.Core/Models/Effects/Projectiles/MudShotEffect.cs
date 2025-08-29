@@ -3,6 +3,7 @@ using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
+using Raylib_cs;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -17,14 +18,15 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private SpriteDecorations _decorations;
 
-        public MudShotEffect()
+        public MudShotEffect(Color? color)
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMud.png"));
+            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
             _decorations = new SpriteDecorations
             {
-                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMud_ShootRight.png"), 3, .6f)),
-                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMud_ShootLeft.png"), 3, .6f)),
-                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMud_ShootBoth.png"), 3, .6f)),
+                Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMudGuns.png"))),
+                ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMudGuns_ShootRight.png"))),
+                ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMudGuns_ShootLeft.png"))),
+                ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMudGuns_ShootBoth.png"))),
                 Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMud_Move.png")))
             };
         }

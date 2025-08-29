@@ -28,6 +28,8 @@ namespace GalagaFighter.Core
         private static float _height;
         private static float _width;
 
+        public static long FrameCounter = 0;
+
         private Player _player1;
         private Player _player2;
         private static Random _random = new();
@@ -233,6 +235,12 @@ namespace GalagaFighter.Core
 
                 var effectManager = _effectManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect(color));
+                effectManager.AddEffect(new IceShotEffect(color));
+                effectManager.AddEffect(new WoodShotEffect(color));
+                effectManager.AddEffect(new ExplosiveShotEffect(color));
+                effectManager.AddEffect(new NinjaShotEffect(color));
+                effectManager.AddEffect(new MagnetEffect(color));
+                effectManager.AddEffect(new MudShotEffect(color));
 
 
                 //var effect = parts[1];
@@ -299,6 +307,7 @@ namespace GalagaFighter.Core
 
         private void UpdateGameObjects()
         {
+            FrameCounter++;
             var gameObjects = _objectService.GetGameObjects();
             for (int i = gameObjects.Count - 1; i >= 0; i--)
             {

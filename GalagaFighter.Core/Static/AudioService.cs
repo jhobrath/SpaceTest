@@ -128,16 +128,16 @@ namespace GalagaFighter.Core.Static
         private static void SetSoundVolumes()
         {
             Raylib.SetSoundVolume(shootSound, 0.01f);  // Very quiet for rapid fire
-            Raylib.SetSoundVolume(iceHitSound, .1f);
-            Raylib.SetSoundVolume(wallStickSound, 1.0f);
+            Raylib.SetSoundVolume(iceHitSound, .02f);
+            Raylib.SetSoundVolume(wallStickSound, .1f);
             Raylib.SetSoundVolume(hitSound, 1.0f);
             Raylib.SetSoundVolume(powerUpSound, .005f);
-            Raylib.SetSoundVolume(explosionConversionSound, .05f);
-            Raylib.SetSoundVolume(burningSound, 1.5f);
+            Raylib.SetSoundVolume(explosionConversionSound, .015f);
+            Raylib.SetSoundVolume(burningSound, .1f);
             Raylib.SetSoundVolume(magnetSound, .05f);
             Raylib.SetSoundVolume(mudsplat, .1f);
             Raylib.SetSoundVolume(magnetReleaseSound, .1f);
-            Raylib.SetSoundVolume(ninjaShot, .1f);
+            Raylib.SetSoundVolume(ninjaShot, .03f);
         }
 
         private static Sound CreateBeepSound(float frequency, float duration, float volume)

@@ -1,6 +1,7 @@
 using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Effects.Projectiles;
+using GalagaFighter.Core.Models.Players;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -14,11 +15,11 @@ namespace GalagaFighter.Core.Models.PowerUps
         {
         }
 
-        public override List<PlayerEffect> CreateEffects()
+        public override List<PlayerEffect> CreateEffects(Player player)
         {
             return new List<PlayerEffect>
             {
-                new MudShotEffect()
+                new MudShotEffect(player.PalleteSwap)
             };
         }
     }

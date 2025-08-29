@@ -11,7 +11,7 @@ namespace GalagaFighter.Core.Handlers.Players
     public class PlayerResourceManager : IPlayerResourceManager
     {
         public const float MaxAmount = 100f;
-        public const float FillRate = 10f; // per second
+        public const float FillRate = 5f; // per second
         public float CurrentAmount { get; private set; } = 100f;
 
         private float _amountLeftToSpend = 0f;

@@ -1,6 +1,7 @@
 using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
@@ -31,6 +32,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
+            AudioService.PlayHitSound();
             return
             [
                 new DefaultCollision(owner, initialPosition, initialSize, initialSpeed)

@@ -11,15 +11,12 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
     {
         public override string IconPath => "Sprites/Effects/ninjashot.png";
         public override bool IsProjectile => true;
-        private readonly SpriteWrapper _sprite;
         protected override float Duration => 10f;
 
         private readonly SpriteDecorations _decorations;
 
-        public NinjaShotEffect(Color? color)
+        public NinjaShotEffect()
         {
-            //_sprite = new SpriteWrapper(TextureService.Get("Sprites/Players/NinjaShotShip.png"), 3, .12f);
-            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
             _decorations = new SpriteDecorations
             {
                 Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns.png"))),
@@ -32,14 +29,12 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Sprite = _sprite;
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Stats.FireRateMultiplier *= .45f;
             modifiers.Projectile.RotationOffset += 10f;
             modifiers.Projectile.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
             modifiers.Projectile.OnClone = (projMods) => projMods.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
             modifiers.Decorations = _decorations;
-            //modifiers.Projectile.VerticalPositionMultiplier = 1.5f;
         }
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)

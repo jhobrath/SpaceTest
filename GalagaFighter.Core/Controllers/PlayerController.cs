@@ -48,7 +48,6 @@ namespace GalagaFighter.Core.Controllers
             UpdatePhantoms(player, modifiers);
 
             player.Rotation = player.IsPlayer1 ? 90f : -90f;
-            player.Sprite = modifiers.Sprite;
 
             _playerMover.Move(player, modifiers);
             var shootState = _playerShooter.Shoot(player, modifiers);

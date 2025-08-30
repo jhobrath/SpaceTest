@@ -19,7 +19,7 @@ namespace GalagaFighter.Core.Models.PowerUps
         {
             return new List<PlayerEffect>
             {
-                new MudShotEffect(player.PalleteSwap)
+                new MudShotEffect()
             };
         }
     }

@@ -17,9 +17,7 @@ namespace GalagaFighter.Core.Models.PowerUps
 
         public override List<PlayerEffect> CreateEffects(Player player)
         {
-            return [
-                new NinjaShotEffect(player.PalleteSwap)
-            ];
+            return [new NinjaShotEffect()];
         }
     }
 }

@@ -14,16 +14,14 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class ElectricShotEffect : PlayerEffect
     {
-        private readonly SpriteWrapper _sprite;
-
         public override string IconPath => "Sprites/effects/plasmaball.png";
         public override bool IsProjectile =>  true;
+        protected override int TotalBullets => 3;
 
         private readonly SpriteDecorations _decorations;
 
-        public ElectricShotEffect(Color? color)
+        public ElectricShotEffect()
         {
-            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
             _decorations = new SpriteDecorations
             {
                 Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipElectricGuns.png"))),
@@ -36,20 +34,16 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Sprite = _sprite;
             modifiers.Projectile.Phases.Add(this, [1.0f, 1.4f, 1.8f, 3f, 7f]);
             modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
+            modifiers.Stats.FireRateMultiplier = 1.5f;
+            modifiers.Projectile.OnShoot = HandleShotFired;
             modifiers.Projectile.OnShootProjectiles.Add((controller, player, position, modifiers) =>
             {
                 return new ElectricProjectile(controller, player, position, modifiers);
             });
             modifiers.Projectile.CollideDistanceFromPlayer = 135f;
             modifiers.Decorations = _decorations;
-        }
-
-        public override void OnUpdate(float frameTime)
-        {
-            base.OnUpdate(frameTime);
         }
 
         private void HandlePhaseChange(Projectile projectile, int phase)

@@ -13,14 +13,12 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
     {
         public override string IconPath => "Sprites/Effects/mudshot.png";
         public override bool IsProjectile => true;
-        private readonly SpriteWrapper _sprite;
         protected override float Duration => 5f;
 
         private SpriteDecorations _decorations;
 
-        public MudShotEffect(Color? color)
+        public MudShotEffect()
         {
-            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
             _decorations = new SpriteDecorations
             {
                 Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMudGuns.png"))),
@@ -33,14 +31,12 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Sprite = _sprite;
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Decorations = _decorations;
             
-            // ✅ Phase transformation (like explosive)
-            modifiers.Projectile.Phases.Add(this, new List<float> { 2f, 4f, 4.25f, 4.5f, 4.75f, 5f });  // Transform at 95% completion
+            modifiers.Projectile.Phases.Add(this, new List<float> { 2f, 4f, 4.25f, 4.5f, 4.75f, 5f });
             modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
-            modifiers.Projectile.DeactivateOnCollision = false;      // Stay active for continuous collision
+            modifiers.Projectile.DeactivateOnCollision = false;
         }
 
         private void HandlePhaseChange(Projectile projectile, int phase)
@@ -48,16 +44,14 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             if(phase == 1)
             { 
                 AudioService.PlayMudSplat();
-                // Transform into immobile mud splat
-                int frameIndex = Game.Random.Next(0, 3); // Randomly pick frame 0, 1, or 2
+                int frameIndex = Game.Random.Next(0, 3);
                 var baseTexture = TextureService.Get("Sprites/Projectiles/mud_splat.png");
-                var mudSplatTexture = TextureService.GetFrame(baseTexture, 3, frameIndex); // Extract the frame as Texture2D
+                var mudSplatTexture = TextureService.GetFrame(baseTexture, 3, frameIndex);
                 var mudSplatSprite = new SpriteWrapper(mudSplatTexture);
                 mudSplatSprite.Color = Raylib_cs.Color.White.ApplyAlpha(.8f);
-                
                 projectile.Modifiers.Sprite = mudSplatSprite;
-                projectile.Modifiers.SizeMultiplier = new Vector2(3f,6f);   // Make it huge
-                projectile.Modifiers.SpeedMultiplier = 0f;   // Make it immobile
+                projectile.Modifiers.SizeMultiplier = new Vector2(3f,6f);
+                projectile.Modifiers.SpeedMultiplier = 0f;
                 projectile.Modifiers.Opacity = .5f;
                 projectile.IsMagnetic = false;
             }

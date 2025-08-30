@@ -5,7 +5,6 @@ namespace GalagaFighter.Core.Models.Players
 {
     public class EffectModifiers
     {
-        public SpriteWrapper? Sprite { get; set; }
         public SpriteDecorations? Decorations { get; set; }
 
         public PlayerStats Stats { get; set; } = new();

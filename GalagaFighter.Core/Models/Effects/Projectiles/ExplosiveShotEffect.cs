@@ -14,29 +14,22 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override string IconPath => "Sprites/Effects/explosiveshot.png";
         public override bool IsProjectile => true;
         protected override int TotalBullets => 5;
-        private SpriteWrapper _sprite;
         private SpriteDecorations _decorations;
 
-        public ExplosiveShotEffect(Color? color)
+        public ExplosiveShotEffect()
         {
-            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
-
             _decorations = new SpriteDecorations()
             {
                 Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipExplosiveGuns.png"))),
                 ShootBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootBoth.png"))),
                 ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootLeft.png"))),
                 ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipNinjaGuns_ShootRight.png"))),
-                //WindUpLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpLeft.png"), 3, .125f)),
-                //WindUpRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpRight.png"), 3, .125f)),
-                //WindUpBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpBoth.png"), 3, .125f)),
                 Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png")))
             };
         }
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Sprite = _sprite;
             modifiers.Projectile.OnShoot = HandleShotFired;
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Projectile.DamageMultiplier *= Raylib.GetFrameTime();

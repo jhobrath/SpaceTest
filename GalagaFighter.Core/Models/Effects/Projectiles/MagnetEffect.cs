@@ -6,8 +6,6 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class MagnetEffect : PlayerEffect
     {
-        private SpriteWrapper _sprite;
-
         public override string IconPath => "Sprites/Effects/Magnetshot.png";
         protected override float Duration => 5f;
         public override bool IsProjectile => true;
@@ -15,9 +13,8 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private readonly SpriteDecorations _decorations;
 
 
-        public MagnetEffect(Color? color)
+        public MagnetEffect()
         {
-            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", color ?? Color.White);
             _decorations = new SpriteDecorations
             {
                 Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipMagnetGuns.png"))),
@@ -29,7 +26,6 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Magnetic = true;
-            modifiers.Sprite = _sprite;
             modifiers.Decorations = _decorations;
         }
     }

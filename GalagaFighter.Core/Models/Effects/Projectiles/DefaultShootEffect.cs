@@ -9,21 +9,12 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
     {
         public override string IconPath => "Sprites/Effects/firerate1.png";
         public override bool IsProjectile => true;
-        private SpriteWrapper _sprite;
         private SpriteDecorations _decorations;
         private Color? _palleteSwap = null;
 
         public DefaultShootEffect()
         {
-            _sprite = new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip.png"));
             _decorations = SetDecorations();
-        }
-
-        public DefaultShootEffect(Color palleteSwap)
-        {
-            _sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", palleteSwap);
-            _decorations = SetDecorations();
-            _palleteSwap = palleteSwap;
         }
 
         private SpriteDecorations SetDecorations()
@@ -41,9 +32,8 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Sprite = _sprite;
             modifiers.Decorations = _decorations; 
-            modifiers.Projectile.OnShootProjectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers, _palleteSwap));
+            modifiers.Projectile.OnShootProjectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers, owner.PalleteSwap));
         }
     }
 }

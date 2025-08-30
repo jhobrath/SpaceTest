@@ -44,6 +44,7 @@ namespace GalagaFighter.Core.Models.Players
             Health = health;
             BaseStats = stats;
             PalleteSwap = palleteSwap;
+            Sprite = new SpriteWrapper("Sprites/Ships/MainShip.png", palleteSwap);
         }
 
         public override void Update(Game game)

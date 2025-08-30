@@ -234,14 +234,14 @@ namespace GalagaFighter.Core
                 player.Initialize(health, stats, color);
 
                 var effectManager = _effectManagerFactory.GetEffectManager(player);
-                effectManager.AddEffect(new DefaultShootEffect(color));
-                effectManager.AddEffect(new ElectricShotEffect(color));
-                effectManager.AddEffect(new IceShotEffect(color));
-                effectManager.AddEffect(new WoodShotEffect(color));
-                effectManager.AddEffect(new ExplosiveShotEffect(color));
-                effectManager.AddEffect(new NinjaShotEffect(color));
-                effectManager.AddEffect(new MagnetEffect(color));
-                effectManager.AddEffect(new MudShotEffect(color));
+                effectManager.AddEffect(new DefaultShootEffect());
+                effectManager.AddEffect(new ElectricShotEffect());
+                effectManager.AddEffect(new IceShotEffect());
+                effectManager.AddEffect(new WoodShotEffect());
+                effectManager.AddEffect(new ExplosiveShotEffect());
+                effectManager.AddEffect(new NinjaShotEffect());
+                effectManager.AddEffect(new MagnetEffect());
+                effectManager.AddEffect(new MudShotEffect());
 
 
                 //var effect = parts[1];

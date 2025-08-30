@@ -34,7 +34,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Projectile.Phases.Add(this, [1.0f, 1.4f, 1.8f, 3f, 7f]);
+            modifiers.Projectile.Phases.Add(this, [1.5f, 7f]);
             modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
             modifiers.Stats.FireRateMultiplier = 1.5f;
             modifiers.Projectile.OnShoot = HandleShotFired;
@@ -42,16 +42,17 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             {
                 return new ElectricProjectile(controller, player, position, modifiers);
             });
+            modifiers.Projectile.DeactivateOnCollision = false;
             modifiers.Projectile.CollideDistanceFromPlayer = 135f;
             modifiers.Decorations = _decorations;
         }
 
         private void HandlePhaseChange(Projectile projectile, int phase)
         {
-            if (phase == 5)
-            {
+            if (phase == 1)
+                projectile.Modifiers.SpeedMultiplier = .2f;
+            else
                 projectile.IsActive = false;
-            }
         }
     }
 }

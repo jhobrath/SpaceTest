@@ -21,6 +21,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         private readonly IProjectileController _projectileController;
         public PlayerProjectile Modifiers { get; private set; }
         public Rectangle CurrentFrameRect { get; set; }
+        public virtual Action<Player>? OnNearPlayer => null;
         //public Vector2 CurrentFrameSpeed { get; set; }
 
         public float Lifetime { get; set; } = 0f;
@@ -43,6 +44,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override void Draw()
         {
             Sprite.Draw(Center, Rotation, CurrentFrameRect.Width, CurrentFrameRect.Height, Color);
+            Raylib.DrawRectangleLines((int)Rect.Position.X, (int)Rect.Position.Y, (int)Rect.Size.X, (int)Rect.Size.Y, Color.Red);
         }
 
         public virtual List<PlayerEffect> CreateEffects() => [];

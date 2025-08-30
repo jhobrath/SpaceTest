@@ -55,8 +55,10 @@ namespace GalagaFighter.Core.Services
                 // Check both collision types - projectile could hit both edge AND player
                 var hasEdgeCollision = _edgeDetector.HasCollision(projectile);
                 var hasPlayerCollision = _contactDetector.HasCollision(player, projectile);
-
                 var hasNearCollision = _nearbyCollisionDetector.HasCollision(player, projectile, projectile.Modifiers.CollideDistanceFromPlayer);
+
+                if (hasNearCollision)  
+                    projectile.OnNearPlayer?.Invoke(player);
 
                 if (hasEdgeCollision || hasPlayerCollision || hasNearCollision)
                 {
@@ -75,7 +77,6 @@ namespace GalagaFighter.Core.Services
 
             foreach (var effect in effects)
                 effectManager.AddEffect(effect);
-
 
             player.Health -= projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * (1 / modifiers.Stats.Shield)*(1/player.BaseStats.Shield);
 

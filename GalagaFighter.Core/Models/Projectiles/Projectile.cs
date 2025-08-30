@@ -46,7 +46,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         }
 
         public virtual List<PlayerEffect> CreateEffects() => [];
-        public virtual List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) => [];
+        public virtual List<Collision> CreateCollisions(Player owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed) => [];
 
     }
 }

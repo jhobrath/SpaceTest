@@ -31,11 +31,11 @@ namespace GalagaFighter.Core.Models.Projectiles
             return new SpriteWrapper(SpriteGenerationService.CreateProjectileSprite(ProjectileType.Wall, (int)_baseSize.X, (int)_baseSize.Y));
         }
 
-        public override List<Collision> CreateCollisions(Guid owner, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        public override List<Collision> CreateCollisions(Player player, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
             return
             [
-                new DefaultCollision(owner, initialPosition, initialSize, initialSpeed)
+                new DefaultCollision(player.Id, initialPosition, initialSize, initialSpeed)
             ];
         }
     }

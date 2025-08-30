@@ -235,6 +235,7 @@ namespace GalagaFighter.Core
 
                 var effectManager = _effectManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect(color));
+                effectManager.AddEffect(new ElectricShotEffect(color));
                 effectManager.AddEffect(new IceShotEffect(color));
                 effectManager.AddEffect(new WoodShotEffect(color));
                 effectManager.AddEffect(new ExplosiveShotEffect(color));
@@ -252,7 +253,7 @@ namespace GalagaFighter.Core
                 //    player.OffensiveAugment = () => new RicochetEffect();
                 //else if(effect == "TimedBarrage")
                 //    player.OffensiveAugment = () => new TimedBarrageEffect();
-                player.OffensiveAugment = () => new KnuckleballEffect();
+                player.OffensiveAugment = () => new PhantomsEffect();
                 player.DefensiveAugment = () => new BurstEffect();
             }
         }

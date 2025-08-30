@@ -66,6 +66,8 @@ namespace GalagaFighter.Core.Models.Players
         public Action<Projectile, Projectile, Player, Player>? OnNearProjectile { get; set; }
         public float Homing { get; set; }
         public bool Untouchable { get; set; }
+        public Dictionary<PlayerEffect, Action<Projectile, Player>> OnNearPlayer { get; set; } = [];
+        public float CollideDistanceFromPlayer { get; internal set; }
 
         public PlayerProjectile Clone()
         {
@@ -106,6 +108,8 @@ namespace GalagaFighter.Core.Models.Players
                 OnClone = OnClone,
                 OnNearProjectile = OnNearProjectile,
                 Homing = Homing,
+                CollideDistanceFromPlayer = CollideDistanceFromPlayer,
+                Untouchable = Untouchable,
 
 
                 //Don't include

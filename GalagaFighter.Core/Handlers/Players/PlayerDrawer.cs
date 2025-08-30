@@ -133,18 +133,18 @@ namespace GalagaFighter.Core.Handlers.Players
 
         private Color GetShootAlpha(float duration)
         {
-            return new Color(1, 1, 1, ((.25f - duration) / .25f));
+            return new Color(1, 1, 1, ((.5f - duration) / .5f));
         }
 
         private Color UpdateColors(Color color, EffectModifiers effects)
         {
-            var color1= color.ApplyRed(1 - effects.Display.RedAlpha)
+            color = color.ApplyRed(1 - effects.Display.RedAlpha)
                         .ApplyGreen(1 - effects.Display.GreenAlpha)
                         .ApplyBlue(1 - effects.Display.BlueAlpha);
 
-            var color2 = color1.ApplyAlpha(effects.Display.Opacity);
+            color = color.ApplyAlpha(effects.Display.Opacity);
 
-            return color2;
+            return color;
         }
     }
 }

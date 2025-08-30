@@ -71,14 +71,9 @@ namespace GalagaFighter.Core.Controllers
 
         private void SetPhase(Projectile projectile, float frameTime)
         {
-            var originalLifeTime = (Math.Max(projectile.Speed.X,1020f) / 1020f) * projectile.Lifetime;
+            var originalLifeTime = (Math.Max(Math.Abs(projectile.Speed.X)* projectile.Modifiers.SpeedMultiplier, 1020f) / 1020f) * projectile.Lifetime;
             projectile.Lifetime += frameTime;
-            var actualLifeTime = (Math.Max(projectile.Speed.X,1020f) / 1020f) * projectile.Lifetime; 
-
-            if(projectile.Lifetime > 2.25)
-            {
-                var s = "";
-            }
+            var actualLifeTime = (Math.Max(Math.Abs(projectile.Speed.X) * projectile.Modifiers.SpeedMultiplier, 1020f) / 1020f) * projectile.Lifetime; 
 
             foreach(var phaseList in projectile.Modifiers.Phases)
                 for(var i = 0; i < phaseList.Value.Count;i++)

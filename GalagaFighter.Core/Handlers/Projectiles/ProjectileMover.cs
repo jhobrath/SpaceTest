@@ -45,13 +45,9 @@ namespace GalagaFighter.Core.Handlers.Projectiles
             if (projectile.Modifiers.Homing != 0f)
                 AdjustFromHoming(projectile);
 
-            var currentFrameSpeed = projectile.Modifiers.SpeedMultiplier * projectile.Speed;
-
-            //projectile.Modifiers.VerticalPositionIncrement += ((projectile.Modifiers.VerticalPositionMultiplier * projectile.Modifiers.VerticalPositionIncrement) - projectile.Modifiers.VerticalPositionIncrement) * frameTime;
             projectile.Modifiers.VerticalPositionOffset += projectile.Modifiers.VerticalPositionIncrement * frameTime;
 
-            projectile.Move(currentFrameSpeed.X * frameTime, currentFrameSpeed.Y * frameTime + projectile.Modifiers.VerticalPositionOffset*frameTime);
-            projectile.HurryTo(x: currentFrameSpeed.X);
+            projectile.Move(projectile.Speed.X * projectile.Modifiers.SpeedMultiplier * frameTime, projectile.Speed.Y * frameTime + projectile.Modifiers.VerticalPositionOffset*frameTime);
         }
 
         private void AdjustFromHoming(Projectile projectile)

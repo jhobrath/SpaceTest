@@ -45,6 +45,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IProjectileProjectileCollisionService, ProjectileProjectileCollisionService>();
             services.AddTransient<IPlayerSpender, PlayerSpender>();
             services.AddTransient<IRepulsionProjectileService, RepulsionProjectileService>();
+            services.AddTransient<INearbyCollisionDetector, NearbyCollisionDetector>();
 
             _provider = services.BuildServiceProvider();
         }

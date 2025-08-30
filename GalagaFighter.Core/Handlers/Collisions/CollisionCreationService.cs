@@ -39,10 +39,15 @@ namespace GalagaFighter.Core.Handlers.Collisions
 
             var size = new Vector2(rect.Width, rect.Height);
 
-            var collisions = projectile.CreateCollisions(player.Id, position, size, speedOverride ?? new Vector2(speed.X, 0f));
+            var collisions = projectile.CreateCollisions(player, position, size, speedOverride ?? new Vector2(speed.X, 0f));
 
             foreach (var collision in collisions)
             {
+                _objectService.AddGameObject(collision);
+
+                if (collision.AnimateManually)
+                    continue;
+
                 collision.Move(x: -collision.Rect.Size.X / 2, y: -collision.Rect.Size.Y / 2);
 
                 var positionXWithinShipBounds = (float)Math.Clamp(collision.Rect.X,
@@ -54,7 +59,6 @@ namespace GalagaFighter.Core.Handlers.Collisions
 
                 collision.MoveTo(x: positionXWithinShipBounds, y: positionYWithinShipBounds);
                 collision.GlueVerticallyTo(player);
-                _objectService.AddGameObject(collision);
             }
         }
     }

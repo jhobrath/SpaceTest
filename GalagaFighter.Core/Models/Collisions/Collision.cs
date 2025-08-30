@@ -10,8 +10,9 @@ namespace GalagaFighter.Core.Models.Collisions
         protected virtual float SpeedDecreaseFactor => 5f;
         protected virtual bool FadeOut => true;
         protected virtual float Duration => 1f; // Default duration for fade-out
+        public virtual bool AnimateManually => false;
 
-        private float _lifetimeThusFar = 0f;
+        protected float _lifetimeThusFar = 0f;
         private float _speedDecreaseFactor = 0f;
         private Player? _gluedTo;
         private float? _gluedOffsetY;
@@ -19,19 +20,27 @@ namespace GalagaFighter.Core.Models.Collisions
         public Collision(Guid owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
             : base(owner, sprite, initialPosition, initialSize, new Vector2(Math.Clamp(initialSpeed.X, -500f, 500f),0f))
         {
-            SetDrawPriority(5);
-            Rotation = 360f * (float)Game.Random.NextDouble();
-            var randomScaleFactor = (float)Game.Random.NextDouble() * .5f + .75f;
-            Scale(randomScaleFactor, randomScaleFactor);
-            _speedDecreaseFactor = SpeedDecreaseFactor * (float)(Game.Random.NextDouble() * .5 + .75f);
+            if(!AnimateManually)
+            { 
+                SetDrawPriority(5);
+                Rotation = 360f * (float)Game.Random.NextDouble();
+                var randomScaleFactor = (float)Game.Random.NextDouble() * .5f + .75f;
+                Scale(randomScaleFactor, randomScaleFactor);
+                _speedDecreaseFactor = SpeedDecreaseFactor * (float)(Game.Random.NextDouble() * .5 + .75f);
+            }
         }
 
         public override void Update(Game game)
         {
             var frameTime = Raylib.GetFrameTime();
-            UpdatePosition(frameTime);
-            UpdateColor(frameTime);
-            UpdateGluedVerticalPosition();
+            
+            if(!AnimateManually)
+            { 
+                UpdatePosition(frameTime);
+                UpdateColor(frameTime);
+                UpdateGluedVerticalPosition();
+            }
+
             Sprite.Update(frameTime);
             _lifetimeThusFar += frameTime;
             if (_lifetimeThusFar >= Duration)
@@ -60,7 +69,7 @@ namespace GalagaFighter.Core.Models.Collisions
 
         public override void Draw()
         {
-            Sprite.Draw(Center, 0f, Rect.Width, Rect.Height, Color);
+            Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
         }
 
         public void GlueVerticallyTo(Player target)

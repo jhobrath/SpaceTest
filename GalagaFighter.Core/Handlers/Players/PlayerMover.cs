@@ -52,7 +52,7 @@ namespace GalagaFighter.Core.Handlers.Players
             }
 
             var speedVariability = 600f;
-            var baseSpeed = 1200f*player.BaseStats.SpeedMultiplier * modifiers.Stats.SpeedMultiplier;
+            var baseSpeed = 1200f*player.BaseStats.SpeedMultiplier;
             var speedFactor = baseSpeed - Math.Min(speedVariability, speedVariability/durationFactor);
 
             if(player.IsPlayer1)
@@ -60,7 +60,7 @@ namespace GalagaFighter.Core.Handlers.Players
                 DebugWriter.Write(speedFactor.ToString());
             }
             var signFactor = left ^ !player.IsPlayer1 ? -1 : 1;
-            var speedY = speedFactor * signFactor;
+            var speedY = speedFactor * signFactor * modifiers.Stats.SpeedMultiplier;
 
             player.HurryTo(x: player.Speed.X, y: speedY);
         }

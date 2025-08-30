@@ -11,17 +11,17 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Projectiles
 {
-    public class IceProjectile : Projectile
+    public class ElectricProjectile : Projectile
     {
-        private static Vector2 _baseSize => new(95f, 42f);
-        private static Vector2 _baseSpeed => new(1020f, 0f);
+        private static Vector2 _baseSize => new(60f, 60f);
+        private static Vector2 _baseSpeed => new(250f, 0f);
 
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed; 
-        public override int BaseDamage => 0;
-        public override Vector2 SpawnOffset => new(-50, 42);
+        public override int BaseDamage => 8;
+        public override Vector2 SpawnOffset => new(-70, 42);
 
-        public IceProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
+        public ElectricProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
             AudioService.PlayShootSound();
@@ -29,21 +29,25 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         private static SpriteWrapper GetSprite()
         {
-            var texture = TextureService.Get("Sprites/Projectiles/ice.png");
-            return new SpriteWrapper(texture, 6, .33f);
+            var texture = TextureService.Get("Sprites/Projectiles/electric.png");
+            return new SpriteWrapper(texture, 5, .125f);
+        }
+
+        public override void Update(Game game)
+        {
+            base.Update(game);
         }
 
         public override List<PlayerEffect> CreateEffects()
         {
-            return new List<PlayerEffect> { new FrozenEffect() };
+            return  [new ElectricEffect()];
         }
 
         public override List<Collision> CreateCollisions(Player player, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
-            var size = Math.Clamp(initialSize.Y, 50f, 200f);
             return
             [
-                new IceShotCollision(player.Id, initialPosition, new Vector2(size,size), initialSpeed)
+                new ZapCollision(player, this)
             ];
         }
     }

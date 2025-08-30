@@ -29,8 +29,14 @@
     <None Remove="Sprites\Players\mud.pdn" />
     <None Remove="Sprites\Players\Ships.pdn" />
     <None Remove="Sprites\Powerups\powerups.pdn" />
+    <None Remove="Sprites\Projectiles\electric.png" />
     <None Remove="Sprites\Projectiles\mud_splat.png" />
+    <None Remove="Sprites\Projectiles\zap.png" />
     <None Remove="Sprites\Ships\MainShip.png" />
+    <None Remove="Sprites\Ships\MainShipElectricGuns.png" />
+    <None Remove="Sprites\Ships\MainShipElectricGuns_ShootBoth.png" />
+    <None Remove="Sprites\Ships\MainShipElectricGuns_ShootLeft.png" />
+    <None Remove="Sprites\Ships\MainShipElectricGuns_ShootRight.png" />
     <None Remove="Sprites\Ships\MainShipExplosive.png" />
     <None Remove="Sprites\Ships\MainShipExplosiveGuns.png" />
     <None Remove="Sprites\Ships\MainShipExplosive_Move.png" />
@@ -82,6 +88,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Sprites\Projectiles\zap.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Sprites\Effects\ricochet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -92,6 +104,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Effects\timedbarrage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Projectiles\electric.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipElectricGuns.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipElectricGuns_ShootBoth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipElectricGuns_ShootLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipElectricGuns_ShootRight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

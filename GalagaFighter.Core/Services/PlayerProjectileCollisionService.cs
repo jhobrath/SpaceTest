@@ -42,6 +42,7 @@ namespace GalagaFighter.Core.Services
             }
         }
 
+        private float _collisionCount = 0f;
 
         private void HandleCollisions(Player player, EffectModifiers modifiers)
         {
@@ -62,11 +63,16 @@ namespace GalagaFighter.Core.Services
                     projectile.OnNearPlayer?.Invoke(player);
 
                 var hasPlayerCollision = _contactDetector.HasCollision(player, projectile);
-
-                if (hasEdgeCollision || hasPlayerCollision || hasNearCollision)
-                {
+                if (hasPlayerCollision || hasNearCollision)
                     Collide(player, projectile, modifiers);
+
+                if (hasPlayerCollision)
+                {
+                    _collisionCount += Raylib_cs.Raylib.GetFrameTime();
+                    DebugWriter.Write(_collisionCount.ToString());
+                    projectile.OnCollide?.Invoke(player);
                 }
+
             }
         }
 
@@ -81,7 +87,10 @@ namespace GalagaFighter.Core.Services
             foreach (var effect in effects)
                 effectManager.AddEffect(effect);
 
-            player.Health -= projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * (1 / modifiers.Stats.Shield)*(1/player.BaseStats.Shield);
+            var damage = projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * (1 / modifiers.Stats.Shield) * (1 / player.BaseStats.Shield);
+            player.Health -= damage;
+
+
 
             var collisionObjects = projectile.Modifiers.OnCollide?.Invoke(player, projectile);
             if (collisionObjects != null && collisionObjects.Count > 0)

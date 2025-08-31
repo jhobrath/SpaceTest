@@ -13,12 +13,12 @@ namespace GalagaFighter.Core.Handlers.Collisions
 
         public static bool CompareRectVertices(Rectangle rect, Vector2[] vertices)
         {
-            // First do a quick bounding rect check for performance
+            // Quick bounding rect check
             var triangleBounds = GetTriangleBoundingRect(vertices);
             if (!Raylib.CheckCollisionRecs(rect, triangleBounds))
                 return false;
 
-            // Check multiple points of the rectangle for better accuracy
+            // Rectangle points
             var rectPoints = new Vector2[]
             {
                 new(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f), // Center
@@ -28,9 +28,18 @@ namespace GalagaFighter.Core.Handlers.Collisions
                 new(rect.X + rect.Width, rect.Y + rect.Height) // Bottom-right
             };
 
+            // Check if any rect point is inside triangle
             foreach (var point in rectPoints)
             {
                 if (IsPointInTriangle(point, vertices[0], vertices[1], vertices[2]))
+                    return true;
+            }
+
+            // Check if any triangle vertex is inside the rectangle
+            foreach (var vertex in vertices)
+            {
+                if (vertex.X >= rect.X && vertex.X <= rect.X + rect.Width &&
+                    vertex.Y >= rect.Y && vertex.Y <= rect.Y + rect.Height)
                     return true;
             }
 

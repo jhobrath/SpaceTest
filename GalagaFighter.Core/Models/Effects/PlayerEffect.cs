@@ -28,7 +28,7 @@ namespace GalagaFighter.Core.Models.Effects
         {
             if(IsProjectile)
             {
-                DebugWriter.Write(_remainingTime.ToString());
+                //DebugWriter.Write(_remainingTime.ToString());
             }
 
             if (Duration > 0f)

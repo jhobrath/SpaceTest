@@ -26,7 +26,6 @@ namespace GalagaFighter.Core
 
         internal static void Write(string text)
         {
-            return;
             int fontSize = 12;
             int lineHeight = 14;
             int x = 400;

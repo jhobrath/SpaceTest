@@ -29,6 +29,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public virtual Action? OnNearEdge => null;
 
         public float Lifetime { get; set; } = 0f;
+        public virtual Action<Player>? OnCollide { get; } = null;
 
         protected Projectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
             : base(owner.Id, sprite, initialPosition, initialSize, new Vector2(initialSpeed.X * (owner.IsPlayer1 ? 1: -1), 0f))

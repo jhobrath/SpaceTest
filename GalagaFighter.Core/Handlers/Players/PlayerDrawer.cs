@@ -36,12 +36,28 @@ namespace GalagaFighter.Core.Handlers.Players
             foreach (var decoration in modifiers.Decorations ?? [])
                 decoration.Value?.Sprite.Update(frameTime);
 
+            var lastShot = new[] { _lastShotBoth[player], _lastShotLeft[player], _lastShotRight[player] }.Where(x => x > 0).Min();
+            var lastShotKickback = lastShot < .3f ? 5 : (lastShot < .4 ? 4 : (lastShot < .5 ? 3 : (lastShot < .6 ? 2 : (lastShot < .7 ? 1 : 0))));
+            lastShotKickback *= player.IsPlayer1 ? -1 : 1;
+
+            //var lastShotLeftRotation = -(float)(_lastShotLeft[player] < .3f ? 2 : (_lastShotLeft[player] < .4 ? 1.5 : (_lastShotLeft[player] < .5 ? 1 : (_lastShotLeft[player] < .6 ? .5 : (_lastShotLeft[player] < .7 ? 0 : 0)))));
+            //var lastShotRightRotation = (float)(_lastShotRight[player] < .3f ? 2 : (_lastShotRight[player] < .4 ? 1.5 : (_lastShotRight[player] < .5 ? 1 : (_lastShotRight[player] < .6 ? .5 : (_lastShotRight[player] < .7 ? 0 : 0)))));
+            //if (_lastShotBoth[player] < _lastShotRight[player] && _lastShotBoth[player] < _lastShotRight[player])
+            //{
+            //    lastShotLeftRotation = 0f;
+            //    lastShotRightRotation = 0f;
+            //}
+
+            player.Move(x: lastShotKickback);
+            //player.Rotation += lastShotLeftRotation + lastShotRightRotation;
+
             DrawShoot(player, modifiers, playerShootState);
             DrawMove(modifiers, player);
-            DrawPlayer(player, modifiers);
+            DrawPlayer(player, modifiers, playerShootState);
             DrawGuns(player, modifiers);
 
-            foreach(var decoration in modifiers.Decorations?.Other ?? [])
+
+            foreach (var decoration in modifiers.Decorations?.Other ?? [])
             {
                 // Apply rotation transformation to the offset
                 Vector2 originalOffset = decoration.Offset;
@@ -56,13 +72,18 @@ namespace GalagaFighter.Core.Handlers.Players
                 
                 decoration.Sprite.Draw(player.Center + rotatedOffset, player.Rotation, decoration.Size!.Value.X, decoration.Size!.Value.Y, Color.White);
             }
+
+            player.Move(x: -lastShotKickback);
+            //player.Rotation -= lastShotLeftRotation + lastShotRightRotation;
         }
 
-        private void DrawPlayer(Player player, EffectModifiers modifiers)
+        private void DrawPlayer(Player player, EffectModifiers modifiers, PlayerShootState playerShootState)
         {
             var color = UpdateColors(Color.White, modifiers);
+            
             var jiggleFactorX = modifiers.Jiggle ? (float)Game.Random.NextDouble() * 4 : 0;
             var jiggleFactorY = modifiers.Jiggle ? (float)Game.Random.NextDouble() * 4 : 0;
+
             DrawWithPhantoms(player, modifiers, p =>
             {
                 player.Sprite?.Draw(new Vector2(p.Center.X + jiggleFactorX, p.Center.Y + jiggleFactorY), p.Rotation, player.Rect.Width, player.Rect.Height, color);

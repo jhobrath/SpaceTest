@@ -25,6 +25,11 @@
     <None Remove="Sprites\Effects\doubleshot.png" />
     <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
     <None Remove="Sprites\Effects\Whirlwind.png" />
+    <None Remove="Sprites\Particles\dot_1.png" />
+    <None Remove="Sprites\Particles\dot_2.png" />
+    <None Remove="Sprites\Particles\dot_3.png" />
+    <None Remove="Sprites\Particles\dot_4.png" />
+    <None Remove="Sprites\Particles\dot_5.png" />
     <None Remove="Sprites\Players\3frameships.pdn" />
     <None Remove="Sprites\Players\mud.pdn" />
     <None Remove="Sprites\Players\Ships.pdn" />
@@ -88,6 +93,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Sprites\Particles\dot_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\dot_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\dot_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\dot_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\dot_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Projectiles\zap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

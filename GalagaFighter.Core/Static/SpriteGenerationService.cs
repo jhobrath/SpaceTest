@@ -243,5 +243,278 @@ namespace GalagaFighter.Core.Static
                 frameDuration
             );
         }
+
+        #region Particle Sprites
+
+        /// <summary>
+        /// Creates a simple circular particle sprite
+        /// </summary>
+        public static SpriteWrapper CreateCircleParticleSprite(int radius = 3, Color? color = null)
+        {
+            string key = $"CircleParticle_{radius}_{(color?.R ?? 255)},{(color?.G ?? 255)},{(color?.B ?? 255)},{(color?.A ?? 255)}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture);
+
+            int size = radius * 2 + 2;
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(size, size);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            
+            Raylib.DrawCircle(size / 2, size / 2, radius, color ?? Color.White);
+            
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture);
+        }
+
+        /// <summary>
+        /// Creates a star-shaped particle sprite
+        /// </summary>
+        public static SpriteWrapper CreateStarParticleSprite(int size = 6, Color? color = null)
+        {
+            string key = $"StarParticle_{size}_{(color?.R ?? 255)},{(color?.G ?? 255)},{(color?.B ?? 255)},{(color?.A ?? 255)}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture);
+
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(size, size);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            
+            int centerX = size / 2;
+            int centerY = size / 2;
+            Color drawColor = color ?? Color.White;
+            
+            // Draw a simple star shape
+            Raylib.DrawLine(centerX, 0, centerX, size - 1, drawColor);
+            Raylib.DrawLine(0, centerY, size - 1, centerY, drawColor);
+            Raylib.DrawLine(1, 1, size - 2, size - 2, drawColor);
+            Raylib.DrawLine(size - 2, 1, 1, size - 2, drawColor);
+            
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture);
+        }
+
+        /// <summary>
+        /// Creates a square particle sprite
+        /// </summary>
+        public static SpriteWrapper CreateSquareParticleSprite(int size = 4, Color? color = null)
+        {
+            string key = $"SquareParticle_{size}_{(color?.R ?? 255)},{(color?.G ?? 255)},{(color?.B ?? 255)},{(color?.A ?? 255)}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture);
+
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(size, size);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            
+            Raylib.DrawRectangle(0, 0, size, size, color ?? Color.White);
+            
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture);
+        }
+
+        /// <summary>
+        /// Creates a spark particle sprite (elongated diamond)
+        /// </summary>
+        public static SpriteWrapper CreateSparkParticleSprite(int width = 8, int height = 3, Color? color = null)
+        {
+            string key = $"SparkParticle_{width}_{height}_{(color?.R ?? 255)},{(color?.G ?? 255)},{(color?.B ?? 255)},{(color?.A ?? 255)}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture);
+
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(width, height);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            
+            int centerX = width / 2;
+            int centerY = height / 2;
+            Color drawColor = color ?? Color.Yellow;
+            
+            // Draw a diamond/spark shape
+            Raylib.DrawTriangle(
+                new Vector2(0, centerY),
+                new Vector2(centerX, 0),
+                new Vector2(centerX, height - 1),
+                drawColor
+            );
+            Raylib.DrawTriangle(
+                new Vector2(width - 1, centerY),
+                new Vector2(centerX, 0),
+                new Vector2(centerX, height - 1),
+                drawColor
+            );
+            
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture);
+        }
+
+        /// <summary>
+        /// Creates a smoke particle sprite (soft circle with gradient)
+        /// </summary>
+        public static SpriteWrapper CreateSmokeParticleSprite(int radius = 8, Color? color = null)
+        {
+            string key = $"SmokeParticle_{radius}_{(color?.R ?? 100)},{(color?.G ?? 100)},{(color?.B ?? 100)},{(color?.A ?? 150)}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture);
+
+            int size = radius * 2 + 2;
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(size, size);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            
+            int centerX = size / 2;
+            int centerY = size / 2;
+            Color baseColor = color ?? new Color(100, 100, 100, 150);
+            
+            // Draw concentric circles to create a gradient effect
+            for (int r = radius; r > 0; r--)
+            {
+                int alpha = (int)(baseColor.A * (1f - (float)r / radius) * 0.8f);
+                Color circleColor = new Color(baseColor.R, baseColor.G, baseColor.B, alpha);
+                Raylib.DrawCircle(centerX, centerY, r, circleColor);
+            }
+            
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture);
+        }
+
+        /// <summary>
+        /// Creates an ice crystal particle sprite
+        /// </summary>
+        public static SpriteWrapper CreateIceCrystalParticleSprite(int size = 6)
+        {
+            string key = $"IceCrystalParticle_{size}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture);
+
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(size, size);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            
+            int centerX = size / 2;
+            int centerY = size / 2;
+            
+            // Draw ice crystal shape
+            Raylib.DrawPixel(centerX, centerY, Color.White);
+            Raylib.DrawPixel(centerX - 1, centerY, Color.SkyBlue);
+            Raylib.DrawPixel(centerX + 1, centerY, Color.SkyBlue);
+            Raylib.DrawPixel(centerX, centerY - 1, Color.SkyBlue);
+            Raylib.DrawPixel(centerX, centerY + 1, Color.SkyBlue);
+            
+            if (size > 4)
+            {
+                Raylib.DrawPixel(centerX - 1, centerY - 1, Color.Blue);
+                Raylib.DrawPixel(centerX + 1, centerY - 1, Color.Blue);
+                Raylib.DrawPixel(centerX - 1, centerY + 1, Color.Blue);
+                Raylib.DrawPixel(centerX + 1, centerY + 1, Color.Blue);
+            }
+            
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture);
+        }
+
+        #endregion
+
+        #region Dot-based Particle Sprites
+
+        /// <summary>
+        /// Creates a dot-based particle sprite using pre-made feathered dot images
+        /// </summary>
+        /// <param name="intensity">1-5, corresponds to dot_1.png through dot_5.png</param>
+        /// <param name="color">Optional color tint to apply to the dot</param>
+        public static SpriteWrapper CreateDotParticleSprite(int intensity = 3, Color? color = null)
+        {
+            // Clamp intensity to valid range
+            intensity = Math.Clamp(intensity, 1, 5);
+            
+            string spritePath = $"Sprites/Particles/dot_{intensity}.png";
+            
+            if (color.HasValue)
+            {
+                // Use palette swap to apply color tint
+                return new SpriteWrapper(spritePath, color.Value);
+            }
+            else
+            {
+                // Use original white dot
+                return new SpriteWrapper(spritePath);
+            }
+        }
+
+        /// <summary>
+        /// Creates a soft particle sprite (dot_1 or dot_2) - good for smoke, gentle effects
+        /// </summary>
+        public static SpriteWrapper CreateSoftParticleSprite(Color? color = null)
+        {
+            return CreateDotParticleSprite(Game.Random.Next(1, 3), color); // dot_1 or dot_2
+        }
+
+        /// <summary>
+        /// Creates a medium particle sprite (dot_3) - good for general purpose particles
+        /// </summary>
+        public static SpriteWrapper CreateMediumParticleSprite(Color? color = null)
+        {
+            return CreateDotParticleSprite(3, color); // dot_3
+        }
+
+        /// <summary>
+        /// Creates a hard particle sprite (dot_4 or dot_5) - good for sparks, explosions
+        /// </summary>
+        public static SpriteWrapper CreateHardParticleSprite(Color? color = null)
+        {
+            return CreateDotParticleSprite(Game.Random.Next(4, 6), color); // dot_4 or dot_5
+        }
+
+        /// <summary>
+        /// Creates a random intensity dot particle sprite - good for varied effects
+        /// </summary>
+        public static SpriteWrapper CreateRandomDotParticleSprite(Color? color = null)
+        {
+            return CreateDotParticleSprite(Game.Random.Next(1, 6), color); // any dot_1 through dot_5
+        }
+
+        /// <summary>
+        /// Creates fire-colored dot particles with random intensity for realistic fire
+        /// </summary>
+        public static SpriteWrapper CreateFireDotParticleSprite()
+        {
+            // Fire colors: orange to yellow to white (hottest)
+            Color[] fireColors = {
+                Color.Orange,
+                new Color(255, 140, 0, 255),  // Dark orange
+                Color.Yellow,
+                new Color(255, 255, 100, 255), // Light yellow
+                new Color(255, 255, 200, 255)  // Near white (hottest)
+            };
+            
+            Color fireColor = fireColors[Game.Random.Next(fireColors.Length)];
+            int intensity = Game.Random.Next(2, 5); // Medium to hard for fire
+            
+            return CreateDotParticleSprite(intensity, fireColor);
+        }
+
+        /// <summary>
+        /// Creates smoke-colored dot particles with soft edges
+        /// </summary>
+        public static SpriteWrapper CreateSmokeDotParticleSprite()
+        {
+            // Smoke colors: gray variations
+            Color[] smokeColors = {
+                new Color(100, 100, 100, 180),
+                new Color(120, 120, 120, 160),
+                new Color(80, 80, 80, 200),
+                new Color(140, 140, 140, 140)
+            };
+            
+            Color smokeColor = smokeColors[Game.Random.Next(smokeColors.Length)];
+            return CreateDotParticleSprite(Game.Random.Next(1, 3), smokeColor); // Soft dots for smoke
+        }
+
+        #endregion
     }
 }

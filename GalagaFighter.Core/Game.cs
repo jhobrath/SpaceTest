@@ -45,8 +45,8 @@ namespace GalagaFighter.Core
         private readonly IProjectileProjectileCollisionService _projectileProjectileCollisionService;
 
         // Player-specific controllers
-        private readonly IPlayerController _playerController1;
-        private readonly IPlayerController _playerController2;
+        private IPlayerController _playerController1;
+        private IPlayerController _playerController2;
 
         private string[] _args = [];
 
@@ -286,6 +286,8 @@ namespace GalagaFighter.Core
 
             if (Raylib.IsKeyPressed(KeyboardKey.Space))
             {
+                _playerController1 = Registry.Get<IPlayerController>();
+                _playerController2 = Registry.Get<IPlayerController>();
                 _objectService.Reset();
                 InitializePlayers();
                 if (_args.Length > 0)

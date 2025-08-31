@@ -49,7 +49,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override void Draw()
         {
             Sprite.Draw(Center, Rotation, CurrentFrameRect.Width, CurrentFrameRect.Height, Color);
-            Raylib.DrawRectangleLines((int)Rect.Position.X, (int)Rect.Position.Y, (int)Rect.Size.X, (int)Rect.Size.Y, Color.Red);
+            //Raylib.DrawRectangleLines((int)Rect.Position.X, (int)Rect.Position.Y, (int)Rect.Size.X, (int)Rect.Size.Y, Color.Red);
         }
 
         public virtual List<PlayerEffect> CreateEffects() => [];

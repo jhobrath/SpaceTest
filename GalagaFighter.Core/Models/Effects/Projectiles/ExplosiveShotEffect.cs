@@ -33,6 +33,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Decorations = _decorations;
             modifiers.Projectile.DeactivateOnCollision = false;
+            modifiers.Projectile.OnShoot = HandleShotFired;
         }
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)

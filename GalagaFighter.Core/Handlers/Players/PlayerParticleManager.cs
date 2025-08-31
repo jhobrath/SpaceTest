@@ -1,152 +1,128 @@
-using GalagaFighter.Core.Models.Particles;
+using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Players;
-using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Static;
+using Raylib_cs;
 using System;
+using System.Linq;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Handlers.Players
 {
     public interface IPlayerParticleManager
     {
-        void Initialize(Player player);
-        void UpdateMovementTrails(Player player, bool isMoving, float movementIntensity = 1f);
-        void UpdateTrailPositions(Player player);
-        void CleanupTrails();
+        void UpdateMovementTrails(Player player);
+        void CleanupTrails(Player player);
     }
 
     public class PlayerParticleManager : IPlayerParticleManager
     {
-        private readonly IParticleService _particleService;
-        private ParticleEmitter _fireTrail;
-        private ParticleEmitter _intenseFireTrail;
-        private bool _isInitialized = false;
-        private bool _wasMovingLastFrame = false;
         private float _currentIntensity = 0f;
 
-        public PlayerParticleManager(IParticleService particleService)
+        public PlayerParticleManager()
         {
-            _particleService = particleService;
         }
 
-        public void Initialize(Player player)
+        public void UpdateMovementTrails(Player player)
         {
-            if (_isInitialized) return;
-
-            // Calculate initial trail position (behind the ship)
-            Vector2 trailPosition = GetTrailPosition(player);
-
-            // Create fire trail emitters
-            _fireTrail = _particleService.CreateFireTrail(trailPosition, player.Id, player.IsPlayer1);
-            _intenseFireTrail = _particleService.CreateIntenseFireTrail(trailPosition, player.Id, player.IsPlayer1);
-
-            // Start with trails disabled
-            _fireTrail.StopEmission();
-            _intenseFireTrail.StopEmission();
-
-            _isInitialized = true;
-        }
-
-        public void UpdateMovementTrails(Player player, bool isMoving, float movementIntensity = 1f)
-        {
-            if (!_isInitialized) return;
-
+            // Calculate intensity directly from player speed
+            float targetIntensity = Math.Min(Math.Abs(player.Speed.Y) / 1200f, 1f);
+            
             // Smooth intensity changes
-            float targetIntensity = isMoving ? movementIntensity : 0f;
             _currentIntensity = Lerp(_currentIntensity, targetIntensity, 0.1f);
 
-            // Update trail positions
-            UpdateTrailPositions(player);
-
-            // Control trail emission based on movement intensity
+            // Update trail effects based on movement intensity
             if (_currentIntensity > 0.1f)
             {
                 if (_currentIntensity > 0.7f) // High intensity movement
                 {
-                    // Use intense fire trail for fast movement
-                    _fireTrail.StopEmission();
-                    _intenseFireTrail.StartEmission();
+                    // Remove normal fire trail, add intense fire trail
+                    RemoveTrailEffect(player, "FireTrail");
+                    AddIntenseFireTrail(player);
                 }
                 else // Normal movement
                 {
-                    // Use regular fire trail
-                    _fireTrail.StartEmission();
-                    _intenseFireTrail.StopEmission();
+                    // Remove intense fire trail, add normal fire trail
+                    RemoveTrailEffect(player, "IntenseFireTrail");
+                    AddNormalFireTrail(player);
                 }
             }
             else
             {
-                // Stop both trails when not moving
-                _fireTrail.StopEmission();
-                _intenseFireTrail.StopEmission();
+                // Remove both trails when not moving (intensity is 0 or very low)
+                RemoveTrailEffect(player, "FireTrail");
+                RemoveTrailEffect(player, "IntenseFireTrail");
             }
-
-            _wasMovingLastFrame = isMoving;
         }
 
-        public void UpdateTrailPositions(Player player)
+        public void CleanupTrails(Player player)
         {
-            if (!_isInitialized) return;
-
-            Vector2 trailPosition = GetTrailPosition(player);
-
-            // Update emitter positions
-            _fireTrail?.MoveTo(trailPosition.X, trailPosition.Y);
-            _intenseFireTrail?.MoveTo(trailPosition.X, trailPosition.Y);
+            // Remove all trail effects
+            RemoveTrailEffect(player, "FireTrail");
+            RemoveTrailEffect(player, "IntenseFireTrail");
         }
 
-        public void CleanupTrails()
+        private void AddNormalFireTrail(Player player)
         {
-            _fireTrail?.StopEmission();
-            _intenseFireTrail?.StopEmission();
-            _isInitialized = false;
+            // Check if already has this effect
+            if (player.ParticleEffects.Any(e => e.Name == "FireTrail"))
+                return;
+
+            var fireTrail = ParticleEffectsLibrary.Get("FireTrail");
+            fireTrail.Offset = GetTrailOffset(player);
+            // FIXED: Use proper fire colors (red/orange) instead of blue
+            if (player.IsPlayer1)
+            {
+                fireTrail.ParticleStartColor = Color.Orange;
+                fireTrail.ParticleEndColor = new Color(255, 50, 0, 0); // Orange to red fade
+            }
+            else
+            {
+                fireTrail.ParticleStartColor = Color.Red;
+                fireTrail.ParticleEndColor = new Color(255, 100, 0, 0); // Red to orange fade
+            }
+            player.ParticleEffects.Add(fireTrail);
         }
 
-        private Vector2 GetTrailPosition(Player player)
+        private void AddIntenseFireTrail(Player player)
+        {
+            // Check if already has this effect
+            if (player.ParticleEffects.Any(e => e.Name == "IntenseFireTrail"))
+                return;
+
+            var intenseFireTrail = ParticleEffectsLibrary.Get("IntenseFireTrail");
+            intenseFireTrail.Offset = GetTrailOffset(player);
+            // FIXED: Use proper intense fire colors (yellow/orange) instead of blue
+            if (player.IsPlayer1)
+            {
+                intenseFireTrail.ParticleStartColor = Color.Yellow; // Hot fire is yellow
+                intenseFireTrail.ParticleEndColor = new Color(255, 165, 0, 0); // Yellow to orange fade
+            }
+            else
+            {
+                intenseFireTrail.ParticleStartColor = new Color(255, 200, 0, 255); // Bright yellow-orange
+                intenseFireTrail.ParticleEndColor = new Color(255, 0, 0, 0); // Fade to red
+            }
+            player.ParticleEffects.Add(intenseFireTrail);
+        }
+
+        private void RemoveTrailEffect(Player player, string effectName)
+        {
+            player.ParticleEffects.RemoveAll(e => e.Name == effectName);
+        }
+
+        private Vector2 GetTrailOffset(Player player)
         {
             // Position the trail at the rear of the ship
-            // For Player 1 (facing right), trail comes from the left side
-            // For Player 2 (facing left), trail comes from the right side
-            
-            float offsetX = player.IsPlayer1 ? -player.Rect.Width * 0.4f : player.Rect.Width * 0.4f;
-            float offsetY = 0f; // Center vertically
+            // Set offset for 0 degree rotation (facing upwards)
+            float offsetX =  0f;
+            float offsetY = player.Rect.Height * 0.4f;
 
-            return new Vector2(
-                player.Center.X + offsetX,
-                player.Center.Y + offsetY
-            );
+            return new Vector2(offsetX, offsetY);
         }
 
         private static float Lerp(float a, float b, float t)
         {
             return a + (b - a) * t;
-        }
-    }
-
-    /// <summary>
-    /// Extension methods to help integrate particle trails with existing player systems
-    /// </summary>
-    public static class PlayerParticleExtensions
-    {
-        /// <summary>
-        /// Calculate movement intensity based on player speed and input duration
-        /// </summary>
-        public static float CalculateMovementIntensity(this Player player, float inputDuration)
-        {
-            // Base intensity on speed magnitude
-            float speedIntensity = Math.Min(Math.Abs(player.Speed.Y) / 1200f, 1f);
-            
-            // Factor in input duration (longer held = more intense)
-            float durationIntensity = Math.Min(inputDuration / 2f, 1f);
-            
-            return Math.Max(speedIntensity, durationIntensity);
-        }
-
-        /// <summary>
-        /// Check if player is currently moving based on speed threshold
-        /// </summary>
-        public static bool IsMoving(this Player player)
-        {
-            return Math.Abs(player.Speed.Y) > 50f; // Threshold for "moving"
         }
     }
 }

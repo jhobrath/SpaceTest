@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Examples\IceProjectileParticleExample.cs" />
+    <Compile Remove="Examples\ParticleEmitterExample.cs" />
+    <Compile Remove="Examples\SelfContainedParticleExample.cs" />
+    <Compile Remove="Examples\YourVisionRealizedExample.cs" />
     <Compile Remove="Services\EventService.cs" />
     <Compile Remove="Services\PlayerEffectManager.cs" />
     <Compile Remove="Services\PlayerEventService.cs" />
@@ -30,6 +34,11 @@
     <None Remove="Sprites\Particles\dot_3.png" />
     <None Remove="Sprites\Particles\dot_4.png" />
     <None Remove="Sprites\Particles\dot_5.png" />
+    <None Remove="Sprites\Particles\star_1.png" />
+    <None Remove="Sprites\Particles\star_2.png" />
+    <None Remove="Sprites\Particles\star_3.png" />
+    <None Remove="Sprites\Particles\star_4.png" />
+    <None Remove="Sprites\Particles\star_5.png" />
     <None Remove="Sprites\Players\3frameships.pdn" />
     <None Remove="Sprites\Players\mud.pdn" />
     <None Remove="Sprites\Players\Ships.pdn" />
@@ -106,6 +115,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Particles\dot_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\star_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\star_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\star_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\star_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\star_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Projectiles\zap.png">
@@ -519,6 +543,10 @@
 
   <ItemGroup>
     <Page Include="Sprites\Effects\doubleshot.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Examples\" />
   </ItemGroup>
 
 </Project>

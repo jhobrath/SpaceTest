@@ -7,14 +7,6 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Particles
 {
-    public enum EmissionShape
-    {
-        Point,      // Emit from a single point
-        Circle,     // Emit from around a circle
-        Rectangle,  // Emit from within a rectangle
-        Line,       // Emit along a line
-        Cone        // Emit in a cone direction
-    }
 
     public class ParticleEmitterConfig
     {

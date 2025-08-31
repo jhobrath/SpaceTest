@@ -43,6 +43,7 @@ namespace GalagaFighter.Core
         private readonly IInputService _inputService;
         private readonly IPlayerManagerFactory _effectManagerFactory;
         private readonly IProjectileProjectileCollisionService _projectileProjectileCollisionService;
+        private readonly IParticleRenderService _particleRenderService;
 
         // Player-specific controllers
         private IPlayerController _playerController1;
@@ -62,6 +63,7 @@ namespace GalagaFighter.Core
             _playerPowerUpCollisionService = Registry.Get<IPlayerPowerUpCollisionService>();
             _effectManagerFactory = Registry.Get<IPlayerManagerFactory>();
             _projectileProjectileCollisionService = Registry.Get<IProjectileProjectileCollisionService>();
+            _particleRenderService = Registry.Get<IParticleRenderService>();
 
             // Create separate controller instances for each player
             _playerController1 = Registry.Get<IPlayerController>();
@@ -315,9 +317,17 @@ namespace GalagaFighter.Core
             for (int i = gameObjects.Count - 1; i >= 0; i--)
             {
                 if (!gameObjects[i].IsActive)
+                {
+                    // Clean up particle effects when object is destroyed
+                    _particleRenderService.ClearCacheForObject(gameObjects[i].Id);
                     _objectService.RemoveGameObject(gameObjects[i]);
+                }
                 else
+                {
                     gameObjects[i].Update(this);
+                    // Add particle rendering - one line addition!
+                    _particleRenderService.RenderParticleEffects(gameObjects[i], this);
+                }
             }
         }
 

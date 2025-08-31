@@ -6,6 +6,16 @@ using GalagaFighter.Core.Services;
 
 namespace GalagaFighter.Core.Static
 {
+    /// <summary>
+    /// Size options for ice particles
+    /// </summary>
+    public enum IceParticleSize
+    {
+        Small,      // For subtle effects
+        Medium,     // For general use
+        Large       // For impact effects
+    }
+
     public static class SpriteGenerationService
     {
         public static Texture2D CreatePlayerShip(bool isPlayer1, int width = 20, int height = 40)
@@ -513,6 +523,123 @@ namespace GalagaFighter.Core.Static
             
             Color smokeColor = smokeColors[Game.Random.Next(smokeColors.Length)];
             return CreateDotParticleSprite(Game.Random.Next(1, 3), smokeColor); // Soft dots for smoke
+        }
+
+        #endregion
+
+        #region Star-based Particle Sprites
+
+        /// <summary>
+        /// Creates a star-based particle sprite using pre-made feathered star images
+        /// </summary>
+        /// <param name="edgeSharpness">1-5, corresponds to star_1.png through star_5.png (1=very blurry, 5=very sharp)</param>
+        /// <param name="color">Optional color tint to apply to the star</param>
+        public static SpriteWrapper CreateStarImageParticleSprite(int edgeSharpness = 5, Color? color = null)
+        {
+            // Clamp edge sharpness to valid range
+            edgeSharpness = Math.Clamp(edgeSharpness, 1, 5);
+            
+            string spritePath = $"Sprites/Particles/star_{edgeSharpness}.png";
+            
+            if (color.HasValue)
+            {
+                // Use palette swap to apply color tint
+                return new SpriteWrapper(spritePath, color.Value);
+            }
+            else
+            {
+                // Use original white star
+                return new SpriteWrapper(spritePath);
+            }
+        }
+
+        /// <summary>
+        /// Creates ice star particles with specified size and intensity (via transparency)
+        /// </summary>
+        /// <param name="size">Size range for ice particles (Small, Medium, Large)</param>
+        /// <param name="intensity">Intensity via alpha transparency (0.0 to 1.0)</param>
+        /// <param name="edgeSharpness">Edge sharpness 1-5 (1=blurry, 5=sharp)</param>
+        public static SpriteWrapper CreateIceStarParticle(IceParticleSize size = IceParticleSize.Medium, float intensity = 1f, int edgeSharpness = 5)
+        {
+            // Use sharp star sprites for ice crystals (4 or 5)
+            edgeSharpness = Math.Clamp(edgeSharpness, 4, 5);
+            
+            // Ice colors with intensity applied via alpha
+            Color[] iceColors = {
+                Color.SkyBlue,
+                new Color(200, 230, 255, 255),  // Light ice blue
+                Color.White,
+                new Color(135, 206, 235, 255),  // Sky blue variation
+                new Color(176, 224, 230, 255)   // Powder blue
+            };
+            
+            Color iceColor = iceColors[Game.Random.Next(iceColors.Length)];
+            
+            // Apply intensity via alpha channel
+            int alpha = (int)(255 * Math.Clamp(intensity, 0f, 1f));
+            iceColor = new Color(iceColor.R, iceColor.G, iceColor.B, alpha);
+            
+            return CreateStarImageParticleSprite(edgeSharpness, iceColor);
+        }
+
+        /// <summary>
+        /// Creates sharp star particles for ice trails - crisp and clear
+        /// </summary>
+        public static SpriteWrapper CreateSharpIceStarParticle(Color? color = null, float intensity = 1f)
+        {
+            Color iceColor = color ?? Color.SkyBlue;
+            
+            // Apply intensity via alpha
+            int alpha = (int)(255 * Math.Clamp(intensity, 0f, 1f));
+            iceColor = new Color(iceColor.R, iceColor.G, iceColor.B, alpha);
+            
+            return CreateStarImageParticleSprite(5, iceColor); // Use star_5 for maximum sharpness
+        }
+
+        /// <summary>
+        /// Creates medium sharp star particles for ice auras
+        /// </summary>
+        public static SpriteWrapper CreateMediumSharpIceStarParticle(Color? color = null, float intensity = 1f)
+        {
+            Color iceColor = color ?? new Color(200, 230, 255, 255);
+            
+            // Apply intensity via alpha
+            int alpha = (int)(255 * Math.Clamp(intensity, 0f, 1f));
+            iceColor = new Color(iceColor.R, iceColor.G, iceColor.B, alpha);
+            
+            return CreateStarImageParticleSprite(4, iceColor); // Use star_4 for good sharpness
+        }
+
+        /// <summary>
+        /// Legacy methods - updated to use sharp edges instead of blurry
+        /// </summary>
+        public static SpriteWrapper CreateSoftStarParticleSprite(Color? color = null)
+        {
+            // Changed: Use sharp edges, control intensity via alpha instead
+            return CreateMediumSharpIceStarParticle(color, 0.8f);
+        }
+
+        public static SpriteWrapper CreateMediumStarParticleSprite(Color? color = null)
+        {
+            // Changed: Use sharp edges for crisp ice crystals
+            return CreateSharpIceStarParticle(color, 1f);
+        }
+
+        public static SpriteWrapper CreateHardStarParticleSprite(Color? color = null)
+        {
+            // Use maximum sharpness for impact effects
+            return CreateSharpIceStarParticle(color, 1f);
+        }
+
+        public static SpriteWrapper CreateRandomStarParticleSprite(Color? color = null)
+        {
+            // Use sharp edges with varied intensity
+            return CreateSharpIceStarParticle(color, Game.Random.NextSingle() * 0.5f + 0.5f);
+        }
+
+        public static SpriteWrapper CreateIceStarParticleSprite()
+        {
+            return CreateIceStarParticle(IceParticleSize.Medium, 1f, 5);
         }
 
         #endregion

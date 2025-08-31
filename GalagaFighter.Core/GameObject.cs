@@ -1,6 +1,9 @@
+using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Collisions;
 using Raylib_cs;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace GalagaFighter.Core
@@ -22,6 +25,9 @@ namespace GalagaFighter.Core
 
         public Hitbox? Hitbox { get; set; }
 
+        // Full control particle effects list - your vision realized!
+        public List<ParticleEffect> ParticleEffects { get; private set; } = new List<ParticleEffect>();
+
         private double _drawPriority = 1;
 
         private Vector2 _speed;
@@ -39,6 +45,58 @@ namespace GalagaFighter.Core
 
         public abstract void Update(Game game);
         public abstract void Draw();
+
+        #region Particle Effect Methods
+
+        /// <summary>
+        /// Add a complete particle effect with full configuration control
+        /// </summary>
+        public void AddParticleEffect(ParticleEffect effect)
+        {
+            ParticleEffects.Add(effect);
+        }
+
+        /// <summary>
+        /// Remove a specific particle effect
+        /// </summary>
+        public void RemoveParticleEffect(ParticleEffect effect)
+        {
+            ParticleEffects.Remove(effect);
+        }
+
+        /// <summary>
+        /// Remove all particle effects with a specific name
+        /// </summary>
+        public void RemoveParticleEffects(string name)
+        {
+            ParticleEffects.RemoveAll(e => e.Name == name);
+        }
+
+        /// <summary>
+        /// Clear all particle effects
+        /// </summary>
+        public void ClearParticleEffects()
+        {
+            ParticleEffects.Clear();
+        }
+
+        /// <summary>
+        /// Get particle effects by name
+        /// </summary>
+        public IEnumerable<ParticleEffect> GetParticleEffects(string name)
+        {
+            return ParticleEffects.Where(e => e.Name == name);
+        }
+
+        /// <summary>
+        /// Check if this object has a specific particle effect
+        /// </summary>
+        public bool HasParticleEffect(string name)
+        {
+            return ParticleEffects.Any(e => e.Name == name);
+        }
+
+        #endregion
 
         public void Move(float? x = null, float? y = null)
         {

@@ -25,56 +25,17 @@ namespace GalagaFighter.Core.Handlers.Players
 
         public void Move(Player player, EffectModifiers modifiers)
         {
-            InitializeParticleSystemIfNeeded(player);
-
             var left = _inputService.GetMoveLeft(player.Id);
             var right = _inputService.GetMoveRight(player.Id);
-
-            // Calculate movement state for both movement and particle effects
-            var movementState = CalculateMovementState(player, left, right);
 
             SetSpeed(player, modifiers, left, right);
             SetPosition(player, modifiers);
             SetSize(player, modifiers);
             SetRotation(player, modifiers, left, right);
-
             SetPhantomSpeed(player, modifiers, left, right);
             
-            // Update particle effects based on calculated movement state
-            UpdateParticleEffects(player, movementState);
+            _particleManager.UpdateMovementTrails(player);
         }
-
-        #region Particle Management Methods
-
-        private void InitializeParticleSystemIfNeeded(Player player)
-        {
-            if (!_particleInitialized)
-            {
-                _particleManager.Initialize(player);
-                _particleInitialized = true;
-            }
-        }
-
-        private MovementState CalculateMovementState(Player player, ButtonState left, ButtonState right)
-        {
-            bool isMoving = left || right;
-            float movementIntensity = 0f;
-            
-            if (isMoving)
-            {
-                var inputDuration = left ? left.HeldDuration : right.HeldDuration;
-                movementIntensity = player.CalculateMovementIntensity(inputDuration);
-            }
-
-            return new MovementState(isMoving, movementIntensity);
-        }
-
-        private void UpdateParticleEffects(Player player, MovementState movementState)
-        {
-            _particleManager.UpdateMovementTrails(player, movementState.IsMoving, movementState.Intensity);
-        }
-
-        #endregion
 
         #region Core Movement Methods
 
@@ -169,22 +130,6 @@ namespace GalagaFighter.Core.Handlers.Players
 
             player.MoveTo(currentPositionX, currentPositionY);
             player.ScaleTo(xSize, ySize);
-        }
-
-        #endregion
-
-        #region Helper Types
-
-        private readonly struct MovementState
-        {
-            public bool IsMoving { get; }
-            public float Intensity { get; }
-
-            public MovementState(bool isMoving, float intensity)
-            {
-                IsMoving = isMoving;
-                Intensity = intensity;
-            }
         }
 
         #endregion

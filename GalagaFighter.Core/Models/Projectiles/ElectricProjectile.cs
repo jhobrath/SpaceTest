@@ -24,6 +24,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         private int _baseDamage = 8;
 
+        public override float? OnNearPlayerDistance => 105f;
         public override Action<Player> OnNearPlayer => StartZap;
 
         private bool _isZapping = false;

@@ -1,5 +1,6 @@
 using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
@@ -12,14 +13,18 @@ namespace GalagaFighter.Core.Handlers.Players
     {
         void UpdateMovementTrails(Player player);
         void CleanupTrails(Player player);
+        void UpdateModifierEffects(Player player, EffectModifiers modifiers);
     }
 
     public class PlayerParticleManager : IPlayerParticleManager
     {
         private float _currentIntensity = 0f;
 
-        public PlayerParticleManager()
+        private readonly IParticleRenderService _particleRenderService;
+
+        public PlayerParticleManager(IParticleRenderService particleRenderService)
         {
+            _particleRenderService = particleRenderService;
         }
 
         public void UpdateMovementTrails(Player player)
@@ -123,6 +128,11 @@ namespace GalagaFighter.Core.Handlers.Players
         private static float Lerp(float a, float b, float t)
         {
             return a + (b - a) * t;
+        }
+
+        public void UpdateModifierEffects(Player player, EffectModifiers modifiers)
+        {
+            _particleRenderService.RenderParticleEffectFromModifiers(player, modifiers);
         }
     }
 }

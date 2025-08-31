@@ -106,8 +106,7 @@ namespace GalagaFighter.Core.Models
         public override int GetHashCode()
         {
             var hash = new HashCode();
-            hash.Add(Offset);
-            hash.Add(FollowRotation);
+            // Removed orientation-dependent properties from hash for stable caching
             hash.Add(Shape);
             hash.Add(EmissionRate);
             hash.Add(MaxParticles);
@@ -137,13 +136,11 @@ namespace GalagaFighter.Core.Models
             hash.Add(ParticleEndColor.B);
             hash.Add(ParticleEndColor.A);
             hash.Add(SpriteSelection);
-            
             // Include sprites in hash
             foreach (var sprite in Sprites.OrderBy(s => s))
             {
                 hash.Add(sprite);
             }
-            
             return hash.ToHashCode();
         }
 
@@ -161,9 +158,9 @@ namespace GalagaFighter.Core.Models
         /// <summary>
         /// Get cache key for this effect combined with object ID
         /// </summary>
-        public string GetCacheKey(Guid objectId)
+        public string GetCacheKey(Guid objectId, bool fromModifiers = false)
         {
-            return $"{objectId}_{GetHashCode():X8}";
+            return $"{(fromModifiers ? "modifiers_" : "")}{objectId}_{GetHashCode():X8}";
         }
     }
 

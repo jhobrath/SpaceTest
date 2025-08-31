@@ -643,5 +643,124 @@ namespace GalagaFighter.Core.Static
         }
 
         #endregion
+
+        #region Lightning-based Particle Sprites
+
+        /// <summary>
+        /// Creates a lightning-based particle sprite using pre-made lightning images
+        /// </summary>
+        /// <param name="complexity">1-5, corresponds to lightning_1.png through lightning_5.png (1=simple, 5=complex branching)</param>
+        /// <param name="color">Optional color tint to apply to the lightning</param>
+        public static SpriteWrapper CreateLightningParticleSprite(int complexity = 3, Color? color = null)
+        {
+            // Clamp complexity to valid range
+            complexity = Math.Clamp(complexity, 1, 5);
+            
+            string spritePath = $"Sprites/Particles/lightning_{complexity}.png";
+            
+            if (color.HasValue)
+            {
+                // Use palette swap to apply color tint
+                return new SpriteWrapper(spritePath, color.Value);
+            }
+            else
+            {
+                // Use original white lightning
+                return new SpriteWrapper(spritePath);
+            }
+        }
+
+        /// <summary>
+        /// Creates a spark-based particle sprite using pre-made spark images
+        /// </summary>
+        /// <param name="intensity">1-5, corresponds to spark_1.png through spark_5.png (1=small, 5=intense with glow)</param>
+        /// <param name="color">Optional color tint to apply to the spark</param>
+        public static SpriteWrapper CreateSparkImageParticleSprite(int intensity = 3, Color? color = null)
+        {
+            // Clamp intensity to valid range
+            intensity = Math.Clamp(intensity, 1, 5);
+            
+            string spritePath = $"Sprites/Particles/spark_{intensity}.png";
+            
+            if (color.HasValue)
+            {
+                // Use palette swap to apply color tint
+                return new SpriteWrapper(spritePath, color.Value);
+            }
+            else
+            {
+                // Use original spark (white/yellow)
+                return new SpriteWrapper(spritePath);
+            }
+        }
+
+        /// <summary>
+        /// Creates electric-themed particles with random lightning and spark selection
+        /// </summary>
+        public static SpriteWrapper CreateElectricParticleSprite(Color? color = null)
+        {
+            // Randomly choose between lightning and spark
+            bool useLightning = Game.Random.NextSingle() > 0.5f;
+            
+            if (useLightning)
+            {
+                // Use lightning with random complexity
+                int complexity = Game.Random.Next(1, 6);
+                return CreateLightningParticleSprite(complexity, color ?? Color.DarkBlue);
+            }
+            else
+            {
+                // Use spark with random intensity
+                int intensity = Game.Random.Next(1, 6);
+                return CreateSparkImageParticleSprite(intensity, color ?? Color.Yellow);
+            }
+        }
+
+        /// <summary>
+        /// Creates simple lightning bolts for basic electric effects
+        /// </summary>
+        public static SpriteWrapper CreateSimpleLightningSprite(Color? color = null)
+        {
+            return CreateLightningParticleSprite(Game.Random.Next(1, 3), color ?? Color.SkyBlue); // lightning_1 or lightning_2
+        }
+
+        /// <summary>
+        /// Creates complex lightning bolts for intense electric effects
+        /// </summary>
+        public static SpriteWrapper CreateComplexLightningSprite(Color? color = null)
+        {
+            return CreateLightningParticleSprite(Game.Random.Next(4, 6), color ?? Color.White); // lightning_4 or lightning_5
+        }
+
+        /// <summary>
+        /// Creates electric sparks with glow for zap effects
+        /// </summary>
+        public static SpriteWrapper CreateElectricSparkSprite(Color? color = null)
+        {
+            return CreateSparkImageParticleSprite(Game.Random.Next(3, 6), color ?? Color.Yellow); // spark_3, spark_4, or spark_5 (with glow)
+        }
+
+        /// <summary>
+        /// Creates electric discharge particles - mix of lightning and sparks
+        /// </summary>
+        public static SpriteWrapper CreateElectricDischargeSprite(Color? color = null)
+        {
+            // Electric discharge colors
+            Color[] electricColors = {
+                Color.DarkBlue,
+                new Color(0, 255, 255, 255),    // Bright cyan
+                Color.Yellow,
+                new Color(255, 255, 150, 255),  // Light yellow
+                Color.White,
+                new Color(150, 200, 255, 255)   // Electric blue
+            };
+            
+            Color electricColor = color ?? electricColors[Game.Random.Next(electricColors.Length)];
+            
+            // Randomly mix lightning and sparks for chaotic discharge
+            return CreateElectricParticleSprite(electricColor);
+        }
+
+        #endregion
     }
 }

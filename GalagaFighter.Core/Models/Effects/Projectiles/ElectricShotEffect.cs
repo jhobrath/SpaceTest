@@ -34,7 +34,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Projectile.Phases.Add(this, [1.5f, 7f]);
+            modifiers.Projectile.Phases.Add(this, [1.5f, 70000f]);
             modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
             modifiers.Stats.FireRateMultiplier = 1.5f;
             modifiers.Projectile.OnShoot = HandleShotFired;

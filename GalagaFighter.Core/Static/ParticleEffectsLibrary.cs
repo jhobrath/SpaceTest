@@ -234,6 +234,109 @@ namespace GalagaFighter.Core.Static
                 Offset = Vector2.Zero,
                 FollowRotation = false
             };
+
+            // Electric Trail Effect
+            _effects["ElectricTrail"] = new ParticleEffect("ElectricTrail")
+            {
+                Shape = EmissionShape.Point,
+                EmissionRate = 40f,
+                MaxParticles = 20,
+                ParticleLifetime = 0.6f,
+                ParticleLifetimeVariation = 0.2f,
+                ParticleSpeed = new Vector2(0f, -30f),
+                ParticleSpeedVariation = new Vector2(20f, 10f),
+                ParticleStartSize = 10f,
+                ParticleEndSize = 3f,
+                ParticleSizeVariation = 3f,
+                ParticleStartColor = Color.SkyBlue,
+                ParticleEndColor = Color.White, // Keep bright white instead of transparent
+                Duration = -1f,
+                Loop = true,
+                EmitOnStart = true,
+                AutoDestroy = false,
+                ParticleDrag = 0.5f,
+                Sprites = { "lightning_1", "lightning_2", "lightning_3", "lightning_4", "lightning_5" }, // Simple to medium lightning + sparks
+                SpriteSelection = SpriteSelectionMode.Random,
+                Offset = new Vector2(-15f, 0f),
+                FollowRotation = true
+            };
+
+            // Electric Zap Effect (for when electric projectile gets near player)
+            _effects["ElectricZap"] = new ParticleEffect("ElectricZap")
+            {
+                Shape = EmissionShape.Line,
+                EmissionRate = 80f,
+                MaxParticles = 40,
+                EmissionRadius = 30f, // Length of the line
+                ParticleLifetime = 0.3f,
+                ParticleLifetimeVariation = 0.1f,
+                ParticleSpeed = Vector2.Zero, // Static sparks
+                ParticleSpeedVariation = new Vector2(5f, 5f),
+                ParticleStartSize = 12f,
+                ParticleEndSize = 6f,
+                ParticleSizeVariation = 4f,
+                ParticleStartColor = Color.White,
+                ParticleEndColor = new Color(0, 255, 255, 0),// Keep visible instead of transparent
+                Duration = 0.5f,
+                Loop = false,
+                EmitOnStart = true,
+                AutoDestroy = true,
+                Sprites = { "lightning_4", "lightning_5", "spark_5" }, // Complex lightning + intense sparks
+                SpriteSelection = SpriteSelectionMode.Random,
+                Offset = Vector2.Zero,
+                FollowRotation = false
+            };
+
+            // Electric Impact Effect
+            _effects["ElectricImpact"] = new ParticleEffect("ElectricImpact")
+            {
+                Shape = EmissionShape.Circle,
+                EmissionRate = 150f,
+                MaxParticles = 50,
+                EmissionRadius = 8f,
+                ParticleLifetime = 1f,
+                ParticleLifetimeVariation = 0.3f,
+                ParticleSpeed = new Vector2(80f, 80f),
+                ParticleSpeedVariation = new Vector2(40f, 40f),
+                ParticleStartSize = 8f,
+                ParticleEndSize = 2f,
+                ParticleSizeVariation = 3f,
+                ParticleStartColor = Color.Yellow,
+                ParticleEndColor = Color.White, // Keep bright instead of transparent
+                Duration = 0.8f,
+                Loop = false,
+                EmitOnStart = true,
+                AutoDestroy = true,
+                Sprites = { "spark_4", "spark_5", "lightning_3" }, // Intense sparks + medium lightning
+                SpriteSelection = SpriteSelectionMode.Random,
+                Offset = Vector2.Zero,
+                FollowRotation = false
+            };
+
+            // Connected Lightning Chain Effect  
+            _effects["LightningChain"] = new ParticleEffect("LightningChain")
+            {
+                Shape = EmissionShape.Point,
+                EmissionRate = 8f, // Fewer chains but more dramatic
+                MaxParticles = 3, // Max 3 chains at once
+                ParticleLifetime = 0.4f, // Chain duration
+                ParticleLifetimeVariation = 0.1f,
+                ParticleSpeed = Vector2.Zero, // Chains don't move
+                ParticleSpeedVariation = Vector2.Zero,
+                ParticleStartSize = 32f, // Segment size
+                ParticleEndSize = 32f,
+                ParticleSizeVariation = 0f,
+                ParticleStartColor = Color.White,
+                ParticleEndColor = new Color(0, 255, 255, 0),
+                Duration = -1f,
+                Loop = true,
+                EmitOnStart = true,
+                AutoDestroy = false,
+                Sprites = { "lightning_1", "lightning_2" }, // Only need these two!
+                SpriteSelection = SpriteSelectionMode.Random,
+                Offset = new Vector2(-16f, 0f),
+                FollowRotation = true
+            };
         }
     }
 }

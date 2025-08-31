@@ -8,6 +8,8 @@ using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Projectiles
@@ -36,6 +38,16 @@ namespace GalagaFighter.Core.Models.Projectiles
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
             AudioService.PlayShootSound();
+
+            var trail = ParticleEffectsLibrary.Get("LightningChain");
+            trail.ParticleStartSize = 10f;
+            trail.Offset = new Vector2(-trail.ParticleStartSize/2, -trail.ParticleStartSize/2);
+            trail.MaxParticles = 50; // Many simultaneous chains for dense electricity
+            trail.EmissionRate = 50f; // Fast emission for continuous effect
+            trail.ParticleSpeed = Vector2.Zero; // FIXED: No particle movement relative to projectile
+            trail.ParticleSpeedVariation = Vector2.Zero; // No speed variation either
+            trail.FollowRotation = true;
+            ParticleEffects.Add(trail);
         }
 
         private static SpriteWrapper GetSprite()
@@ -55,6 +67,8 @@ namespace GalagaFighter.Core.Models.Projectiles
             _zapOriginalPlayerCenter = player.Center;
             _zapLastOffset = Vector2.Zero;
 
+            //ParticleEffects.Add(ParticleEffectsLibrary.Get("ElectricZap"));
+
             UpdateZap();
         }
 
@@ -65,6 +79,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             Move(x: -_zapLastOffset.X, -_zapLastOffset.Y);
             Move(x: offset.X, y: offset.Y);
             _zapLastOffset = offset;
+
+            var chain = ParticleEffects.First(x => x.Name == "LightningChain");
+            chain.Offset = new Vector2(-offset.X - chain.ParticleStartSize/2, -offset.Y-chain.ParticleStartSize/2);
+            chain.FollowRotation = false;
         }
 
         private float DetermineZapRotation(Vector2 playerCenter, Vector2 projectileCenter)
@@ -93,6 +111,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             base.Update(game);
             if (_isZapping)
             {
+
                 UpdateZap();
                 _baseDamage = 0;
             }

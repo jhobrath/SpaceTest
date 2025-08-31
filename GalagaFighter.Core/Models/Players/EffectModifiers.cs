@@ -17,6 +17,7 @@ namespace GalagaFighter.Core.Models.Players
         public bool IsRepulsive { get; set; }
         public List<Phantom> Phantoms { get; set; } = [];
         public int PhantomCount { get; internal set; }
+        public List<ParticleEffect> ParticleEffects { get; set; } = [];
 
         public EffectModifiers()
         {

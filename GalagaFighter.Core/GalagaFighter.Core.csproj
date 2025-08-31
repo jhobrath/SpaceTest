@@ -34,6 +34,11 @@
     <None Remove="Sprites\Particles\dot_3.png" />
     <None Remove="Sprites\Particles\dot_4.png" />
     <None Remove="Sprites\Particles\dot_5.png" />
+    <None Remove="Sprites\Particles\spark_1.png" />
+    <None Remove="Sprites\Particles\spark_2.png" />
+    <None Remove="Sprites\Particles\spark_3.png" />
+    <None Remove="Sprites\Particles\spark_4.png" />
+    <None Remove="Sprites\Particles\spark_5.png" />
     <None Remove="Sprites\Particles\star_1.png" />
     <None Remove="Sprites\Particles\star_2.png" />
     <None Remove="Sprites\Particles\star_3.png" />
@@ -115,6 +120,36 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Particles\dot_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\lightning_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\lightning_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\lightning_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\lightning_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\lightning_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\spark_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\spark_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\spark_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\spark_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\spark_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Particles\star_1.png">

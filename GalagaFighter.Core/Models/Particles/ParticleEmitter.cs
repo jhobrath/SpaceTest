@@ -46,16 +46,20 @@ namespace GalagaFighter.Core.Models.Particles
         private readonly IObjectService _objectService;
         private readonly ParticleEmitterConfig _config;
         private readonly List<Particle> _particles;
+        private readonly List<string> _sprites;
+        private readonly SpriteSelectionMode _spriteSelection;
         private float _emissionTimer;
         private float _durationTimer;
         private bool _isEmitting;
+        private int _sequentialIndex;
 
         public ParticleEmitterConfig Config => _config;
         public int ActiveParticleCount => _particles.Count;
         public bool IsEmitting => _isEmitting;
 
         public ParticleEmitter(Guid owner, IObjectService objectService, Vector2 position, 
-                              ParticleEmitterConfig config, SpriteWrapper particleSprite = null) 
+                              ParticleEmitterConfig config, SpriteWrapper particleSprite = null,
+                              List<string> sprites = null, SpriteSelectionMode spriteSelection = SpriteSelectionMode.First) 
             : base(owner, particleSprite, position, Vector2.One, Vector2.Zero)
         {
             _objectService = objectService;
@@ -64,6 +68,9 @@ namespace GalagaFighter.Core.Models.Particles
             _emissionTimer = 0f;
             _durationTimer = 0f;
             _isEmitting = _config.EmitOnStart;
+            _sprites = sprites ?? new List<string>();
+            _spriteSelection = spriteSelection;
+            _sequentialIndex = 0;
             SetDrawPriority(0.4); // Draw emitter before particles
         }
 
@@ -125,8 +132,9 @@ namespace GalagaFighter.Core.Models.Particles
             float lifetime = GetParticleLifetime();
             float startSize = GetParticleStartSize();
             float endSize = GetParticleEndSize();
+            float rotation = GetParticleRotation();
 
-            var particleSprite = Sprite ?? CreateDefaultParticleSprite();
+            var particleSprite = GetParticleSprite();
             
             var particle = new Particle(
                 Id, // Emitter is the owner
@@ -144,11 +152,41 @@ namespace GalagaFighter.Core.Models.Particles
                 Acceleration = _config.ParticleAcceleration,
                 UseGravity = _config.UseGravity,
                 GravityStrength = _config.GravityStrength,
-                Drag = _config.ParticleDrag
+                Drag = _config.ParticleDrag,
+                Rotation = rotation
             };
 
             _particles.Add(particle);
             _objectService.AddGameObject(particle);
+        }
+
+        private float GetParticleRotation()
+        {
+            // Random rotation between 0 and 360 degrees
+            return (float)(Game.Random.NextDouble() * 360.0);
+        }
+
+        protected virtual SpriteWrapper GetParticleSprite()
+        {
+            if (_sprites.Count > 0)
+            {
+                string selectedSprite = _spriteSelection switch
+                {
+                    SpriteSelectionMode.First => _sprites[0],
+                    SpriteSelectionMode.Random => _sprites[Game.Random.Next(_sprites.Count)],
+                    SpriteSelectionMode.Sequential => GetSequentialSprite(),
+                    _ => _sprites[0]
+                };
+                return new SpriteWrapper($"Sprites/Particles/{selectedSprite}.png", _config.ParticleStartColor);
+            }
+            return Sprite ?? CreateDefaultParticleSprite();
+        }
+
+        private string GetSequentialSprite()
+        {
+            string sprite = _sprites[_sequentialIndex];
+            _sequentialIndex = (_sequentialIndex + 1) % _sprites.Count;
+            return sprite;
         }
 
         private Vector2 GetEmissionPosition()
@@ -235,7 +273,7 @@ namespace GalagaFighter.Core.Models.Particles
             return Math.Max(0f, _config.ParticleEndSize + variation);
         }
 
-        private SpriteWrapper CreateDefaultParticleSprite()
+        protected SpriteWrapper CreateDefaultParticleSprite()
         {
             // Return a simple white circle sprite
             return new SpriteWrapper((position, rotation, width, height, scale) =>

@@ -29,10 +29,11 @@ namespace GalagaFighter.Core.Models.Effects.Statuses
 
         public override void Apply(EffectModifiers modifiers)
         {
-            //modifiers.Stats.SpeedMultiplier = 0f;
+            modifiers.Stats.SpeedMultiplier = 0f;
             modifiers.Display.RedAlpha = .9f;
             modifiers.Display.GreenAlpha = .8f;
             modifiers.Display.BlueAlpha = .9f;
+            modifiers.Jiggle = true;
 
             modifiers.ParticleEffects.Add(_particleEffect);
 

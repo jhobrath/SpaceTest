@@ -61,9 +61,11 @@ namespace GalagaFighter.Core.Handlers.Players
         private void DrawPlayer(Player player, EffectModifiers modifiers)
         {
             var color = UpdateColors(Color.White, modifiers);
+            var jiggleFactorX = modifiers.Jiggle ? (float)Game.Random.NextDouble() * 4 : 0;
+            var jiggleFactorY = modifiers.Jiggle ? (float)Game.Random.NextDouble() * 4 : 0;
             DrawWithPhantoms(player, modifiers, p =>
             {
-                player.Sprite?.Draw(p.Center, p.Rotation, player.Rect.Width, player.Rect.Height, color);
+                player.Sprite?.Draw(new Vector2(p.Center.X + jiggleFactorX, p.Center.Y + jiggleFactorY), p.Rotation, player.Rect.Width, player.Rect.Height, color);
             });
         }
 

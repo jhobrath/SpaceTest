@@ -41,7 +41,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
             var trail = ParticleEffectsLibrary.Get("LightningChain");
             trail.ParticleStartSize = 10f;
-            trail.Offset = new Vector2(-trail.ParticleStartSize/2, -trail.ParticleStartSize/2);
+            trail.Offset = new Vector2(trail.ParticleStartSize/2 * (owner.IsPlayer1 ? -1 : 1), trail.ParticleStartSize/ 2 * (owner.IsPlayer1 ? -1 : 1));
             trail.MaxParticles = 50; // Many simultaneous chains for dense electricity
             trail.EmissionRate = 50f; // Fast emission for continuous effect
             trail.ParticleSpeed = Vector2.Zero; // FIXED: No particle movement relative to projectile

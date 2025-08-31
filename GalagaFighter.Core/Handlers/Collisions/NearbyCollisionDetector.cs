@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
+using System.Numerics;
 
 namespace GalagaFighter.Core.Handlers.Collisions
 {

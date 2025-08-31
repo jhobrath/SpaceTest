@@ -4,21 +4,17 @@ namespace GalagaFighter.Core.Handlers.Collisions
 {
     public class EdgeCollisionDetector
     {
-        public bool HasCollision(GameObject gameObject)
+        public bool HasCollision(GameObject gameObject, float? distance)
         {
-            // Only projectiles currently have edge collision logic
-            if (gameObject is not Projectile projectile)
+            if (!distance.HasValue)
                 return false;
 
-            if (projectile.Modifiers.CollideDistanceFromEdge <= 0f)
-                return false;
+            var edge = gameObject.Speed.X < 0
+                ? distance
+                : Game.Width - distance;
 
-            var edge = projectile.Speed.X < 0
-                ? projectile.Modifiers.CollideDistanceFromEdge - projectile.Rect.Width / 2
-                : Game.Width - projectile.Modifiers.CollideDistanceFromEdge - projectile.Rect.Width / 2;
-
-            return (projectile.Speed.X > 0 && projectile.Center.X > edge) ||
-                   (projectile.Speed.X < 0 && projectile.Center.X < edge);
+             return (gameObject.Speed.X > 0 && gameObject.Rect.X + gameObject.Rect.Width > edge) ||
+                   (gameObject.Speed.X < 0 && gameObject.Rect.X < edge);
         }
     }
 }

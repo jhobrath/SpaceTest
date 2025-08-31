@@ -1,3 +1,5 @@
+using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -9,10 +11,10 @@ namespace GalagaFighter.Core.Handlers.Collisions
         // Cache for rotated percentage vertices to avoid recalculating same rotations
         private static readonly Dictionary<(float rotation, int verticesHash), Vector2[]> _rotationCache = [];
 
-        public bool HasCollision(GameObject obj1, GameObject obj2)
+        public bool HasCollision(Player obj1, Projectile obj2)
         {
             if (obj1.Hitbox == null && obj2.Hitbox == null )
-                return BoundsComparer.CompareRectRect(obj1.Rect, obj2.Rect);
+                return BoundsComparer.CompareRectRect(obj1.Rect, obj2.CurrentFrameRect);
 
             if (obj1.Hitbox ==  null && obj2.Hitbox != null)
                 return BoundsComparer.CompareRectVertices(obj1.Rect, GetActualBounds(obj2));

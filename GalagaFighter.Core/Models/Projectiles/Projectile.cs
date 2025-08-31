@@ -21,8 +21,12 @@ namespace GalagaFighter.Core.Models.Projectiles
         private readonly IProjectileController _projectileController;
         public PlayerProjectile Modifiers { get; private set; }
         public Rectangle CurrentFrameRect { get; set; }
+        
+        public virtual float? OnNearPlayerDistance { get; }
         public virtual Action<Player>? OnNearPlayer => null;
-        //public Vector2 CurrentFrameSpeed { get; set; }
+
+        public virtual float? OnNearEdgeDistance { get; }
+        public virtual Action? OnNearEdge => null;
 
         public float Lifetime { get; set; } = 0f;
 

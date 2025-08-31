@@ -53,12 +53,15 @@ namespace GalagaFighter.Core.Services
                     continue;
 
                 // Check both collision types - projectile could hit both edge AND player
-                var hasEdgeCollision = _edgeDetector.HasCollision(projectile);
-                var hasPlayerCollision = _contactDetector.HasCollision(player, projectile);
-                var hasNearCollision = _nearbyCollisionDetector.HasCollision(player, projectile, projectile.Modifiers.CollideDistanceFromPlayer);
+                var hasEdgeCollision = _edgeDetector.HasCollision(projectile, projectile.OnNearEdgeDistance);
+                if (hasEdgeCollision)  
+                    projectile.OnNearEdge?.Invoke();
 
-                if (hasNearCollision)  
+                var hasNearCollision = _nearbyCollisionDetector.HasCollision(player, projectile, projectile.OnNearPlayerDistance);
+                if (hasNearCollision)
                     projectile.OnNearPlayer?.Invoke(player);
+
+                var hasPlayerCollision = _contactDetector.HasCollision(player, projectile);
 
                 if (hasEdgeCollision || hasPlayerCollision || hasNearCollision)
                 {

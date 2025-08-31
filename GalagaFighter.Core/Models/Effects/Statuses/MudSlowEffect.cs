@@ -14,7 +14,7 @@ namespace GalagaFighter.Core.Models.Effects.Statuses
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Stats.SpeedMultiplier = 0.5f;
+            modifiers.Stats.SpeedMultiplier *= 0.33f;
             modifiers.Display.GreenAlpha = 0.7f;
         }
     }

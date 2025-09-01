@@ -5,6 +5,7 @@ using GalagaFighter.Core.Handlers.Collisions;
 using GalagaFighter.Core.Handlers.Players;
 using GalagaFighter.Core.Handlers.Projectiles;
 using System;
+using GalagaFighter.Core.CPU;
 
 namespace GalagaFighter.Core
 {
@@ -47,6 +48,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IRepulsionProjectileService, RepulsionProjectileService>();
             services.AddTransient<INearbyCollisionDetector, NearbyCollisionDetector>();
             services.AddTransient<IPlayerParticleManager, PlayerParticleManager>();
+            services.AddTransient<ICpuDecisionMaker, CpuDecisionMaker>();
             services.AddTransient<IParticleRenderService>((provider) =>
                 new ParticleRenderService(
                     provider.GetRequiredService<IObjectService>()));

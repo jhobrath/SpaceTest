@@ -45,14 +45,14 @@ namespace GalagaFighter.Core.Services
 
         private readonly static List<Func<IPowerUpController, Guid, Rectangle, Vector2, PowerUp>> _powerUpTypes =
         [
-            //(up,o,r,f) => new FireRatePowerUp(up,o, r.Position, r.Size, f),
-            (up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
+            (up,o,r,f) => new FireRatePowerUp(up,o, r.Position, r.Size, f),
+            //(up,o,r,f) => new IceShotPowerUp(up,o, r.Position, r.Size, f),
             //(up,o,r,f) => new WoodShotPowerUp(up,o,r.Position,r.Size,f),
-            (up,o,r,f) => new NinjaShotPowerUp(up,o,r.Position,r.Size,f),
-            (up,o,r,f) => new ExplosiveShotPowerUp(up,o, r.Position, r.Size, f),
-            //(up,o,r,f) => new DoubleShotPowerUp(up,o, r.Position, r.Size, f),
+            //(up,o,r,f) => new NinjaShotPowerUp(up,o,r.Position,r.Size,f),
+            //(up,o,r,f) => new ExplosiveShotPowerUp(up,o, r.Position, r.Size, f),
+            (up,o,r,f) => new DoubleShotPowerUp(up,o, r.Position, r.Size, f),
             //(up,o,r,f) => new MagnetPowerUp(up,o, r.Position, r.Size, f),
-            (up,o,r,f) => new MudShotPowerUp(up,o, r.Position, r.Size, f)
+            //(up,o,r,f) => new MudShotPowerUp(up,o, r.Position, r.Size, f)
         ];
 
         public void Roll()

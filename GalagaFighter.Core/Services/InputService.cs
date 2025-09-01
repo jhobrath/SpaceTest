@@ -8,12 +8,42 @@ namespace GalagaFighter.Core.Services
     {
         void Update();
 
-        void AddPlayer(Guid owner, KeyMappings mappings);
+        void AddPlayer(Guid owner, IInputMappings mappings);
 
         ButtonState GetShoot(Guid owner);
         ButtonState GetMoveLeft(Guid owner);
         ButtonState GetMoveRight(Guid owner);
         ButtonState GetSwitch(Guid owner);
+    }
+
+    public class InputService : IInputService
+    {
+        private readonly Dictionary<Guid, PlayerInputData> _players = [];
+        private float _gameTime = 0f;
+
+        public void AddPlayer(Guid owner, IInputMappings mappings)
+        {
+            _players[owner] = new PlayerInputData { Mappings = mappings };
+        }
+
+        public void Update()
+        {
+            var frameTime = Raylib.GetFrameTime();
+            _gameTime += frameTime;
+
+            foreach (var player in _players.Values)
+            {
+                player.MoveLeft.Update(player.Mappings.IsMoveLeftDown(), frameTime, _gameTime);
+                player.MoveRight.Update(player.Mappings.IsMoveRightDown(), frameTime, _gameTime);
+                player.Shoot.Update(player.Mappings.IsShootDown(), frameTime, _gameTime);
+                player.Switch.Update(player.Mappings.IsSwitchDown(), frameTime, _gameTime);
+            }
+        }
+
+        public ButtonState GetMoveLeft(Guid owner) => _players[owner].MoveLeft.ToButtonState();
+        public ButtonState GetMoveRight(Guid owner) => _players[owner].MoveRight.ToButtonState();
+        public ButtonState GetShoot(Guid owner) => _players[owner].Shoot.ToButtonState();
+        public ButtonState GetSwitch(Guid owner) => _players[owner].Switch.ToButtonState();
     }
 
     public class ButtonState
@@ -42,7 +72,15 @@ namespace GalagaFighter.Core.Services
         }
     }
 
-    public class KeyMappings
+    public interface IInputMappings
+    {
+        bool IsMoveLeftDown();
+        bool IsMoveRightDown();
+        bool IsShootDown();
+        bool IsSwitchDown();
+    }
+
+    public class KeyMappings : IInputMappings
     {
         public KeyboardKey MoveLeft { get; set; } = KeyboardKey.W;
         public KeyboardKey MoveRight { get; set; } = KeyboardKey.S;
@@ -56,6 +94,11 @@ namespace GalagaFighter.Core.Services
             Shoot = shoot;
             Switch = switchButton;
         }
+
+        public bool IsMoveLeftDown() => Raylib.IsKeyDown(MoveLeft);
+        public bool IsMoveRightDown() => Raylib.IsKeyDown(MoveRight);
+        public bool IsShootDown() => Raylib.IsKeyDown(Shoot);
+        public bool IsSwitchDown() => Raylib.IsKeyDown(Switch);
     }
 
     // Consolidated button tracking data
@@ -145,40 +188,10 @@ namespace GalagaFighter.Core.Services
     // Player input data consolidated into single structure
     internal class PlayerInputData
     {
-        public KeyMappings Mappings { get; set; }
+        public IInputMappings Mappings { get; set; }
         public ButtonData MoveLeft { get; set; } = new();
         public ButtonData MoveRight { get; set; } = new();
         public ButtonData Shoot { get; set; } = new();
         public ButtonData Switch { get; set; } = new();
-    }
-
-    public class InputService : IInputService
-    {
-        private readonly Dictionary<Guid, PlayerInputData> _players = [];
-        private float _gameTime = 0f;
-
-        public void AddPlayer(Guid owner, KeyMappings mappings)
-        {
-            _players[owner] = new PlayerInputData { Mappings = mappings };
-        }
-
-        public void Update()
-        {
-            var frameTime = Raylib.GetFrameTime();
-            _gameTime += frameTime;
-
-            foreach (var player in _players.Values)
-            {
-                player.MoveLeft.Update(Raylib.IsKeyDown(player.Mappings.MoveLeft), frameTime, _gameTime);
-                player.MoveRight.Update(Raylib.IsKeyDown(player.Mappings.MoveRight), frameTime, _gameTime);
-                player.Shoot.Update(Raylib.IsKeyDown(player.Mappings.Shoot), frameTime, _gameTime);
-                player.Switch.Update(Raylib.IsKeyDown(player.Mappings.Switch), frameTime, _gameTime);
-            }
-        }
-
-        public ButtonState GetMoveLeft(Guid owner) => _players[owner].MoveLeft.ToButtonState();
-        public ButtonState GetMoveRight(Guid owner) => _players[owner].MoveRight.ToButtonState();
-        public ButtonState GetShoot(Guid owner) => _players[owner].Shoot.ToButtonState();
-        public ButtonState GetSwitch(Guid owner) => _players[owner].Switch.ToButtonState();
     }
 }

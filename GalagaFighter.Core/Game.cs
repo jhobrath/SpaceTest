@@ -9,6 +9,7 @@ using System.Numerics;
 using GalagaFighter.Core.Models.Effects.Defensives;
 using GalagaFighter.Core.Models.Effects.Projectiles;
 using GalagaFighter.Core.Models.Effects.Offensives;
+using GalagaFighter.Core.CPU;
 
 namespace GalagaFighter.Core
 {
@@ -41,9 +42,10 @@ namespace GalagaFighter.Core
         private readonly IPowerUpService _powerUpService;
         private readonly IObjectService _objectService;
         private readonly IInputService _inputService;
-        private readonly IPlayerManagerFactory _effectManagerFactory;
+        private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly IProjectileProjectileCollisionService _projectileProjectileCollisionService;
         private readonly IParticleRenderService _particleRenderService;
+        private  ICpuDecisionMaker _cpuDecisionMaker;
 
         // Player-specific controllers
         private IPlayerController _playerController1;
@@ -61,7 +63,7 @@ namespace GalagaFighter.Core
             _playerProjectileCollisionService = Registry.Get<IPlayerProjectileCollisionService>();
             _projectilePowerUpCollisionService = Registry.Get<IProjectilePowerUpCollisionService>();
             _playerPowerUpCollisionService = Registry.Get<IPlayerPowerUpCollisionService>();
-            _effectManagerFactory = Registry.Get<IPlayerManagerFactory>();
+            _playerManagerFactory = Registry.Get<IPlayerManagerFactory>();
             _projectileProjectileCollisionService = Registry.Get<IProjectileProjectileCollisionService>();
             _particleRenderService = Registry.Get<IParticleRenderService>();
 
@@ -110,18 +112,13 @@ namespace GalagaFighter.Core
             var rect1 = new Rectangle(position1, shipSize);
             var rect2 = new Rectangle(position2, shipSize);
 
-            var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
-            var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6);
-
             // 1. Construct players with their own controllers
             _player1 = new Player(_playerController1, rect1, true);
             _player2 = new Player(_playerController2, rect2, false);
-            
+
+
             _objectService.AddGameObject(_player1);
             _objectService.AddGameObject(_player2);
-
-            _inputService.AddPlayer(_player1.Id, player1Mappings);
-            _inputService.AddPlayer(_player2.Id, player2Mappings);
 
             _player1.SetDrawPriority(0);
             _player2.SetDrawPriority(0);
@@ -136,11 +133,23 @@ namespace GalagaFighter.Core
             GiveAllEffects(_player1);
             GiveAllEffects(_player2);
 #endif
+
+            var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
+
+            //For Human player 2:
+            //var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6);
+            //For CPU Player 2:
+            _cpuDecisionMaker = new CpuDecisionMaker(_objectService, _playerManagerFactory, _player2.Id);
+            var player2Mappings = new CpuKeyMappings(_cpuDecisionMaker);
+
+            _inputService.AddPlayer(_player1.Id, player1Mappings);
+            _inputService.AddPlayer(_player2.Id, player2Mappings);
+
         }
 
         private void GiveAllEffects(Player player)
         {
-            var effectManager = _effectManagerFactory.GetEffectManager(player);
+            var effectManager = _playerManagerFactory.GetEffectManager(player);
             //effectManager.AddEffect(new RicochetEffect());
             //effectManager.AddEffect(new IceShotEffect());
             //effectManager.AddEffect(new ExplosiveShotEffect());
@@ -190,7 +199,7 @@ namespace GalagaFighter.Core
             }
             else
             {
-                var effectManager = _effectManagerFactory.GetEffectManager(_player1);
+                var effectManager = _playerManagerFactory.GetEffectManager(_player1);
                 effectManager.AddEffect(new DefaultShootEffect());
             }
 
@@ -200,7 +209,7 @@ namespace GalagaFighter.Core
             }
             else
             {
-                var effectManager = _effectManagerFactory.GetEffectManager(_player2);
+                var effectManager = _playerManagerFactory.GetEffectManager(_player2);
                 effectManager.AddEffect(new DefaultShootEffect());
 
             }
@@ -235,7 +244,7 @@ namespace GalagaFighter.Core
                 };
                 player.Initialize(health, stats, color);
 
-                var effectManager = _effectManagerFactory.GetEffectManager(player);
+                var effectManager = _playerManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect());
                 effectManager.AddEffect(new BeamEffect());
                 effectManager.AddEffect(new ElectricShotEffect());
@@ -268,6 +277,7 @@ namespace GalagaFighter.Core
             _projectileProjectileCollisionService.HandleCollisions();
             _playerProjectileCollisionService.HandleCollisions();
             _inputService.Update();
+            _cpuDecisionMaker.Update();
 
             HandleInput();
             UpdateGameObjects();

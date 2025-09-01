@@ -25,7 +25,7 @@ namespace GalagaFighter.Core.Services
 
         public void AddGameObject(GameObject gameObject)
         {
-            _gameObjects.Add(gameObject.Id, gameObject);
+            _gameObjects[gameObject.Id] = gameObject;
         }
 
         public void RemoveGameObject(GameObject gameObject) => RemoveGameObject(gameObject.Id);

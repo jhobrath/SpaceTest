@@ -2,6 +2,7 @@ using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;

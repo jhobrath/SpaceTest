@@ -21,6 +21,7 @@ namespace GalagaFighter.Core.Models.Particles
 
         private float _currentSize;
         private Color _currentColor;
+        private float _colorVariation;
 
         public Particle(Guid owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, 
                        Vector2 initialSpeed, float lifetime, Color startColor, Color endColor, 
@@ -36,6 +37,8 @@ namespace GalagaFighter.Core.Models.Particles
             _currentSize = startSize;
             _currentColor = startColor;
             SetDrawPriority(0.5); // Draw particles behind most objects but in front of background
+
+            _colorVariation = 1f;// .75f + (float)(1.5f * Game.Random.NextDouble());
         }
 
         public override void Update(Game game)
@@ -80,6 +83,8 @@ namespace GalagaFighter.Core.Models.Particles
         private void UpdateVisualProperties()
         {
             float progress = Lifetime / MaxLifetime;
+
+            progress = progress;
             
             // Interpolate size
             _currentSize = StartSize + (EndSize - StartSize) * progress;
@@ -87,10 +92,10 @@ namespace GalagaFighter.Core.Models.Particles
 
             // Interpolate color
             _currentColor = new Color(
-                (int)(StartColor.R + (EndColor.R - StartColor.R) * progress),
-                (int)(StartColor.G + (EndColor.G - StartColor.G) * progress),
-                (int)(StartColor.B + (EndColor.B - StartColor.B) * progress),
-                (int)(StartColor.A + (EndColor.A - StartColor.A) * progress)
+                (int)Math.Clamp((StartColor.R + (EndColor.R - StartColor.R) * progress) * _colorVariation, 0,255),
+                (int)Math.Clamp((StartColor.G + (EndColor.G - StartColor.G) * progress) * _colorVariation, 0,255),
+                (int)Math.Clamp((StartColor.B + (EndColor.B - StartColor.B) * progress) * _colorVariation, 0,255),
+                (int)Math.Clamp((StartColor.A + (EndColor.A - StartColor.A) * progress) * _colorVariation, 0,255)
             );
 
             // Apply fade out effect near end of life

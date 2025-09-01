@@ -187,8 +187,11 @@ namespace GalagaFighter.Core.Handlers.Players
             projectile.Move(y: projectile.SpawnOffset.Y * (_lastGunLeft ? 1 : -1) * modifiers.Display.SizeMultiplier.Y);
 
             //Undo offset from spawn position
-            projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
-            projectile.Move(y: -(projectile.Rect.Height / 2));
+            if(!(projectile is BeamProjectile))
+            { 
+                projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
+                projectile.Move(y: -(projectile.Rect.Height / 2));
+            }
 
             projectile.Modifiers.OnShoot?.Invoke(projectile);
             projectile.Modifiers.Untouchable = isPhantom;

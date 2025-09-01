@@ -50,7 +50,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
 
             if (!shootState.IsDown)
             {
-                Release(projectile);
+                Release(projectile, _heldDuration - _heldDurationOffset);
                 _heldDurationOffset = 0f;
                 return;
             }
@@ -62,7 +62,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
 
             if (_heldDuration - _heldDurationOffset >= projectile.Modifiers.WindUpDuration)
             {
-                Release(projectile);
+                Release(projectile, _heldDuration - _heldDurationOffset);
                 _heldDurationOffset = _heldDuration;
             }
 
@@ -70,10 +70,10 @@ namespace GalagaFighter.Core.Handlers.Projectiles
             projectile.MoveTo(y: owner.Rect.Y - _spawnOffset);
         }
 
-        private void Release(Projectile projectile)
+        private void Release(Projectile projectile, float heldDuration)
         {
             ChangeSpeed(projectile);
-            projectile.Modifiers.OnWindUpReleased?.Invoke(projectile);
+            projectile.Modifiers.OnWindUpReleased?.Invoke(projectile, heldDuration);
             projectile.Modifiers.WindUpDuration = 0f;
         }
 

@@ -1,4 +1,4 @@
 namespace GalagaFighter
 {
-    public enum ProjectileType { Normal, Ice, Wall, Explosive }
+    public enum ProjectileType { Normal, Ice, Wall, Explosive, Beam }
 }

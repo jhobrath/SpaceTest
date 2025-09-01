@@ -28,6 +28,7 @@ namespace GalagaFighter.Core.Models.Particles
         public float ParticleStartSize { get; set; } = 5f;
         public float ParticleEndSize { get; set; } = 1f;
         public float ParticleSizeVariation { get; set; } = 2f;
+        public float ParticleColorVariation { get; set; } = 0f;
         public Color ParticleStartColor { get; set; } = Color.White;
         public Color ParticleEndColor { get; set; } = Color.Blank;
         public float ParticleDrag { get; set; } = 0f;
@@ -135,7 +136,7 @@ namespace GalagaFighter.Core.Models.Particles
             float rotation = GetParticleRotation();
 
             var particleSprite = GetParticleSprite();
-            
+
             var particle = new Particle(
                 Id, // Emitter is the owner
                 particleSprite,
@@ -143,8 +144,8 @@ namespace GalagaFighter.Core.Models.Particles
                 new Vector2(startSize, startSize),
                 particleSpeed,
                 lifetime,
-                _config.ParticleStartColor,
-                _config.ParticleEndColor,
+                ApplyColorVariation(_config.ParticleStartColor, _config.ParticleColorVariation),
+                ApplyColorVariation(_config.ParticleEndColor, _config.ParticleColorVariation),
                 startSize,
                 endSize
             )
@@ -307,6 +308,32 @@ namespace GalagaFighter.Core.Models.Particles
             {
                 EmitParticle();
             }
+        }
+
+
+        /// <summary>
+        /// Apply random color variation to a base color
+        /// </summary>
+        /// <param name="baseColor">The base color to modify</param>
+        /// <param name="random">Random number generator instance</param>
+        /// <returns>Color with random variation applied</returns>
+        public Color ApplyColorVariation(Color baseColor, float colorVariation)
+        {
+            if (colorVariation <= 0f)
+                return baseColor;
+
+            // Generate random offsets for RGB components
+            float rOffset = (float)(Game.Random.NextDouble() - 0.5) * colorVariation * 2f;
+            float gOffset = (float)(Game.Random.NextDouble() - 0.5) * colorVariation * 2f;
+            float bOffset = (float)(Game.Random.NextDouble() - 0.5) * colorVariation * 2f;
+
+            // Apply offsets and clamp to valid color range
+            int newR = Math.Clamp((int)(baseColor.R + rOffset), 0, 255);
+            int newG = Math.Clamp((int)(baseColor.G + gOffset), 0, 255);
+            int newB = Math.Clamp((int)(baseColor.B + bOffset), 0, 255);
+            int newA = Math.Clamp((int)(baseColor.A + bOffset), 0, 255);
+
+            return new Color(newR, newG, newB, newA); // Keep original alpha
         }
     }
 }

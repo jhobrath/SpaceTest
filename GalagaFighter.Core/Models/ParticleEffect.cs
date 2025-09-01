@@ -44,6 +44,7 @@ namespace GalagaFighter.Core.Models
         public float ParticleSizeVariation { get; set; } = 1f;
         public Color ParticleStartColor { get; set; } = Color.White;
         public Color ParticleEndColor { get; set; } = new Color(255, 255, 255, 0);
+        public float ParticleColorVariation { get; set; } = 0f; // Random offset for color components (0-255)
 
         // Sprite Configuration - Full control!
         public List<string> Sprites { get; set; } = new List<string>();
@@ -95,6 +96,7 @@ namespace GalagaFighter.Core.Models
             ParticleSizeVariation = source.ParticleSizeVariation;
             ParticleStartColor = source.ParticleStartColor;
             ParticleEndColor = source.ParticleEndColor;
+            ParticleColorVariation = source.ParticleColorVariation;
             Sprites = new List<string>(source.Sprites);
             SpriteSelection = source.SpriteSelection;
             Name = source.Name;
@@ -107,26 +109,26 @@ namespace GalagaFighter.Core.Models
         {
             var hash = new HashCode();
             // Removed orientation-dependent properties from hash for stable caching
-            hash.Add(Shape);
-            hash.Add(EmissionRate);
-            hash.Add(MaxParticles);
-            hash.Add(EmissionRadius);
-            hash.Add(EmissionDirection);
-            hash.Add(ConeAngle);
-            hash.Add(ParticleLifetime);
-            hash.Add(ParticleLifetimeVariation);
+            //hash.Add(Shape);
+            //hash.Add(EmissionRate);
+            //hash.Add(MaxParticles);
+            //hash.Add(EmissionRadius);
+            //hash.Add(EmissionDirection);
+            //hash.Add(ConeAngle);
+            //hash.Add(ParticleLifetime);
+            //hash.Add(ParticleLifetimeVariation);
             hash.Add(Duration);
-            hash.Add(Loop);
-            hash.Add(EmitOnStart);
-            hash.Add(AutoDestroy);
-            hash.Add(ParticleSpeed);
-            hash.Add(ParticleSpeedVariation);
-            hash.Add(UseGravity);
-            hash.Add(GravityStrength);
-            hash.Add(ParticleDrag);
-            hash.Add(ParticleStartSize);
-            hash.Add(ParticleEndSize);
-            hash.Add(ParticleSizeVariation);
+            //hash.Add(Loop);
+            //hash.Add(EmitOnStart);
+            //hash.Add(AutoDestroy);
+            //hash.Add(ParticleSpeed);
+            //hash.Add(ParticleSpeedVariation);
+            //hash.Add(UseGravity);
+            //hash.Add(GravityStrength);
+            //hash.Add(ParticleDrag);
+            //hash.Add(ParticleStartSize);
+            //hash.Add(ParticleEndSize);
+            //hash.Add(ParticleSizeVariation);
             hash.Add(ParticleStartColor.R);
             hash.Add(ParticleStartColor.G);
             hash.Add(ParticleStartColor.B);
@@ -135,12 +137,13 @@ namespace GalagaFighter.Core.Models
             hash.Add(ParticleEndColor.G);
             hash.Add(ParticleEndColor.B);
             hash.Add(ParticleEndColor.A);
+            //hash.Add(ParticleColorVariation);
             hash.Add(SpriteSelection);
             // Include sprites in hash
-            foreach (var sprite in Sprites.OrderBy(s => s))
-            {
-                hash.Add(sprite);
-            }
+            //foreach (var sprite in Sprites.OrderBy(s => s))
+            //{
+            //    hash.Add(sprite);
+            //}
             return hash.ToHashCode();
         }
 

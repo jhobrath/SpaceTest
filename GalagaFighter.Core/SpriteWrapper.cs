@@ -12,6 +12,7 @@ namespace GalagaFighter.Core
         public SpriteMode Mode { get; }
         public Texture2D Texture { get; }
         public Color Color { get; set; }
+        public bool Repeat { get; set; }
 
         private int _frameCount;
         private float _frameDuration;
@@ -19,6 +20,8 @@ namespace GalagaFighter.Core
         private float _animationTimer;
         private readonly Action<Vector2, float, float, float, float>? _drawAction = null;
         private readonly Action<Vector2, float, float, float, float, int>? _drawAnimatedAction = null;
+
+        private bool _reachedLastFrame = false;
 
         // For static drawn mode
         public SpriteWrapper(Action<Vector2, float, float, float, float> drawAction)
@@ -70,6 +73,7 @@ namespace GalagaFighter.Core
             _frameCount = frameCount;
             _frameDuration = frameDuration;
             _currentFrame = 0;
+            Repeat = repeat;
         }
 
         public void Update(float frameTime)
@@ -80,7 +84,13 @@ namespace GalagaFighter.Core
                 if (_animationTimer >= _frameDuration)
                 {
                     _animationTimer -= _frameDuration;
-                    _currentFrame = (_currentFrame + 1) % _frameCount;
+
+                    if (!Repeat && _currentFrame == _frameCount - 1)
+                        _reachedLastFrame = true;
+                    else if (!Repeat && _reachedLastFrame && _currentFrame != _frameCount - 1)
+                        _currentFrame = _frameCount - 1;
+                    else 
+                        _currentFrame = (_currentFrame + 1) % _frameCount;
                 }
             }
         }

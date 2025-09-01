@@ -337,6 +337,34 @@ namespace GalagaFighter.Core.Static
                 Offset = new Vector2(-16f, 0f),
                 FollowRotation = true
             };
+
+            // Flamethrower Beam Effect
+            _effects["FlamethrowerBeam"] = new ParticleEffect("FlamethrowerBeam")
+            {
+                Shape = EmissionShape.Circle,
+                EmissionRate = 120f, // High emission for thick beam
+                MaxParticles = 100, // Increased for longer beam coverage
+                EmissionRadius = 8f, // Spread for beam thickness
+                ParticleLifetime = 3.5f, // EXTENDED: Much longer to reach screen edge
+                ParticleLifetimeVariation = 0.2f, // Reduced variation for consistency
+                ParticleSpeed = new Vector2(200f, 0f), // Forward motion for beam
+                ParticleSpeedVariation = new Vector2(40f, 60f), // Random spread outward
+                ParticleStartSize = 12f, // Large particles for visibility
+                ParticleEndSize = 3f, // Shrink as they burn out
+                ParticleSizeVariation = 4f,
+                ParticleStartColor = Color.Yellow, // Hot fire starts yellow
+                ParticleEndColor = new Color(255, 80, 0, 0), // Fades to orange then transparent
+                Duration = -1f,
+                Loop = true,
+                EmitOnStart = true,
+                AutoDestroy = false,
+                UseGravity = false, // No gravity as requested
+                ParticleDrag = 0.3f, // Minimal drag to maintain beam shape
+                Sprites = { "fire_1", "fire_2", "fire_3", "fire_4", "fire_5" }, // Your fire textures
+                SpriteSelection = SpriteSelectionMode.Random, // CHANGED: Use Random to avoid cycling gaps
+                Offset = new Vector2(20f, 0f), // Offset forward from source
+                FollowRotation = true
+            };
         }
     }
 }

@@ -147,6 +147,10 @@ namespace GalagaFighter.Core.Static
                     Raylib.DrawPixel(width / 2 - 1, height / 2 - 1, Color.Yellow);
                     Raylib.DrawPixel(width / 2 + 1, height / 2 + 1, Color.Yellow);
                     break;
+                case ProjectileType.Beam:
+                    // Simple red circle as fallback (the animated version is used instead)
+                    Raylib.DrawCircle(width / 2, height / 2, Math.Min(width, height) / 2, Color.Red);
+                    break;
             }
             Raylib.EndTextureMode();
             TextureService.Set(key, renderTexture.Texture);

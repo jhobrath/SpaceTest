@@ -54,7 +54,7 @@ namespace GalagaFighter.Core.Models.Players
 
         //Events
         public Action<Projectile>? OnShoot { get; set; } = null;
-        public Action<Projectile>? OnWindUpReleased { get; set; } = null;
+        public Action<Projectile, float>? OnWindUpReleased { get; set; } = null;
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
         public Action<Projectile>? OnSpriteUpdate { get; internal set; }
         public Func<Player, Projectile, List<GameObject>>? OnCollide { get; set; } = null;

@@ -34,6 +34,11 @@
     <None Remove="Sprites\Particles\dot_3.png" />
     <None Remove="Sprites\Particles\dot_4.png" />
     <None Remove="Sprites\Particles\dot_5.png" />
+    <None Remove="Sprites\Particles\fire_1.png" />
+    <None Remove="Sprites\Particles\fire_2.png" />
+    <None Remove="Sprites\Particles\fire_3.png" />
+    <None Remove="Sprites\Particles\fire_4.png" />
+    <None Remove="Sprites\Particles\fire_5.png" />
     <None Remove="Sprites\Particles\spark_1.png" />
     <None Remove="Sprites\Particles\spark_2.png" />
     <None Remove="Sprites\Particles\spark_3.png" />
@@ -49,6 +54,7 @@
     <None Remove="Sprites\Players\Ships.pdn" />
     <None Remove="Sprites\Powerups\powerups.pdn" />
     <None Remove="Sprites\Projectiles\electric.png" />
+    <None Remove="Sprites\Projectiles\fire.png" />
     <None Remove="Sprites\Projectiles\mud_splat.png" />
     <None Remove="Sprites\Projectiles\zap.png" />
     <None Remove="Sprites\Ships\MainShip.png" />
@@ -62,6 +68,7 @@
     <None Remove="Sprites\Ships\MainShipExplosive_ShootBoth.png" />
     <None Remove="Sprites\Ships\MainShipExplosive_ShootLeft.png" />
     <None Remove="Sprites\Ships\MainShipExplosive_ShootRight.png" />
+    <None Remove="Sprites\Ships\MainShipFireGuns.png" />
     <None Remove="Sprites\Ships\MainShipIce.png" />
     <None Remove="Sprites\Ships\MainShipIceGuns.png" />
     <None Remove="Sprites\Ships\MainShipIceGuns_ShootBoth.png" />
@@ -122,6 +129,21 @@
     <Content Include="Sprites\Particles\dot_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sprites\Particles\fire_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\fire_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\fire_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\fire_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\fire_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Particles\lightning_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -167,6 +189,9 @@
     <Content Include="Sprites\Particles\star_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sprites\Projectiles\fire.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Projectiles\zap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -204,6 +229,9 @@
 
   <ItemGroup>
     <Content Include="Sprites\Ships\MainShipExplosiveGuns.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipFireGuns.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Ships\MainShipIceGuns.png">
@@ -582,6 +610,7 @@
 
   <ItemGroup>
     <Folder Include="Examples\" />
+    <Folder Include="Static\NewFolder\" />
   </ItemGroup>
 
 </Project>

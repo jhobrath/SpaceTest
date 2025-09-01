@@ -150,7 +150,8 @@ namespace GalagaFighter.Core.Services
                 AutoDestroy = effect.AutoDestroy,
                 UseGravity = effect.UseGravity,
                 GravityStrength = effect.GravityStrength,
-                ParticleDrag = effect.ParticleDrag
+                ParticleDrag = effect.ParticleDrag,
+                ParticleColorVariation = effect.ParticleColorVariation
             };
 
             // Create emitter with multi-sprite support

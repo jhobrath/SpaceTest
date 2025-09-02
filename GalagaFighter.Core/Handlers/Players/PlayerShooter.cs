@@ -39,16 +39,19 @@ namespace GalagaFighter.Core.Handlers.Players
         private readonly IInputService _inputService;
         private readonly IProjectileController _projectileController;
         private readonly IMagnetProjectileService _magnetProjectileService;
+        private readonly IPlayerManagerFactory _playerManagerFactory;
 
         protected virtual float EffectiveFireRate => 1.2f * (float)Math.Pow(0.8f, 5);
 
-        public PlayerShooter(IInputService inputService, IObjectService objectService, IProjectileController projectileUpdater,
-            IMagnetProjectileService magnetProjectileService)
+        public PlayerShooter(IInputService inputService, IObjectService objectService, 
+            IProjectileController projectileUpdater, IMagnetProjectileService magnetProjectileService,
+            IPlayerManagerFactory playerManagerFactory)
         {
             _objectService = objectService;
             _inputService = inputService;
             _projectileController = projectileUpdater;
             _magnetProjectileService = magnetProjectileService;
+            _playerManagerFactory = playerManagerFactory;
         }
 
         public PlayerShootState Shoot(Player player, EffectModifiers modifiers)
@@ -194,7 +197,10 @@ namespace GalagaFighter.Core.Handlers.Players
             }
 
             projectile.Modifiers.OnShoot?.Invoke(projectile);
-            projectile.Modifiers.Untouchable = isPhantom;
+            projectile.Modifiers.Untouchable |= isPhantom;
+
+            var resourceManager = _playerManagerFactory.GetResourceManager(player);
+            resourceManager.AddShotFired();
 
             _objectService.AddGameObject(projectile);
             _lastProjectile = projectile;

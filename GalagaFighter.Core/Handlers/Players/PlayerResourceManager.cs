@@ -1,4 +1,6 @@
 ﻿using Raylib_cs;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GalagaFighter.Core.Handlers.Players
 {
@@ -6,56 +8,77 @@ namespace GalagaFighter.Core.Handlers.Players
     {
         bool Spend(float amount);
         void Update();
-        float CurrentAmount { get; }
+        void AddShotFired();
+
+        float ShieldMeter { get; }
+        float ShootMeter { get; }
     }
     public class PlayerResourceManager : IPlayerResourceManager
     {
         public const float MaxAmount = 100f;
         public const float FillRate = 5f; // per second
-        public float CurrentAmount { get; private set; } = 100f;
+        public float ShieldMeter { get; set; } = 100f;
+        public float ShootMeter => (MaxShotCount - _shotTimestamps.Count)/MaxShotCount;
+
+
+        private const float WindowSeconds = 3f;
+        private const float MaxShotCount = 12f;
 
         private float _amountLeftToSpend = 0f;
+
+        private List<double> _shotTimestamps = new();
 
         public void Update()
         {
             if(_amountLeftToSpend > 0f)
             {
                 var amountToRemove = FillRate * Raylib.GetFrameTime() * 3;
-                CurrentAmount -= amountToRemove;
-                if (CurrentAmount < 0f) 
-                    CurrentAmount = 0f;
+                ShieldMeter -= amountToRemove;
+                if (ShieldMeter < 0f) 
+                    ShieldMeter = 0f;
 
                 _amountLeftToSpend -= amountToRemove;
             }
             else 
             { 
-                if(CurrentAmount < 10)
-                    CurrentAmount += FillRate * Raylib.GetFrameTime()/4f;
-                else if (CurrentAmount < 20)
-                    CurrentAmount += FillRate * Raylib.GetFrameTime() /3f;
-                else if (CurrentAmount < 30)
-                    CurrentAmount += FillRate * Raylib.GetFrameTime() / 2f;
+                if(ShieldMeter < 10)
+                    ShieldMeter += FillRate * Raylib.GetFrameTime()/4f;
+                else if (ShieldMeter < 20)
+                    ShieldMeter += FillRate * Raylib.GetFrameTime() /3f;
+                else if (ShieldMeter < 30)
+                    ShieldMeter += FillRate * Raylib.GetFrameTime() / 2f;
                 else
-                    CurrentAmount += FillRate * Raylib.GetFrameTime();
+                    ShieldMeter += FillRate * Raylib.GetFrameTime();
 
-                if (CurrentAmount > MaxAmount)
-                    CurrentAmount = MaxAmount;
+                if (ShieldMeter > MaxAmount)
+                    ShieldMeter = MaxAmount;
             }
+
+            var now = Raylib.GetTime();
+            _shotTimestamps = _shotTimestamps.Where(t => now - t <= WindowSeconds).ToList();
+
         }
 
         public bool Spend(float amount)
         {
             if (amount < 0f)
                 return false;
-            if (amount > CurrentAmount)
+            if (amount > ShieldMeter)
                 return false;
 
             if (amount > 20)
                 _amountLeftToSpend = amount;
             else
-                CurrentAmount -= amount;
+                ShieldMeter -= amount;
                 
             return true;
+        }
+
+        public void AddShotFired()
+        {
+            double now = Raylib.GetTime();
+            _shotTimestamps.Add(now);
+            _shotTimestamps = _shotTimestamps.Where(t => now - t <= WindowSeconds).ToList();
         }
     }
 }

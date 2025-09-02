@@ -80,7 +80,7 @@ namespace GalagaFighter.Core.CPU
                 Health = player.Health,
                 PositionX = player.Center.X,
                 PositionY = player.Center.Y,
-                Resource = _resourceManagers[player.Id].CurrentAmount
+                Resource = _resourceManagers[player.Id].ShieldMeter
             };
         }
 

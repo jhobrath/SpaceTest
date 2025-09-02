@@ -63,6 +63,8 @@ namespace GalagaFighter.Core.Controllers
             var resourceManager = _playerManagerFactory.GetResourceManager(player);
             resourceManager.Update();
 
+
+
             _playerSpender.HandleDefensiveSpend(player, modifiers);
             _playerSpender.HandleOffensiveSpend(player, modifiers);
 

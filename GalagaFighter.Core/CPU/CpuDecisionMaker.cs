@@ -133,7 +133,7 @@ namespace GalagaFighter.Core.CPU
             }
 
             // 2. If danger cannot be avoided, use switch (defend) if resources are sufficient
-            if (dangerDetected && _resourceManager.CurrentAmount > 40)
+            if (dangerDetected && _resourceManager.ShieldMeter > 40)
             {
                 _switch = true;
             }

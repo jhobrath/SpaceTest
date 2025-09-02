@@ -112,11 +112,10 @@ namespace GalagaFighter.Core.Static
         public static void DrawPlayerResources(Player player, bool reverse)
         {
             var resourceManager = _playerManagerFactory.GetResourceManager(player);
-            var currentResources = resourceManager.CurrentAmount;
+            var currentResources = resourceManager.ShieldMeter;
             var maxResources = PlayerResourceManager.MaxAmount;
-            
             var resourcePercentage = currentResources / maxResources;
-            
+
             var remainingResourceStartX = (int)(((reverse 
                 ? Game.Width - (_margin + (resourcePercentage * 500)) 
                 : _margin))*Game.UniformScale);
@@ -125,11 +124,19 @@ namespace GalagaFighter.Core.Static
                 ? Game.Width - (_margin + 500)
                 : _margin)*Game.UniformScale);
 
-            // Draw resource bar directly under health bar (health bar is at _margin, so resource bar is at _margin + 35)
-            var resourceBarY = _margin + 35;
-            
-            Raylib.DrawRectangle(remainingResourceStartX, resourceBarY, (int)(resourcePercentage*500*Game.UniformScale), 30, Color.Blue);
-            Raylib.DrawRectangleLines(resourceBarLinesStart, resourceBarY, 500, 30, Color.White);
+            // Draw ShieldMeter bar directly under health bar (health bar is at _margin, so resource bar is at _margin + 5)
+            var resourceBarY = _margin + 30 + 5; // 30 for health bar height, 5 for spacing
+            Raylib.DrawRectangle(remainingResourceStartX, resourceBarY, (int)(resourcePercentage*500*Game.UniformScale), 10, Color.Blue);
+            Raylib.DrawRectangleLines(resourceBarLinesStart, resourceBarY, 500, 10, Color.White);
+
+            // Draw ShootMeter bar below resource bar
+            var shootMeterPercentage = resourceManager.ShootMeter; // 0.0 to 1.0
+            var shootMeterStartX = (int)(((reverse 
+                ? Game.Width - (_margin + (shootMeterPercentage * 500)) 
+                : _margin))*Game.UniformScale);
+            var shootMeterBarY = resourceBarY + 10 + 5; // 10 for shield bar height, 5 for spacing
+            Raylib.DrawRectangle(shootMeterStartX, shootMeterBarY, (int)(shootMeterPercentage*500*Game.UniformScale), 10, Color.Lime);
+            Raylib.DrawRectangleLines(resourceBarLinesStart, shootMeterBarY, 500, 10, Color.White);
         }
 
         public static void DrawWinner(Player player1, Player player2)

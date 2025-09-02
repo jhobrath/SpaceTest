@@ -55,6 +55,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
                     projectile.SetOwner(player.Id);
 
                 projectile.HurryTo(x: newSpeedX, y: newSpeedY);
+                projectile.Modifiers.Homing = 0f;
             }
         }
     }

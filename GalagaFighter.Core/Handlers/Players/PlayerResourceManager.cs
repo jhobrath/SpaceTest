@@ -21,7 +21,7 @@ namespace GalagaFighter.Core.Handlers.Players
         public float ShieldMeter { get; set; } = 100f;
 
         //TODO: This is duplicate logic to whats in default shoot effect. Any idea on how to share logic?
-        public float ShootMeter => (MaxShotCount - Math.Max(0, _shotTimestamps.Count - 5))/MaxShotCount;
+        public float ShootMeter => (MaxShotCount - Math.Max(0, _shotTimestamps.Count - 3))/MaxShotCount;
 
 
         private const float WindowSeconds = 3f;

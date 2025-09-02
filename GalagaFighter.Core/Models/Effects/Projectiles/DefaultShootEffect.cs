@@ -16,8 +16,8 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private SpriteDecorations _decorations;
         private Color? _palleteSwap = null;
         private List<double> _shotTimestamps = new();
-        private const float WindowSeconds = 3f;
-        private const float MaxCount = 15f;
+        private const float BulletSpeedWindow = 3f;
+        private const float BulletSpeedMaxAffectiveCount = 12f;
 
         public DefaultShootEffect()
         {
@@ -43,6 +43,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Decorations = _decorations; 
             modifiers.Projectile.OnShootProjectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers, owner.PalleteSwap));
             modifiers.Projectile.OnShoot = projectile => HandleShotFired(projectile, modifiers);
+            modifiers.Projectile.Homing += .5f;
             _playerModifiers = modifiers;
         }
 
@@ -50,7 +51,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         {
             double now = Raylib.GetTime();
             _shotTimestamps.Add(now);
-            _shotTimestamps = _shotTimestamps.Where(t => now - t <= WindowSeconds).ToList();
+            _shotTimestamps = _shotTimestamps.Where(t => now - t <= BulletSpeedWindow).ToList();
             UpdateMultipliers(modifiers.Projectile);
             base.HandleShotFired(projectile);
         }
@@ -58,12 +59,12 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private void UpdateMultipliers(PlayerProjectile projectile)
         {
             double now = Raylib.GetTime();
-            _shotTimestamps = _shotTimestamps.Where(t => now - t <= WindowSeconds).ToList();
-            int count = Math.Max(0, _shotTimestamps.Count - 5);
+            _shotTimestamps = _shotTimestamps.Where(t => now - t <= BulletSpeedWindow).ToList();
+            int count = Math.Max(0, _shotTimestamps.Count - 3);
 
             float maxMultiplier = 1.5f;
             float minMultiplier = 0.75f;
-            float newMultiplier = maxMultiplier - ((maxMultiplier - minMultiplier) * Math.Min(count, MaxCount) / MaxCount);
+            float newMultiplier = maxMultiplier - ((maxMultiplier - minMultiplier) * Math.Min(count, BulletSpeedMaxAffectiveCount) / BulletSpeedMaxAffectiveCount);
 
             // Undo previous multiplier, apply new one
             _playerModifiers.Projectile.SpeedMultiplier /= _currentMultiplier;
@@ -77,8 +78,6 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             }
 
             _currentMultiplier = newMultiplier;
-
-
         }
 
         protected override void HandleShotFired(Projectile projectile)

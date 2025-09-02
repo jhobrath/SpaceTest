@@ -9,7 +9,7 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Projectile.Homing = 500f;
+            modifiers.Projectile.Homing += 1f;
         }
     }
 }

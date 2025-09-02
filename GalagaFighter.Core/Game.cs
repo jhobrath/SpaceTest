@@ -137,10 +137,10 @@ namespace GalagaFighter.Core
             var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
 
             //For Human player 2:
-            //var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6);
+            var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6);
             //For CPU Player 2:
-            _cpuDecisionMaker = new CpuDecisionMaker(_objectService, _playerManagerFactory, _player2.Id);
-            var player2Mappings = new CpuKeyMappings(_cpuDecisionMaker);
+            //_cpuDecisionMaker = new CpuDecisionMaker(_objectService, _playerManagerFactory, _player2.Id);
+            //var player2Mappings = new CpuKeyMappings(_cpuDecisionMaker);
 
             _inputService.AddPlayer(_player1.Id, player1Mappings);
             _inputService.AddPlayer(_player2.Id, player2Mappings);
@@ -277,7 +277,7 @@ namespace GalagaFighter.Core
             _projectileProjectileCollisionService.HandleCollisions();
             _playerProjectileCollisionService.HandleCollisions();
             _inputService.Update();
-            _cpuDecisionMaker.Update();
+            _cpuDecisionMaker?.Update();
 
             HandleInput();
             UpdateGameObjects();

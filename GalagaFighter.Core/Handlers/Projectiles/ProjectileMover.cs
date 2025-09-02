@@ -54,7 +54,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
         {
             var target = _objectService.GetGameObjects<Player>().Where(p => p.Id != projectile.Owner).Single();
             var direction = Vector2.Normalize(target.Center - projectile.Center);
-            var homingStrength = projectile.Modifiers.Homing * Raylib.GetFrameTime();
+            var homingStrength = projectile.Modifiers.Homing * projectile.BaseSpeed.X * projectile.Modifiers.SpeedMultiplier * Raylib.GetFrameTime();
             var newSpeed = new Vector2(
                 projectile.Speed.X + direction.X * homingStrength,
                 projectile.Speed.Y + direction.Y * homingStrength);

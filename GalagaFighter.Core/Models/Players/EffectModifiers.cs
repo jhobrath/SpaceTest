@@ -19,6 +19,7 @@ namespace GalagaFighter.Core.Models.Players
         public int PhantomCount { get; internal set; }
         public List<ParticleEffect> ParticleEffects { get; set; } = [];
         public bool Jiggle { get; set; }
+        public bool Parry { get; set; }
 
         public EffectModifiers()
         {

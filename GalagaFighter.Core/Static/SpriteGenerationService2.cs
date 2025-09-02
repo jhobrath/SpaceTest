@@ -34,5 +34,10 @@ namespace GalagaFighter.Core.Static
             TextureService.Set(key, renderTexture.Texture);
             return new SpriteWrapper(renderTexture.Texture);
         }
+
+        public static SpriteWrapper CreateAnimatedParrySprite()
+        {
+            return null;
+        }
     }
 }

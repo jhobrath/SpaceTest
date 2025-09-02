@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class RewindEffect : PlayerEffect
+    public class ParryEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/rewind.png";
-        protected override float Duration => 1f;
-        public override List<string> DecorationKeys => ["RepulseShield"];
+        protected override float Duration => .25f;
+        public override List<string> DecorationKeys => ["ParryShield"];
 
         private readonly SpriteDecoration _sprite;
-        public RewindEffect()
+        public ParryEffect()
         {
-            _sprite = new SpriteDecoration(SpriteGenerationService.CreateAnimatedMagnetShieldSprite())
+            _sprite = new SpriteDecoration(SpriteGenerationService2.CreateAnimatedParrySprite())
             {
                 Offset = new System.Numerics.Vector2(0, -80),
                 Size = new System.Numerics.Vector2(200, 20)
@@ -26,8 +26,8 @@ namespace GalagaFighter.Core.Models.Effects.Defensives
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.IsRepulsive = true;
-            modifiers.Decorations!["RepulseShield"] = _sprite;
+            modifiers.Parry = true;
+            modifiers.Decorations!["ParryShield"] = _sprite;
         }
     }
 }

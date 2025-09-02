@@ -17,7 +17,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private Color? _palleteSwap = null;
         private List<double> _shotTimestamps = new();
         private const float WindowSeconds = 3f;
-        private const float MaxCount = 12f;
+        private const float MaxCount = 15f;
 
         public DefaultShootEffect()
         {
@@ -59,15 +59,15 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         {
             double now = Raylib.GetTime();
             _shotTimestamps = _shotTimestamps.Where(t => now - t <= WindowSeconds).ToList();
-            int count = _shotTimestamps.Count;
+            int count = Math.Max(0, _shotTimestamps.Count - 5);
 
             float maxMultiplier = 1.5f;
             float minMultiplier = 0.75f;
             float newMultiplier = maxMultiplier - ((maxMultiplier - minMultiplier) * Math.Min(count, MaxCount) / MaxCount);
 
             // Undo previous multiplier, apply new one
-            projectile.SpeedMultiplier /= _currentMultiplier;
-            projectile.SpeedMultiplier *= newMultiplier;
+            _playerModifiers.Projectile.SpeedMultiplier /= _currentMultiplier;
+            _playerModifiers.Projectile.SpeedMultiplier *= newMultiplier;
 
             if (_playerModifiers?.Stats != null)
             {
@@ -77,6 +77,8 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             }
 
             _currentMultiplier = newMultiplier;
+
+
         }
 
         protected override void HandleShotFired(Projectile projectile)

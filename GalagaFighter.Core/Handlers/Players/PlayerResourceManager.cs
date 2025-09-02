@@ -1,4 +1,5 @@
 ﻿using Raylib_cs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +19,9 @@ namespace GalagaFighter.Core.Handlers.Players
         public const float MaxAmount = 100f;
         public const float FillRate = 5f; // per second
         public float ShieldMeter { get; set; } = 100f;
-        public float ShootMeter => (MaxShotCount - _shotTimestamps.Count)/MaxShotCount;
+
+        //TODO: This is duplicate logic to whats in default shoot effect. Any idea on how to share logic?
+        public float ShootMeter => (MaxShotCount - Math.Max(0, _shotTimestamps.Count - 5))/MaxShotCount;
 
 
         private const float WindowSeconds = 3f;

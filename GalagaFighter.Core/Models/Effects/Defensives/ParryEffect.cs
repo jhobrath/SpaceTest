@@ -11,7 +11,7 @@ namespace GalagaFighter.Core.Models.Effects.Defensives
     public class ParryEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/rewind.png";
-        protected override float Duration => .25f;
+        protected override float Duration => .15f;
         public override List<string> DecorationKeys => ["ParryShield"];
 
         private readonly SpriteDecoration _sprite;

@@ -18,7 +18,7 @@ namespace GalagaFighter.Core.Handlers.Projectiles
     {
         private readonly IObjectService _objectService;
 
-        private const float MaxDistance = 350f;
+        private const float MaxDistance = 200f;
 
         public ParryProjectileService(IObjectService objectService)
         {
@@ -41,21 +41,19 @@ namespace GalagaFighter.Core.Handlers.Projectiles
                 if (distance > MaxDistance)
                     continue;
 
-                var xDist = player.Center.X - projectile.Center.X;
-                var yDist = player.Center.Y - projectile.Center.Y;
+                var xDist = distance;
+                var yDist = distance/2;
 
-                yDist /= 5;
-
-                var xSpeedFactor = (MaxDistance - xDist) / MaxDistance;
-                var ySpeedFactor = (MaxDistance - yDist) / MaxDistance;
+                var xSpeedFactor = Math.Max((MaxDistance - xDist) / MaxDistance, .5f);
+                var ySpeedFactor = Math.Max((MaxDistance - yDist) / MaxDistance, .5f);
 
                 // Apply the repulsion magnitude in the calculated direction
                 // For the "really good" effect, flip the X direction
-                var parrySpeedX = xSpeedFactor * projectile.Speed.X * projectile.Modifiers.SpeedMultiplier * -1;
+                var parrySpeedX = projectile.Speed.X * projectile.Modifiers.SpeedMultiplier * -1;
                 var parrySpeedY = ySpeedFactor;
 
                 projectile.HurryTo(x: parrySpeedX, y: parrySpeedY);
-                projectile.Modifiers.Homing = 4f;
+                projectile.Modifiers.Homing = 2f;
                 projectile.SetOwner(player.Id);
             }
         }

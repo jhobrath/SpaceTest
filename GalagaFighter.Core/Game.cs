@@ -266,7 +266,7 @@ namespace GalagaFighter.Core
                 //else if(effect == "TimedBarrage")
                 //    player.OffensiveAugment = () => new TimedBarrageEffect();
                 player.OffensiveAugment = () => new PhantomsEffect();
-                player.DefensiveAugment = () => new ParryEffect();
+                player.DefensiveAugment = () => new WarpEffect();
             }
         }
 

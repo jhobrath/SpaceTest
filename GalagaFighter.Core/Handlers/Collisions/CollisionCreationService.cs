@@ -1,7 +1,9 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Models.Collisions;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using System;
+using System.Drawing;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Handlers.Collisions
@@ -9,6 +11,7 @@ namespace GalagaFighter.Core.Handlers.Collisions
     public interface ICollisionCreationService
     {
         void Create(Player player, Projectile projectile, Vector2? speedOverride = null);
+        GameObject Create(Vector2 center, Vector2 size, Vector2 speed);
     }
     public class CollisionCreationService : ICollisionCreationService
     {
@@ -17,6 +20,13 @@ namespace GalagaFighter.Core.Handlers.Collisions
         public CollisionCreationService(IObjectService objectService)
         {
             _objectService = objectService;
+        }
+
+        public GameObject Create(Vector2 center, Vector2 size, Vector2 speed)
+        {
+            var collision = new CenteredCollision(Game.Id, center, size, speed);
+            _objectService.AddGameObject(collision);
+            return collision;
         }
 
         public void Create(Player player, Projectile projectile, Vector2? speedOverride = null)

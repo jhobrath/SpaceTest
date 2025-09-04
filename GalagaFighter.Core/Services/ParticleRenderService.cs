@@ -39,7 +39,9 @@ namespace GalagaFighter.Core.Services
             {
                 // Get or create emitter using hash-based caching
                 var emitter = GetOrCreateEmitter(gameObject, effect);
-                
+                if (emitter == null)
+                    continue;
+
                 // Update emitter position based on object position + offset
                 Vector2 worldPosition = CalculateWorldPosition(gameObject, effect);
                 emitter.MoveTo(worldPosition.X, worldPosition.Y);
@@ -55,9 +57,11 @@ namespace GalagaFighter.Core.Services
             { 
                  // Get or create emitter using hash-based caching
                  var emitter = GetOrCreateEmitter(player, effect, true);
+                if (emitter == null)
+                    continue;
 
-                 // Update emitter position based on object position + offset
-                 Vector2 worldPosition = CalculateWorldPosition(player, effect);
+                // Update emitter position based on object position + offset
+                Vector2 worldPosition = CalculateWorldPosition(player, effect);
                  emitter.MoveTo(worldPosition.X, worldPosition.Y);
             }
 
@@ -84,7 +88,7 @@ namespace GalagaFighter.Core.Services
             }
         }
 
-        private GameObject GetOrCreateEmitter(GameObject gameObject, ParticleEffect effect, bool fromModifiers = false)
+        private GameObject? GetOrCreateEmitter(GameObject gameObject, ParticleEffect effect, bool fromModifiers = false)
         {
             // Use the effect's hash for caching - your vision!
             string cacheKey = effect.GetCacheKey(gameObject.Id, fromModifiers);
@@ -93,6 +97,9 @@ namespace GalagaFighter.Core.Services
             {
                 return existingEmitter;
             }
+
+            if (!gameObject.IsActive)
+                return null;
 
             // Create new emitter from the complete effect configuration
             var emitter = CreateEmitterFromEffect(gameObject, effect);

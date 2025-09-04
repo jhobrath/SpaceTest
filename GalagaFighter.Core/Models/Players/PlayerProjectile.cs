@@ -81,7 +81,7 @@ namespace GalagaFighter.Core.Models.Players
                 GreenAlpha = GreenAlpha,
                 Opacity = Opacity,
                 DoubleShot = DoubleShot,
-                OnShootProjectiles = OnShootProjectiles,
+                OnShootProjectiles = new(OnShootProjectiles),
                 OnShoot = OnShoot,
                 OnProjectileDestroyed = OnProjectileDestroyed,
                 WindUpSpeed = WindUpSpeed,
@@ -93,8 +93,8 @@ namespace GalagaFighter.Core.Models.Players
                 OnSpriteUpdate = OnSpriteUpdate,
                 OnCollide = OnCollide,
                 DeactivateOnCollision = DeactivateOnCollision,
-                Phases = Phases,
-                OnPhaseChange = OnPhaseChange,
+                Phases = new(Phases),
+                OnPhaseChange = new(OnPhaseChange),
                 Sprite = Sprite,
                 RotationOffset = RotationOffset,
                 RotationOffsetIncrement = RotationOffsetIncrement,
@@ -106,11 +106,11 @@ namespace GalagaFighter.Core.Models.Players
                 CanSplit = CanSplit,
                 CanRicochet = CanRicochet,
                 OnClone = OnClone,
-                OnNearProjectile = OnNearProjectile,
+                OnNearProjectile = new(OnNearProjectile),
                 Homing = Homing,
                 CollideDistanceFromPlayer = CollideDistanceFromPlayer,
                 Untouchable = Untouchable,
-                OnNearPlayer = OnNearPlayer,
+                OnNearPlayer = new(OnNearPlayer),
 
 
                 //Don't include

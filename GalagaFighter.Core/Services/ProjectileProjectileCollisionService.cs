@@ -56,8 +56,8 @@ namespace GalagaFighter.Core.Services
 
         private Action? GetHandleMethod(Projectile p1, Projectile p2)
         {
-            var p1State = p1.Modifiers.OnNearProjectile != null;
-            var p2State = p2.Modifiers.OnNearProjectile != null;
+            var p1State = p1.Modifiers.OnNearProjectile?.Any() ?? false;
+            var p2State = p2.Modifiers.OnNearProjectile?.Any() ?? false;
 
             if (p1State && p2State)
             {

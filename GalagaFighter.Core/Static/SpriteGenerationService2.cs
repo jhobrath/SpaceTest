@@ -35,7 +35,7 @@ namespace GalagaFighter.Core.Static
             return new SpriteWrapper(renderTexture.Texture);
         }
 
-        public static SpriteWrapper CreateAbsorptionEffectSprite(int frameCount = 20, float frameDuration = 0.06f, int width = 200, int height = 20)
+        public static SpriteWrapper CreateBulletShieldEffect(int frameCount = 20, float frameDuration = 0.06f, int width = 200, int height = 20)
         {
             return new SpriteWrapper(
                 (position, rotation, drawWidth, drawHeight, scale, frame) =>

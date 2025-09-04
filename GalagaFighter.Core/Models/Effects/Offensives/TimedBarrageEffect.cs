@@ -27,7 +27,7 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
             _lifetime += frameTime;
             var timeInCurrentCycle = _lifetime % 4f;
 
-            DebugWriter.Write(timeInCurrentCycle.ToString());
+            //DebugWriter.Write(timeInCurrentCycle.ToString());
 
             if (_modifiers == null)
                 return;

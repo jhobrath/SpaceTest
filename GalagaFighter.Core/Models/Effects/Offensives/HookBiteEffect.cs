@@ -7,35 +7,22 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
     public class HookBiteEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/hookbite.png";
-        protected override float Duration => 10f;
+        protected override float Duration => 1000f;
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Projectile.OnNearProjectile = HandleNearbyProjectile;
+            modifiers.Projectile.OnNearProjectile.Add(HandleNearbyProjectile);
         }
 
-        private void HandleNearbyProjectile(Projectile projectile, Projectile target, Player player, Player targetPlayer)
+        private void HandleNearbyProjectile(Projectile current, Projectile target)
         {
-            var projectileDistanceY = target.Center.Y - projectile.Center.Y;
-            var playerDistanceY = targetPlayer.Center.Y - projectile.Center.Y;
-            var playerDistanceX = Math.Abs(targetPlayer.Center.X - projectile.Center.X);
-            
-            //Too overpoweredd
-            if (playerDistanceX < 250)
+            var yDistance = Math.Abs(current.Center.Y - target.Center.Y);
+            if (yDistance > 200)
                 return;
 
-            //Only hook if hooking takes the bullet towards the opponent
-            if (projectileDistanceY < 0 && playerDistanceY > 0 ||
-                projectileDistanceY > 0 && playerDistanceY < 0)
-                return;
-
-            var remainingTime = playerDistanceX / Math.Abs(projectile.Speed.X);
-            //projectile.Modifiers.VerticalPositionOffset = playerDistanceY/remainingTime;
-            projectile.Modifiers.VerticalPositionIncrement = 2 * playerDistanceY / (remainingTime * remainingTime);
-            //projectile.Modifiers.VerticalPositionMultiplier = .5f;
-
-            projectile.Modifiers.OnNearProjectile = null;
-            target.IsActive = false;
+            var hookPct = (200 - yDistance)/200;
+            current.Modifiers.Homing = 10f*hookPct;
+            current.Modifiers.OnNearProjectile = null;
         }
     }
 }

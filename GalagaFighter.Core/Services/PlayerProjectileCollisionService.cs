@@ -69,7 +69,7 @@ namespace GalagaFighter.Core.Services
                 if (hasPlayerCollision)
                 {
                     _collisionCount += Raylib_cs.Raylib.GetFrameTime();
-                    DebugWriter.Write(_collisionCount.ToString());
+                    //DebugWriter.Write(_collisionCount.ToString());
                     projectile.OnCollide?.Invoke(player);
                 }
 

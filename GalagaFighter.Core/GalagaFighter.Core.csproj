@@ -610,7 +610,6 @@
 
   <ItemGroup>
     <Folder Include="Examples\" />
-    <Folder Include="Static\NewFolder\" />
   </ItemGroup>
 
 </Project>

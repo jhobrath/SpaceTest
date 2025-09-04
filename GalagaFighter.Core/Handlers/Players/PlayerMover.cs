@@ -62,10 +62,6 @@ namespace GalagaFighter.Core.Handlers.Players
             var baseSpeed = 1200f*player.BaseStats.SpeedMultiplier;
             var speedFactor = baseSpeed - Math.Min(speedVariability, speedVariability/durationFactor);
 
-            if(player.IsPlayer1)
-            { 
-                DebugWriter.Write(speedFactor.ToString());
-            }
             var signFactor = left ^ !player.IsPlayer1 ? -1 : 1;
             var speedY = speedFactor * signFactor * modifiers.Stats.SpeedMultiplier;
 

@@ -3,6 +3,7 @@ using GalagaFighter.Core.Models.Projectiles;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace GalagaFighter.Core.Services
 {
@@ -22,68 +23,60 @@ namespace GalagaFighter.Core.Services
 
         public void HandleCollisions()
         {
-            var projectiles = _objectService.GetGameObjects<Projectile>()
-                .GroupBy(x => x.Owner).ToList();
-            if (projectiles.Count() < 2) return;
-            var projectilePairs = projectiles
-                .First()
-                .Zip(projectiles.Last(), (a, b) => new { P1 = a, P2 = b })
-                .Where(p => IsNear(p.P1,p.P2))
-                .ToList();
+            var projectiles = _objectService.GetGameObjects<Projectile>();
+            var groupedProjectiles = projectiles.GroupBy(x => x.Owner).ToList();
+            if (groupedProjectiles.Count() < 2) return;
 
-            var players = new Lazy<List<Player>>(_objectService.GetGameObjects<Player>);
+            DebugWriter.Write(projectiles.Count.ToString());
 
-            foreach (var pair in projectilePairs)
+
+            var p1Projectiles = groupedProjectiles.First();
+            var p2Projectiles = groupedProjectiles.Last();
+
+            foreach(var p1 in p1Projectiles)
             {
-                var handle = GetHandleMethod(pair.P1, pair.P2, players);
-                if (handle == null)
+                foreach(var p2 in p2Projectiles)
                 {
-                    if(pair.P1.Owner != players.Value.Single(x => x.IsPlayer1).Id)
-                    {
-                        var s = "";
-                    }
-                    continue;
+                    if (!IsNear(p1, p2))
+                        continue;
+
+                    var handle = GetHandleMethod(p1, p2);
+                    if (handle == null)
+                        continue;
+
+                    handle();
                 }
-
-                handle();
-
-                //pair.P1.Modifiers.OnNearProjectile = null;
-                //pair.P2.Modifiers.OnNearProjectile = null;
             }
         }
 
         private bool IsNear(Projectile p1, Projectile p2)
         {
-            //var pyth = (Vector2 v) => Math.Sqrt(Math.Pow(v.X, 2) + Math.Pow(v.Y, 2));
-            //var actualDistance = pyth(p1.Center - p2.Center);
-            //if (actualDistance < 100f)
-            //    return true;
-            //
-            //return false;
-            var distX = Math.Abs(p1.Center.X - p2.Center.X);
-            var distY = Math.Abs(p1.Center.Y - p2.Center.Y);
-
-            return distX < 40 && distY < 200 && (distX + distY) < 200;
+            return Vector2.Distance(p1.Center, p2.Center) < 200f;
         }
 
-        private Action? GetHandleMethod(Projectile p1, Projectile p2, Lazy<List<Player>> players)
+        private Action? GetHandleMethod(Projectile p1, Projectile p2)
         {
             var p1State = p1.Modifiers.OnNearProjectile != null;
             var p2State = p2.Modifiers.OnNearProjectile != null;
 
-            Player GetPlayer(Projectile proj) => 
-                players.Value.First(p => p.Id == proj.Owner);   
-
             if (p1State && p2State)
-                return Game.Random.NextDouble() <  .5
-                   ? () => p1.Modifiers.OnNearProjectile!(p1,p2, GetPlayer(p1), GetPlayer(p2))
-                   : () => p2.Modifiers.OnNearProjectile!(p2,p1, GetPlayer(p2), GetPlayer(p1));
+            {
+                var whoGoesFirst = Game.Random.NextDouble() < .5;
+                var first = whoGoesFirst ? p1 : p2;
+                var second = whoGoesFirst ? p2 : p1;
+
+                return () =>
+                {
+                    first.Modifiers.OnNearProjectile!.ForEach(f => f(first, second));
+                    second.Modifiers.OnNearProjectile!.ForEach(f => f(second, first));
+                };
+            }
 
             if (p1State)
-                return () => p1.Modifiers.OnNearProjectile!(p1, p2, GetPlayer(p1), GetPlayer(p2));
+                return () => p1.Modifiers.OnNearProjectile!.ForEach(f => f(p1, p2));
 
             if (p2State)
-                return () => p2.Modifiers.OnNearProjectile!(p2, p1, GetPlayer(p2), GetPlayer(p1));
+                return () => p2.Modifiers.OnNearProjectile!.ForEach(f => f(p2, p1));
 
             return null;
         }

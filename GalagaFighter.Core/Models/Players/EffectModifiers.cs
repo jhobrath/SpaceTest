@@ -16,11 +16,12 @@ namespace GalagaFighter.Core.Models.Players
         public bool Untouchable { get; set; }
         public bool IsRepulsive { get; set; }
         public List<Phantom> Phantoms { get; set; } = [];
-        public int PhantomCount { get; internal set; }
+        public int PhantomCount { get;  set; }
         public List<ParticleEffect> ParticleEffects { get; set; } = [];
         public bool Jiggle { get; set; }
         public bool Parry { get; set; }
         public bool Warp { get; set; }
+        public bool BulletShield { get; set; }
 
         public EffectModifiers()
         {

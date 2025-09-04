@@ -17,7 +17,7 @@ namespace GalagaFighter.Core.Models.Projectiles
     public class ElectricProjectile : Projectile
     {
         private static Vector2 _baseSize => new(60f, 60f);
-        private static Vector2 _baseSpeed => new(950f, 0f);
+        private static Vector2 _baseSpeed => new(1350f, 0f);
 
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed; 

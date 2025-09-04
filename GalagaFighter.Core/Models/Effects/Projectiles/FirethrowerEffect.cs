@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class BeamEffect : PlayerEffect
+    public class FirethrowerEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/beam.png";
         public override bool IsProjectile => true;
@@ -15,7 +15,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private BeamProjectile? _beamProjectile;
         private readonly SpriteDecorations _decorations;
 
-        public BeamEffect()
+        public FirethrowerEffect()
         {
             _decorations = new SpriteDecorations
             {

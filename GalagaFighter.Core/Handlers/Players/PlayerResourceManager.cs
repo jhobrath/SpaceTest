@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using GalagaFighter.Core.Services;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace GalagaFighter.Core.Handlers.Players
     {
         bool Spend(float amount);
         void Update();
-        void AddShotFired();
+        void HandleShootMeter(ButtonState shootState);
 
         float ShieldMeter { get; }
         float ShootMeter { get; }
@@ -21,13 +22,14 @@ namespace GalagaFighter.Core.Handlers.Players
         public float ShieldMeter { get; set; } = 100f;
 
         //TODO: This is duplicate logic to whats in default shoot effect. Any idea on how to share logic?
-        public float ShootMeter => (MaxShotCount - Math.Max(0, _shotTimestamps.Count - 3))/MaxShotCount;
+        public float ShootMeter => Math.Clamp(_shootMeter / 3f, 0, 1);
 
 
         private const float WindowSeconds = 3f;
         private const float MaxShotCount = 12f;
 
         private float _amountLeftToSpend = 0f;
+        private float _shootMeter = 5f;
 
         private List<double> _shotTimestamps = new();
 
@@ -77,11 +79,16 @@ namespace GalagaFighter.Core.Handlers.Players
             return true;
         }
 
-        public void AddShotFired()
+        public void HandleShootMeter(ButtonState shootButton)
         {
-            double now = Raylib.GetTime();
-            _shotTimestamps.Add(now);
-            _shotTimestamps = _shotTimestamps.Where(t => now - t <= WindowSeconds).ToList();
+            if(shootButton.IsDown)
+            {
+                _shootMeter = Math.Max(0, _shootMeter - Raylib.GetFrameTime());
+            }
+            else
+            {
+                _shootMeter = Math.Min(5, _shootMeter + Raylib.GetFrameTime()*2f);
+            }
         }
     }
 }

@@ -23,6 +23,11 @@ namespace GalagaFighter.Core.Models.Players
         public bool Warp { get; set; }
         public bool BulletShield { get; set; }
 
+
+        //This flag informs services that the modifiers were reset
+        //  in case they were updating modifiers on the fly.
+        public bool WereReset { get; set; } = true;
+
         public EffectModifiers()
         {
         }

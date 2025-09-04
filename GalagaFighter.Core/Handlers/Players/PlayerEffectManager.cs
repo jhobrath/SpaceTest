@@ -146,6 +146,8 @@ namespace GalagaFighter.Core.Handlers.Players
                 if (!effect.IsProjectile || effect == _selectedProjectile)
                     effect.Apply(modifiers);
 
+
+            modifiers.WereReset = true;
             _modifiers = modifiers;
         }
     }

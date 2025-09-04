@@ -79,12 +79,11 @@ namespace GalagaFighter.Core.Controllers
             var resourceManager = _playerManagerFactory.GetResourceManager(player);
             resourceManager.Update();
 
-
-
             _playerSpender.HandleDefensiveSpend(player, modifiers);
             _playerSpender.HandleOffensiveSpend(player, modifiers);
-
             _playerParticleManager.UpdateModifierEffects(player, modifiers);
+
+            modifiers.WereReset = false;
         }
 
         private void UpdatePhantoms(Player player, EffectModifiers modifiers)

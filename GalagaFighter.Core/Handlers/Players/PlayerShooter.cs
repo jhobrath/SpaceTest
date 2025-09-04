@@ -43,6 +43,10 @@ namespace GalagaFighter.Core.Handlers.Players
 
         protected virtual float EffectiveFireRate => 1.2f * (float)Math.Pow(0.8f, 5);
 
+
+        private float _lastFireRateFactor = 1.0f;
+
+
         public PlayerShooter(IInputService inputService, IObjectService objectService, 
             IProjectileController projectileUpdater, IMagnetProjectileService magnetProjectileService,
             IPlayerManagerFactory playerManagerFactory)
@@ -56,6 +60,8 @@ namespace GalagaFighter.Core.Handlers.Players
 
         public PlayerShootState Shoot(Player player, EffectModifiers modifiers)
         {
+            UpdateShootMeter(player, modifiers);
+
             var canShoot = GetCanShoot(player, modifiers, out ButtonState shoot);
             if (!canShoot)
             {
@@ -83,6 +89,22 @@ namespace GalagaFighter.Core.Handlers.Players
 
 
             return CreateProjectiles(player, modifiers);
+        }
+
+        private void UpdateShootMeter(Player player, EffectModifiers modifiers)
+        {
+            var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
+            resourceManager.HandleShootMeter(_inputService.GetShoot(player.Id));
+
+            if (modifiers.WereReset)
+                _lastFireRateFactor = 1f;
+
+            var shootMeter = .5f + .5f*resourceManager.ShootMeter;
+            
+            modifiers.Stats.FireRateMultiplier *= _lastFireRateFactor;
+            modifiers.Stats.FireRateMultiplier /= shootMeter;
+
+            _lastFireRateFactor = shootMeter;
         }
 
         private PlayerShootState CreateProjectiles(Player player, EffectModifiers modifiers)
@@ -198,9 +220,6 @@ namespace GalagaFighter.Core.Handlers.Players
 
             projectile.Modifiers.OnShoot?.Invoke(projectile);
             projectile.Modifiers.Untouchable |= isPhantom;
-
-            var resourceManager = _playerManagerFactory.GetResourceManager(player);
-            resourceManager.AddShotFired();
 
             _objectService.AddGameObject(projectile);
             _lastProjectile = projectile;

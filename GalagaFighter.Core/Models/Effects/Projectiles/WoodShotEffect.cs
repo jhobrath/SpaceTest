@@ -20,7 +20,10 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             _decorations = new SpriteDecorations()
             {
                 Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWoodGuns.png"))),
-                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png")))
+                Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png"))),
+                WindUpBoth = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpBoth.png"), 3, .05f)),
+                WindUpLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpLeft.png"), 3, .05f)),
+                WindUpRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipWood_WindUpRight.png"), 3, .05f))
             };
         }
 

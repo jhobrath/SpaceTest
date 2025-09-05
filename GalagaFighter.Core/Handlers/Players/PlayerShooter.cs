@@ -40,6 +40,7 @@ namespace GalagaFighter.Core.Handlers.Players
         private readonly IProjectileController _projectileController;
         private readonly IMagnetProjectileService _magnetProjectileService;
         private readonly IPlayerManagerFactory _playerManagerFactory;
+        private readonly IPlayerProjectileSpawner _projectileSpawner;
 
         protected virtual float EffectiveFireRate => 1.2f * (float)Math.Pow(0.8f, 5);
 
@@ -49,32 +50,28 @@ namespace GalagaFighter.Core.Handlers.Players
 
         public PlayerShooter(IInputService inputService, IObjectService objectService, 
             IProjectileController projectileUpdater, IMagnetProjectileService magnetProjectileService,
-            IPlayerManagerFactory playerManagerFactory)
+            IPlayerManagerFactory playerManagerFactory, IPlayerProjectileSpawner projectileSpawner)
         {
             _objectService = objectService;
             _inputService = inputService;
             _projectileController = projectileUpdater;
             _magnetProjectileService = magnetProjectileService;
             _playerManagerFactory = playerManagerFactory;
+            _projectileSpawner = projectileSpawner;
         }
 
         public PlayerShootState Shoot(Player player, EffectModifiers modifiers)
         {
-            UpdateShootMeter(player, modifiers);
+            var shootButton = _inputService.GetShoot(player.Id);
+            UpdateShootMeter(player, modifiers, shootButton);
 
-            var canShoot = GetCanShoot(player, modifiers, out ButtonState shoot);
+            var canShoot = GetCanShoot(player, modifiers, shootButton);
             if (!canShoot)
-            {
-                if (shoot.HeldDuration > 0f && modifiers.Projectile.WindUpDuration > 0f)
-                    return _lastGunLeft
-                        ? player.IsPlayer1 ? PlayerShootState.WindUpLeft : PlayerShootState.WindUpRight
-                        : player.IsPlayer1 ? PlayerShootState.WindUpRight : PlayerShootState.WindUpLeft;
-
                 return PlayerShootState.Idle;
-            }
 
             if (modifiers.Magnetic)
             {
+                var shoot = _inputService.GetShoot(player.Id);
                 if(shoot.HeldDuration == Raylib.GetFrameTime())
                     AudioService.PlayMagnetSound();
 
@@ -82,19 +79,16 @@ namespace GalagaFighter.Core.Handlers.Players
                 return PlayerShootState.ShootBoth; 
             }
 
-            if (_lastProjectile != null && (_lastProjectile?.Modifiers.WindUpDuration ?? 0f) > 0f)
-                return _lastGunLeft
-                    ? player.IsPlayer1 ? PlayerShootState.WindUpLeft : PlayerShootState.WindUpRight
-                    : player.IsPlayer1 ? PlayerShootState.WindUpRight : PlayerShootState.WindUpLeft;
-
-
-            return CreateProjectiles(player, modifiers);
+            return _projectileSpawner.SpawnProjectiles(player, modifiers, shootButton);
         }
 
-        private void UpdateShootMeter(Player player, EffectModifiers modifiers)
+        private void UpdateShootMeter(Player player, EffectModifiers modifiers, ButtonState shootButton)
         {
+            if (!modifiers.AffectedByShootMeter)
+                return;
+
             var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
-            resourceManager.HandleShootMeter(_inputService.GetShoot(player.Id));
+            resourceManager.HandleShootMeter(shootButton);
 
             if (modifiers.WereReset)
                 _lastFireRateFactor = 1f;
@@ -107,47 +101,21 @@ namespace GalagaFighter.Core.Handlers.Players
             _lastFireRateFactor = shootMeter;
         }
 
-        private PlayerShootState CreateProjectiles(Player player, EffectModifiers modifiers)
-        {
-            var shooters = modifiers.Phantoms.Select(x => new { IsPhantom = true, x.Center }).ToList();
-            shooters.Add(new { IsPhantom = false, player.Center });
-
-            foreach(var shooter in shooters)
-            { 
-                var spawnPosition = GetSpawnPosition(player, modifiers, shooter.Center);
-                SpawnProjectile(player, modifiers, spawnPosition, shooter.IsPhantom);
-
-                if (modifiers.Stats.DoubleShot)
-                {
-                    var spawnPosition2 = GetSpawnPosition(player, modifiers, shooter.Center);
-                    SpawnProjectile(player, modifiers, spawnPosition2, shooter.IsPhantom);
-                    return PlayerShootState.ShootBoth;
-                }
-            }
-
-            if (_lastProjectile?.Modifiers.WindUpDuration > 0f)
-                return _lastGunLeft
-                ? player.IsPlayer1 ? PlayerShootState.ShootRight : PlayerShootState.ShootLeft
-                : player.IsPlayer1 ? PlayerShootState.ShootLeft : PlayerShootState.ShootRight;
-
-            return _lastGunLeft
-                ? player.IsPlayer1 ? PlayerShootState.ShootLeft : PlayerShootState.ShootRight
-                : player.IsPlayer1 ? PlayerShootState.ShootRight : PlayerShootState.ShootLeft;
-        }
-
-        protected virtual bool GetCanShoot(Player player, EffectModifiers modifiers, out ButtonState shoot)
+        protected virtual bool GetCanShoot(Player player, EffectModifiers modifiers, ButtonState shootButton)
         {
             _fireRateTimer += Raylib.GetFrameTime();
 
-            shoot = _inputService.GetShoot(player.Id);
+            if (modifiers.Projectile.WindUpDuration > 0f)
+                return true;
+
             if (modifiers.Magnetic)
             {
-                var canMagnet = GetCanShootMagnet(player, shoot);
+                var canMagnet = GetCanShootMagnet(player, shootButton);
                 if (canMagnet.HasValue)
                     return canMagnet.Value;
             }
 
-            if (!shoot)
+            if (!shootButton)
                 return false;
 
             var fireRate = modifiers.Stats.FireRateMultiplier * EffectiveFireRate * player.BaseStats.FireRateMultiplier;
@@ -174,61 +142,6 @@ namespace GalagaFighter.Core.Handlers.Players
             }
 
             return null;
-        }
-
-        private Vector2 GetSpawnPosition(Player player, EffectModifiers modifiers, Vector2? center = null)
-        {
-            center ??= player.Center;
-            var playerWidth = player.Rect.Width;
-            var playerHeight = player.Rect.Height;
-
-            var spawnX = player.IsPlayer1 ? player.Rect.X + playerWidth : player.Rect.X;
-            var spawnY = center.Value.Y;
-
-            var position = new Vector2(spawnX, spawnY);
-            return position;
-        }
-
-        private void SpawnProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition, bool isPhantom)
-        {
-            foreach (var projectileFunc in modifiers.Projectile.OnShootProjectiles)
-                ShootProjectile(player, modifiers, spawnPosition, projectileFunc, isPhantom);
-
-            if(!isPhantom)
-                _lastGunLeft = !_lastGunLeft;
-        }
-
-        private void ShootProjectile(Player player, EffectModifiers modifiers, Vector2 spawnPosition, Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile> projectileFunc, bool isPhantom)
-        {
-            var projectileModifiers = modifiers.Projectile.Clone();
-
-            projectileModifiers.DamageMultiplier *= player.BaseStats.Damage;
-            projectileModifiers.OnClone?.Invoke(projectileModifiers);
-
-            var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
-            SetRotation(projectile);
-
-            projectile.Move(x: projectile.SpawnOffset.X * (player.IsPlayer1 ? 1 : -1) * modifiers.Display.SizeMultiplier.X);
-            projectile.Move(y: projectile.SpawnOffset.Y * (_lastGunLeft ? 1 : -1) * modifiers.Display.SizeMultiplier.Y);
-
-            //Undo offset from spawn position
-            if(!(projectile is BeamProjectile))
-            { 
-                projectile.Move(x: player.IsPlayer1 ? 0 : -projectile.Rect.Width);
-                projectile.Move(y: -(projectile.Rect.Height / 2));
-            }
-
-            projectile.Modifiers.OnShoot?.Invoke(projectile);
-            projectile.Modifiers.Untouchable |= isPhantom;
-
-            _objectService.AddGameObject(projectile);
-            _lastProjectile = projectile;
-        }
-
-        protected virtual void SetRotation(Projectile projectile)
-        {
-            if (projectile.Speed.X < 0)
-                projectile.Rotation += -180f;
         }
 
         public void ShootOneTime(Player player, EffectModifiers modifiers)

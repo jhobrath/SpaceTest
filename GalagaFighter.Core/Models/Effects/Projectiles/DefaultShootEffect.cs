@@ -14,18 +14,11 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override string IconPath => "Sprites/Effects/firerate1.png";
         public override bool IsProjectile => true;
         private SpriteDecorations _decorations;
-        private Color? _palleteSwap = null;
-        private List<double> _shotTimestamps = new();
-        private const float BulletSpeedWindow = 3f;
-        private const float BulletSpeedMaxAffectiveCount = 12f;
 
         public DefaultShootEffect()
         {
             _decorations = SetDecorations();
         }
-
-        private EffectModifiers _playerModifiers;
-        private float _currentMultiplier = 1f;
 
         private SpriteDecorations SetDecorations()
         {
@@ -44,7 +37,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.OnShootProjectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers, owner.PalleteSwap));
             modifiers.Projectile.Homing += .5f;
             modifiers.Stats.FireRateMultiplier *= 1/1.5f;
-            _playerModifiers = modifiers;
+            modifiers.AffectedByShootMeter = true;
         }
     }
 }

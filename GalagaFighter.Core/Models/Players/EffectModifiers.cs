@@ -27,6 +27,7 @@ namespace GalagaFighter.Core.Models.Players
         //This flag informs services that the modifiers were reset
         //  in case they were updating modifiers on the fly.
         public bool WereReset { get; set; } = true;
+        public bool AffectedByShootMeter { get; set; }
 
         public EffectModifiers()
         {

@@ -29,6 +29,13 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             var frameTime = Raylib.GetFrameTime();
 
+            if (modifiers.WereReset)
+            {
+                _lastShotBoth[player] =  100f;
+                _lastShotLeft[player] =  100f;
+                _lastShotRight[player] = 100f;
+            }
+
             _lastShotBoth[player] = playerShootState == PlayerShootState.ShootBoth ? 0f : _lastShotBoth.GetValueOrDefault(player, 100f) + frameTime;
             _lastShotLeft[player] = playerShootState == PlayerShootState.ShootLeft ? 0f : _lastShotLeft.GetValueOrDefault(player, 100f) + frameTime;
             _lastShotRight[player] = playerShootState == PlayerShootState.ShootRight ? 0f : _lastShotRight.GetValueOrDefault(player, 100f) + frameTime;
@@ -40,16 +47,7 @@ namespace GalagaFighter.Core.Handlers.Players
             var lastShotKickback = lastShot < .3f ? 5 : (lastShot < .4 ? 4 : (lastShot < .5 ? 3 : (lastShot < .6 ? 2 : (lastShot < .7 ? 1 : 0))));
             lastShotKickback *= player.IsPlayer1 ? -1 : 1;
 
-            //var lastShotLeftRotation = -(float)(_lastShotLeft[player] < .3f ? 2 : (_lastShotLeft[player] < .4 ? 1.5 : (_lastShotLeft[player] < .5 ? 1 : (_lastShotLeft[player] < .6 ? .5 : (_lastShotLeft[player] < .7 ? 0 : 0)))));
-            //var lastShotRightRotation = (float)(_lastShotRight[player] < .3f ? 2 : (_lastShotRight[player] < .4 ? 1.5 : (_lastShotRight[player] < .5 ? 1 : (_lastShotRight[player] < .6 ? .5 : (_lastShotRight[player] < .7 ? 0 : 0)))));
-            //if (_lastShotBoth[player] < _lastShotRight[player] && _lastShotBoth[player] < _lastShotRight[player])
-            //{
-            //    lastShotLeftRotation = 0f;
-            //    lastShotRightRotation = 0f;
-            //}
-
             player.Move(x: lastShotKickback);
-            //player.Rotation += lastShotLeftRotation + lastShotRightRotation;
 
             DrawShoot(player, modifiers, playerShootState);
             DrawMove(modifiers, player);
@@ -74,7 +72,6 @@ namespace GalagaFighter.Core.Handlers.Players
             }
 
             player.Move(x: -lastShotKickback);
-            //player.Rotation -= lastShotLeftRotation + lastShotRightRotation;
         }
 
         private void DrawPlayer(Player player, EffectModifiers modifiers, PlayerShootState playerShootState)

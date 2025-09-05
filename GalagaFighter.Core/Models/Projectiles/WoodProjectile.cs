@@ -16,7 +16,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => 0;
-        public override Vector2 SpawnOffset => new(-40, 45);
+        public override Vector2 SpawnOffset => new(-40, 45);    
 
         public bool Released { get; set; } = false;
         public bool Planked { get; set; } = false;

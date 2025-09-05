@@ -7,15 +7,15 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class FirethrowerEffect : PlayerEffect
+    public class FlamethrowerEffect : PlayerEffect
     {
         public override string IconPath => "Sprites/effects/beam.png";
         public override bool IsProjectile => true;
 
-        private BeamProjectile? _beamProjectile;
+        private FlamethrowerProjectile? _beamProjectile;
         private readonly SpriteDecorations _decorations;
 
-        public FirethrowerEffect()
+        public FlamethrowerEffect()
         {
             _decorations = new SpriteDecorations
             {
@@ -35,7 +35,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private Projectile CreateProjectiles(IProjectileController controller, Player player, Vector2 vector, PlayerProjectile modifiers)
         {
-            _beamProjectile =  new BeamProjectile(controller, player, vector, modifiers, Color.Red);
+            _beamProjectile =  new FlamethrowerProjectile(controller, player, vector, modifiers, Color.Red);
             return _beamProjectile;
         }
     }

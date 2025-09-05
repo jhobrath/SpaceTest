@@ -82,8 +82,6 @@ namespace GalagaFighter.Core.Controllers
             _playerSpender.HandleDefensiveSpend(player, modifiers);
             _playerSpender.HandleOffensiveSpend(player, modifiers);
             _playerParticleManager.UpdateModifierEffects(player, modifiers);
-
-            modifiers.WereReset = false;
         }
 
         private void UpdatePhantoms(Player player, EffectModifiers modifiers)
@@ -101,6 +99,8 @@ namespace GalagaFighter.Core.Controllers
             var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
             var modifiers = effectManager.GetModifiers();
             _playerDrawer.Draw(player, modifiers!, _shootState);
+
+            modifiers.WereReset = false;
         }
     }
 }

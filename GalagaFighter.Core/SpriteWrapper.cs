@@ -66,7 +66,7 @@ namespace GalagaFighter.Core
         }
 
         // For animation
-        public SpriteWrapper(Texture2D texture, int frameCount, float frameDuration, bool repeat = false)
+        public SpriteWrapper(Texture2D texture, int frameCount, float frameDuration, bool repeat = true)
         {
             Mode = SpriteMode.Animation;
             Texture = texture;

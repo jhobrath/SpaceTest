@@ -53,6 +53,8 @@ namespace GalagaFighter.Core
             services.AddTransient<ICpuDecisionMaker, CpuDecisionMaker>();
             services.AddTransient<IPlayerBulletShielder, PlayerBulletShielder>();
             services.AddTransient<IPlayerProjectileSpawner, PlayerProjectileSpawner>();
+            services.AddTransient<IAsteroidCreationService, AsteroidCreationService>();
+            services.AddTransient<IProjectileAsteroidCollisionService, ProjectileAsteroidCollisionService>();
             services.AddTransient<IParticleRenderService>((provider) =>
                 new ParticleRenderService(
                     provider.GetRequiredService<IObjectService>()));

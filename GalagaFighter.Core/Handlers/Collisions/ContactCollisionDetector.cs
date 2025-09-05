@@ -6,12 +6,12 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Handlers.Collisions
 {
-    public class ContactCollisionDetector
+    public static class ContactCollisionDetector
     {
         // Cache for rotated percentage vertices to avoid recalculating same rotations
         private static readonly Dictionary<(float rotation, int verticesHash), Vector2[]> _rotationCache = [];
 
-        public bool HasCollision(Player obj1, Projectile obj2)
+        public static bool HasCollision(GameObject obj1, GameObject obj2)
         {
             if (obj1.Hitbox == null && obj2.Hitbox == null )
                 return BoundsComparer.CompareRectRect(obj1.Rect, obj2.Rect);
@@ -28,7 +28,7 @@ namespace GalagaFighter.Core.Handlers.Collisions
             return false;
         }
 
-        private Vector2[] GetActualBounds(GameObject obj)
+        private static Vector2[] GetActualBounds(GameObject obj)
         {
             var worldVertices = ConvertPercentagesToWorldCoordinates(
                 obj.Hitbox!.Vertices,
@@ -39,7 +39,7 @@ namespace GalagaFighter.Core.Handlers.Collisions
             return worldVertices;
         }
 
-        private Vector2[] ConvertPercentagesToWorldCoordinates(Vector2[] percentageVertices, Raylib_cs.Rectangle rect, float rotation)
+        private static Vector2[] ConvertPercentagesToWorldCoordinates(Vector2[] percentageVertices, Raylib_cs.Rectangle rect, float rotation)
         {
             // First, convert percentages to local coordinates relative to center
             Vector2[] localVertices = new Vector2[percentageVertices.Length];
@@ -73,7 +73,7 @@ namespace GalagaFighter.Core.Handlers.Collisions
             return worldVertices;
         }
 
-        private Vector2[] GetRotatedVertices(Vector2[] localVertices, float rotation)
+        private static Vector2[] GetRotatedVertices(Vector2[] localVertices, float rotation)
         {
             // Create cache key
             int verticesHash = GetVerticesHash(localVertices);
@@ -106,7 +106,7 @@ namespace GalagaFighter.Core.Handlers.Collisions
             return rotatedVertices;
         }
 
-        private int GetVerticesHash(Vector2[] vertices)
+        private static int GetVerticesHash(Vector2[] vertices)
         {
             // Simple hash combining all vertex coordinates
             int hash = 17;

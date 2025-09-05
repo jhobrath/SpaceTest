@@ -1,5 +1,6 @@
 using Raylib_cs;
 using System;
+using System.Linq;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Collisions
@@ -51,6 +52,24 @@ namespace GalagaFighter.Core.Models.Collisions
         private Vector2[] GetVertices()
         {
             return [Vector2.Zero, new Vector2(0, _rect.Height), new Vector2(_rect.Width, _rect.Height), new Vector2(_rect.Width, 0)];
+        }
+    }
+
+    public class HitboxVertices : Hitbox
+    {
+        private readonly Vector2[] _vertices;
+
+        public override Vector2 Center =>
+            new(
+                _vertices.Select(x => x.X).Average(),
+                _vertices.Select(x => x.Y).Average()
+            );
+
+        public override Vector2[] Vertices => _vertices;
+
+        public HitboxVertices(Vector2[] vertices)
+        {
+            _vertices = vertices;
         }
     }
 }

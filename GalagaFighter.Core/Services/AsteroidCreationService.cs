@@ -27,7 +27,7 @@ namespace GalagaFighter.Core.Services
 
         private static float GetRandomDelay()
         {
-            return 2f + 2f * (float)Game.Random.NextDouble();
+            return 1f + 1f * (float)Game.Random.NextDouble();
         }
 
         public void Update()

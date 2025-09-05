@@ -81,6 +81,70 @@ namespace GalagaFighter.Core.Static
             return new SpriteWrapper(asteroidTexture);
         }
 
+        // Returns both the procedurally masked asteroid sprite and its vertices
+        public static (SpriteWrapper sprite, Vector2[] vertices) CreateProceduralAsteroidSpriteWithVertices(int minVertices = 8, int maxVertices = 16, float irregularity = 0.5f)
+        {
+            var randomIndex = Game.Random.Next(AsteroidTextures.Length);
+            var texturePath = AsteroidTextures[randomIndex];
+            Image baseImage = Raylib.LoadImage(texturePath);
+            int width = baseImage.Width;
+            int height = baseImage.Height;
+
+            // Generate random polygon mask with more irregularity
+            Vector2 center = new Vector2(width / 2f, height / 2f);
+            float radius = Math.Min(width, height) * 0.45f;
+            int vertexCount = Game.Random.Next(minVertices, maxVertices + 1);
+            Vector2[] vertices = new Vector2[vertexCount];
+            for (int i = 0; i < vertexCount; i++)
+            {
+                float angle = (float)(i * 2 * Math.PI / vertexCount);
+                float r = radius * (1f + (float)(Game.Random.NextDouble() * irregularity - irregularity / 2));
+                vertices[i] = new Vector2(
+                    center.X + r * (float)Math.Cos(angle),
+                    center.Y + r * (float)Math.Sin(angle)
+                );
+            }
+
+            // Prepare mask array
+            bool[] mask = new bool[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int idx = y * width + x;
+                    mask[idx] = PointInPolygon(x + 0.5f, y + 0.5f, vertices); // Use pixel center for accuracy
+                }
+            }
+
+            // Create a fully transparent image to draw on
+            Image asteroidImage = Raylib.GenImageColor(width, height, Color.Blank);
+
+            // Copy pixels from base image if inside mask, apply edge darkening
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int idx = y * width + x;
+                    if (mask[idx])
+                    {
+                        Color pixel = Raylib.GetImageColor(baseImage, x, y);
+                        if (IsEdgePixel(mask, x, y, width, height))
+                        {
+                            pixel = Darken(pixel, 0.7f);
+                        }
+                        Raylib.ImageDrawPixel(ref asteroidImage, x, y, pixel);
+                    }
+                    // else: leave transparent
+                }
+            }
+
+            Texture2D asteroidTexture = Raylib.LoadTextureFromImage(asteroidImage);
+            Raylib.UnloadImage(baseImage);
+            Raylib.UnloadImage(asteroidImage);
+
+            return (new SpriteWrapper(asteroidTexture), vertices);
+        }
+
         // Point-in-polygon test (ray casting)
         private static bool PointInPolygon(float px, float py, Vector2[] poly)
         {

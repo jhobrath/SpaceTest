@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Raylib_cs;
+using GalagaFighter.Core.Models.Collisions;
 
 namespace GalagaFighter.Core.Models.Debris
 {
@@ -13,15 +14,22 @@ namespace GalagaFighter.Core.Models.Debris
     {
         private float _rotation;
 
+        private Vector2[] _vertices;
+
         public Asteroid(Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
-            : base(Game.Id, GetSprite(), initialPosition, initialSize, initialSpeed)
+            : base(Game.Id, GetSpriteAndVertices(out var verts), initialPosition, initialSize, initialSpeed)
         {
+            var rectSize = new Vector2(verts.Max(x => x.X) - verts.Min(x => x.X), verts.Max(x => x.Y) - verts.Min(x => x.Y));
+            var ty =  verts.Select(x => new Vector2(x.X / rectSize.X, x.Y / rectSize.Y)).ToArray();
+            Hitbox = new HitboxVertices(ty);
             _rotation = 90f + (float)Game.Random.NextDouble() * 180f;
         }
 
-        private static SpriteWrapper GetSprite()
+        private static SpriteWrapper GetSpriteAndVertices(out Vector2[] vertices)
         {
-            return AsteroidSpriteFactory.CreateProceduralAsteroidSprite();
+            var result = Static.AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices();
+            vertices = result.vertices;
+            return result.sprite;
         }
 
         public override void Update(Game game)

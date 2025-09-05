@@ -2,9 +2,9 @@ using GalagaFighter.Core.Models.Projectiles;
 
 namespace GalagaFighter.Core.Handlers.Collisions
 {
-    public class EdgeCollisionDetector
+    public static class EdgeCollisionDetector
     {
-        public bool HasCollision(GameObject gameObject, float? distance)
+        public static bool HasCollision(GameObject gameObject, float? distance)
         {
             if (!distance.HasValue)
                 return false;

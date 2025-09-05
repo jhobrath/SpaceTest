@@ -39,16 +39,7 @@ namespace GalagaFighter.Core.Services
 
         private bool CollisionOccured(Projectile projectile, Asteroid asteroid)
         {
-            var asteroidRect = new Rectangle(
-                new Vector2(
-                    asteroid.Rect.Position.X + asteroid.Rect.Size.X / 5f, 
-                    asteroid.Rect.Position.Y + asteroid.Rect.Size.Y / 5
-                ),
-                asteroid.Rect.Size.X * 3 / 5, 
-                asteroid.Rect.Size.Y * 3 / 5
-            );
-
-            return Raylib.CheckCollisionRecs(projectile.Rect, asteroidRect);
+            return ContactCollisionDetector.HasCollision(projectile, asteroid);
         }
 
         private void HandleCollision(Projectile projectile, Asteroid asteroid)

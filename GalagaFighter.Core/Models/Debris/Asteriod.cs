@@ -20,10 +20,13 @@ namespace GalagaFighter.Core.Models.Debris
             : base(Game.Id, GetSpriteAndVertices(out var verts), initialPosition, initialSize, initialSpeed)
         {
             var rectSize = new Vector2(verts.Max(x => x.X) - verts.Min(x => x.X), verts.Max(x => x.Y) - verts.Min(x => x.Y));
-            var ty =  verts.Select(x => new Vector2(x.X / rectSize.X, x.Y / rectSize.Y)).ToArray();
-            Hitbox = new HitboxVertices(ty);
+            _vertices = verts.Select(x => new Vector2(x.X / rectSize.X, x.Y / rectSize.Y)).ToArray();
+            Hitbox = new HitboxVertices(_vertices);
             _rotation = 90f + (float)Game.Random.NextDouble() * 180f;
+
+            CreateParticleEffects();
         }
+
 
         private static SpriteWrapper GetSpriteAndVertices(out Vector2[] vertices)
         {
@@ -47,6 +50,35 @@ namespace GalagaFighter.Core.Models.Debris
         internal void AddRotation(float rotationToAdd)
         {
             _rotation += rotationToAdd;
+        }
+
+        private void CreateParticleEffects()
+        {
+            int particleCount = Game.Random.Next(4, 8);
+            for (int i = 0; i < particleCount; i++)
+            {
+                // Pick a random vertex
+                var vertex = _vertices[Game.Random.Next(_vertices.Length)];
+                // Scale vertex to asteroid size
+                var localPos = new Vector2(vertex.X * Rect.Width, vertex.Y * Rect.Height);
+                // Correct offset: randomize and center
+                var offset = localPos
+                    + new Vector2(
+                        (float)(Game.Random.NextDouble() - 0.5) * Rect.Width * 0.2f,
+                        (float)(Game.Random.NextDouble() - 0.5) * Rect.Height * 0.2f
+                      )
+                    - new Vector2(Rect.Width / 2f, Rect.Height / 2f);
+
+                // Get dust effect template from library and clone it
+                var effect = new ParticleEffect(ParticleEffectsLibrary.Get("AsteroidDust"));
+                effect.Offset = offset;
+                effect.Duration = 0.3f + (float)Game.Random.NextDouble() * 0.3f;
+                effect.MaxParticles = Game.Random.Next(8, 16);
+
+                effect.FollowRotation = true;
+
+                AddParticleEffect(effect);
+            }
         }
     }
 }

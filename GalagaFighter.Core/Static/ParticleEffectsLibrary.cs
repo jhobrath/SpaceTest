@@ -365,6 +365,33 @@ namespace GalagaFighter.Core.Static
                 Offset = new Vector2(20f, 0f), // Offset forward from source
                 FollowRotation = true
             };
+
+            // Asteroid Dust Effect
+            _effects["AsteroidDust"] = new ParticleEffect("AsteroidDust")
+            {
+                Shape = EmissionShape.Circle,
+                EmissionRate = 40f,
+                MaxParticles = 12,
+                EmissionRadius = 6f,
+                ParticleLifetime = 0.7f,
+                ParticleLifetimeVariation = 0.2f,
+                ParticleSpeed = new Vector2(20f, 20f),
+                ParticleSpeedVariation = new Vector2(15f, 15f),
+                ParticleStartSize = 5f,
+                ParticleEndSize = 1f,
+                ParticleSizeVariation = 2f,
+                ParticleStartColor = new Color(120, 100, 80, 180), // Brown/gray
+                ParticleEndColor = new Color(80, 80, 80, 0), // Fade out
+                Duration = 0.5f,
+                Loop = false,
+                EmitOnStart = true,
+                AutoDestroy = true,
+                ParticleDrag = 0.3f,
+                Sprites = { "dot_3", "dot_4", "dot_5" }, // Use your debris/dust sprites
+                SpriteSelection = SpriteSelectionMode.Random,
+                Offset = Vector2.Zero,
+                FollowRotation = false
+            };
         }
     }
 }

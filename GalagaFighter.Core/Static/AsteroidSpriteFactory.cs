@@ -52,10 +52,36 @@ namespace GalagaFighter.Core.Static
                 }
             }
 
+            // Roughen the mask edges
+            Random rand = Game.Random;
+            for (int y = 1; y < height - 1; y++)
+            {
+                for (int x = 1; x < width - 1; x++)
+                {
+                    int idx = y * width + x;
+                    if (mask[idx] && IsEdgePixel(mask, x, y, width, height))
+                    {
+                        // Randomly shrink or grow the mask at the edge
+                        if (rand.NextDouble() < 0.25) // 25% chance to shrink
+                        {
+                            mask[idx] = false;
+                        }
+                        else if (rand.NextDouble() < 0.15) // 15% chance to grow
+                        {
+                            // Try to grow to a neighbor
+                            int dx = rand.Next(-1, 2);
+                            int dy = rand.Next(-1, 2);
+                            int nidx = (y + dy) * width + (x + dx);
+                            if (!mask[nidx]) mask[nidx] = true;
+                        }
+                    }
+                }
+            }
+
             // Create a fully transparent image to draw on
             Image asteroidImage = Raylib.GenImageColor(width, height, Color.Blank);
 
-            // Copy pixels from base image if inside mask, apply edge darkening
+            // Copy pixels from base image if inside mask, apply edge roughness and dithering
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -66,6 +92,9 @@ namespace GalagaFighter.Core.Static
                         Color pixel = Raylib.GetImageColor(baseImage, x, y);
                         if (IsEdgePixel(mask, x, y, width, height))
                         {
+                            // Dither: randomly set some edge pixels to partial alpha
+                            if (rand.NextDouble() < 0.2)
+                                pixel.A = (byte)(pixel.A * 0.5);
                             pixel = Darken(pixel, 0.7f);
                         }
                         Raylib.ImageDrawPixel(ref asteroidImage, x, y, pixel);
@@ -116,33 +145,78 @@ namespace GalagaFighter.Core.Static
                 }
             }
 
-            // Create a fully transparent image to draw on
-            Image asteroidImage = Raylib.GenImageColor(width, height, Color.Blank);
-
-            // Copy pixels from base image if inside mask, apply edge darkening
-            for (int y = 0; y < height; y++)
+            // Roughen the mask edges (managed array)
+            Random rand = Game.Random;
+            for (int pass = 0; pass < 2; pass++) // Multiple passes for stronger effect
             {
-                for (int x = 0; x < width; x++)
+                for (int y = 1; y < height - 1; y++)
                 {
-                    int idx = y * width + x;
-                    if (mask[idx])
+                    for (int x = 1; x < width - 1; x++)
                     {
-                        Color pixel = Raylib.GetImageColor(baseImage, x, y);
-                        if (IsEdgePixel(mask, x, y, width, height))
+                        int idx = y * width + x;
+                        if (mask[idx] && IsEdgePixel(mask, x, y, width, height))
                         {
-                            pixel = Darken(pixel, 0.7f);
+                            if (rand.NextDouble() < 0.4) // 40% chance to shrink
+                                mask[idx] = false;
+                            else if (rand.NextDouble() < 0.25) // 25% chance to grow
+                            {
+                                int dx = rand.Next(-1, 2);
+                                int dy = rand.Next(-1, 2);
+                                int nidx = (y + dy) * width + (x + dx);
+                                if (!mask[nidx]) mask[nidx] = true;
+                            }
                         }
-                        Raylib.ImageDrawPixel(ref asteroidImage, x, y, pixel);
                     }
-                    // else: leave transparent
                 }
             }
 
-            Texture2D asteroidTexture = Raylib.LoadTextureFromImage(asteroidImage);
-            Raylib.UnloadImage(baseImage);
-            Raylib.UnloadImage(asteroidImage);
 
-            return (new SpriteWrapper(asteroidTexture), vertices);
+            unsafe 
+            { 
+                var basePixels = Raylib.LoadImageColors(baseImage);
+
+                var asteroidPixels = new Color[width * height];
+                for (int i = 0; i < asteroidPixels.Length; i++)
+                    asteroidPixels[i] = Color.Blank; // Fully transparent
+
+                // Copy pixels from base image if inside mask, apply edge roughness and dithering
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int idx = y * width + x;
+                        if (mask[idx])
+                        {
+                            Color pixel = basePixels[idx];
+                            if (IsEdgePixel(mask, x, y, width, height))
+                            {
+                                if (rand.NextDouble() < 0.3)
+                                    pixel.A = (byte)(pixel.A * 0.5);
+                                pixel = Darken(pixel, 0.7f);
+                            }
+                            asteroidPixels[idx] = pixel;
+                        }
+                    }
+                }
+
+
+                // Create image from pixel array
+                Image asteroidImage = Raylib.GenImageColor(width, height, Color.Blank);
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int idx = y * width + x;
+                        Raylib.ImageDrawPixel(ref asteroidImage, x, y, asteroidPixels[idx]);
+                    }
+                }
+
+                Texture2D asteroidTexture = Raylib.LoadTextureFromImage(asteroidImage);
+                Raylib.UnloadImage(baseImage);
+                Raylib.UnloadImage(asteroidImage);
+
+                return (new SpriteWrapper(asteroidTexture), vertices);
+            }
         }
 
         // Point-in-polygon test (ray casting)

@@ -97,46 +97,42 @@ namespace GalagaFighter.Core.Static
 
         public static void DrawPlayerHealth(Player player, bool reverse)
         {
-            var remainingHealthStartX = (int)(((reverse 
-                ? Game.Width - (_margin + (player.Health * 500 / 100f)) 
-                : _margin))*Game.UniformScale);
+            var baseWidth = 500;
+            var baseHeight = 30;
 
-            var healthBarLinesStart = (int)((reverse
-                ? Game.Width - (_margin + 500)
-                : _margin)*Game.UniformScale);
+            var remainingHealthPercentage = player.Health / 100f;
 
-            Raylib.DrawRectangle(remainingHealthStartX, _margin, (int)(player.Health*500*Game.UniformScale/100f), 30, Color.Red);
-            Raylib.DrawRectangleLines(healthBarLinesStart, _margin, 500, 30, Color.White);
+            var remainingHealthStartX = GetUiResourceStartX(remainingHealthPercentage, baseWidth, reverse);
+            var healthBarLinesStart = GetUiResourceStartX(1f, baseWidth, reverse);
+
+            Raylib.DrawRectangle(remainingHealthStartX, _margin, (int)(remainingHealthPercentage * baseWidth * Game.UniformScale), baseHeight, Color.Red);
+            Raylib.DrawRectangleLines(healthBarLinesStart, _margin, (int)(baseWidth * Game.UniformScale), baseHeight, Color.White);
         }
 
         public static void DrawPlayerResources(Player player, bool reverse)
         {
+            var baseWidth = 500;
+
             var resourceManager = _playerManagerFactory.GetResourceManager(player);
             var currentResources = resourceManager.ShieldMeter;
             var maxResources = PlayerResourceManager.MaxAmount;
             var resourcePercentage = currentResources / maxResources;
 
-            var remainingResourceStartX = (int)(((reverse 
-                ? Game.Width - (_margin + (resourcePercentage * 500)) 
-                : _margin))*Game.UniformScale);
-
-            var resourceBarLinesStart = (int)((reverse
-                ? Game.Width - (_margin + 500)
-                : _margin)*Game.UniformScale);
+            var remainingResourceStartX = GetUiResourceStartX(resourcePercentage, baseWidth, reverse);
+            var resourceBarLinesStart = GetUiResourceStartX(1f, baseWidth, reverse);
 
             // Draw ShieldMeter bar directly under health bar (health bar is at _margin, so resource bar is at _margin + 5)
             var resourceBarY = _margin + 30 + 5; // 30 for health bar height, 5 for spacing
-            Raylib.DrawRectangle(remainingResourceStartX, resourceBarY, (int)(resourcePercentage*500*Game.UniformScale), 10, Color.Blue);
-            Raylib.DrawRectangleLines(resourceBarLinesStart, resourceBarY, 500, 10, Color.White);
+            Raylib.DrawRectangle(remainingResourceStartX, resourceBarY, (int)(resourcePercentage* baseWidth * Game.UniformScale), 10, Color.Blue);
+            Raylib.DrawRectangleLines(resourceBarLinesStart, resourceBarY, (int)(baseWidth * Game.UniformScale), 10, Color.White);
 
             // Draw ShootMeter bar below resource bar
             var shootMeterPercentage = resourceManager.ShootMeter; // 0.0 to 1.0
-            var shootMeterStartX = (int)(((reverse 
-                ? Game.Width - (_margin + (shootMeterPercentage * 500)) 
-                : _margin))*Game.UniformScale);
+            var shootMeterStartX = GetUiResourceStartX(shootMeterPercentage, baseWidth, reverse);
+
             var shootMeterBarY = resourceBarY + 10 + 5; // 10 for shield bar height, 5 for spacing
-            Raylib.DrawRectangle(shootMeterStartX, shootMeterBarY, (int)(shootMeterPercentage*500*Game.UniformScale), 10, Color.Lime);
-            Raylib.DrawRectangleLines(resourceBarLinesStart, shootMeterBarY, 500, 10, Color.White);
+            Raylib.DrawRectangle(shootMeterStartX, shootMeterBarY, (int)(shootMeterPercentage*baseWidth *Game.UniformScale), 10, Color.Lime);
+            Raylib.DrawRectangleLines(resourceBarLinesStart, shootMeterBarY, (int)(baseWidth * Game.UniformScale), 10, Color.White);
         }
 
         public static void DrawWinner(Player player1, Player player2)
@@ -150,6 +146,13 @@ namespace GalagaFighter.Core.Static
                 Vector2 textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), winner, winnerTextSize, 1);
                 Raylib.DrawText(winner, (int)(Game.Width / 2 - textSize.X / 2), (int)(Game.Width / 2 - textSize.Y / 2), winnerTextSize, Color.Gold);
             }
+        }
+
+        private static int GetUiResourceStartX(float percentage, int baseSize, bool reverse)
+        {
+            return (int)((reverse 
+                ? Game.Width - ((_margin + ((percentage) * baseSize)) * Game.UniformScale)
+                : _margin * Game.UniformScale));
         }
     }
 }

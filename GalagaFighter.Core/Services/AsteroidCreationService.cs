@@ -12,6 +12,7 @@ namespace GalagaFighter.Core.Services
     public interface IAsteroidCreationService
     {
         void Update();
+        void Explode(Asteroid asteroid, Vector2 position);
     }
     public class AsteroidCreationService : IAsteroidCreationService
     {
@@ -65,6 +66,24 @@ namespace GalagaFighter.Core.Services
                 minX + (maxX - minX)*(float)Game.Random.NextDouble(),
                 minY + (maxY - minY)*(float)Game.Random.NextDouble()
             );
+        }
+
+        public void Explode(Asteroid asteroid, Vector2 collisionPosition)
+        {
+            var numberOfAsteroids = Game.Random.Next(2, 5);
+            var averageAsteroidSize = asteroid.Rect.Size/numberOfAsteroids;
+            var averageAsteroidSpeed = asteroid.Speed / numberOfAsteroids;
+            for(var i =0;i < numberOfAsteroids;i++)
+            {
+                var position = GetRandomVector(asteroid.Center.X - 50, asteroid.Center.Y - 50, asteroid.Center.X + 50, asteroid.Center.Y + 50);
+                var size = GetRandomVector(averageAsteroidSize.X * .8f, averageAsteroidSize.Y * .8f, averageAsteroidSize.X / .8f, averageAsteroidSize.Y / .8f);
+                var speed = GetRandomVector(averageAsteroidSpeed.X * .8f, averageAsteroidSpeed.Y * .8f, averageAsteroidSpeed.X / .8f, averageAsteroidSpeed.Y / .8f);
+
+                var newAsteroid = new Asteroid(position, size, speed);
+                _objectService.AddGameObject(newAsteroid);
+            }
+
+            asteroid.IsActive = false;
         }
     }
 }

@@ -19,11 +19,14 @@ namespace GalagaFighter.Core.Services
     {
         private readonly IObjectService _objectService;
         private readonly ICollisionCreationService _collisionCreationService;
+        private readonly IAsteroidCreationService _asteroidCreationService;
 
-        public ProjectileAsteroidCollisionService(IObjectService objectService, ICollisionCreationService collisionCreationService)
+        public ProjectileAsteroidCollisionService(IObjectService objectService, ICollisionCreationService collisionCreationService, 
+            IAsteroidCreationService asteroidCreationService)
         {
             _objectService = objectService;
             _collisionCreationService = collisionCreationService;
+            _asteroidCreationService = asteroidCreationService;
         }
 
         public void HandleCollisions()
@@ -44,9 +47,9 @@ namespace GalagaFighter.Core.Services
 
         private void HandleCollision(Projectile projectile, Asteroid asteroid)
         {
+
             var rotationToAdd = projectile.Center.Y - asteroid.Center.Y;
             var speedToAdd = (asteroid.Speed + projectile.Speed/10 ) / (asteroid.Speed);
-
             asteroid.Hurry(speedToAdd.X, speedToAdd.Y);
             asteroid.AddRotation(rotationToAdd);
 
@@ -55,6 +58,10 @@ namespace GalagaFighter.Core.Services
             var collision = _collisionCreationService.Create(new Vector2(impactPointX, projectile.Center.Y), Vector2.One * collisionSize, projectile.Speed / 4);
             collision.SetDrawPriority(10);
             projectile.IsActive = false;
+            
+            var destroyChance = Game.Random.Next(0, 5) == 0;
+            if(destroyChance)
+                _asteroidCreationService.Explode(asteroid, collision.Center);
         }
     }
 }

@@ -166,7 +166,7 @@ namespace GalagaFighter.CharacterScreen
         private void HandleEffectSelection()
         {
             HandlePlayerEffectInput(1, _player1Selection, ref _player1Index, KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
-            HandlePlayerEffectInput(2, _player2Selection, ref _player2Index, KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
+            HandlePlayerEffectInput(2, _player2Selection, ref _player2Index, KeyboardKey.Kp8, KeyboardKey.Kp5, KeyboardKey.Kp4, KeyboardKey.Kp6);
             if (_player1Selection.EffectReady && _player2Selection.EffectReady)
             {
                 _currentPhase = SelectionPhase.Complete;

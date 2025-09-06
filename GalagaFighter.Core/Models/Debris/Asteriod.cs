@@ -28,12 +28,32 @@ namespace GalagaFighter.Core.Models.Debris
             CreateParticleEffects();
         }
 
+        public Asteroid((Image image, Vector2[] vertices) result, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+            : base(Game.Id, GetFromResult(result, out var verts), initialPosition, initialSize, initialSpeed)
+        {
+            var rectSize = new Vector2(verts.Max(x => x.X) - verts.Min(x => x.X), verts.Max(x => x.Y) - verts.Min(x => x.Y));
+            _vertices = verts.Select(x => new Vector2(x.X / rectSize.X, x.Y / rectSize.Y)).ToArray();
+            Hitbox = new HitboxVertices(_vertices);
+            _rotation = -25f + (float)Game.Random.NextDouble() * 50f;
+
+            CreateParticleEffects();
+        }
 
         private static SpriteWrapper GetSpriteAndVertices(out Vector2[] vertices)
         {
             var result = Static.AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices();
+            var result1 = GetFromResult(result, out var verts);
             vertices = result.vertices;
-            return result.sprite;
+            return result1;
+        }
+
+        private static SpriteWrapper GetFromResult((Image image, Vector2[] vertices) result, out Vector2[] verts)
+        {
+             var asteroidTexture = Raylib.LoadTextureFromImage(result.image);
+            var sprite = new SpriteWrapper(asteroidTexture);
+            Raylib.UnloadImage(result.image);
+            verts = result.vertices;
+            return sprite;
         }
 
         public override void Update(Game game)

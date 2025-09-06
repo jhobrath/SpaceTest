@@ -10,6 +10,7 @@ using GalagaFighter.Core.Models.Effects.Defensives;
 using GalagaFighter.Core.Models.Effects.Projectiles;
 using GalagaFighter.Core.Models.Effects.Offensives;
 using GalagaFighter.Core.CPU;
+using System.Threading.Tasks;
 
 namespace GalagaFighter.Core
 {
@@ -80,6 +81,12 @@ namespace GalagaFighter.Core
             InitializeScale();
             InitializePlayers();
             AudioService.Initialize();
+
+
+            for (var i = 0; i < 100; i++)
+            {
+                AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices();
+            }
         }
 
         private static void InitializeWindow()

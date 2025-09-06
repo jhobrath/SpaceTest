@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core.Models.Debris;
+using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -17,6 +19,8 @@ namespace GalagaFighter.Core.Services
     public class AsteroidCreationService : IAsteroidCreationService
     {
         private readonly IObjectService _objectService;
+
+        private readonly ConcurrentQueue<(Image, Vector2[])> Queue = new();
 
         public AsteroidCreationService(IObjectService objectService)
         {
@@ -35,9 +39,15 @@ namespace GalagaFighter.Core.Services
         {
             _sinceLastDrop += Raylib.GetFrameTime();
 
+            if (Queue.Count < 10)
+            {
+                Task.Run(() => Queue.Enqueue(AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices()));
+                return;
+            }
+
+
             if (_sinceLastDrop < _nextDrop)
                 return;
-
 
             _nextDrop = GetRandomDelay();
             _sinceLastDrop = 0f;
@@ -79,7 +89,11 @@ namespace GalagaFighter.Core.Services
                 var size = GetRandomVector(averageAsteroidSize.X * .8f, averageAsteroidSize.Y * .8f, averageAsteroidSize.X / .8f, averageAsteroidSize.Y / .8f);
                 var speed = GetRandomVector(averageAsteroidSpeed.X * .8f, averageAsteroidSpeed.Y * .8f, averageAsteroidSpeed.X / .8f, averageAsteroidSpeed.Y / .8f);
 
-                var newAsteroid = new Asteroid(position, size, speed);
+                var asteroidData = Queue.TryDequeue(out (Image, Vector2[]) result);// AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices();
+                if (!asteroidData)
+                    break;
+
+                var newAsteroid = new Asteroid(result, position, size, speed);
                 _objectService.AddGameObject(newAsteroid);
             }
 

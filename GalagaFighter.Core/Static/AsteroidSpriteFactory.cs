@@ -111,7 +111,7 @@ namespace GalagaFighter.Core.Static
         }
 
         // Returns both the procedurally masked asteroid sprite and its vertices
-        public static (SpriteWrapper sprite, Vector2[] vertices) CreateProceduralAsteroidSpriteWithVertices(int minVertices = 8, int maxVertices = 16, float irregularity = 0.5f)
+        public static (Image image, Vector2[] vertices) CreateProceduralAsteroidSpriteWithVertices(int minVertices = 8, int maxVertices = 16, float irregularity = 0.5f)
         {
             var randomIndex = Game.Random.Next(AsteroidTextures.Length);
             var texturePath = AsteroidTextures[randomIndex];
@@ -172,12 +172,13 @@ namespace GalagaFighter.Core.Static
 
 
             unsafe 
-            { 
+            {
                 var basePixels = Raylib.LoadImageColors(baseImage);
 
                 var asteroidPixels = new Color[width * height];
                 for (int i = 0; i < asteroidPixels.Length; i++)
                     asteroidPixels[i] = Color.Blank; // Fully transparent
+
 
                 // Copy pixels from base image if inside mask, apply edge roughness and dithering
                 for (int y = 0; y < height; y++)
@@ -199,7 +200,6 @@ namespace GalagaFighter.Core.Static
                     }
                 }
 
-
                 // Create image from pixel array
                 Image asteroidImage = Raylib.GenImageColor(width, height, Color.Blank);
                 for (int y = 0; y < height; y++)
@@ -211,11 +211,9 @@ namespace GalagaFighter.Core.Static
                     }
                 }
 
-                Texture2D asteroidTexture = Raylib.LoadTextureFromImage(asteroidImage);
                 Raylib.UnloadImage(baseImage);
-                Raylib.UnloadImage(asteroidImage);
 
-                return (new SpriteWrapper(asteroidTexture), vertices);
+                return (asteroidImage, vertices);
             }
         }
 

@@ -153,7 +153,7 @@ namespace GalagaFighter.CharacterScreen
         private void HandleShipSelection()
         {
             HandlePlayerShipInput(1, _player1Selection, ref _player1Index, KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
-            HandlePlayerShipInput(2, _player2Selection, ref _player2Index, KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
+            HandlePlayerShipInput(2, _player2Selection, ref _player2Index, KeyboardKey.Kp8, KeyboardKey.Kp5, KeyboardKey.Kp4, KeyboardKey.Kp6);
             if (_player1Selection.CharacterReady && _player2Selection.CharacterReady)
             {
                 _currentPhase = SelectionPhase.EffectSelection;

@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class WoodShotEffect : PlayerEffect
+    public class WoodShotEffect : ProjectileEffect
     {
         private readonly SpriteDecorations _decorations;
 
@@ -41,5 +41,10 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)
             => new WoodProjectile(projectileController, owner, position, modifiers);
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return WoodProjectile._baseSpeed;
+        }
     }
 }

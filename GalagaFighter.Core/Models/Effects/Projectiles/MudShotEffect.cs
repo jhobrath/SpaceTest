@@ -9,7 +9,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class MudShotEffect : PlayerEffect
+    public class MudShotEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/Effects/mudshot.png";
         public override bool IsProjectile => true;
@@ -38,5 +38,10 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)
             => new MudProjectile(controller, owner, position, modifiers);
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return MudProjectile._baseSpeed;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace GalagaFighter.Core.Models.Debris
         private float _rotation;
 
         private Vector2[] _vertices;
-        private float _opacity = 1f;
+        public float Opacity { get; set; } = 1f;
 
         public Asteroid(Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
             : base(Game.Id, GetSpriteAndVertices(out var verts), initialPosition, initialSize, initialSpeed)
@@ -60,8 +60,8 @@ namespace GalagaFighter.Core.Models.Debris
         {
             if((Rect.Width + Rect.Height)/2 < 50)
             { 
-                _opacity = _opacity - Raylib.GetFrameTime()/1.5f;
-                if (_opacity < 0)
+                Opacity = Opacity - Raylib.GetFrameTime()/1.5f;
+                if (Opacity < 0)
                     IsActive = false;
             }
 
@@ -72,7 +72,7 @@ namespace GalagaFighter.Core.Models.Debris
         public override void Draw()
         {
             //For some reason the sprites are drawn centered at <0,0> so we have to move them to the center of the rect.
-            Sprite.Draw(Rect.Position + new Vector2(Rect.Width/2, Rect.Height/2), Rotation, Rect.Width, Rect.Height, new Color((int)255,(int)255,(int)255, (int)(Math.Clamp(_opacity * 255, 0, 255))));
+            Sprite.Draw(Rect.Position + new Vector2(Rect.Width/2, Rect.Height/2), Rotation, Rect.Width, Rect.Height, new Color((int)255,(int)255,(int)255, (int)(Math.Clamp(Opacity * 255, 0, 255))));
         }
 
         internal void AddRotation(float rotationToAdd)

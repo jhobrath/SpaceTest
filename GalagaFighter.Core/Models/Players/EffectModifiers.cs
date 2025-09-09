@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Players
@@ -28,6 +29,7 @@ namespace GalagaFighter.Core.Models.Players
         //  in case they were updating modifiers on the fly.
         public bool WereReset { get; set; } = true;
         public bool AffectedByShootMeter { get; set; }
+        public Func<Vector2> GetProjectileSpeed { get; set; }
 
         public EffectModifiers()
         {

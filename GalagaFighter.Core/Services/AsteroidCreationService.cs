@@ -14,11 +14,14 @@ namespace GalagaFighter.Core.Services
     public interface IAsteroidCreationService
     {
         void Update();
-        void Explode(Asteroid asteroid, Vector2 position);
+        void Initialize();
+        void Explode(Asteroid asteroid, Vector2 position, float defaultOpacity = 1f);
     }
     public class AsteroidCreationService : IAsteroidCreationService
     {
         private readonly IObjectService _objectService;
+
+        private int _asteroidCount = 0;
 
         private readonly ConcurrentQueue<(Image, Vector2[])> Queue = new();
 
@@ -27,12 +30,21 @@ namespace GalagaFighter.Core.Services
             _objectService = objectService;
         }
 
+        public void Initialize()
+        {
+            _asteroidCount = 0;
+            for (var i = 0; i < 10; i++)
+                GenerateAsteroid(Game.Height * (float)Game.Random.NextDouble() + 200f);
+        }
+
         private float _nextDrop = GetRandomDelay();
         private float _sinceLastDrop;
+        private int _startingCount = 0;
+        private bool _neverReachedTen = true;
 
         private static float GetRandomDelay()
         {
-            return 1f + 1f * (float)Game.Random.NextDouble();
+            return .5f * (float)Game.Random.NextDouble();
         }
 
         public void Update()
@@ -45,28 +57,51 @@ namespace GalagaFighter.Core.Services
                 return;
             }
 
-
-            if (_sinceLastDrop < _nextDrop)
+            if (_sinceLastDrop < _nextDrop && _asteroidCount > 10)
                 return;
 
             _nextDrop = GetRandomDelay();
             _sinceLastDrop = 0f;
-
-            var position = GetRandomVector(300, -200, Game.Width - 600, -200);
-            var size = GetRandomVector(50, 50, 200, 200);
-            var speed = GetRandomVector(-5, 60, 5, 130);
-
-            var asteroid = new Asteroid(position, size, speed);
-            _objectService.AddGameObject(asteroid);
+            GenerateAsteroid();
 
             CleanUp();
+        }
+
+        private void GenerateAsteroid(float verticalOffset = 0f)
+        {
+            var size = GetRandomVector(100, 100, 300, 300);
+
+
+            Vector2 position;
+            Vector2 speed;
+
+            if (Game.Random.NextDouble() > .5f)
+            {
+                position = GetRandomVector(300, verticalOffset - 200, Game.Width - 600, verticalOffset - 200);
+                speed = GetRandomVector(-5, 150, 5, 300);
+            }
+            else
+            {
+                position = GetRandomVector(300, Game.Height - verticalOffset, Game.Width - 600, Game.Height + 200 - verticalOffset);
+                speed = GetRandomVector(-5, -300, 5, -150);
+            }
+
+
+            var asteroidData = Queue.TryDequeue(out (Image, Vector2[]) result);// AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices();
+            if (!asteroidData)
+                return;
+
+            var asteroid = new Asteroid(result, position, size, speed);
+
+            _objectService.AddGameObject(asteroid);
         }
 
         private void CleanUp()
         {
             var asteroids = _objectService.GetGameObjects<Asteroid>();
-            foreach(var asteroid in asteroids)
-                if (asteroid.Rect.Y > Game.Height + 50)
+            _asteroidCount = asteroids.Count(x => x.Opacity == 1f);
+            foreach (var asteroid in asteroids)
+                if (asteroid.Rect.Y > Game.Height + 50 || asteroid.Rect.Y < -50 || asteroid.Rect.X < -150 || asteroid.Rect.X > Game.Width + 50)
                     asteroid.IsActive = false;
         }
 
@@ -78,7 +113,7 @@ namespace GalagaFighter.Core.Services
             );
         }
 
-        public void Explode(Asteroid asteroid, Vector2 collisionPosition)
+        public void Explode(Asteroid asteroid, Vector2 collisionPosition, float defaultOpacity = 1f)
         {
             var numberOfAsteroids = Game.Random.Next(2, 5);
             var averageAsteroidSize = asteroid.Rect.Size/numberOfAsteroids;
@@ -94,6 +129,7 @@ namespace GalagaFighter.Core.Services
                     break;
 
                 var newAsteroid = new Asteroid(result, position, size, speed);
+                newAsteroid.Opacity = .99f;
                 _objectService.AddGameObject(newAsteroid);
             }
 

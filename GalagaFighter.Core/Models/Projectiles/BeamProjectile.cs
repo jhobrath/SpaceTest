@@ -15,8 +15,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class BeamProjectile : Projectile
     {
-        private static Vector2 _baseSize => new(70, 70);
-        private static Vector2 _baseSpeed => new(800f, 0f); // Beam is stationary, only animates
+        public static Vector2 _baseSize => new(70, 70);
+        public static Vector2 _baseSpeed => new(800f, 0f); // Beam is stationary, only animates
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => _baseDamage;

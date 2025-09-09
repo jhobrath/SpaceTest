@@ -42,7 +42,7 @@ namespace GalagaFighter.Core.Handlers.Players
         private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly IPlayerProjectileSpawner _projectileSpawner;
 
-        protected virtual float EffectiveFireRate => 1.2f * (float)Math.Pow(0.8f, 5);
+        protected virtual float EffectiveFireRate => .15f;//1.2f * (float)Math.Pow(0.8f, 5);
 
 
         private float _lastFireRateFactor = 1.0f;

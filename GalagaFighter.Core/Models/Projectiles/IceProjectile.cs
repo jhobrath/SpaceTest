@@ -16,8 +16,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class IceProjectile : Projectile
     {
-        private static Vector2 _baseSize => new(95f, 42f);
-        private static Vector2 _baseSpeed => new(2020f, 0f);
+        public static Vector2 _baseSize => new(95f, 42f);
+        public static Vector2 _baseSpeed => new(2020f, 0f);
 
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed; 

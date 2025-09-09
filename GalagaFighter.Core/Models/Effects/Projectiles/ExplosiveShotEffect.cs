@@ -9,7 +9,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class ExplosiveShotEffect : PlayerEffect
+    public class ExplosiveShotEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/Effects/explosiveshot.png";
         public override bool IsProjectile => true;
@@ -39,6 +39,11 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)
         {
             return new ExplosiveProjectile(projectileController, owner, position, modifiers);
+        }
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return ExplosiveProjectile._baseSpeed;
         }
     }
 }

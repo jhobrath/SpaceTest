@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class IceShotEffect : PlayerEffect
+    public class IceShotEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/Effects/iceshot.png";
         public override bool IsProjectile => true;
@@ -35,5 +35,10 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)
             => new IceProjectile(controller, owner, position, modifiers);
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return IceProjectile._baseSpeed;
+        }
     }
 }

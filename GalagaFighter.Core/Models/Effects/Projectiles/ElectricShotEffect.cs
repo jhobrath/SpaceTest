@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class ElectricShotEffect : PlayerEffect
+    public class ElectricShotEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/effects/plasmaball.png";
         public override bool IsProjectile =>  true;
@@ -53,6 +53,11 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
                 projectile.Modifiers.SpeedMultiplier = .2f;
             else
                 projectile.IsActive = false;
+        }
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return ElectricProjectile._baseSpeed;
         }
     }
 }

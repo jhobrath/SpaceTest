@@ -59,8 +59,8 @@ namespace GalagaFighter.Core.Services
             collision.SetDrawPriority(10);
             projectile.IsActive = false;
             
-            var destroyChance = Game.Random.Next(0, 5) == 0;
-            if(destroyChance)
+            var explodeChance = Game.Random.Next(0, 5) == 0;
+            if(explodeChance)
                 _asteroidCreationService.Explode(asteroid, collision.Center);
         }
     }

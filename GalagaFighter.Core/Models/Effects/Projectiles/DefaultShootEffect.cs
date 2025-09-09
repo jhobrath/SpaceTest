@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
@@ -9,7 +10,7 @@ using Raylib_cs;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class DefaultShootEffect : PlayerEffect
+    public class DefaultShootEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/Effects/firerate1.png";
         public override bool IsProjectile => true;
@@ -18,6 +19,11 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public DefaultShootEffect()
         {
             _decorations = SetDecorations();
+        }
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return DefaultProjectile._baseSpeed;
         }
 
         private SpriteDecorations SetDecorations()
@@ -36,7 +42,6 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Decorations = _decorations; 
             modifiers.Projectile.OnShootProjectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers, owner.PalleteSwap));
             modifiers.Projectile.Homing += .5f;
-            modifiers.Stats.FireRateMultiplier *= 1/1.5f;
             modifiers.AffectedByShootMeter = true;
         }
     }

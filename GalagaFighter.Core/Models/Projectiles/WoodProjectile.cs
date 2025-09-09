@@ -10,8 +10,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class WoodProjectile : Projectile
     {
-        private static Vector2 _baseSize = new(150f, 15f);
-        private static Vector2 _baseSpeed= new(7000f, 0f);
+        public static Vector2 _baseSize = new(150f, 15f);
+        public static Vector2 _baseSpeed= new(7000f, 0f);
 
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;

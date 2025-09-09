@@ -1,10 +1,12 @@
 ﻿using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
+using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class MagnetEffect : PlayerEffect
+    public class MagnetEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/Effects/Magnetshot.png";
         protected override float Duration => 5f;
@@ -27,6 +29,11 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         {
             modifiers.Magnetic = true;
             modifiers.Decorations = _decorations;
+        }
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return Vector2.Zero;
         }
     }
 }

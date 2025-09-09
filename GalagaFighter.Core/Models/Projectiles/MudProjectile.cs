@@ -14,8 +14,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class MudProjectile : Projectile
     {
-        private static readonly Vector2 _baseSpeed = new(1500f, 0f);
-        private static readonly Vector2 _baseSize = new(150f, 64f);
+        public static readonly Vector2 _baseSpeed = new(1500f, 0f);
+        public static readonly Vector2 _baseSize = new(150f, 64f);
 
         public override Vector2 BaseSpeed => _baseSpeed;
         public override Vector2 BaseSize => _baseSize;

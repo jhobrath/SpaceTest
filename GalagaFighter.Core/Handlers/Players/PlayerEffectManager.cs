@@ -28,7 +28,7 @@ namespace GalagaFighter.Core.Handlers.Players
         PlayerEffect IExposedPlayerEffectManager.SelectedProjectile => _selectedProjectile;
 
         private EffectModifiers _modifiers = new();
-        private PlayerEffect _selectedProjectile = new DefaultShootEffect();
+        private ProjectileEffect _selectedProjectile = new DefaultShootEffect();
         private readonly List<PlayerEffect> _effects = [];
 
         private long _lastFrameIndex = -1;
@@ -60,8 +60,8 @@ namespace GalagaFighter.Core.Handlers.Players
                 }
             }
 
-            if (_effects.All(x => x != _selectedProjectile))
-                _selectedProjectile = newEffect;
+            if (newEffect is ProjectileEffect projEffect && _effects.All(x => x != _selectedProjectile))
+                _selectedProjectile = projEffect;
         }
 
         private void LimitEffectCount(PlayerEffect newEffect)
@@ -88,9 +88,9 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             var currentIndex = _effects.IndexOf(_selectedProjectile);
             for(var i = (currentIndex + 1) % _effects.Count;i != currentIndex; i = (i + 1) % _effects.Count)
-                if (_effects[i].IsProjectile)
+                if (_effects[i] is ProjectileEffect projEffect)
                 { 
-                    _selectedProjectile = _effects[i];
+                    _selectedProjectile = projEffect;
                     UpdateModifiers();
                     break;
                 }
@@ -114,8 +114,8 @@ namespace GalagaFighter.Core.Handlers.Players
 
                 _effects.RemoveAll(x => x.IsActive == false);
 
-                if (!_selectedProjectile.IsActive)
-                    _selectedProjectile = _effects[0];
+                if (!_selectedProjectile.IsActive && _effects[0] is ProjectileEffect projEffect)
+                    _selectedProjectile = projEffect;
                 
                 UpdateModifiers();
             }
@@ -142,10 +142,11 @@ namespace GalagaFighter.Core.Handlers.Players
                 Decorations = []
             };
 
-            foreach (var effect in _effects)
+            foreach (var effect in _effects.OrderByDescending(x => x.IsProjectile))
                 if (!effect.IsProjectile || effect == _selectedProjectile)
                     effect.Apply(modifiers);
 
+            modifiers.GetProjectileSpeed = _selectedProjectile.GetProjectileSpeed;
 
             modifiers.WereReset = true;
             _modifiers = modifiers;

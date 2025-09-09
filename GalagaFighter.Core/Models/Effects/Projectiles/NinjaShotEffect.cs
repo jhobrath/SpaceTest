@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class NinjaShotEffect : PlayerEffect
+    public class NinjaShotEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/Effects/ninjashot.png";
         public override bool IsProjectile => true;
@@ -39,5 +39,10 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)
             => new NinjaProjectile(controller, owner, position, modifiers);
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return NinjaProjectile._baseSpeed;
+        }
     }
 }

@@ -13,8 +13,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class ExplosiveProjectile : Projectile
     {
-        private static Vector2 _baseSize => new(50f, 50f);
-        private static Vector2 _baseSpeed => new(1020f, 0f);
+        public static Vector2 _baseSize => new(50f, 50f);
+        public static Vector2 _baseSpeed => new(1020f, 0f);
         public override Vector2 BaseSpeed => _baseSpeed;
         public override Vector2 BaseSize => _baseSize;
         public override int BaseDamage => _baseDamage;

@@ -1,15 +1,16 @@
-﻿using GalagaFighter.Core.Models.Players;
+﻿using GalagaFighter.Core.Controllers;
+using GalagaFighter.Core.CPU;
+using GalagaFighter.Core.Models.Effects.Defensives;
+using GalagaFighter.Core.Models.Effects.Offensives;
+using GalagaFighter.Core.Models.Effects.Projectiles;
+using GalagaFighter.Core.Models.Effects.Statuses;
+using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
-using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 using System.Linq;
 using System.Numerics;
-using GalagaFighter.Core.Models.Effects.Defensives;
-using GalagaFighter.Core.Models.Effects.Projectiles;
-using GalagaFighter.Core.Models.Effects.Offensives;
-using GalagaFighter.Core.CPU;
 using System.Threading.Tasks;
 
 namespace GalagaFighter.Core
@@ -48,6 +49,7 @@ namespace GalagaFighter.Core
         private readonly IParticleRenderService _particleRenderService;
         private readonly IAsteroidCreationService _asteroidCreationService;
         private readonly IProjectileAsteroidCollisionService _projectileAsteroidCollisionService;
+        private readonly IAsteroidPlayerCollisionService _asteroidPlayerCollisionService;
         private  ICpuDecisionMaker _cpuDecisionMaker;
 
         // Player-specific controllers
@@ -71,7 +73,7 @@ namespace GalagaFighter.Core
             _particleRenderService = Registry.Get<IParticleRenderService>();
             _asteroidCreationService = Registry.Get<IAsteroidCreationService>();
             _projectileAsteroidCollisionService = Registry.Get<IProjectileAsteroidCollisionService>();
-
+            _asteroidPlayerCollisionService = Registry.Get<IAsteroidPlayerCollisionService>();
             // Create separate controller instances for each player
             _playerController1 = Registry.Get<IPlayerController>();
             _playerController2 = Registry.Get<IPlayerController>();
@@ -81,6 +83,7 @@ namespace GalagaFighter.Core
             InitializeScale();
             InitializePlayers();
             AudioService.Initialize();
+            _asteroidCreationService.Initialize();
 
 
             for (var i = 0; i < 100; i++)
@@ -91,8 +94,8 @@ namespace GalagaFighter.Core
 
         private static void InitializeWindow()
         {
-            int monitorWidth = Raylib.GetMonitorWidth(0);
-            int monitorHeight = Raylib.GetMonitorHeight(0);
+            int monitorWidth = Raylib.GetScreenWidth();
+            int monitorHeight = Raylib.GetScreenHeight();
 
             Raylib.InitWindow(monitorWidth, monitorHeight, "Galaga Fighter");
             Raylib.SetTargetFPS(60);
@@ -288,6 +291,7 @@ namespace GalagaFighter.Core
             _projectileProjectileCollisionService.HandleCollisions();
             _playerProjectileCollisionService.HandleCollisions();
             _projectileAsteroidCollisionService.HandleCollisions();
+            _asteroidPlayerCollisionService.HandleCollisions();
             _inputService.Update();
             _cpuDecisionMaker?.Update();
             _asteroidCreationService.Update();
@@ -318,9 +322,10 @@ namespace GalagaFighter.Core
                 InitializePlayers();
                 if (_args.Length > 0)
                     InitializePlayersFromArgs(_args);
+                _asteroidCreationService.Initialize();
             }
 
-            if(Raylib.IsKeyPressed(KeyboardKey.E))
+            if (Raylib.IsKeyPressed(KeyboardKey.E))
             {
                 var factory = Registry.Get<IPlayerManagerFactory>();
                 var effectManager = factory.GetEffectManager(_player1);

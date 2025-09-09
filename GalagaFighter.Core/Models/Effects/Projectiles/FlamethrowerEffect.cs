@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
-    public class FlamethrowerEffect : PlayerEffect
+    public class FlamethrowerEffect : ProjectileEffect
     {
         public override string IconPath => "Sprites/effects/beam.png";
         public override bool IsProjectile => true;
@@ -37,6 +37,11 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         {
             _beamProjectile =  new FlamethrowerProjectile(controller, player, vector, modifiers, Color.Red);
             return _beamProjectile;
+        }
+
+        public override Vector2 GetProjectileSpeed()
+        {
+            return FlamethrowerProjectile._baseSpeed;
         }
     }
 }

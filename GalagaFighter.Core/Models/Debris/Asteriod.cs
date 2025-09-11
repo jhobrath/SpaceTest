@@ -14,6 +14,8 @@ namespace GalagaFighter.Core.Models.Debris
     {
         private float _rotation;
 
+        public Vector2? RectSize { get;  set; }
+
         private Vector2[] _vertices;
         public float Opacity { get; set; } = 1f;
 
@@ -28,14 +30,14 @@ namespace GalagaFighter.Core.Models.Debris
             CreateParticleEffects();
         }
 
-        public Asteroid((Image image, Vector2[] vertices) result, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
+        public Asteroid((Image image, Vector2[] vertices) result, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, Vector2? rectSize = null)
             : base(Game.Id, GetFromResult(result, out var verts), initialPosition, initialSize, initialSpeed)
         {
-            var rectSize = new Vector2(verts.Max(x => x.X) - verts.Min(x => x.X), verts.Max(x => x.Y) - verts.Min(x => x.Y));
-            _vertices = verts.Select(x => new Vector2(x.X / rectSize.X, x.Y / rectSize.Y)).ToArray();
+            rectSize ??= new Vector2(verts.Max(x => x.X) - verts.Min(x => x.X), verts.Max(x => x.Y) - verts.Min(x => x.Y));
+            _vertices = verts.Select(x => new Vector2(x.X / rectSize.Value.X, x.Y / rectSize.Value.Y)).ToArray();
             Hitbox = new HitboxVertices(_vertices);
             _rotation = -25f + (float)Game.Random.NextDouble() * 50f;
-
+            RectSize = rectSize;
             CreateParticleEffects();
         }
 

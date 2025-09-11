@@ -118,22 +118,55 @@ namespace GalagaFighter.Core.Services
             var numberOfAsteroids = Game.Random.Next(2, 5);
             var averageAsteroidSize = asteroid.Rect.Size/numberOfAsteroids;
             var averageAsteroidSpeed = asteroid.Speed / numberOfAsteroids;
-            for(var i =0;i < numberOfAsteroids;i++)
+
+            var vertexGroups = GetExplodeVertexGroups(asteroid);
+            foreach(var vertices in vertexGroups)
             {
-                var position = GetRandomVector(asteroid.Center.X - 50, asteroid.Center.Y - 50, asteroid.Center.X + 50, asteroid.Center.Y + 50);
-                var size = GetRandomVector(averageAsteroidSize.X * .8f, averageAsteroidSize.Y * .8f, averageAsteroidSize.X / .8f, averageAsteroidSize.Y / .8f);
-                var speed = GetRandomVector(averageAsteroidSpeed.X * .8f, averageAsteroidSpeed.Y * .8f, averageAsteroidSpeed.X / .8f, averageAsteroidSpeed.Y / .8f);
+                var position = asteroid.Rect.Position;
+                var size = asteroid.Rect.Size;
+                var speed = asteroid.Speed;// * (.75f + (float)Game.Random.NextDouble() * .5f);
 
-                var asteroidData = Queue.TryDequeue(out (Image, Vector2[]) result);// AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices();
-                if (!asteroidData)
-                    break;
+                var result = AsteroidSpriteFactory.CreateProceduralAsteroidSpriteWithVertices(vertices: vertices.ToArray());
+                //var asteroidData = Queue.TryDequeue(out (Image, Vector2[]) result);
+                //if (!asteroidData)
+                //    break;
 
-                var newAsteroid = new Asteroid(result, position, size, speed);
+                var newAsteroid = new Asteroid(result, position, size, speed, rectSize: asteroid.RectSize);
                 newAsteroid.Opacity = .99f;
+                newAsteroid.Rotation = asteroid.Rotation;
                 _objectService.AddGameObject(newAsteroid);
             }
 
             asteroid.IsActive = false;
+        }
+
+        private List<List<Vector2>> GetExplodeVertexGroups(Asteroid asteroid)
+        {
+            var vertices = asteroid.Hitbox!.Vertices
+                .Select(x => new Vector2(x.X * asteroid.RectSize!.Value.X, x.Y * asteroid.RectSize.Value.Y))
+                .ToArray();
+
+            //Add a new vertex in the middle of the sprite
+            var interiorVertex = new Vector2(vertices.Sum(x => x.X) / vertices.Length,
+                vertices.Sum(x => x.Y) / vertices.Length);
+
+            var groups = new List<List<Vector2>>
+            {
+                new()
+            };
+
+            for(var i = 0;i < vertices.Length - 3;i++)
+            {
+                if (groups.Last().Count > 3 && Game.Random.NextDouble() < .75f)
+                    groups.Add([]);
+
+                groups.Last().Add(vertices[i]);
+            }
+
+            groups.Last().AddRange(vertices.Skip(vertices.Length - 3));
+            groups.ForEach(x => x.Add(interiorVertex));
+
+            return groups;
         }
     }
 }

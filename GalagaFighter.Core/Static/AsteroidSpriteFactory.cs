@@ -111,9 +111,9 @@ namespace GalagaFighter.Core.Static
         }
 
         // Returns both the procedurally masked asteroid sprite and its vertices
-        public static (Image image, Vector2[] vertices) CreateProceduralAsteroidSpriteWithVertices(int minVertices = 8, int maxVertices = 16, float irregularity = 0.5f)
+        public static (Image image, Vector2[] vertices) CreateProceduralAsteroidSpriteWithVertices(Vector2[]? vertices = null, int minVertices = 8, int maxVertices = 16, float irregularity = 0.5f)
         {
-            var randomIndex = Game.Random.Next(AsteroidTextures.Length);
+            var randomIndex = 1;// Game.Random.Next(AsteroidTextures.Length);
             var texturePath = AsteroidTextures[randomIndex];
             Image baseImage = Raylib.LoadImage(texturePath);
             int width = baseImage.Width;
@@ -123,15 +123,19 @@ namespace GalagaFighter.Core.Static
             Vector2 center = new Vector2(width / 2f, height / 2f);
             float radius = Math.Min(width, height) * 0.45f;
             int vertexCount = Game.Random.Next(minVertices, maxVertices + 1);
-            Vector2[] vertices = new Vector2[vertexCount];
-            for (int i = 0; i < vertexCount; i++)
-            {
-                float angle = (float)(i * 2 * Math.PI / vertexCount);
-                float r = radius * (1f + (float)(Game.Random.NextDouble() * irregularity - irregularity / 2));
-                vertices[i] = new Vector2(
-                    center.X + r * (float)Math.Cos(angle),
-                    center.Y + r * (float)Math.Sin(angle)
-                );
+            
+            if(vertices == null)
+            { 
+                vertices = new Vector2[vertexCount];
+                for (int i = 0; i < vertexCount; i++)
+                {
+                    float angle = (float)(i * 2 * Math.PI / vertexCount);
+                    float r = radius * (1f + (float)(Game.Random.NextDouble() * irregularity - irregularity / 2));
+                    vertices[i] = new Vector2(
+                        center.X + r * (float)Math.Cos(angle),
+                        center.Y + r * (float)Math.Sin(angle)
+                    );
+                }
             }
 
             // Prepare mask array

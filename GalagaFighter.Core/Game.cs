@@ -83,7 +83,7 @@ namespace GalagaFighter.Core
             InitializeScale();
             InitializePlayers();
             AudioService.Initialize();
-            _asteroidCreationService.Initialize();
+            //_asteroidCreationService.Initialize();
 
 
             for (var i = 0; i < 100; i++)
@@ -291,10 +291,10 @@ namespace GalagaFighter.Core
             _projectileProjectileCollisionService.HandleCollisions();
             _playerProjectileCollisionService.HandleCollisions();
             _projectileAsteroidCollisionService.HandleCollisions();
-            _asteroidPlayerCollisionService.HandleCollisions();
+            //_asteroidPlayerCollisionService.HandleCollisions();
             _inputService.Update();
             _cpuDecisionMaker?.Update();
-            _asteroidCreationService.Update();
+            //_asteroidCreationService.Update();
 
             HandleInput();
             UpdateGameObjects();
@@ -322,7 +322,7 @@ namespace GalagaFighter.Core
                 InitializePlayers();
                 if (_args.Length > 0)
                     InitializePlayersFromArgs(_args);
-                _asteroidCreationService.Initialize();
+                //_asteroidCreationService.Initialize();
             }
 
             if (Raylib.IsKeyPressed(KeyboardKey.E))

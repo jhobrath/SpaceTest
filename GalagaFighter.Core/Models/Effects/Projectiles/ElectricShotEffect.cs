@@ -16,7 +16,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
     {
         public override string IconPath => "Sprites/effects/plasmaball.png";
         public override bool IsProjectile =>  true;
-        protected override int TotalBullets => 3;
+        protected override int TotalBullets => 5;
 
         private readonly SpriteDecorations _decorations;
 

@@ -16,7 +16,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class ElectricProjectile : Projectile
     {
-        public static Vector2 _baseSize => new(60f, 60f);
+        public static Vector2 _baseSize => new(100f, 100f);
         public static Vector2 _baseSpeed => new(1350f, 0f);
 
         public override Vector2 BaseSize => _baseSize;
@@ -42,9 +42,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             var trail = ParticleEffectsLibrary.Get("LightningChain");
             trail.ParticleStartSize = 10f;
             trail.Offset = new Vector2(trail.ParticleStartSize/2 * (owner.IsPlayer1 ? -1 : 1), trail.ParticleStartSize/ 2 * (owner.IsPlayer1 ? -1 : 1));
-            trail.MaxParticles = 50; // Many simultaneous chains for dense electricity
-            trail.EmissionRate = 50f; // Fast emission for continuous effect
+            trail.MaxParticles = 100; // Many simultaneous chains for dense electricity
+            trail.EmissionRate = 100f; // Fast emission for continuous effect
             trail.ParticleSpeed = Vector2.Zero; // FIXED: No particle movement relative to projectile
+            trail.MaxParticles *= 3;
             trail.ParticleSpeedVariation = Vector2.Zero; // No speed variation either
             trail.FollowRotation = true;
             ParticleEffects.Add(trail);
@@ -52,7 +53,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         private static SpriteWrapper GetSprite()
         {
-            var texture = TextureService.Get("Sprites/Projectiles/electric.png");
+            var texture = TextureService.Get("Sprites/Projectiles/electric1.png");
             return new SpriteWrapper(texture, 5, .125f);
         }
 
@@ -62,7 +63,7 @@ namespace GalagaFighter.Core.Models.Projectiles
                 return;
 
             _isZapping = true;
-            Sprite = new SpriteWrapper(TextureService.Get("Sprites/projectiles/zap.png"), 4, .04f);
+            Sprite = new SpriteWrapper(TextureService.Get("Sprites/projectiles/zap1.png"), 4, .04f);
             _zapOriginalPosition = Rect.Position;
             _zapOriginalPlayerCenter = player.Center;
             _zapLastOffset = Vector2.Zero;

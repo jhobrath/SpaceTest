@@ -6,7 +6,7 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class TimedBarrageEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/Effects/timedbarrage.png";
+        public override string IconPath => "Sprites/Effects/offensives/timedbarrage.png";
         public override bool IsProjectile => false;
         protected override float Duration => 300f;
 

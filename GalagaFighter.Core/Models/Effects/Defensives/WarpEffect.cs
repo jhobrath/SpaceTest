@@ -10,7 +10,7 @@ namespace GalagaFighter.Core.Models.Effects.Defensives
 {
     public class WarpEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/effects/rewind.png";
+        public override string IconPath => "Sprites/effects/defensives/warp.png";
         protected override float Duration => .5f;
 
 

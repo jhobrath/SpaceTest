@@ -10,7 +10,7 @@ namespace GalagaFighter.Core.Models.Effects.Defensives
 {
     public class ParryEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/effects/rewind.png";
+        public override string IconPath => "Sprites/effects/defensives/parry.png";
         protected override float Duration => .15f;
         public override List<string> DecorationKeys => ["ParryShield"];
 

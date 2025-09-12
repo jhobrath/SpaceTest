@@ -10,7 +10,7 @@ namespace GalagaFighter.Core.Models.Effects.Defensives
 {
     public class BulletShieldEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/effects/rewind.png";
+        public override string IconPath => "Sprites/effects/defensives/bulletshield.png";
         protected override float Duration => .35f;
         public override List<string> DecorationKeys => ["BulletShield"];
 

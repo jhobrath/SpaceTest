@@ -6,6 +6,7 @@ using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -30,11 +31,12 @@ namespace GalagaFighter.Core.Static
             DrawPlayerResources(player1, false);
             DrawPlayerResources(player2, true);
             DrawWinner(player1, player2);
-            DrawEffects(ef => ef.IsProjectile || ef is FireRateEffect, player1, false, rowNumber: 0);
-            DrawEffects(ef => ef.IsProjectile || ef is FireRateEffect, player2, true, rowNumber: 0);
+            
+            DrawProjectileEffects(player1, false, rowNumber: 0);
+            DrawProjectileEffects(player2, true, rowNumber: 0);
 
-            DrawEffects(ef => ef is StatusEffect && !(ef is FireRateEffect), player1, false, rowNumber: 1, summarize: true);
-            DrawEffects(ef => ef is StatusEffect && !(ef is FireRateEffect), player2, true, rowNumber: 1, summarize: true);
+            DrawStatusEffects(player1, false, rowNumber: 1);
+            DrawStatusEffects(player2, true, rowNumber: 1);
 #if DEBUG
             DrawPlayerDebugInfo(player1, false);
             DrawPlayerDebugInfo(player2, true);
@@ -57,55 +59,81 @@ namespace GalagaFighter.Core.Static
 
         private class HudIcon { public string IconPath { get; set; } public int Count { get; set; } }
 
-        private static void DrawEffects(Func<PlayerEffect, bool> requirement, Player player, bool reverse, float rowNumber, bool summarize = false)
+        private static void DrawProjectileEffects(Player player, bool reverse, float rowNumber)
         {
             var effectManager = (IExposedPlayerEffectManager)_playerManagerFactory.GetEffectManager(player);
-            var effects = effectManager.Effects.Where(requirement).GroupBy(x => x.GetType()).ToDictionary(x => x.Key, x => new HudIcon { Count = x.Count(), IconPath = x.First().IconPath });
+            var projectileEffects = effectManager.Effects
+                .Where(ef => ef.IsProjectile || ef is FireRateEffect)
+                .GroupBy(x => x.GetType())
+                .ToDictionary(x => x.Key, x => new HudIcon { Count = x.Count(), IconPath = x.First().IconPath });
 
+            // Special handling for DefaultShoot + FireRate integration
+            var defaultShoot = projectileEffects.Where(x => x.Key == typeof(DefaultShootEffect)).ToList();
+            if (defaultShoot.Any())
+            {
+                var fireRateCount = projectileEffects.ContainsKey(typeof(FireRateEffect)) ? projectileEffects[typeof(FireRateEffect)].Count : 0;
+                projectileEffects[typeof(DefaultShootEffect)].IconPath = "Sprites/Effects/Projectiles/DefaultShoot" + (fireRateCount + 1) + ".png";
+                projectileEffects[typeof(DefaultShootEffect)].Count = 1;
+                projectileEffects.Remove(typeof(FireRateEffect));
+            }
+
+            var selected = effectManager.SelectedProjectile;
+            var isDefaultEffect = selected != null && selected.GetType() == typeof(DefaultShootEffect);
+            
+            // Determine which icons should be highlighted
+            Func<string, int, bool> shouldHighlight = (iconPath, index) => 
+                (isDefaultEffect && index == 0) || (selected != null && iconPath == selected.IconPath);
+
+            DrawEffectIcons(projectileEffects, reverse, rowNumber, shouldHighlight);
+        }
+
+        private static void DrawStatusEffects(Player player, bool reverse, float rowNumber)
+        {
+            var effectManager = (IExposedPlayerEffectManager)_playerManagerFactory.GetEffectManager(player);
+            var statusEffects = effectManager.Effects
+                .Where(ef => ef is StatusEffect && !(ef is FireRateEffect))
+                .GroupBy(x => x.GetType())
+                .ToDictionary(x => x.Key, x => new HudIcon { Count = x.Count(), IconPath = x.First().IconPath });
+
+            // No highlighting for status effects
+            Func<string, int, bool> shouldHighlight = (iconPath, index) => false;
+
+            DrawEffectIcons(statusEffects, reverse, rowNumber, shouldHighlight);
+        }
+
+        private static void DrawEffectIcons(
+            Dictionary<Type, HudIcon> effects, 
+            bool reverse, 
+            float rowNumber, 
+            Func<string, int, bool> shouldHighlight)
+        {
             var slotSize = 40f * Game.UniformScale;
-            var iconSize = slotSize - 6f*Game.UniformScale;
+            var iconSize = slotSize - 6f * Game.UniformScale;
             var startX = reverse
                 ? Game.Width - (_margin + slotSize * 12)
                 : _margin;
 
-            var start = new Vector2(0f, slotSize);
             var slot = new Vector2(slotSize, slotSize);
 
-            var defaultShoot = effects.Where(x => x.Key == typeof(DefaultShootEffect)).ToList();
-            if (defaultShoot.Any())
-            {
-                var fireRateCount = effects.ContainsKey(typeof(FireRateEffect)) ? effects[typeof(FireRateEffect)].Count : 0;
-                effects[typeof(DefaultShootEffect)].IconPath = "Sprites/Effects/Projectiles/DefaultShoot" + (fireRateCount + 1) + ".png";
-                effects[typeof(DefaultShootEffect)].Count = 1;
-                effects.Remove(typeof(FireRateEffect));
-            }
-
-            var selected = effectManager.SelectedProjectile;
-            var isDefaultEffect = !summarize && selected != null && selected.GetType() == typeof(DefaultShootEffect);
-
             int i = 0;
-            foreach(var key in effects.Keys)
+            foreach (var key in effects.Keys)
             {
-                var col = (reverse ? ((12 - (i % 12))-1) : i % 12);
+                var col = (reverse ? ((12 - (i % 12)) - 1) : i % 12);
                 var row = (int)Math.Floor(i / 12f);
 
                 var texture = new SpriteWrapper(TextureService.Get(effects[key].IconPath));
-                // Move icons down by adding extra space for resource bar (30 pixels + some padding)
-                var position = new Vector2(startX + col * slotSize, _margin + (rowNumber*slotSize) + row * slotSize + iconSize / 2 + slotSize + 5);
+                var position = new Vector2(startX + col * slotSize, _margin + (rowNumber * slotSize) + row * slotSize + iconSize / 2 + slotSize + 5);
                 var center = new Vector2(position.X + slotSize / 2, position.Y + slotSize / 2);
 
-                if ((isDefaultEffect && i == 0) || (selected != null && effects[key].IconPath == selected.IconPath))
-                {
-                    if(summarize)
-                    {
-                        var s = "";
-                    }
+                // Highlight if specified
+                if (shouldHighlight(effects[key].IconPath, i))
                     Raylib.DrawRectangle((int)position.X + 1, (int)position.Y + 1, (int)slot.X - 2, (int)slot.Y - 2, Color.LightGray);
-                }
 
                 texture.Draw(center, 0f, iconSize, iconSize, Color.White);
 
-                if (summarize && effects[key].Count > 1 && key != typeof(DefaultShootEffect))
+                // Show count for status effects (which can have multiple instances)
+                var isStatusEffect = typeof(StatusEffect).IsAssignableFrom(key);
+                if (isStatusEffect && effects[key].Count > 1)
                     Raylib.DrawText(effects[key].Count.ToString(), (int)position.X + 25, (int)position.Y + 25, 20, Color.White);
 
                 i++;

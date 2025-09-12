@@ -7,7 +7,7 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class KnuckleballEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/Effects/knuckleball.png";
+        public override string IconPath => "Sprites/Effects/offensives/knuckleball.png";
         protected override float Duration => 10f;
         public KnuckleballEffect()
         {

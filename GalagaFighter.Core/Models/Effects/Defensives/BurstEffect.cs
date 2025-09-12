@@ -6,7 +6,7 @@ namespace GalagaFighter.Core.Models.Effects.Defensives
 {
     public class BurstEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/effects/defensive_duck.png";
+        public override string IconPath => "Sprites/effects/defensives/burst.png";
         protected override float Duration => 1f;
         public override List<string> DecorationKeys => ["RepulseShield"];
 

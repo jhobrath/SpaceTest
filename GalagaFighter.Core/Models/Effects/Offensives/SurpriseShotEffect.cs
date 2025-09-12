@@ -7,7 +7,7 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class SurpriseShotEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/Effects/surprise.png";
+        public override string IconPath => "Sprites/Effects/offensives/surpriseshot.png";
         public override bool IsProjectile => false;
         protected override float Duration => 10f;
 

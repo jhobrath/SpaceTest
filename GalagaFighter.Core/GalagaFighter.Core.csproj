@@ -27,8 +27,21 @@
     <None Remove="Sounds\mudsplat.wav" />
     <None Remove="Sounds\ninjashot.mp3" />
     <None Remove="Sprites\Collisions\burst.png" />
+    <None Remove="Sprites\Effects\Defensives\BulletShield.png" />
+    <None Remove="Sprites\Effects\Defensives\Burst.png" />
+    <None Remove="Sprites\Effects\Defensives\Duck.png" />
+    <None Remove="Sprites\Effects\Defensives\Parry.png" />
+    <None Remove="Sprites\Effects\Defensives\Warp.png" />
+    <None Remove="Sprites\Effects\Defensives\Wrap.png" />
     <None Remove="Sprites\Effects\doubleshot.png" />
     <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
+    <None Remove="Sprites\Effects\Offensives\FadingBullet.png" />
+    <None Remove="Sprites\Effects\Offensives\Homing.png" />
+    <None Remove="Sprites\Effects\Offensives\Knuckleball.png" />
+    <None Remove="Sprites\Effects\Offensives\Ricochet.png" />
+    <None Remove="Sprites\Effects\Offensives\Splitter.png" />
+    <None Remove="Sprites\Effects\Offensives\SurpriseShot.png" />
+    <None Remove="Sprites\Effects\Offensives\TimedBarrage.png" />
     <None Remove="Sprites\Effects\Projectiles\DefaultShoot1.png" />
     <None Remove="Sprites\Effects\Projectiles\DefaultShoot2.png" />
     <None Remove="Sprites\Effects\Projectiles\DefaultShoot3.png" />
@@ -146,6 +159,45 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Debris\asteroid_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Defensives\BulletShield.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Defensives\Burst.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Defensives\Duck.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Defensives\Parry.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Defensives\Warp.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Defensives\Wrap.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Offensives\FadingBullet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Offensives\Homing.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Offensives\Knuckleball.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Offensives\Ricochet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Offensives\Splitter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Offensives\SurpriseShot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Offensives\TimedBarrage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Effects\Projectiles\DefaultShoot1.png">
@@ -280,18 +332,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Sprites\Effects\ricochet.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Sprites\Effects\splitter.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Sprites\Effects\surprise.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Sprites\Effects\timedbarrage.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Sprites\Projectiles\electric.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

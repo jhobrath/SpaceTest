@@ -4,7 +4,7 @@ namespace GalagaFighter.Core.Models.Effects.Offensives
 {
     public class HomingEffect : PlayerEffect
     {
-        public override string IconPath => "Sprites/effects/homing.png";
+        public override string IconPath => "Sprites/effects/offensives/homing.png";
         protected override float Duration => 10f;
 
         public override void Apply(EffectModifiers modifiers)

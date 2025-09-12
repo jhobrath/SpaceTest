@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class ParryEffect : PlayerEffect
+    public class ParryEffect : DefensiveEffect
     {
         public override string IconPath => "Sprites/effects/defensives/parry.png";
         protected override float Duration => .15f;

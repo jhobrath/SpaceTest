@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace GalagaFighter.Core.Models.Effects.Offensives
 {
-    public class FadingBulletEffect : PlayerEffect
+    public class FadingBulletEffect : OffensiveEffect
     {
         public override string IconPath => "Sprites/effects/offensives/fadingbullet.png";
 

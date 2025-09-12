@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class BurstEffect : PlayerEffect
+    public class BurstEffect : DefensiveEffect
     {
         public override string IconPath => "Sprites/effects/defensives/burst.png";
         protected override float Duration => 1f;

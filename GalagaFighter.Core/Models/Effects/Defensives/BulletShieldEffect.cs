@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class BulletShieldEffect : PlayerEffect
+    public class BulletShieldEffect : DefensiveEffect
     {
         public override string IconPath => "Sprites/effects/defensives/bulletshield.png";
         protected override float Duration => .35f;

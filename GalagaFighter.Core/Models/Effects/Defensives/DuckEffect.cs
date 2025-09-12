@@ -2,7 +2,7 @@
 
 namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class DuckEffect : PlayerEffect
+    public class DuckEffect : DefensiveEffect
     {
         public override string IconPath => "Sprites/effects/defensives/duck.png";
 

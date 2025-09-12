@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Offensives
 {
-    public class TimedBarrageEffect : PlayerEffect
+    public class TimedBarrageEffect : OffensiveEffect
     {
         public override string IconPath => "Sprites/Effects/offensives/timedbarrage.png";
         public override bool IsProjectile => false;

@@ -2,7 +2,7 @@
 
 namespace GalagaFighter.Core.Models.Effects.Offensives
 {
-    public class SplitterEffect : PlayerEffect
+    public class SplitterEffect : OffensiveEffect
     {
         public override string IconPath => "Sprites/Effects/offensives/splitter.png";
         protected override float Duration => 10f;

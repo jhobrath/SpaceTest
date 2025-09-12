@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core.Models.Effects.Defensives
 {
-    public class WrapEffect : PlayerEffect
+    public class WrapEffect : DefensiveEffect
     {
         public override string IconPath => "Sprites/effects/defensives/wrap.png";
         protected override float Duration => 1.5f;

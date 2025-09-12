@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Offensives
 {
-    public class SurpriseShotEffect : PlayerEffect
+    public class SurpriseShotEffect : OffensiveEffect
     {
         public override string IconPath => "Sprites/Effects/offensives/surpriseshot.png";
         public override bool IsProjectile => false;

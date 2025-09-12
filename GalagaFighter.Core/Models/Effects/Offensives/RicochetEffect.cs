@@ -2,7 +2,7 @@
 
 namespace GalagaFighter.Core.Models.Effects.Offensives
 {
-    public class RicochetEffect : PlayerEffect
+    public class RicochetEffect : OffensiveEffect
     {
         public override string IconPath => "Sprites/Effects/offensives/ricochet.png";
         protected override float Duration => 10f;

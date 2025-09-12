@@ -12,7 +12,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         private readonly SpriteDecorations _decorations;
 
         public override bool IsProjectile => true;
-        public override string IconPath => "Sprites/Effects/woodshot.png";
+        public override string IconPath => "Sprites/Effects/Projectiles/woodshot.png";
         protected override int TotalBullets => 3;
 
         public WoodShotEffect()

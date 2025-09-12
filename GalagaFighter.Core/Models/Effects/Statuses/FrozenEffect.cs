@@ -2,7 +2,7 @@
 
 namespace GalagaFighter.Core.Models.Effects.Statuses
 {
-    public class FrozenEffect : PlayerEffect
+    public class FrozenEffect : StatusEffect
     {
         public override string IconPath => "Sprites/Effects/frozen.png";
         protected override float Duration => 5f;

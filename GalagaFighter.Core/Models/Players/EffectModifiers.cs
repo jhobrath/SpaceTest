@@ -22,6 +22,7 @@ namespace GalagaFighter.Core.Models.Players
         public bool Jiggle { get; set; }
         public bool Parry { get; set; }
         public bool Warp { get; set; }
+        public bool Wrap { get; set; }
         public bool BulletShield { get; set; }
 
 

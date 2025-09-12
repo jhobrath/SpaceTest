@@ -9,7 +9,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class FlamethrowerEffect : ProjectileEffect
     {
-        public override string IconPath => "Sprites/effects/beam.png";
+        public override string IconPath => "Sprites/effects/projectiles/flamethrower.png";
         public override bool IsProjectile => true;
 
         private FlamethrowerProjectile? _beamProjectile;

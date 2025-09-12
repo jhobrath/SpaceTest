@@ -98,7 +98,8 @@ namespace GalagaFighter.Core.Controllers
         {
             var effectManager = _playerManagerFactory.GetEffectManager(player.Id);
             var modifiers = effectManager.GetModifiers();
-            _playerDrawer.Draw(player, modifiers!, _shootState);
+            var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
+            _playerDrawer.Draw(player, modifiers!, _shootState, resourceManager.ShootMeter);
 
             modifiers.WereReset = false;
         }

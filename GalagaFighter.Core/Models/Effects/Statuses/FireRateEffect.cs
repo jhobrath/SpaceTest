@@ -2,7 +2,7 @@
 
 namespace GalagaFighter.Core.Models.Effects.Statuses
 {
-    public class FireRateEffect : PlayerEffect
+    public class FireRateEffect : StatusEffect
     {
         public override string IconPath => "Sprites/Effects/firerate1.png";
         public override void Apply(EffectModifiers modifiers)

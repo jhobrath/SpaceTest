@@ -11,7 +11,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class MudShotEffect : ProjectileEffect
     {
-        public override string IconPath => "Sprites/Effects/mudshot.png";
+        public override string IconPath => "Sprites/Effects/Projectiles/mudshot.png";
         public override bool IsProjectile => true;
         protected override float Duration => 5f;
 

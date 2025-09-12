@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core.Models.Effects.Statuses
 {
-    public class ElectricEffect : PlayerEffect
+    public class ElectricEffect : StatusEffect
     {
         private EffectModifiers? _modifiers;
         private ParticleEffect _particleEffect;

@@ -29,6 +29,22 @@
     <None Remove="Sprites\Collisions\burst.png" />
     <None Remove="Sprites\Effects\doubleshot.png" />
     <None Remove="Sprites\Effects\frozen_embellishment.pdn" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot1.png" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot2.png" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot3.png" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot4.png" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot5.png" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot6.png" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot7.png" />
+    <None Remove="Sprites\Effects\Projectiles\DefaultShoot8.png" />
+    <None Remove="Sprites\Effects\Projectiles\ElectricShot.png" />
+    <None Remove="Sprites\Effects\Projectiles\ExplosiveShot.png" />
+    <None Remove="Sprites\Effects\Projectiles\Flamethrower.png" />
+    <None Remove="Sprites\Effects\Projectiles\IceShot.png" />
+    <None Remove="Sprites\Effects\Projectiles\Magnet.png" />
+    <None Remove="Sprites\Effects\Projectiles\MudShot.png" />
+    <None Remove="Sprites\Effects\Projectiles\NinjaShot.png" />
+    <None Remove="Sprites\Effects\Projectiles\WoodShot.png" />
     <None Remove="Sprites\Effects\Whirlwind.png" />
     <None Remove="Sprites\Particles\dot_1.png" />
     <None Remove="Sprites\Particles\dot_2.png" />
@@ -59,6 +75,7 @@
     <None Remove="Sprites\Projectiles\mud_splat.png" />
     <None Remove="Sprites\Projectiles\zap.png" />
     <None Remove="Sprites\Ships\MainShip.png" />
+    <None Remove="Sprites\Ships\MainShipBody.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns_ShootBoth.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns_ShootLeft.png" />
@@ -70,6 +87,7 @@
     <None Remove="Sprites\Ships\MainShipExplosive_ShootLeft.png" />
     <None Remove="Sprites\Ships\MainShipExplosive_ShootRight.png" />
     <None Remove="Sprites\Ships\MainShipFireGuns.png" />
+    <None Remove="Sprites\Ships\MainShipGuns.png" />
     <None Remove="Sprites\Ships\MainShipIce.png" />
     <None Remove="Sprites\Ships\MainShipIceGuns.png" />
     <None Remove="Sprites\Ships\MainShipIceGuns_ShootBoth.png" />
@@ -128,6 +146,54 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Debris\asteroid_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot6.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot7.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\DefaultShoot8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\ElectricShot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\ExplosiveShot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\Flamethrower.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\IceShot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\Magnet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\MudShot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\NinjaShot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\WoodShot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Particles\dot_1.png">
@@ -229,6 +295,9 @@
     <Content Include="Sprites\Projectiles\electric.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sprites\Ships\MainShipBody.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Ships\MainShipElectricGuns.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -248,6 +317,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Ships\MainShipFireGuns.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipGuns.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Ships\MainShipIceGuns.png">

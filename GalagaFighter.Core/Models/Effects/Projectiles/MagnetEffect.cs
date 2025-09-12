@@ -8,7 +8,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class MagnetEffect : ProjectileEffect
     {
-        public override string IconPath => "Sprites/Effects/Magnetshot.png";
+        public override string IconPath => "Sprites/Effects/Projectiles/Magnet.png";
         protected override float Duration => 5f;
         public override bool IsProjectile => true;
 

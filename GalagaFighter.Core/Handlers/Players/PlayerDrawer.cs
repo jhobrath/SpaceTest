@@ -2,15 +2,15 @@
 using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
-using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace GalagaFighter.Core.Handlers.Players
 {
     public interface IPlayerDrawer
     {
-        void Draw(Player player, EffectModifiers modifiers, PlayerShootState playerShootState);
+        void Draw(Player player, EffectModifiers modifiers, PlayerShootState playerShootState, float shootMeter);
     }
     public class PlayerDrawer : IPlayerDrawer
     {
@@ -25,7 +25,7 @@ namespace GalagaFighter.Core.Handlers.Players
             _inputService = inputService;
         }
 
-        public void Draw(Player player, EffectModifiers modifiers, PlayerShootState playerShootState)
+        public void Draw(Player player, EffectModifiers modifiers, PlayerShootState playerShootState, float shootMeter)
         {
             var frameTime = Raylib.GetFrameTime();
 
@@ -47,12 +47,12 @@ namespace GalagaFighter.Core.Handlers.Players
             var lastShotKickback = lastShot < .3f ? 5 : (lastShot < .4 ? 4 : (lastShot < .5 ? 3 : (lastShot < .6 ? 2 : (lastShot < .7 ? 1 : 0))));
             lastShotKickback *= player.IsPlayer1 ? -1 : 1;
 
-            player.Move(x: lastShotKickback);
+            //player.Move(x: lastShotKickback);
 
             DrawShoot(player, modifiers, playerShootState);
             DrawMove(modifiers, player);
             DrawPlayer(player, modifiers, playerShootState);
-            DrawGuns(player, modifiers);
+            DrawGuns(player, modifiers, shootMeter);
 
 
             foreach (var decoration in modifiers.Decorations?.Other ?? [])
@@ -71,7 +71,7 @@ namespace GalagaFighter.Core.Handlers.Players
                 decoration.Sprite.Draw(player.Center + rotatedOffset, player.Rotation, decoration.Size!.Value.X, decoration.Size!.Value.Y, Color.White);
             }
 
-            player.Move(x: -lastShotKickback);
+            //player.Move(x: -lastShotKickback);
         }
 
         private void DrawPlayer(Player player, EffectModifiers modifiers, PlayerShootState playerShootState)
@@ -136,11 +136,13 @@ namespace GalagaFighter.Core.Handlers.Players
         }
 
 
-        private void DrawGuns(Player player, EffectModifiers modifiers)
+        private void DrawGuns(Player player, EffectModifiers modifiers, float shootMeter)
         {
+            var redAlpha = ColorExtensions.ApplyRed(Color.White, 1 - shootMeter);
+
             DrawWithPhantoms(player, modifiers, p =>
             {
-                modifiers.Decorations?.Guns?.Draw(p.Center, new Vector2(player.Rect.Width, player.Rect.Height), p.Rotation, Color.White);
+                modifiers.Decorations?.Guns?.Draw(p.Center, new Vector2(player.Rect.Width, player.Rect.Height), p.Rotation, redAlpha);
             });
         }
 

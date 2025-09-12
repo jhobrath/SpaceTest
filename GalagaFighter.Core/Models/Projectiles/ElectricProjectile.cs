@@ -53,6 +53,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         private static SpriteWrapper GetSprite()
         {
+            //Purposely wrong because the particle effects look better without it
             var texture = TextureService.Get("Sprites/Projectiles/electric1.png");
             return new SpriteWrapper(texture, 5, .125f);
         }

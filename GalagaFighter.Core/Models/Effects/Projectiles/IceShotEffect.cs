@@ -9,7 +9,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class IceShotEffect : ProjectileEffect
     {
-        public override string IconPath => "Sprites/Effects/iceshot.png";
+        public override string IconPath => "Sprites/Effects/Projectiles/iceshot.png";
         public override bool IsProjectile => true;
         protected override float Duration => 10f;
 

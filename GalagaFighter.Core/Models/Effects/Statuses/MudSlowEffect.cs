@@ -2,7 +2,7 @@ using GalagaFighter.Core.Models.Players;
 
 namespace GalagaFighter.Core.Models.Effects.Statuses
 {
-    public class MudSlowEffect : PlayerEffect
+    public class MudSlowEffect : StatusEffect
     {
         public override string IconPath => "Sprites/Effects/mudsplaticon.png";
         public override int MaxCount => 3;

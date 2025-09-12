@@ -76,6 +76,13 @@ namespace GalagaFighter.Core.Handlers.Players
             var deltaY = player.Speed.Y * frameTime;
             
             var newY = player.Rect.Y + deltaY;
+            
+            if (modifiers.Wrap)
+            {
+                SetWrapPosition(player, modifiers, deltaY);
+                return;
+            }
+
             if (newY < Game.Margin)
             {
                 player.MoveTo(y: Game.Margin);
@@ -89,6 +96,20 @@ namespace GalagaFighter.Core.Handlers.Players
             else
             {
                 player.Move(deltaX, deltaY);
+            }
+        }
+
+        private void SetWrapPosition(Player player, EffectModifiers modifiers, float deltaY)
+        {
+            player.Move(y: deltaY);
+            
+            if (player.Rect.Y + player.Rect.Height < Game.Margin)
+            {
+                player.MoveTo(y: Game.Height);
+            }
+            else if (player.Rect.Y > Game.Height)
+            {
+                player.MoveTo(y: Game.Margin - player.Rect.Height);
             }
         }
 

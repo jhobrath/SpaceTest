@@ -3,7 +3,7 @@ using GalagaFighter.Core.Static;
 
 namespace GalagaFighter.Core.Models.Effects.Statuses
 {
-    public class BurningEffect : PlayerEffect
+    public class BurningEffect : StatusEffect
     {
         public override string IconPath => "Sprites/Effects/burning.png";
         public override int MaxCount => 5;

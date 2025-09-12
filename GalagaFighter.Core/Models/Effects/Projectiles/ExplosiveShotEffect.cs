@@ -11,7 +11,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 {
     public class ExplosiveShotEffect : ProjectileEffect
     {
-        public override string IconPath => "Sprites/Effects/explosiveshot.png";
+        public override string IconPath => "Sprites/Effects/Projectiles/ExplosiveShot.png";
         public override bool IsProjectile => true;
         protected override int TotalBullets => 5;
         private SpriteDecorations _decorations;

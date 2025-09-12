@@ -2,7 +2,7 @@
 
 namespace GalagaFighter.Core.Models.Effects.Statuses
 {
-    public class DoubleShotEffect : PlayerEffect
+    public class DoubleShotEffect : StatusEffect
     {
         public override string IconPath => "Sprites/Effects/doubleshot.png";
         protected override float Duration => 10f;

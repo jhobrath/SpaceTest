@@ -17,7 +17,7 @@ namespace GalagaFighter.Core.Static
         private static int _healthTextSize = (int)(24 * Game.UniformScale);
         private static int _controlTextSize = (int)(20 * Game.UniformScale);
         private static int _statusTextSize = (int)(16 * Game.UniformScale);
-        private static int _margin = (int)(15 * Game.UniformScale);
+        private static int _margin = (int)(30 * Game.UniformScale);
         private static IPlayerManagerFactory _playerManagerFactory = Registry.Get<IPlayerManagerFactory>();
 
         public static void Initialize()
@@ -30,6 +30,8 @@ namespace GalagaFighter.Core.Static
             DrawPlayerHealth(player2, true);
             DrawPlayerResources(player1, false);
             DrawPlayerResources(player2, true);
+            DrawPlayerAugments(player1, false);
+            DrawPlayerAugments(player2, true);
             DrawWinner(player1, player2);
             
             DrawProjectileEffects(player1, false, rowNumber: 0);
@@ -178,6 +180,69 @@ namespace GalagaFighter.Core.Static
             var shootMeterBarY = resourceBarY + 10 + 5; // 10 for shield bar height, 5 for spacing
             Raylib.DrawRectangle(shootMeterStartX, shootMeterBarY, (int)(shootMeterPercentage*baseWidth *Game.UniformScale), 10, Color.Lime);
             Raylib.DrawRectangleLines(resourceBarLinesStart, shootMeterBarY, (int)(baseWidth * Game.UniformScale), 10, Color.White);
+        }
+
+        private static void DrawPlayerAugments(Player player, bool reverse)
+        {
+            var baseWidth = 500;
+            var augmentHeight = 30 + 10 + 10; // Health bar (30) + shield bar (10) + shoot bar (10)
+            var augmentSize = (int)(augmentHeight * Game.UniformScale);
+            
+            var effectManager = (IExposedPlayerEffectManager)_playerManagerFactory.GetEffectManager(player);
+            var activeEffects = effectManager.Effects.ToList();
+            
+            // Calculate base position (end of the bars)
+            var barEndX = reverse 
+                ? (int)(Game.Width - ((_margin + baseWidth) * Game.UniformScale))
+                : (int)((_margin + baseWidth) * Game.UniformScale);
+            
+            var augmentY = _margin;
+            
+            // Position augments next to bars, towards center
+            var augmentStartX = reverse 
+                ? barEndX - augmentSize // On left side (towards center)
+                : barEndX; // On right side (towards center)
+            
+            int augmentIndex = 0;
+            
+            // Draw Offensive Augment (closest to bars)
+            if (player.OffensiveAugment != null)
+            {
+                var sampleEffect = player.OffensiveAugment();
+                var isActive = activeEffects.Any(e => e.GetType() == sampleEffect.GetType());
+                var opacity = isActive ? 1.0f : 0.5f;
+                
+                var augmentX = reverse 
+                    ? augmentStartX - (augmentIndex * augmentSize)
+                    : augmentStartX + (augmentIndex * augmentSize);
+                    
+                DrawAugmentIcon(sampleEffect.IconPath, augmentX, augmentY, augmentSize, opacity);
+                augmentIndex++;
+            }
+            
+            // Draw Defensive Augment (next to offensive)
+            if (player.DefensiveAugment != null)
+            {
+                var sampleEffect = player.DefensiveAugment();
+                var isActive = activeEffects.Any(e => e.GetType() == sampleEffect.GetType());
+                var opacity = isActive ? 1.0f : 0.5f;
+                
+                var augmentX = reverse 
+                    ? augmentStartX - (augmentIndex * augmentSize)
+                    : augmentStartX + (augmentIndex * augmentSize);
+                    
+                DrawAugmentIcon(sampleEffect.IconPath, augmentX, augmentY, augmentSize, opacity);
+            }
+        }
+
+        private static void DrawAugmentIcon(string iconPath, int x, int y, int size, float opacity)
+        {
+            var texture = new SpriteWrapper(TextureService.Get(iconPath));
+            var center = new Vector2(x + size / 2f, y + size / 2f);
+            var color = Color.White;
+            color.A = (byte)(255 * opacity);
+            
+            texture.Draw(center, 0f, size, size, color);
         }
 
         public static void DrawWinner(Player player1, Player player2)

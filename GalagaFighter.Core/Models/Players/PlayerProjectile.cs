@@ -34,6 +34,7 @@ namespace GalagaFighter.Core.Models.Players
         public float PlankDuration { get; set; } = 0f;
         public bool PlankStopsMovement { get; set; } = false;
         public bool IgnoreShipMovement { get; set; } = false;
+        public bool FollowShipVertically { get; set; } = false;
 
         //Edge Collision
         public float CollideDistanceFromEdge { get; set; } = 0f;
@@ -103,6 +104,7 @@ namespace GalagaFighter.Core.Models.Players
                 VerticalPositionOffset = VerticalPositionOffset,
                 VerticalPositionMultiplier = VerticalPositionMultiplier,
                 IgnoreShipMovement = IgnoreShipMovement,
+                FollowShipVertically = FollowShipVertically,
                 CanSplit = CanSplit,
                 CanRicochet = CanRicochet,
                 OnClone = OnClone,

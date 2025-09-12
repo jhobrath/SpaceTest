@@ -45,9 +45,23 @@ namespace GalagaFighter.Core.Handlers.Projectiles
             if (projectile.Modifiers.Homing != 0f)
                 AdjustFromHoming(projectile);
 
+            // Handle vertical ship following
+            if (projectile.Modifiers.FollowShipVertically)
+                HandleVerticalShipFollowing(projectile);
+
             projectile.Modifiers.VerticalPositionOffset += projectile.Modifiers.VerticalPositionIncrement * frameTime;
 
             projectile.Move(projectile.Speed.X * projectile.Modifiers.SpeedMultiplier * frameTime, projectile.Speed.Y * frameTime + projectile.Modifiers.VerticalPositionOffset*frameTime);
+        }
+
+        private void HandleVerticalShipFollowing(Projectile projectile)
+        {
+            var owner = _objectService.GetGameObjects<Player>().FirstOrDefault(p => p.Id == projectile.Owner);
+            if (owner != null)
+            {
+                var newY = owner.Center.Y - projectile.Rect.Height / 2;
+                projectile.MoveTo(y: newY);
+            }
         }
 
         private void AdjustFromHoming(Projectile projectile)

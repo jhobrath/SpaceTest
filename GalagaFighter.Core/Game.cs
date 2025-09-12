@@ -260,6 +260,7 @@ namespace GalagaFighter.Core
 
                 var effectManager = _playerManagerFactory.GetEffectManager(player);
                 effectManager.AddEffect(new DefaultShootEffect());
+                effectManager.AddEffect(new BeamEffect());
                 effectManager.AddEffect(new FlamethrowerEffect());
                 effectManager.AddEffect(new ElectricShotEffect());
                 effectManager.AddEffect(new IceShotEffect());

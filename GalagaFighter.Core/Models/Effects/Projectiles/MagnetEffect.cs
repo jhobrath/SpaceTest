@@ -28,7 +28,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Magnetic = true;
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
         }
 
         public override Vector2 GetProjectileSpeed()

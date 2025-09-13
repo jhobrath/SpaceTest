@@ -34,7 +34,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.RotationOffsetIncrement = 1080f;
             modifiers.Projectile.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
             modifiers.Projectile.OnClone = (projMods) => projMods.VerticalPositionIncrement = -150 + 300f * (float)Game.Random.NextDouble();
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
         }
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)

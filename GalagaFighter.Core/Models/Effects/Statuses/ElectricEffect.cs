@@ -33,7 +33,7 @@ namespace GalagaFighter.Core.Models.Effects.Statuses
             modifiers.Display.RedAlpha *= .9f;
             modifiers.Display.GreenAlpha *= .8f;
             modifiers.Display.BlueAlpha *= .9f;
-            modifiers.Jiggle = true;
+            modifiers.Jiggle = 1f;
 
             modifiers.ParticleEffects.Add(_particleEffect);
 

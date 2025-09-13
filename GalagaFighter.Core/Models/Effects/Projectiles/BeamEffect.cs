@@ -26,12 +26,11 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectiles);
-            modifiers.Stats.FireRateMultiplier *= 0.15f; // Very slow fire rate - beam should be rare and powerful
+            modifiers.Stats.FireRateMultiplier *= 0.5f; // Very slow fire rate - beam should be rare and powerful
             modifiers.Projectile.DeactivateOnCollision = false; // Beam stays active when hitting things
-            modifiers.Projectile.Untouchable = true; // Beam can't be destroyed by other projectiles
             modifiers.Projectile.IgnoreShipMovement = true; // Beam should NOT move with ship - stays stationary and grows
             modifiers.Projectile.FollowShipVertically = true; // But it should follow ship vertically
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
         }
 
         private Projectile CreateProjectiles(IProjectileController controller, Player player, Vector2 vector, PlayerProjectile modifiers)
@@ -39,6 +38,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             // If we already have an active beam projectile, reuse it instead of creating a new one
             if (_beamProjectile != null && _beamProjectile.IsActive)
             {
+                _beamProjectile.Reset();
                 return _beamProjectile;
             }
 

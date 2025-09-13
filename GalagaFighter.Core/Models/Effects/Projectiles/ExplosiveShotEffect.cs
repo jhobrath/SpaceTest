@@ -31,7 +31,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
             modifiers.Projectile.DeactivateOnCollision = false;
             modifiers.Projectile.OnShoot = HandleShotFired;
         }

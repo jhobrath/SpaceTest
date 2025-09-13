@@ -1,4 +1,5 @@
 ﻿using Raylib_cs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -15,15 +16,21 @@ namespace GalagaFighter.Core
         public SpriteDecoration? WindUpBoth { get => this.GetValueOrDefault(nameof(WindUpBoth)); set => this[nameof(WindUpBoth)] = value; }
         public SpriteDecoration? Move { get => this.GetValueOrDefault(nameof(Move)); set => this[nameof(Move)] = value; }
         public SpriteDecoration? Guns { get => this.GetValueOrDefault(nameof(Guns)); set => this[nameof(Guns)] = value; }
+        public SpriteDecoration? Glow { get => this.GetValueOrDefault(nameof(Glow)); set => this[nameof(Glow)] = value; } 
 
         public List<SpriteDecoration> Other => this.Where(kv => 
             kv.Key != nameof(ShootLeft) && kv.Key != nameof(ShootRight) && kv.Key != nameof(ShootBoth) &&
             kv.Key != nameof(WindUpLeft) && kv.Key != nameof(WindUpRight) && kv.Key != nameof(WindUpBoth) &&
-            kv.Key != nameof(Move) && kv.Key != nameof(Guns))
+            kv.Key != nameof(Move) && kv.Key != nameof(Guns) && kv.Key != nameof(Glow))
             .Select(kv => kv.Value)
             .Where(v => v != null)
             .ToList()!;
 
+        public void Apply(SpriteDecorations decorations)
+        {
+            foreach (var decoration in decorations)
+                this[decoration.Key] = decoration.Value;
+        }
     }
 
     public class SpriteDecoration

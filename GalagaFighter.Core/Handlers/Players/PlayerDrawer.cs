@@ -49,11 +49,16 @@ namespace GalagaFighter.Core.Handlers.Players
 
             //player.Move(x: lastShotKickback);
 
+            var jiggleFactorX = modifiers.Jiggle > 0 ? (float)Game.Random.NextDouble() * modifiers.Jiggle - modifiers.Jiggle / 2f : 0;
+            var jiggleFactorY = modifiers.Jiggle > 0 ? (float)Game.Random.NextDouble() * modifiers.Jiggle - modifiers.Jiggle / 2f : 0;
+            var jiggle = new Vector2(jiggleFactorX, jiggleFactorY);
+            player.Move(jiggle.X, jiggle.Y);
+
             DrawShoot(player, modifiers, playerShootState);
             DrawMove(modifiers, player);
+            DrawGlow(player, modifiers);
             DrawPlayer(player, modifiers, playerShootState);
             DrawGuns(player, modifiers, shootMeter);
-
 
             foreach (var decoration in modifiers.Decorations?.Other ?? [])
             {
@@ -68,22 +73,31 @@ namespace GalagaFighter.Core.Handlers.Players
                     originalOffset.X * sin + originalOffset.Y * cos
                 );
                 
-                decoration.Sprite.Draw(player.Center + rotatedOffset, player.Rotation, decoration.Size!.Value.X, decoration.Size!.Value.Y, Color.White);
+                decoration.Sprite.Draw(player.Center + rotatedOffset, player.Rotation, decoration.Size!.Value.X, decoration.Size!.Value.Y, decoration.Sprite.Color);
             }
 
+            player.Move(-jiggle.X, -jiggle.Y);
             //player.Move(x: -lastShotKickback);
+        }
+
+        private void DrawGlow(Player player, EffectModifiers modifiers)
+        {
+            if (modifiers.Decorations?.Glow == null)
+                return;
+
+            DrawWithPhantoms(player, modifiers, p =>
+            {
+                modifiers.Decorations?.Glow.Sprite?.Draw(p.Center, p.Rotation, player.Rect.Width, player.Rect.Height, modifiers.Decorations.Glow.Sprite.Color);
+            });
         }
 
         private void DrawPlayer(Player player, EffectModifiers modifiers, PlayerShootState playerShootState)
         {
             var color = UpdateColors(Color.White, modifiers);
             
-            var jiggleFactorX = modifiers.Jiggle ? (float)Game.Random.NextDouble() * 4 : 0;
-            var jiggleFactorY = modifiers.Jiggle ? (float)Game.Random.NextDouble() * 4 : 0;
-
             DrawWithPhantoms(player, modifiers, p =>
             {
-                player.Sprite?.Draw(new Vector2(p.Center.X + jiggleFactorX, p.Center.Y + jiggleFactorY), p.Rotation, player.Rect.Width, player.Rect.Height, color);
+                player.Sprite?.Draw(p.Center, p.Rotation, player.Rect.Width, player.Rect.Height, color);
             });
         }
 
@@ -140,9 +154,12 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             var redAlpha = ColorExtensions.ApplyRed(Color.White, 1 - shootMeter);
 
+            var jiggleFactorX = modifiers.Jiggle > 0 ? (float)Game.Random.NextDouble() * modifiers.Jiggle - modifiers.Jiggle / 2f : 0;
+            var jiggleFactorY = modifiers.Jiggle > 0 ? (float)Game.Random.NextDouble() * modifiers.Jiggle - modifiers.Jiggle / 2f : 0;
+
             DrawWithPhantoms(player, modifiers, p =>
             {
-                modifiers.Decorations?.Guns?.Draw(p.Center, new Vector2(player.Rect.Width, player.Rect.Height), p.Rotation, redAlpha);
+                modifiers.Decorations?.Guns?.Draw(p.Center + new Vector2(jiggleFactorX, jiggleFactorY), new Vector2(player.Rect.Width, player.Rect.Height), p.Rotation, redAlpha);
             });
         }
 

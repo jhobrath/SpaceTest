@@ -109,7 +109,7 @@ namespace GalagaFighter.Core.Static
             float rowNumber, 
             Func<string, int, bool> shouldHighlight)
         {
-            var slotSize = 40f * Game.UniformScale;
+            var slotSize = 50f * Game.UniformScale;
             var iconSize = slotSize - 6f * Game.UniformScale;
             var startX = reverse
                 ? Game.Width - (_margin + slotSize * 12)
@@ -124,7 +124,7 @@ namespace GalagaFighter.Core.Static
                 var row = (int)Math.Floor(i / 12f);
 
                 var texture = new SpriteWrapper(TextureService.Get(effects[key].IconPath));
-                var position = new Vector2(startX + col * slotSize, _margin + (rowNumber * slotSize) + row * slotSize + iconSize / 2 + slotSize + 5);
+                var position = new Vector2(startX + col * slotSize, _margin + (rowNumber * slotSize) + row * slotSize + iconSize / 2 + slotSize - 10    );
                 var center = new Vector2(position.X + slotSize / 2, position.Y + slotSize / 2);
 
                 // Highlight if specified

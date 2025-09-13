@@ -14,6 +14,7 @@
     <Compile Remove="Examples\SelfContainedParticleExample.cs" />
     <Compile Remove="Examples\YourVisionRealizedExample.cs" />
     <Compile Remove="Services\EventService.cs" />
+    <Compile Remove="Services\MaskTextureService.cs" />
     <Compile Remove="Services\PlayerEffectManager.cs" />
     <Compile Remove="Services\PlayerEventService.cs" />
     <Compile Remove="Services\PlayerUpdater.cs" />
@@ -42,6 +43,7 @@
     <None Remove="Sprites\Effects\Offensives\Splitter.png" />
     <None Remove="Sprites\Effects\Offensives\SurpriseShot.png" />
     <None Remove="Sprites\Effects\Offensives\TimedBarrage.png" />
+    <None Remove="Sprites\Effects\Projectiles\Beam.png" />
     <None Remove="Sprites\Effects\Projectiles\DefaultShoot1.png" />
     <None Remove="Sprites\Effects\Projectiles\DefaultShoot2.png" />
     <None Remove="Sprites\Effects\Projectiles\DefaultShoot3.png" />
@@ -89,6 +91,7 @@
     <None Remove="Sprites\Projectiles\zap.png" />
     <None Remove="Sprites\Ships\MainShip.png" />
     <None Remove="Sprites\Ships\MainShipBody.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Radioactive.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns_ShootBoth.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns_ShootLeft.png" />
@@ -100,6 +103,7 @@
     <None Remove="Sprites\Ships\MainShipExplosive_ShootLeft.png" />
     <None Remove="Sprites\Ships\MainShipExplosive_ShootRight.png" />
     <None Remove="Sprites\Ships\MainShipFireGuns.png" />
+    <None Remove="Sprites\Ships\MainShipGlow.png" />
     <None Remove="Sprites\Ships\MainShipGuns.png" />
     <None Remove="Sprites\Ships\MainShipIce.png" />
     <None Remove="Sprites\Ships\MainShipIceGuns.png" />
@@ -198,6 +202,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Effects\Offensives\TimedBarrage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Effects\Projectiles\Beam.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Effects\Projectiles\DefaultShoot1.png">
@@ -338,6 +345,9 @@
     <Content Include="Sprites\Ships\MainShipBody.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sprites\Ships\MainShipBody_Radioactive.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Ships\MainShipElectricGuns.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -357,6 +367,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Ships\MainShipFireGuns.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipGlow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Ships\MainShipGuns.png">

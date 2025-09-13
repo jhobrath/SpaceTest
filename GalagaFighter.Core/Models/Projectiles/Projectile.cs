@@ -16,6 +16,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public abstract Vector2 BaseSize { get; }
         public abstract int BaseDamage { get; }
         public abstract Vector2 SpawnOffset { get; }
+        public virtual bool DamageOverTime => false;
 
         public virtual bool IsMagnetic { get; set; } = true;
 
@@ -51,6 +52,11 @@ namespace GalagaFighter.Core.Models.Projectiles
         {
             Sprite.Draw(Center, Rotation, CurrentFrameRect.Width, CurrentFrameRect.Height, Color);
             //Raylib.DrawRectangleLines((int)Rect.Position.X, (int)Rect.Position.Y, (int)Rect.Size.X, (int)Rect.Size.Y, Color.Red);
+        }
+
+        public virtual bool? IsColliding(Player player)
+        {
+            return null;
         }
 
         public virtual List<PlayerEffect> CreateEffects() => [];

@@ -138,8 +138,7 @@ namespace GalagaFighter.Core.Handlers.Players
             {
                 Stats = new PlayerStats(),
                 Display = new PlayerDisplay() {  },
-                Projectile = new PlayerProjectile(),
-                Decorations = []
+                Projectile = new PlayerProjectile()
             };
 
             foreach (var effect in _effects.OrderByDescending(x => x.IsProjectile))

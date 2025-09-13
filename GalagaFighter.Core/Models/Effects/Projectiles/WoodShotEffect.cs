@@ -36,7 +36,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.PlankDuration = 7f;
             modifiers.Projectile.PlankStopsMovement = true;
             modifiers.Projectile.IgnoreShipMovement = true;
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
         }
 
         private Projectile CreateProjectile(IProjectileController projectileController, Player owner, Vector2 position, PlayerProjectile modifiers)

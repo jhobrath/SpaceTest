@@ -9,6 +9,7 @@ namespace GalagaFighter.Core.Models.Players
         public float BlueAlpha { get; set; } = 1.0f;
         public float GreenAlpha { get; set; } = 1.0f;
         public float Opacity { get; set; } = 1f;
+        public float Brightness { get; set; } = 0f;
         public float RotationOffset { get; set; } = 0f;
 
         public float Rotation { get; set; } = 0f; //Always leave at zero

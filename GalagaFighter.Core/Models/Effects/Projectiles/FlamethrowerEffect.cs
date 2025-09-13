@@ -30,7 +30,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.DeactivateOnCollision = false;
             modifiers.Projectile.Untouchable = true;
             modifiers.Projectile.IgnoreShipMovement = true;
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
         }
 
         private Projectile CreateProjectiles(IProjectileController controller, Player player, Vector2 vector, PlayerProjectile modifiers)

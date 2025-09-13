@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Handlers.Collisions;
+using System;
 
 namespace GalagaFighter.Core.Services
 {
@@ -16,6 +17,8 @@ namespace GalagaFighter.Core.Services
         private readonly ICollisionCreationService _collisionCreationService;
         private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly INearbyCollisionDetector _nearbyCollisionDetector;
+
+        private float _testVal = 0f;
 
         public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker,
             ICollisionCreationService collisionCreationService, IPlayerManagerFactory playerManagerFactory, INearbyCollisionDetector nearbyCollisionDetector)
@@ -49,6 +52,18 @@ namespace GalagaFighter.Core.Services
                 if (projectile.Owner == player.Id)
                     continue;
 
+                var customCollisionResult = projectile.IsColliding(player);
+                if (customCollisionResult != null)
+                {
+                    if(customCollisionResult == true)
+                    { 
+                        _collisionCount += Raylib_cs.Raylib.GetFrameTime();
+                        Collide(player, projectile, modifiers);
+                        projectile.OnCollide?.Invoke(player);
+                    }
+                    return;
+                }
+
                 // Check both collision types - projectile could hit both edge AND player
                 var hasEdgeCollision = EdgeCollisionDetector.HasCollision(projectile, projectile.OnNearEdgeDistance);
                 if (hasEdgeCollision)  
@@ -68,7 +83,6 @@ namespace GalagaFighter.Core.Services
                     //DebugWriter.Write(_collisionCount.ToString());
                     projectile.OnCollide?.Invoke(player);
                 }
-
             }
         }
 
@@ -76,12 +90,18 @@ namespace GalagaFighter.Core.Services
         {
             if (modifiers.Untouchable || projectile.Modifiers.Untouchable)
                 return;
-            
+
             var effectManager = _playerManagerFactory.GetEffectManager(player);
             var effects = projectile.CreateEffects();
 
             foreach (var effect in effects)
                 effectManager.AddEffect(effect);
+
+            if (projectile.DamageOverTime)
+            {
+                HandleDamageOverTime(player, projectile, modifiers);
+                return;
+            }
 
             var damage = projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * (1 / modifiers.Stats.Shield) * (1 / player.BaseStats.Shield);
             player.Health -= damage;
@@ -106,6 +126,15 @@ namespace GalagaFighter.Core.Services
                 projectile.IsActive = false;
                 projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
             }
+        }
+
+        private void HandleDamageOverTime(Player player, Projectile projectile, EffectModifiers modifiers)
+        {
+            var damagePerSecond = projectile.BaseDamage * projectile.Modifiers.DamageMultiplier *
+                (1 / modifiers.Stats.Shield);
+
+            var damage = damagePerSecond * Raylib_cs.Raylib.GetFrameTime();
+            player.Health -= damage;
         }
     }
 }

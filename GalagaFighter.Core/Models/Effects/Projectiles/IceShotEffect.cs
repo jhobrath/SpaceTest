@@ -30,7 +30,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         public override void Apply(EffectModifiers modifiers)
         {
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
         }
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)

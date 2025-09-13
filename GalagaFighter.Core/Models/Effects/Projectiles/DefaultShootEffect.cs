@@ -40,7 +40,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Decorations = _decorations; 
+            modifiers.Decorations.Apply(_decorations);
             modifiers.Projectile.OnShootProjectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers, owner.PalleteSwap));
             modifiers.Projectile.Homing += .5f;
             modifiers.AffectedByShootMeter = true;

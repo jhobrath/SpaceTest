@@ -44,7 +44,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             });
             modifiers.Projectile.DeactivateOnCollision = false;
             modifiers.Projectile.CollideDistanceFromPlayer = 135f;
-            modifiers.Decorations = _decorations;
+            modifiers.Decorations.Apply(_decorations);
         }
 
         private void HandlePhaseChange(Projectile projectile, int phase)

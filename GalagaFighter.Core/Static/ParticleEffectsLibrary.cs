@@ -392,6 +392,63 @@ namespace GalagaFighter.Core.Static
                 Offset = Vector2.Zero,
                 FollowRotation = false
             };
+
+            // Smoke Effect
+            _effects[ParticleEffectLibraryKeys.Smoke] = new ParticleEffect(ParticleEffectLibraryKeys.Smoke)
+            {
+                Shape = EmissionShape.Circle,
+                EmissionRate = 30f,
+                MaxParticles = 40,
+                EmissionRadius = 10f,
+                ParticleLifetime = 2.5f,
+                ParticleLifetimeVariation = 0.7f,
+                ParticleSpeed = new Vector2(0f, -10f), // gentle upward drift
+                ParticleSpeedVariation = new Vector2(15f, 10f),
+                ParticleStartSize = 8f,
+                ParticleEndSize = 32f, // grow large
+                ParticleSizeVariation = 4f,
+                ParticleStartColor = new Color(180, 180, 180, 160), // soft gray
+                ParticleEndColor = new Color(180, 180, 180, 0), // fade out
+                Duration = -1f,
+                Loop = true,
+                EmitOnStart = true,
+                AutoDestroy = false,
+                UseGravity = false,
+                ParticleDrag = 0.2f,
+                Sprites = { "smoke_1", "smoke_2", "smoke_3", "smoke_4", "smoke_5" },
+                SpriteSelection = SpriteSelectionMode.Random,
+                Offset = Vector2.Zero,
+                FollowRotation = false
+            };
+
+            // Smoke Ring Effect
+            _effects[ParticleEffectLibraryKeys.SmokeRings] = new ParticleEffect(ParticleEffectLibraryKeys.SmokeRings)
+            {
+                Shape = EmissionShape.Circle,
+                EmissionRate = 12f,
+                MaxParticles = 20,
+                EmissionRadius = 18f,
+                ParticleLifetime = 2.2f,
+                ParticleLifetimeVariation = 0.5f,
+                ParticleSpeed = new Vector2(0f, -35f), // strong upward motion
+                ParticleSpeedVariation = new Vector2(8f, 12f),
+                ParticleStartSize = 18f,
+                ParticleEndSize = 28f, // slight growth
+                ParticleSizeVariation = 2f,
+                ParticleStartColor = new Color(200, 200, 200, 180), // lighter gray
+                ParticleEndColor = new Color(200, 200, 200, 0), // fade out
+                Duration = -1f,
+                Loop = true,
+                EmitOnStart = true,
+                AutoDestroy = false,
+                UseGravity = true,
+                GravityStrength = -30f, // negative gravity for upward motion
+                ParticleDrag = 0.1f,
+                Sprites = { "smoke_ring_1", "smoke_ring_2", "smoke_ring_3", "smoke_ring_4", "smoke_ring_5" },
+                SpriteSelection = SpriteSelectionMode.Random,
+                Offset = Vector2.Zero,
+                FollowRotation = false
+            };
         }
     }
 }

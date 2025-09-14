@@ -21,11 +21,12 @@ namespace GalagaFighter.Core.Handlers.Projectiles
         {
             var frameTime = Raylib.GetFrameTime();
 
+            if (projectile.Speed.X < .01f && projectile.Rotation != 0)
+                return;
+
             projectile.Modifiers.RotationOffsetIncrement += ((projectile.Modifiers.RotationOffsetMultiplier * projectile.Modifiers.RotationOffsetIncrement) - projectile.Modifiers.RotationOffsetIncrement) * frameTime;
             projectile.Modifiers.RotationOffset += projectile.Modifiers.RotationOffsetIncrement * frameTime;
-
-
-            var rotationBasedOnSpeed = MathF.Atan2(projectile.Speed.Y, projectile.Speed.X) * 180/MathF.PI; //Help me fill this in
+            var rotationBasedOnSpeed = MathF.Atan2(projectile.BaseSpeed.Y, projectile.BaseSpeed.X) * 180/MathF.PI;
 
             projectile.Rotation = rotationBasedOnSpeed + projectile.Modifiers.RotationOffset;
         }

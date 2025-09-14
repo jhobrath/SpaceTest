@@ -47,7 +47,14 @@ namespace GalagaFighter.Core.Handlers.Collisions
 
             if(_stuckProjectile == projectile)
             {
-                player.MoveTo(y: projectile.Center.Y - player.Rect.Height/2);
+                if(player.Speed.Y > 100)
+                    projectile.Rotation = -10f;
+                else if(player.Speed.Y < -100)
+                    projectile.Rotation = 10f;
+                else
+                    projectile.Rotation = 0f;
+
+                player.MoveTo(y: projectile.Center.Y - player.Rect.Height / 2);
                 return;
             }
 

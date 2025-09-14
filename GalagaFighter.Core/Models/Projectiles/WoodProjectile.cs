@@ -1,10 +1,13 @@
 using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
+using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Effects.Statuses;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Static;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Reflection;
 
 namespace GalagaFighter.Core.Models.Projectiles
 {
@@ -16,27 +19,51 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => 0;
-        public override Vector2 SpawnOffset => new(-40, 45);    
+        public override Vector2 SpawnOffset => new(-40, 45);
 
-        public bool Released { get; set; } = false;
-        public bool Planked { get; set; } = false;
+        public bool _plankedThisFrame = false;
+        private bool _plankedIntoPlayer;
+        private bool _alreadyPlanked;
+        private readonly int SpriteIndex = Game.Random.Next(1, 4);
+        public bool IsPlanked => _plankedIntoPlayer;
 
         public WoodProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
-            : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
+            : base(controller, owner, new SpriteWrapper("Temp"), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
+            SpriteIndex = 2;
+            Sprite = new SpriteWrapper("Sprites/Projectiles/wooden_plank_" + SpriteIndex + ".png");
         }
 
-        private static SpriteWrapper GetSprite()
+        public override void Update(Game game)
         {
-            return new SpriteWrapper(SpriteGenerationService.CreateProjectileSprite(ProjectileType.Wall, (int)_baseSize.X, (int)_baseSize.Y));
+            if(_plankedThisFrame)
+            {
+                ScaleTo(y: 30f);
+                Sprite = new SpriteWrapper("Sprites/Projectiles/wooden_plank_" + SpriteIndex + "_planked.png");
+                SetDrawPriority(5);
+                _plankedThisFrame = false;
+                _plankedIntoPlayer = true;
+            }
+
+            base.Update(game);
         }
 
         public override List<Collision> CreateCollisions(Player player, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)
         {
+            _plankedThisFrame = true;
             return
             [
                 new DefaultCollision(player.Id, initialPosition, initialSize, initialSpeed)
             ];
+        }
+
+        public override List<PlayerEffect> CreateEffects()
+        {
+            if (_alreadyPlanked)
+                return [];
+
+            _alreadyPlanked = true;
+            return [new PlankedEffect()];
         }
     }
 }

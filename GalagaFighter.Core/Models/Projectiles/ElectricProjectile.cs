@@ -121,7 +121,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override List<PlayerEffect> CreateEffects()
         {
-            return  [new ElectricEffect()];
+            return  [new ElectrocutedEffect()];
         }
 
         public override List<Collision> CreateCollisions(Player player, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed)

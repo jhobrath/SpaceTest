@@ -14,5 +14,7 @@ namespace GalagaFighter.Core.Static
         public const string ElectricImpact = "ElectricImpact";
         public const string LightningChain = "LightningChain";
         public const string FlamethrowerBeam = "FlamethrowerBeam";
+        public const string Smoke = "Smoke";
+        public const string SmokeRings = "SmokeRings";
     }
 }

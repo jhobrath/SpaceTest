@@ -40,6 +40,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             : base(controller, owner, GetSprite(), new Vector2(initialPosition.X, initialPosition.Y - _baseSize.Y/2), _baseSize, _baseSpeed, modifiers)
         {
             _owner = owner;
+            Move(_owner.IsPlayer1 ? -87 : 87);
             _originalX = Position.X;
             AudioService.PlayShootSound();
             SetDrawPriority(2);
@@ -95,7 +96,6 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override void Draw()
         {
-
             var circleMaxRadius = Rect.Height/2;
             var circleRadius = MathF.Min(1, Lifetime / .5f);
             var rect = new Rectangle(Position.X + circleMaxRadius*(_owner.IsPlayer1 ? 1f : -1f), Position.Y, Rect.Width, Rect.Height);

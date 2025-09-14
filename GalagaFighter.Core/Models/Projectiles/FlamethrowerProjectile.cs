@@ -1,5 +1,7 @@
 ﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.Models.Collisions;
+using GalagaFighter.Core.Models.Effects;
+using GalagaFighter.Core.Models.Effects.Statuses;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
@@ -16,11 +18,11 @@ namespace GalagaFighter.Core.Models.Projectiles
     public class FlamethrowerProjectile : Projectile
     {
         public static Vector2 _baseSize => new(70, 70);
-        public static Vector2 _baseSpeed => new(800f, 0f); // Beam is stationary, only animates
+        public static Vector2 _baseSpeed => new(800f, 0f); 
         public override Vector2 BaseSize => _baseSize;
         public override Vector2 BaseSpeed => _baseSpeed;
         public override int BaseDamage => _baseDamage;
-        public override Vector2 SpawnOffset => new(-50, 0);
+        public override Vector2 SpawnOffset => new(-50, -25);
 
         private int _baseDamage = 0;
 
@@ -28,7 +30,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         private ParticleEffect _particleEffect;
 
         public FlamethrowerProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers, Color? color)
-            : base(controller, owner, GetSprite(), new Vector2(initialPosition.X, initialPosition.Y - _baseSize.Y/2)   , _baseSize, _baseSpeed, modifiers)
+            : base(controller, owner, GetSprite(), new Vector2(initialPosition.X, initialPosition.Y)   , _baseSize, _baseSpeed, modifiers)
         {
             AudioService.PlayShootSound();
 
@@ -42,11 +44,11 @@ namespace GalagaFighter.Core.Models.Projectiles
             _particleEffect.ParticleEndColor = Color.Yellow;
             _particleEffect.ParticleColorVariation = 50f;
             _particleEffect.ParticleLifetime = 1f;
-            _particleEffect.EmissionRate *= 1f;
+            _particleEffect.EmissionRate *= .25f;
             _particleEffect.EmissionRadius *= 2f;
             _particleEffect.FollowRotation = true;
             _particleEffect.ParticleSizeVariation = 20f;
-            _particleEffect.Offset = new(_particleEffect.ParticleStartSize / 2 + (owner.IsPlayer1 ? -70 : 60), (owner.IsPlayer1 ? -1 : 1) * _particleEffect.ParticleStartSize / 2);// Vector2.Zero;// new Vector2((owner.IsPlayer1 ? -1 : 1)*_particleEffect.ParticleStartSize / 2 + 50f, (owner.IsPlayer1 ? -1 : 1) * _particleEffect.ParticleStartSize / 2);
+            _particleEffect.Offset = Vector2.One * _particleEffect.ParticleStartSize / 2 * (owner.IsPlayer1 ? -1 : 1);
             ParticleEffects.Add(_particleEffect);
         }
 
@@ -62,6 +64,16 @@ namespace GalagaFighter.Core.Models.Projectiles
             [
                 new DefaultCollision(player.Id, initialPosition, initialSize, initialSpeed)
             ];
+        }
+
+        public override void Draw()
+        {
+            //Raylib.DrawRectangleLines((int)Rect.X, (int)Rect.Y, (int)Rect.Width, (int)Rect.Height, Color.Red);
+        }
+
+        public override List<PlayerEffect> CreateEffects()
+        {
+            return [new CharredEffect()];
         }
 
         public override void Update(Game game)

@@ -19,7 +19,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         {
             _decorations = new SpriteDecorations
             {
-                Guns = new SpriteDecoration(new SpriteWrapper("Sprites/Ships/MainShipBeamGuns.png"))
+                Guns = new SpriteDecoration(new SpriteWrapper("Sprites/Ships/MainShipBeam_Guns.png")) { FollowRotation = false }
             };
         }
 

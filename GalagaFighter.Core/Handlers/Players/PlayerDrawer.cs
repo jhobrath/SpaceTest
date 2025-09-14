@@ -73,7 +73,7 @@ namespace GalagaFighter.Core.Handlers.Players
                     originalOffset.X * sin + originalOffset.Y * cos
                 );
                 
-                decoration.Sprite.Draw(player.Center + rotatedOffset, player.Rotation, decoration.Size!.Value.X, decoration.Size!.Value.Y, decoration.Sprite.Color);
+                decoration.Sprite.Draw(player.Center + rotatedOffset, decoration.FollowRotation ? player.Rotation : (player.IsPlayer1 ? 90 : -90), decoration.Size!.Value.X, decoration.Size!.Value.Y, decoration.Sprite.Color);
             }
 
             player.Move(-jiggle.X, -jiggle.Y);
@@ -159,7 +159,7 @@ namespace GalagaFighter.Core.Handlers.Players
 
             DrawWithPhantoms(player, modifiers, p =>
             {
-                modifiers.Decorations?.Guns?.Draw(p.Center + new Vector2(jiggleFactorX, jiggleFactorY), new Vector2(player.Rect.Width, player.Rect.Height), p.Rotation, redAlpha);
+                modifiers.Decorations?.Guns?.Draw(p.Center + new Vector2(jiggleFactorX, jiggleFactorY), new Vector2(player.Rect.Width, player.Rect.Height), modifiers.Decorations.Guns.FollowRotation ? p.Rotation : (player.IsPlayer1 ? 90 : -90), redAlpha);
             });
         }
 

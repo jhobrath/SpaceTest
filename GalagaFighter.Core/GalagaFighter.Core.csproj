@@ -71,6 +71,16 @@
     <None Remove="Sprites\Particles\fire_3.png" />
     <None Remove="Sprites\Particles\fire_4.png" />
     <None Remove="Sprites\Particles\fire_5.png" />
+    <None Remove="Sprites\Particles\smoke_1.png" />
+    <None Remove="Sprites\Particles\smoke_2.png" />
+    <None Remove="Sprites\Particles\smoke_3.png" />
+    <None Remove="Sprites\Particles\smoke_4.png" />
+    <None Remove="Sprites\Particles\smoke_5.png" />
+    <None Remove="Sprites\Particles\smoke_ring_1.png" />
+    <None Remove="Sprites\Particles\smoke_ring_2.png" />
+    <None Remove="Sprites\Particles\smoke_ring_3.png" />
+    <None Remove="Sprites\Particles\smoke_ring_4.png" />
+    <None Remove="Sprites\Particles\smoke_ring_5.png" />
     <None Remove="Sprites\Particles\spark_1.png" />
     <None Remove="Sprites\Particles\spark_2.png" />
     <None Remove="Sprites\Particles\spark_3.png" />
@@ -88,9 +98,22 @@
     <None Remove="Sprites\Projectiles\electric.png" />
     <None Remove="Sprites\Projectiles\fire.png" />
     <None Remove="Sprites\Projectiles\mud_splat.png" />
+    <None Remove="Sprites\Projectiles\wooden_plank_1.png" />
+    <None Remove="Sprites\Projectiles\wooden_plank_1_planked.png" />
+    <None Remove="Sprites\Projectiles\wooden_plank_2.png" />
+    <None Remove="Sprites\Projectiles\wooden_plank_2_planked.png" />
+    <None Remove="Sprites\Projectiles\wooden_plank_3.png" />
+    <None Remove="Sprites\Projectiles\wooden_plank_3_planked.png" />
     <None Remove="Sprites\Projectiles\zap.png" />
     <None Remove="Sprites\Ships\MainShip.png" />
+    <None Remove="Sprites\Ships\MainShipBeam_Guns.png" />
     <None Remove="Sprites\Ships\MainShipBody.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Charred.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Cinders.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Cinders2.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Electrocuted.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Frozen.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Planked.png" />
     <None Remove="Sprites\Ships\MainShipBody_Radioactive.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns_ShootBoth.png" />
@@ -300,6 +323,36 @@
     <Content Include="Sprites\Particles\lightning_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sprites\Particles\smoke_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_ring_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_ring_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_ring_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_ring_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Particles\smoke_ring_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Particles\spark_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -333,6 +386,24 @@
     <Content Include="Sprites\Projectiles\fire.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sprites\Projectiles\wooden_plank_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Projectiles\wooden_plank_1_planked.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Projectiles\wooden_plank_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Projectiles\wooden_plank_2_planked.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Projectiles\wooden_plank_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Projectiles\wooden_plank_3_planked.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Projectiles\zap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -342,7 +413,28 @@
     <Content Include="Sprites\Projectiles\electric.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sprites\Ships\MainShipBeam_Guns.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Ships\MainShipBody.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipBody_Charred.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipBody_Cinders.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipBody_Cinders2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipBody_Electrocuted.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipBody_Frozen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Ships\MainShipBody_Planked.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sprites\Ships\MainShipBody_Radioactive.png">

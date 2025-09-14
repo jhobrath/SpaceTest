@@ -2,6 +2,7 @@
 using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Handlers.Collisions;
 using System;
+using GalagaFighter.Core.Models.Effects.Statuses;
 
 namespace GalagaFighter.Core.Services
 {
@@ -116,6 +117,7 @@ namespace GalagaFighter.Core.Services
             if (planked)
             {
                 _planker.HandlePlankCollision(player, projectile);
+                CleanupOrphanedPlanks(player);
                 return;
             }
 
@@ -125,6 +127,17 @@ namespace GalagaFighter.Core.Services
             { 
                 projectile.IsActive = false;
                 projectile.Modifiers.OnProjectileDestroyed?.Invoke(projectile);
+            }
+
+        }
+
+        private void CleanupOrphanedPlanks(Player player)
+        {
+            var planks = _objectService.GetGameObjects<WoodProjectile>();
+            foreach(var plank in planks)
+            {
+                if (plank.IsPlanked && Math.Abs(plank.Center.Y - player.Center.Y) > 5)
+                    plank.IsActive = false;
             }
         }
 

@@ -36,6 +36,8 @@ namespace GalagaFighter.Core
     public class SpriteDecoration
     {
         public SpriteWrapper Sprite { get; set; }
+        public bool FollowRotation { get; internal set; }
+
         public Vector2 Offset = new(0, 0);
         public Vector2? Size = new Vector2(0, 0);
 
@@ -47,6 +49,11 @@ namespace GalagaFighter.Core
             Sprite = sprite;
             Offset = offset;
             Size = size;
+
+            if(sprite.Color.R == 0 && sprite.Color.G == 0 && sprite.Color.B == 0 && sprite.Color.A == 0)
+            {
+                sprite.Color = Color.White;
+            }
         }
 
         public void Draw(Vector2 center, Vector2 size, float rotation, Color color)

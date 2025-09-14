@@ -28,7 +28,6 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectiles);
             modifiers.Stats.FireRateMultiplier *= .235f;
             modifiers.Projectile.DeactivateOnCollision = false;
-            modifiers.Projectile.Untouchable = true;
             modifiers.Projectile.IgnoreShipMovement = true;
             modifiers.Decorations.Apply(_decorations);
         }

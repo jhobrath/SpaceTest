@@ -14,6 +14,7 @@ namespace GalagaFighter.Core.Handlers.Players
         void RemoveEffect(PlayerEffect effect);
         void SwitchEffect();
         EffectModifiers GetModifiers();
+        bool HasEffect<T>();
     }
 
     public interface IExposedPlayerEffectManager : IPlayerEffectManager
@@ -149,6 +150,11 @@ namespace GalagaFighter.Core.Handlers.Players
 
             modifiers.WereReset = true;
             _modifiers = modifiers;
+        }
+
+        public bool HasEffect<T>()
+        {
+            return _effects.Any(x => x is T);
         }
     }
 }

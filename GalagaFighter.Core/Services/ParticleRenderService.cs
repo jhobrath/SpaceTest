@@ -133,36 +133,8 @@ namespace GalagaFighter.Core.Services
                 return chainEmitter;
             }
 
-            // Regular particle emitter for other effects
-            var config = new ParticleEmitterConfig
-            {
-                Shape = effect.Shape,
-                EmissionRate = effect.EmissionRate,
-                MaxParticles = effect.MaxParticles,
-                EmissionRadius = effect.EmissionRadius,
-                EmissionDirection = effect.EmissionDirection,
-                ConeAngle = effect.ConeAngle,
-                ParticleLifetime = effect.ParticleLifetime,
-                ParticleLifetimeVariation = effect.ParticleLifetimeVariation,
-                ParticleSpeed = effect.ParticleSpeed,
-                ParticleSpeedVariation = effect.ParticleSpeedVariation,
-                ParticleStartSize = effect.ParticleStartSize,
-                ParticleEndSize = effect.ParticleEndSize,
-                ParticleSizeVariation = effect.ParticleSizeVariation,
-                ParticleStartColor = effect.ParticleStartColor,
-                ParticleEndColor = effect.ParticleEndColor,
-                Duration = effect.Duration,
-                Loop = effect.Loop,
-                EmitOnStart = effect.EmitOnStart,
-                AutoDestroy = effect.AutoDestroy,
-                UseGravity = effect.UseGravity,
-                GravityStrength = effect.GravityStrength,
-                ParticleDrag = effect.ParticleDrag,
-                ParticleColorVariation = effect.ParticleColorVariation
-            };
-
-            // Create emitter with multi-sprite support
-            var emitter = new ParticleEmitter(gameObject.Id, _objectService, worldPosition, config, null, effect.Sprites, effect.SpriteSelection);
+            // Regular particle emitter - pass the effect directly instead of copying to config!
+            var emitter = new ParticleEmitter(gameObject.Id, _objectService, worldPosition, effect, null, effect.Sprites, effect.SpriteSelection);
             _objectService.AddGameObject(emitter);
             
             return emitter;

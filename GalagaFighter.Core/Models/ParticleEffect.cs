@@ -34,6 +34,7 @@ namespace GalagaFighter.Core.Models
         // Particle Movement
         public Vector2 ParticleSpeed { get; set; } = new Vector2(0f, 0f);
         public Vector2 ParticleSpeedVariation { get; set; } = new Vector2(10f, 10f);
+        public Vector2 ParticleAcceleration { get; set; } = Vector2.Zero; // ? Add missing property
         public bool UseGravity { get; set; } = false;
         public float GravityStrength { get; set; } = 100f;
         public float ParticleDrag { get; set; } = 0f;
@@ -45,6 +46,9 @@ namespace GalagaFighter.Core.Models
         public Color ParticleStartColor { get; set; } = Color.White;
         public Color ParticleEndColor { get; set; } = new Color(255, 255, 255, 0);
         public float ParticleColorVariation { get; set; } = 0f; // Random offset for color components (0-255)
+
+        // Emission Sizing (for Rectangle and Line shapes)
+        public Vector2 EmissionSize { get; set; } = new Vector2(20f, 20f); // ? Add missing property
 
         // Sprite Configuration - Full control!
         public List<string> Sprites { get; set; } = new List<string>();
@@ -88,6 +92,7 @@ namespace GalagaFighter.Core.Models
             AutoDestroy = source.AutoDestroy;
             ParticleSpeed = source.ParticleSpeed;
             ParticleSpeedVariation = source.ParticleSpeedVariation;
+            ParticleAcceleration = source.ParticleAcceleration; // ? Add missing property
             UseGravity = source.UseGravity;
             GravityStrength = source.GravityStrength;
             ParticleDrag = source.ParticleDrag;
@@ -97,6 +102,7 @@ namespace GalagaFighter.Core.Models
             ParticleStartColor = source.ParticleStartColor;
             ParticleEndColor = source.ParticleEndColor;
             ParticleColorVariation = source.ParticleColorVariation;
+            EmissionSize = source.EmissionSize; // ? Add missing property
             Sprites = new List<string>(source.Sprites);
             SpriteSelection = source.SpriteSelection;
             Name = source.Name;

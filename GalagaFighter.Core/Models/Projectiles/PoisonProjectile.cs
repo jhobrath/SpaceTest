@@ -5,6 +5,7 @@ using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class PoisonProjectile : Projectile
     {
-        public static readonly Vector2 _baseSpeed = new Vector2(300f, 0f);
+        public static readonly Vector2 _baseSpeed = new Vector2(500f, 0f);
         public static readonly Vector2 _baseSize = new Vector2(100f, 100f);
         private Vector2 _originalPosition;
 
@@ -41,9 +42,13 @@ namespace GalagaFighter.Core.Models.Projectiles
         public PoisonProjectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, PlayerProjectile modifiers) 
             : base(controller, owner, sprite, initialPosition, _baseSize, _baseSpeed, modifiers)
         {
+            initialPosition = new Vector2(initialPosition.X 
+                + (owner.IsPlayer1 ? 0 : -1)*Rect.Width 
+                + (owner.IsPlayer1 ? -1 : 1)*25, initialPosition.Y - Rect.Size.Y/ 2);
+            MoveTo(initialPosition.X, initialPosition.Y);
             _originalPosition = initialPosition;
             _owner = owner;
-            
+
             // Store the initial offset from the owner's center so we can follow the ship's movement
             _initialOffsetFromOwnerCenter = initialPosition - owner.Center;
             
@@ -59,8 +64,8 @@ namespace GalagaFighter.Core.Models.Projectiles
             _poisonEffect.Shape = EmissionShape.Point;
             _poisonEffect.ParticleStartSize = 10f;
             _poisonEffect.ParticleEndSize = 70f;
-            _poisonEffect.ParticleSpeed = new Vector2((_owner.IsPlayer1 ? 1 : -1.2f) * _baseSpeed.X / 2, -20f);
-            _poisonEffect.Offset = new Vector2(-_baseSize.X/2, -_baseSize.Y/2.25f);
+            _poisonEffect.ParticleSpeed = Vector2.Zero;// new Vector2((_owner.IsPlayer1 ? 1 : -1.2f) * _baseSpeed.X / 2, -20f);
+            _poisonEffect.Offset = -Vector2.One*_poisonEffect.ParticleStartSize/2;
             _poisonEffect.ParticleStartColor = Color.DarkGreen;
             _poisonEffect.ParticleEndColor = Color.DarkGreen.ApplyAlpha(0f);
             ParticleEffects.Add(_poisonEffect);
@@ -116,16 +121,20 @@ namespace GalagaFighter.Core.Models.Projectiles
                 _originalPosition = Position;
             }
             
-            var offsetX = _baseSize.X / 2;
-            if (_lifeTime < .5f)
+            //var offsetX = _baseSize.X / 2;
+            if (_bubbleFormationComplete)
             {
-                _poisonEffect.ParticleSpeed = new Vector2((_owner.IsPlayer1 ? 1 : -1.2f) * _baseSpeed.X / 2, -20f);
-                _poisonEffect.Offset = new Vector2(-_baseSize.X / 2, -_baseSize.Y / 2.25f);
+                if(_owner.IsPlayer1)
+                    _poisonEffect.ParticleSpeed = new Vector2(Speed.X/2.1f, -10f);///2;
+                else
+                    _poisonEffect.ParticleSpeed = new Vector2(Speed.X/1.9f, -10f);///2;
+
+                _poisonEffect.Offset = -Vector2.One * _poisonEffect.ParticleStartSize / 2;
             }
             else
             {
-                _poisonEffect.ParticleSpeed = Vector2.One * 1000f;// new Vector2((_owner.IsPlayer1 ? 1 : -1.2f) * _baseSpeed.X / 2, -20f);
-                _poisonEffect.Offset = new Vector2(-_baseSize.X / 2, -_baseSize.Y / 2.25f);
+                //We don't want to show the poison effect yet
+                _poisonEffect.Offset = new Vector2(0f, 100000f);
             }
 
             base.Update(game);
@@ -138,8 +147,11 @@ namespace GalagaFighter.Core.Models.Projectiles
             
             // Get prong positions with player direction consideration
             float directionMultiplier = _owner.IsPlayer1 ? 1f : -1f; // Mirror for Player 2
-            Vector2 topProng = _originalPosition + new Vector2(-12.78f * directionMultiplier, -9.89f);
-            Vector2 bottomProng = _originalPosition + new Vector2(-12.78f * directionMultiplier, 9.89f);
+            var spawnPoint = new Vector2(Center.X + 
+                (_owner.IsPlayer1 ? -1 : 1)*Rect.Width / 2 + 
+                (_owner.IsPlayer1 ? 1 : -1)*25f, (!_bubbleFormationComplete ? _owner.Center.Y : Center.Y)); 
+            Vector2 topProng = spawnPoint + new Vector2(-12.78f * directionMultiplier, -9.89f);
+            Vector2 bottomProng = spawnPoint + new Vector2(-12.78f * directionMultiplier, 9.89f);
             
             // Realistic bubble colors with slight randomization
             Color bubbleColor = GetRandomizedBubbleColor();
@@ -198,6 +210,8 @@ namespace GalagaFighter.Core.Models.Projectiles
                 // Draw multiple soap film highlights with randomized wobble
                 DrawRandomizedHighlights(bubbleCenter, highlightColor);
             }
+
+            //Raylib.DrawRectangleLines((int)Rect.X, (int)Rect.Y, (int)Rect.Width, (int)Rect.Height, Color.Red);
         }
         
         private Color GetRandomizedBubbleColor()

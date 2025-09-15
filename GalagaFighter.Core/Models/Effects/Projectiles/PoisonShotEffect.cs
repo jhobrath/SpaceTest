@@ -29,7 +29,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)
         {
-            if(_lastShotTime >= 2f)
+            if(_lastShotTime >= 1f)
             { 
                 _bubbleProjectile = new PoisonProjectile(controller, owner, new SpriteWrapper("Purposefully Missing Image"), position, modifiers);
                 _lastShotTime = 0f;

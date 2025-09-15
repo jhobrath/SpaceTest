@@ -13,7 +13,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class PoisonProjectile : Projectile
     {
-        public static readonly Vector2 _baseSpeed = new Vector2(100f, 0f);
+        public static readonly Vector2 _baseSpeed = new Vector2(300f, 0f);
         public static readonly Vector2 _baseSize = new Vector2(100f, 100f);
         private Vector2 _originalPosition;
 
@@ -55,11 +55,12 @@ namespace GalagaFighter.Core.Models.Projectiles
 
             _poisonEffect = ParticleEffectsLibrary.Get(ParticleEffectLibraryKeys.Smoke);
             _poisonEffect.UseGravity = false;
+            _poisonEffect.ParticleDrag = 0f;
             _poisonEffect.Shape = EmissionShape.Point;
-            _poisonEffect.ParticleSpeed = new Vector2(_baseSpeed.X/2, -20f);
             _poisonEffect.ParticleStartSize = 10f;
             _poisonEffect.ParticleEndSize = 70f;
-            _poisonEffect.Offset = new Vector2(-_baseSize.X, -_baseSize.Y/2);
+            _poisonEffect.ParticleSpeed = new Vector2((_owner.IsPlayer1 ? 1 : -1.2f) * _baseSpeed.X / 2, -20f);
+            _poisonEffect.Offset = new Vector2(-_baseSize.X/2, -_baseSize.Y/2.25f);
             _poisonEffect.ParticleStartColor = Color.DarkGreen;
             _poisonEffect.ParticleEndColor = Color.DarkGreen.ApplyAlpha(0f);
             ParticleEffects.Add(_poisonEffect);
@@ -114,16 +115,17 @@ namespace GalagaFighter.Core.Models.Projectiles
                 // After formation: _originalPosition follows the projectile's actual position
                 _originalPosition = Position;
             }
-
+            
             var offsetX = _baseSize.X / 2;
             if (_lifeTime < .5f)
             {
-                var pct = _lifeTime / .5f;
-                _poisonEffect.Offset = new Vector2((_owner.IsPlayer1 ? -1 : 1)*(offsetX * 1.6f) + (_owner.IsPlayer1 ? 1 : -1) * offsetX * pct, _poisonEffect.Offset.Y);
+                _poisonEffect.ParticleSpeed = new Vector2((_owner.IsPlayer1 ? 1 : -1.2f) * _baseSpeed.X / 2, -20f);
+                _poisonEffect.Offset = new Vector2(-_baseSize.X / 2, -_baseSize.Y / 2.25f);
             }
             else
             {
-                _poisonEffect.Offset = new Vector2((_owner.IsPlayer1 ? -1 : 1) * (offsetX * .8f), _poisonEffect.Offset.Y);
+                _poisonEffect.ParticleSpeed = Vector2.One * 1000f;// new Vector2((_owner.IsPlayer1 ? 1 : -1.2f) * _baseSpeed.X / 2, -20f);
+                _poisonEffect.Offset = new Vector2(-_baseSize.X / 2, -_baseSize.Y / 2.25f);
             }
 
             base.Update(game);
@@ -134,9 +136,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             // Calculate animation progress (0.0 to 1.0)
             float animationProgress = Math.Clamp(_lifeTime / _bubbleFormationTime, 0f, 1f);
             
-            // Get prong positions
-            Vector2 topProng = _originalPosition + new Vector2(-12.78f, -9.89f);
-            Vector2 bottomProng = _originalPosition + new Vector2(-12.78f, 9.89f);
+            // Get prong positions with player direction consideration
+            float directionMultiplier = _owner.IsPlayer1 ? 1f : -1f; // Mirror for Player 2
+            Vector2 topProng = _originalPosition + new Vector2(-12.78f * directionMultiplier, -9.89f);
+            Vector2 bottomProng = _originalPosition + new Vector2(-12.78f * directionMultiplier, 9.89f);
             
             // Realistic bubble colors with slight randomization
             Color bubbleColor = GetRandomizedBubbleColor();
@@ -146,13 +149,13 @@ namespace GalagaFighter.Core.Models.Projectiles
             if (!_bubbleFormationComplete)
             {
                 // During formation animation
-                DrawBubbleFormation(topProng, bottomProng, animationProgress, bubbleColor, soapColor, highlightColor);
+                DrawBubbleFormation(topProng, bottomProng, animationProgress, bubbleColor, soapColor, highlightColor, directionMultiplier);
             }
             else
             {
                 // Fully formed transparent bubble traveling independently with realistic wobble
                 Vector2 prongCenterPoint = (topProng + bottomProng) / 2f;
-                Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius, 0f);
+                Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
                 
                 // Full wobble intensity for traveling bubble - most realistic motion
                 float wobbleIntensity = 1.0f;
@@ -261,14 +264,14 @@ namespace GalagaFighter.Core.Models.Projectiles
                 new Color((byte)200, (byte)210, (byte)255, (byte)(35 + Game.Random.Next(10)))); // 35-44 alpha variation
         }
         
-        private void DrawSemiCircleStage(Vector2 centerPoint, Vector2 topProng, Vector2 bottomProng, float prongDistance, float progress, Color soapColor, Color highlightColor)
+        private void DrawSemiCircleStage(Vector2 centerPoint, Vector2 topProng, Vector2 bottomProng, float prongDistance, float progress, Color soapColor, Color highlightColor, float directionMultiplier)
         {
             // Start with a small semi-circle that grows
             float initialRadius = prongDistance / 3f; // Start small relative to prong distance
             float currentRadius = initialRadius * progress;
             
-            // Draw the semi-circle (right half of a circle) connected to prongs
-            Vector2 bubbleCenter = centerPoint + new Vector2(currentRadius, 0f);
+            // Draw the semi-circle connected to prongs (mirrored for Player 2)
+            Vector2 bubbleCenter = centerPoint + new Vector2(currentRadius * directionMultiplier, 0f);
             
             // Calculate subtle wobble for realistic bubble motion with randomization
             float wobbleIntensity = progress * (0.25f + (float)Game.Random.NextDouble() * 0.1f); // 0.25-0.35 variation
@@ -279,9 +282,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             // Draw the curved part of the semi-circle with subtle wobble
             for (int i = 0; i < segments; i++)
             {
-                // Draw from -90 degrees to +90 degrees (right semi-circle)
-                float angle1 = ((i / (float)segments) - 0.5f) * (float)Math.PI;
-                float angle2 = (((i + 1) / (float)segments) - 0.5f) * (float)Math.PI;
+                // Draw the appropriate half based on player direction
+                float startAngle = directionMultiplier > 0 ? -0.5f : 0.5f; // Right half for P1, left half for P2
+                float angle1 = (startAngle + (i / (float)segments) * directionMultiplier) * (float)Math.PI;
+                float angle2 = (startAngle + ((i + 1) / (float)segments) * directionMultiplier) * (float)Math.PI;
                 
                 // Apply subtle wobble with randomized phase shifts
                 float randomPhase = (float)(Game.Random.NextDouble() * Math.PI * 2);
@@ -317,7 +321,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             }
         }
         
-        private void DrawSemiEllipseStage(Vector2 centerPoint, Vector2 topProng, Vector2 bottomProng, float prongDistance, float progress, Color soapColor, Color bubbleColor, Color highlightColor)
+        private void DrawSemiEllipseStage(Vector2 centerPoint, Vector2 topProng, Vector2 bottomProng, float prongDistance, float progress, Color soapColor, Color bubbleColor, Color highlightColor, float directionMultiplier)
         {
             float initialRadius = prongDistance / 3f;
             
@@ -329,7 +333,8 @@ namespace GalagaFighter.Core.Models.Projectiles
             float maxVerticalGrowth = _finalBubbleRadius * verticalGrowthRate - initialRadius;
             float verticalRadius = initialRadius + (maxVerticalGrowth * progress);
             
-            Vector2 ellipseCenter = centerPoint + new Vector2(horizontalRadius, 0f);
+            // Ellipse center follows player direction
+            Vector2 ellipseCenter = centerPoint + new Vector2(horizontalRadius * directionMultiplier, 0f);
             
             // Calculate wobble intensity with randomization
             float wobbleIntensity = progress * (0.45f + (float)Game.Random.NextDouble() * 0.1f); // 0.45-0.55 variation
@@ -340,8 +345,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             // Draw the transparent semi-ellipse with randomized wobble
             for (int i = 0; i < segments; i++)
             {
-                float angle1 = ((i / (float)segments) - 0.5f) * (float)Math.PI;
-                float angle2 = (((i + 1) / (float)segments) - 0.5f) * (float)Math.PI;
+                // Draw the appropriate half based on player direction
+                float startAngle = directionMultiplier > 0 ? -0.5f : 0.5f; // Right half for P1, left half for P2
+                float angle1 = (startAngle + (i / (float)segments) * directionMultiplier) * (float)Math.PI;
+                float angle2 = (startAngle + ((i + 1) / (float)segments) * directionMultiplier) * (float)Math.PI;
                 
                 // Apply different wobble patterns with randomized complexity
                 float randomPhase1 = (float)(Game.Random.NextDouble() * Math.PI);
@@ -384,11 +391,14 @@ namespace GalagaFighter.Core.Models.Projectiles
                     (byte)(bubbleColor.A * fillProgress * transparencyVariation)
                 );
                 
-                // Draw filled semi-ellipse with randomized density
+                // Draw filled semi-ellipse with randomized density, considering direction
                 int stepSize = 2 + Game.Random.Next(2); // 2-3 pixel steps for variation
-                for (int x = 0; x <= (int)horizontalRadius; x += stepSize)
+                float fillStart = directionMultiplier > 0 ? 0 : -horizontalRadius;
+                float fillEnd = directionMultiplier > 0 ? horizontalRadius : 0;
+                
+                for (float x = fillStart; (directionMultiplier > 0 ? x <= fillEnd : x >= fillEnd); x += stepSize * directionMultiplier)
                 {
-                    float normalizedX = x / horizontalRadius;
+                    float normalizedX = Math.Abs(x) / horizontalRadius;
                     if (normalizedX <= 1f)
                     {
                         float y = verticalRadius * (float)Math.Sin(Math.Acos(normalizedX));
@@ -403,17 +413,17 @@ namespace GalagaFighter.Core.Models.Projectiles
                 {
                     float highlightScale = 0.25f + (float)Game.Random.NextDouble() * 0.1f; // 0.25-0.35 variation
                     float highlightRadius = Math.Min(horizontalRadius, verticalRadius) * highlightScale;
-                    float offsetX = -6f + (float)Game.Random.NextDouble() * 2f; // -6 to -4
+                    float offsetX = (-6f + (float)Game.Random.NextDouble() * 2f) * directionMultiplier; // Mirror offset for Player 2
                     float offsetY = -4f + (float)Game.Random.NextDouble() * 2f; // -4 to -2
                     Raylib.DrawCircleLines((int)(ellipseCenter.X + offsetX), (int)(ellipseCenter.Y + offsetY), highlightRadius, highlightColor);
                 }
             }
         }
 
-        private void DrawSphereDetachmentStage(Vector2 centerPoint, Vector2 topProng, Vector2 bottomProng, float progress, Color bubbleColor, Color soapColor, Color highlightColor)
+        private void DrawSphereDetachmentStage(Vector2 centerPoint, Vector2 topProng, Vector2 bottomProng, float progress, Color bubbleColor, Color soapColor, Color highlightColor, float directionMultiplier)
         {
-            // Calculate the final bubble position (detached from prongs)
-            Vector2 finalBubbleCenter = centerPoint + new Vector2(_finalBubbleRadius, 0f);
+            // Calculate the final bubble position (detached from prongs) with player direction
+            Vector2 finalBubbleCenter = centerPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
             
             // Calculate the starting values from the end of stage 2
             float prongDistance = Vector2.Distance(topProng, bottomProng);
@@ -424,7 +434,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             float maxVerticalRadius = initialRadius + maxVerticalGrowth;
             float maxHorizontalRadius = initialRadius + ((_finalBubbleRadius - initialRadius) * (0.55f + (float)Game.Random.NextDouble() * 0.1f)); // 0.55-0.65 variation
             
-            Vector2 startCenter = centerPoint + new Vector2(maxHorizontalRadius, 0f);
+            Vector2 startCenter = centerPoint + new Vector2(maxHorizontalRadius * directionMultiplier, 0f);
             Vector2 currentCenter = Vector2.Lerp(startCenter, finalBubbleCenter, progress);
             float currentRadius = maxVerticalRadius + (_finalBubbleRadius - maxVerticalRadius) * progress;
             
@@ -491,33 +501,33 @@ namespace GalagaFighter.Core.Models.Projectiles
                 Raylib.DrawLineEx(bottomProng, bottomConnectionPoint, lineThickness, fadingSoapColor);
             }
             
-            // Add realistic soap film highlights with randomization
+            // Add realistic soap film highlights with randomization and player direction
             if (progress > 0.3f)
             {
                 float highlightProgress = (progress - 0.3f) / 0.7f;
                 float highlightRadius = currentRadius * (0.65f + (float)Game.Random.NextDouble() * 0.1f); // 0.65-0.75 variation
                 
-                // Main highlight with randomized wobble and position
-                float highlightOffsetX = -8f + (float)Game.Random.NextDouble() * 3f; // -8 to -5
+                // Main highlight with randomized wobble and position (mirrored for Player 2)
+                float highlightOffsetX = (-8f + (float)Game.Random.NextDouble() * 3f) * directionMultiplier; // Mirror offset for Player 2
                 float highlightOffsetY = -8f + (float)Game.Random.NextDouble() * 3f; // -8 to -5
                 float highlightWobble = (float)Math.Sin(_lifeTime * _wobbleFrequency1 * Math.PI) * (1.5f + (float)Game.Random.NextDouble() * 1f); // 1.5-2.5 wobble
-                Raylib.DrawCircleLines((int)(currentCenter.X + highlightOffsetX + highlightWobble), (int)(currentCenter.Y + highlightOffsetY), highlightRadius * 0.3f, 
+                Raylib.DrawCircleLines((int)(currentCenter.X + highlightOffsetX + highlightWobble * directionMultiplier), (int)(currentCenter.Y + highlightOffsetY), highlightRadius * 0.3f, 
                     new Color(highlightColor.R, highlightColor.G, highlightColor.B, (byte)(highlightColor.A * highlightProgress)));
                 
                 // Secondary smaller highlight with different randomization
                 if (progress > 0.6f)
                 {
-                    float secOffsetX = -12f + (float)Game.Random.NextDouble() * 2f; // -12 to -10
+                    float secOffsetX = (-12f + (float)Game.Random.NextDouble() * 2f) * directionMultiplier; // Mirror offset for Player 2
                     float secOffsetY = -5f + (float)Game.Random.NextDouble() * 2f; // -5 to -3
                     float secondaryWobble = (float)Math.Sin(_lifeTime * _wobbleFrequency2 * Math.PI) * (1f + (float)Game.Random.NextDouble() * 1f); // 1-2 wobble
                     float secHighlightRadius = highlightRadius * (0.1f + (float)Game.Random.NextDouble() * 0.1f); // 0.1-0.2 size variation
-                    Raylib.DrawCircleLines((int)(currentCenter.X + secOffsetX + secondaryWobble), (int)(currentCenter.Y + secOffsetY), secHighlightRadius, 
+                    Raylib.DrawCircleLines((int)(currentCenter.X + secOffsetX + secondaryWobble * directionMultiplier), (int)(currentCenter.Y + secOffsetY), secHighlightRadius, 
                         new Color((byte)255, (byte)255, (byte)255, (byte)(30 + Game.Random.Next(20) * highlightProgress))); // 30-49 alpha variation
                 }
             }
         }
-
-        private void DrawBubbleFormation(Vector2 topProng, Vector2 bottomProng, float progress, Color bubbleColor, Color soapColor, Color highlightColor)
+        
+        private void DrawBubbleFormation(Vector2 topProng, Vector2 bottomProng, float progress, Color bubbleColor, Color soapColor, Color highlightColor, float directionMultiplier)
         {
             Vector2 centerPoint = (topProng + bottomProng) / 2f;
             float prongDistance = Vector2.Distance(topProng, bottomProng);
@@ -526,19 +536,19 @@ namespace GalagaFighter.Core.Models.Projectiles
             if (progress <= 0.3f)
             {
                 float stageProgress = progress / 0.3f;
-                DrawSemiCircleStage(centerPoint, topProng, bottomProng, prongDistance, stageProgress, soapColor, highlightColor);
+                DrawSemiCircleStage(centerPoint, topProng, bottomProng, prongDistance, stageProgress, soapColor, highlightColor, directionMultiplier);
             }
             // Stage 2 (0.3 - 0.7): Semi-ellipse growth (vertical grows 2x faster than horizontal)
             else if (progress <= 0.7f)
             {
                 float stageProgress = (progress - 0.3f) / 0.4f;
-                DrawSemiEllipseStage(centerPoint, topProng, bottomProng, prongDistance, stageProgress, soapColor, bubbleColor, highlightColor);
+                DrawSemiEllipseStage(centerPoint, topProng, bottomProng, prongDistance, stageProgress, soapColor, bubbleColor, highlightColor, directionMultiplier);
             }
             // Stage 3 (0.7 - 1.0): Detachment and sphere formation
             else
             {
                 float stageProgress = (progress - 0.7f) / 0.3f;
-                DrawSphereDetachmentStage(centerPoint, topProng, bottomProng, stageProgress, bubbleColor, soapColor, highlightColor);
+                DrawSphereDetachmentStage(centerPoint, topProng, bottomProng, stageProgress, bubbleColor, soapColor, highlightColor, directionMultiplier);
             }
         }
     }

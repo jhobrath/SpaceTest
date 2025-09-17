@@ -54,7 +54,7 @@ namespace GalagaFighter.Core.Models.Players
         public List<Func<IProjectileController, Player, Vector2, PlayerProjectile, Projectile>> OneTimeProjectiles = [];
 
         //Events
-        public Action<Projectile>? OnShoot { get; set; } = null;
+        public List<Action<Player, Projectile>> OnShoot { get; set; } = [];
         public Action<Projectile, float>? OnWindUpReleased { get; set; } = null;
         public Action<Projectile>? OnProjectileDestroyed { get; set; } = null;
         public Action<Projectile>? OnSpriteUpdate { get; internal set; }
@@ -83,7 +83,7 @@ namespace GalagaFighter.Core.Models.Players
                 Opacity = Opacity,
                 DoubleShot = DoubleShot,
                 OnShootProjectiles = new(OnShootProjectiles),
-                OnShoot = OnShoot,
+                OnShoot = new(OnShoot),
                 OnProjectileDestroyed = OnProjectileDestroyed,
                 WindUpSpeed = WindUpSpeed,
                 WindUpDuration = WindUpDuration,

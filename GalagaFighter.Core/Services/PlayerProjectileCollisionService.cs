@@ -101,6 +101,7 @@ namespace GalagaFighter.Core.Services
             if (projectile.DamageOverTime)
             {
                 HandleDamageOverTime(player, projectile, modifiers);
+                projectile.Modifiers.OnCollide?.Invoke(player, projectile);
                 return;
             }
 

@@ -37,7 +37,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
             modifiers.Projectile.Phases.Add(this, [1.5f, 70000f]);
             modifiers.Projectile.OnPhaseChange.Add(this, HandlePhaseChange);
             modifiers.Stats.FireRateMultiplier = 1.5f;
-            modifiers.Projectile.OnShoot = HandleShotFired;
+            modifiers.Projectile.OnShoot.Add(HandleShotFired);
             modifiers.Projectile.OnShootProjectiles.Add((controller, player, position, modifiers) =>
             {
                 return new ElectricProjectile(controller, player, position, modifiers);

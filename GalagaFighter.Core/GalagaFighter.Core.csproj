@@ -114,6 +114,7 @@
     <None Remove="Sprites\Ships\MainShipBody_Electrocuted.png" />
     <None Remove="Sprites\Ships\MainShipBody_Frozen.png" />
     <None Remove="Sprites\Ships\MainShipBody_Planked.png" />
+    <None Remove="Sprites\Ships\MainShipBody_Poisoned.png" />
     <None Remove="Sprites\Ships\MainShipBody_Radioactive.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns.png" />
     <None Remove="Sprites\Ships\MainShipElectricGuns_ShootBoth.png" />
@@ -171,6 +172,12 @@
     <None Remove="Sprites\Ships\MainShip_ShootBoth.png" />
     <None Remove="Sprites\Ships\MainShip_ShootLeft.png" />
     <None Remove="Sprites\Ships\MainShip_ShootRight.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Sprites\Ships\MainShipBody_Poisoned.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

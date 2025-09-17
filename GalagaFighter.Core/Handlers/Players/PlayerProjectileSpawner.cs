@@ -109,7 +109,7 @@ namespace GalagaFighter.Core.Handlers.Players
             SetRotation(projectile);
             SetProjectilePlacement(player, modifiers, lastGunLeft, projectile);
 
-            projectile.Modifiers.OnShoot?.Invoke(projectile);
+            projectile.Modifiers.OnShoot.ForEach(x => x.Invoke(player, projectile));
             projectile.Modifiers.Untouchable |= isPhantom;
 
             _objectService.AddGameObject(projectile);

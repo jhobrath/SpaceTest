@@ -17,7 +17,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private readonly SpriteDecorations _decorations;
         private float _lastShotTime = 2f;
-        private PoisonProjectile _bubbleProjectile;
+        private PoisonProjectile? _bubbleProjectile;
 
         public PoisonShotEffect()
         {
@@ -29,7 +29,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         private Projectile CreateProjectile(IProjectileController controller, Player owner, Vector2 position, PlayerProjectile modifiers)
         {
-            if(_lastShotTime >= 1f)
+            if(_bubbleProjectile == null || _lastShotTime >= .5f)
             { 
                 _bubbleProjectile = new PoisonProjectile(controller, owner, new SpriteWrapper("Purposefully Missing Image"), position, modifiers);
                 _lastShotTime = 0f;
@@ -42,6 +42,27 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
         {
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Decorations.Apply(_decorations);
+            modifiers.Projectile.OnNearProjectile.Add(HandleNearProjectile);
+            modifiers.Projectile.OnCollide = HandleOnCollide;
+        }
+
+        private List<GameObject> HandleOnCollide(Player player, Projectile projectile)
+        {
+            if (projectile is PoisonProjectile poison)
+                poison.Pop();
+
+            return [];
+        }
+
+        private void HandleNearProjectile(Projectile projectile1, Projectile projectile2)
+        {
+            if (Vector2.Distance(projectile1.Center, projectile2.Center) > 30f)
+                return;
+
+            if(projectile1 is PoisonProjectile poison)
+            {
+                poison.Pop();
+            }
         }
 
         public override void OnUpdate(float frameTime)

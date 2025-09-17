@@ -29,7 +29,7 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
 
         public override void Apply(EffectModifiers modifiers)
         {
-            modifiers.Projectile.OnWindUpReleased = (p,d) => HandleShotFired(p);
+            modifiers.Projectile.OnWindUpReleased = (p,d) => HandleShotFired(null, p);
             modifiers.Projectile.OnShootProjectiles.Add(CreateProjectile);
             modifiers.Projectile.WindUpDuration = 1.0f;
             modifiers.Projectile.WindUpSpeed = 250f;

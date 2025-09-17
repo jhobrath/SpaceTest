@@ -42,7 +42,7 @@ namespace GalagaFighter.Core.Models.Effects
         public virtual void Apply(EffectModifiers modifiers) { }
         public virtual void Deactivate() => IsActive = false;
 
-        protected virtual void HandleShotFired(Projectile projectile)
+        protected virtual void HandleShotFired(Player player, Projectile projectile)
         {
             _remainingBullets--;
             if (_remainingBullets == 0)

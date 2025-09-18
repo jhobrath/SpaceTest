@@ -6,6 +6,7 @@ using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
@@ -28,6 +29,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         // Animation variables (changed from constants for debugging flexibility)
         private readonly float _bubbleFormationTime = .35f;//.35f; // average value
+        private readonly float _travelAnimationTime = 1.25f;
         private float _finalBubbleRadius = 35f; // average value
         
         // Track the initial offset from owner center for movement following
@@ -35,9 +37,9 @@ namespace GalagaFighter.Core.Models.Projectiles
         private readonly Player _owner;
         
         // Bubble wobble animation for realistic floating motion
-        private float _wobbleFrequency1 = 2.9f;  // average value
-        private float _wobbleFrequency2 = 1.8f;  // average value 
-        private float _wobbleAmplitude = 0.8f;   // average value
+        private float _wobbleFrequency1 = .8f;  // average value
+        private float _wobbleFrequency2 = 1.6f;  // average value 
+        private float _wobbleAmplitude = 1.3f;   // average value
 
         private readonly ParticleEffect _poisonEffect;
 
@@ -175,13 +177,14 @@ namespace GalagaFighter.Core.Models.Projectiles
                 var directionMultiplier = _owner.IsPlayer1 ? 1f : -1f; // Mirror for Player 2
 
                 // Use average bubble colors
-                Color bubbleColor = GetAverageBubbleColor();
-                Color soapColor = GetAverageSoapColor();
-                Color highlightColor = GetAverageHighlightColor();
+                var bubbleColor = GetAverageBubbleColor();
+                var soapColor = GetAverageSoapColor();
+                var highlightColor = GetAverageHighlightColor();
 
                 if (_bubbleFormationComplete)
                 { 
-                    DrawTravel(0, directionMultiplier, bubbleColor, soapColor, highlightColor);
+                    int frameNumber = GetAnimationFrame(_lifeTime % _travelAnimationTime, _travelAnimationTime, 75);
+                    DrawTravel(frameNumber, directionMultiplier, bubbleColor, soapColor, highlightColor);
                 }
                 else
                 { 
@@ -207,9 +210,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         private void DrawFormation(int frame, Color bubbleColor, Color soapColor, Color highlightColor, float directionMultiplier)
         {
-            int frameCount = 20;
-            int frameNumber = GetAnimationFrame(_lifeTime, _bubbleFormationTime, frameCount);
-            var progress = (float)frameNumber / (float)frameCount;
+            var progress = frame / 20f;
 
             // Stage 1 (0.0 - 0.3): Semi-circle formation connected to prongs
             if (progress <= 0.3f)
@@ -513,6 +514,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         
         private void DrawTravel(int frame, float directionMultiplier, Color bubbleColor, Color soapColor, Color highlightColor)
         {
+            var progress = frame / 75f;
+
             // Fully formed transparent bubble traveling independently with realistic wobble
             var prongCenterPoint = new Vector2(12.78f, 50f);
             Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
@@ -529,11 +532,11 @@ namespace GalagaFighter.Core.Models.Projectiles
                 float angle = (i / (float)wobbleSegments) * (float)Math.PI * 2f;
 
                 // Complex wobble with randomized phase shifts for unique patterns
-                float randomPhase1 = (float)Math.Sin(_lifeTime * 0.1f) * 2f; // Slow phase drift
-                float randomPhase2 = (float)Math.Cos(_lifeTime * 0.07f) * 1.5f; // Different phase drift
-                float wobble1 = (float)Math.Sin(_lifeTime * _wobbleFrequency1 * Math.PI * 2 + angle * 3 + randomPhase1) * _wobbleAmplitude * wobbleIntensity;
-                float wobble2 = (float)Math.Sin(_lifeTime * _wobbleFrequency2 * Math.PI * 2 + angle * 5 + randomPhase2) * _wobbleAmplitude * wobbleIntensity * 0.7f;
-                float wobble3 = (float)Math.Sin(_lifeTime * (_wobbleFrequency1 + _wobbleFrequency2) * 0.5f * Math.PI * 2 + angle * 2) * _wobbleAmplitude * wobbleIntensity * 0.4f;
+                float randomPhase1 = (float)Math.Sin(progress * 0.1f) * 2f; // Slow phase drift
+                float randomPhase2 = (float)Math.Cos(progress * 0.07f) * 1.5f; // Different phase drift
+                float wobble1 = (float)Math.Sin(progress * _wobbleFrequency1 * Math.PI * 2 + angle * 3 + randomPhase1) * _wobbleAmplitude * wobbleIntensity;
+                float wobble2 = (float)Math.Sin(progress * _wobbleFrequency2 * Math.PI * 2 + angle * 5 + randomPhase2) * _wobbleAmplitude * wobbleIntensity * 0.7f;
+                float wobble3 = (float)Math.Sin(progress * (_wobbleFrequency1 + _wobbleFrequency2) * 0.5f * Math.PI * 2 + angle * 2) * _wobbleAmplitude * wobbleIntensity * 0.4f;
                 float totalWobble = wobble1 + wobble2 + wobble3;
 
                 Vector2 wobbledPoint = bubbleCenter + new Vector2(
@@ -555,10 +558,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             }
 
             // Draw multiple soap film highlights with randomized wobble
-            DrawTravelHighlights(bubbleCenter, highlightColor);
+            DrawTravelHighlights(progress, bubbleCenter, highlightColor);
         }
 
-        private void DrawTravelHighlights(Vector2 bubbleCenter, Color highlightColor)
+        private void DrawTravelHighlights(float progress, Vector2 bubbleCenter, Color highlightColor)
         {
             // Randomize highlight positions and sizes for organic variety
             float highlight1Scale = 0.65f + (float)Game.Random.NextDouble() * 0.1f; // 0.65-0.75
@@ -570,21 +573,21 @@ namespace GalagaFighter.Core.Models.Projectiles
             // Main highlight with randomized wobble and offset
             float mainOffsetX = -8f + (float)Game.Random.NextDouble() * 3f; // -8 to -5
             float mainOffsetY = -8f + (float)Game.Random.NextDouble() * 3f; // -8 to -5
-            float mainWobbleX = (float)Math.Sin(_lifeTime * _wobbleFrequency1 * Math.PI) * 2f;
-            float mainWobbleY = (float)Math.Sin(_lifeTime * _wobbleFrequency2 * Math.PI) * 1.5f;
+            float mainWobbleX = (float)Math.Sin(progress * _wobbleFrequency1 * Math.PI) * 2f;
+            float mainWobbleY = (float)Math.Sin(progress * _wobbleFrequency2 * Math.PI) * 1.5f;
             Raylib.DrawCircleLines((int)Rect.X + (int)(bubbleCenter.X + mainOffsetX + mainWobbleX), (int)Rect.Y + (int)(bubbleCenter.Y + mainOffsetY + mainWobbleY), highlightRadius1 * 0.4f, highlightColor);
             
             // Secondary highlight with different randomized pattern
             float secOffsetX = -12f + (float)Game.Random.NextDouble() * 2f; // -12 to -10
             float secOffsetY = -5f + (float)Game.Random.NextDouble() * 2f; // -5 to -3
-            float secondaryWobbleX = (float)Math.Sin(_lifeTime * _wobbleFrequency2 * Math.PI * 1.3f) * 1.8f;
-            float secondaryWobbleY = (float)Math.Sin(_lifeTime * _wobbleFrequency1 * Math.PI * 0.8f) * 1.2f;
+            float secondaryWobbleX = (float)Math.Sin(progress * _wobbleFrequency2 * Math.PI * 1.3f) * 1.8f;
+            float secondaryWobbleY = (float)Math.Sin(progress * _wobbleFrequency1 * Math.PI * 0.8f) * 1.2f;
             Raylib.DrawCircleLines((int)Rect.X + (int)(bubbleCenter.X + secOffsetX + secondaryWobbleX), (int)Rect.Y + (int)(bubbleCenter.Y + secOffsetY + secondaryWobbleY), highlightRadius2 * 0.2f, 
                 new Color((byte)255, (byte)255, (byte)255, (byte)(55 + Game.Random.Next(10)))); // 55-64 alpha variation
             
             // Rim highlight with subtle randomization
             float rimOffset = (float)Game.Random.NextDouble() * 1.5f; // 0-1.5 pixel variation
-            float rimWobble = (float)Math.Sin(_lifeTime * (_wobbleFrequency1 + _wobbleFrequency2) * 0.5f * Math.PI) * 0.8f;
+            float rimWobble = (float)Math.Sin(progress * (_wobbleFrequency1 + _wobbleFrequency2) * 0.5f * Math.PI) * 0.8f;
             Raylib.DrawCircleLines((int)Rect.X + (int)(bubbleCenter.X + rimOffset + rimWobble), 
                 (int)Rect.Y + (int)bubbleCenter.Y, _finalBubbleRadius - 1, 
                 new Color((byte)200, (byte)210, (byte)255, (byte)(35 + Game.Random.Next(10)))); // 35-44 alpha variation
@@ -858,8 +861,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         private void RandomizeBubbleCharacteristics()
         {
             // Use fixed average values
-            _wobbleFrequency1 = 2.9f;
-            _wobbleFrequency2 = 1.8f;
+            _wobbleFrequency1 = 1.6f;
+            _wobbleFrequency2 = .8f;
             _wobbleAmplitude = 0.8f;
             _finalBubbleRadius = 35f;
             //_bubbleFormationTime = 0.35f;

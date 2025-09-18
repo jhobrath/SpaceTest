@@ -27,7 +27,7 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override bool DamageOverTime => true;
 
         // Animation variables (changed from constants for debugging flexibility)
-        private float _bubbleFormationTime = 0.35f; // average value
+        private readonly float _bubbleFormationTime = .35f;//.35f; // average value
         private float _finalBubbleRadius = 35f; // average value
         
         // Track the initial offset from owner center for movement following
@@ -58,7 +58,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             Hurry(0f, 0f); // Set speed to 0 during formation
             
             // Add randomization for unique bubble characteristics
-            RandomizeBubbleCharacteristics();
+            //RandomizeBubbleCharacteristics();
 
             _poisonEffect = ParticleEffectsLibrary.Get(ParticleEffectLibraryKeys.Smoke);
             _poisonEffect.UseGravity = false;
@@ -172,8 +172,7 @@ namespace GalagaFighter.Core.Models.Projectiles
                 DrawPop();
             else
             {
-                float animationProgress = Math.Clamp(_lifeTime / _bubbleFormationTime, 0f, 1f);
-                float directionMultiplier = _owner.IsPlayer1 ? 1f : -1f; // Mirror for Player 2
+                var directionMultiplier = _owner.IsPlayer1 ? 1f : -1f; // Mirror for Player 2
 
                 // Use average bubble colors
                 Color bubbleColor = GetAverageBubbleColor();
@@ -181,14 +180,37 @@ namespace GalagaFighter.Core.Models.Projectiles
                 Color highlightColor = GetAverageHighlightColor();
 
                 if (_bubbleFormationComplete)
-                    DrawTravel(directionMultiplier, bubbleColor, soapColor, highlightColor);
+                { 
+                    DrawTravel(0, directionMultiplier, bubbleColor, soapColor, highlightColor);
+                }
                 else
-                    DrawFormation(animationProgress, bubbleColor, soapColor, highlightColor, directionMultiplier);
+                { 
+                    int frameNumber = GetAnimationFrame(_lifeTime, _bubbleFormationTime, 20);
+                    DrawFormation(frameNumber, bubbleColor, soapColor, highlightColor, directionMultiplier);
+                }
             }
         }
 
-        private void DrawFormation(float progress, Color bubbleColor, Color soapColor, Color highlightColor, float directionMultiplier)
+        private int GetAnimationFrame(float lifeTime, float duration, int frameCount)
         {
+            var progress = lifeTime / duration;
+
+            for(var i = frameCount - 1;i >= 0;i--)
+            {
+                var step = i / (float)frameCount;
+                if (step <= progress)
+                    return i;
+            }
+
+            return 0;
+        }
+
+        private void DrawFormation(int frame, Color bubbleColor, Color soapColor, Color highlightColor, float directionMultiplier)
+        {
+            int frameCount = 20;
+            int frameNumber = GetAnimationFrame(_lifeTime, _bubbleFormationTime, frameCount);
+            var progress = (float)frameNumber / (float)frameCount;
+
             // Stage 1 (0.0 - 0.3): Semi-circle formation connected to prongs
             if (progress <= 0.3f)
             {
@@ -383,6 +405,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             var topProng = new Vector2(12.78f, 50f - 9.89f);
             var bottomProng = new Vector2(12.78f, 50f + 9.89f);
 
+
             // Calculate the final bubble position (detached from prongs) with player direction
             Vector2 finalBubbleCenter = centerPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
             
@@ -488,7 +511,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             }
         }
         
-        private void DrawTravel(float directionMultiplier, Color bubbleColor, Color soapColor, Color highlightColor)
+        private void DrawTravel(int frame, float directionMultiplier, Color bubbleColor, Color soapColor, Color highlightColor)
         {
             // Fully formed transparent bubble traveling independently with realistic wobble
             var prongCenterPoint = new Vector2(12.78f, 50f);
@@ -839,7 +862,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             _wobbleFrequency2 = 1.8f;
             _wobbleAmplitude = 0.8f;
             _finalBubbleRadius = 35f;
-            _bubbleFormationTime = 0.35f;
+            //_bubbleFormationTime = 0.35f;
         }
 
 

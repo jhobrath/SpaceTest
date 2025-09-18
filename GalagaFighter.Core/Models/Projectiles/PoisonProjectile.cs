@@ -16,8 +16,8 @@ namespace GalagaFighter.Core.Models.Projectiles
 {
     public class PoisonProjectile : Projectile
     {
-        public static readonly Vector2 _baseSpeed = new Vector2(500f, 0f);
-        public static readonly Vector2 _baseSize = new Vector2(100f, 100f);
+        public static readonly Vector2 _baseSpeed = new(500f, 0f);
+        public static readonly Vector2 _baseSize = new(100f, 100f);
         private Vector2 _originalPosition;
 
         public override Vector2 BaseSpeed => _baseSpeed;
@@ -32,14 +32,14 @@ namespace GalagaFighter.Core.Models.Projectiles
         
         // Track the initial offset from owner center for movement following
         private Vector2 _initialOffsetFromOwnerCenter;
-        private Player _owner;
+        private readonly Player _owner;
         
         // Bubble wobble animation for realistic floating motion
         private float _wobbleFrequency1 = 2.9f;  // average value
         private float _wobbleFrequency2 = 1.8f;  // average value 
         private float _wobbleAmplitude = 0.8f;   // average value
 
-        private ParticleEffect _poisonEffect;
+        private readonly ParticleEffect _poisonEffect;
 
         public PoisonProjectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, PlayerProjectile modifiers) 
             : base(controller, owner, sprite, initialPosition, _baseSize, _baseSpeed, modifiers)
@@ -341,7 +341,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             {
                 float fillProgress = (progress - fillThreshold) / (1f - fillThreshold);
                 float transparencyVariation = 0.5f + (float)Game.Random.NextDouble() * 0.2f; // 0.5-0.7 variation
-                Color fillColor = new Color(
+                Color fillColor = new(
                     bubbleColor.R,
                     bubbleColor.G,
                     bubbleColor.B,
@@ -404,7 +404,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             
             // Randomized wobble complexity for unique sphere ripples
             int wobbleSegments = 30 + Game.Random.Next(6); // 30-35 segments for variation
-            List<Vector2> wobbledPoints = new List<Vector2>();
+            List<Vector2> wobbledPoints = [];
             
             for (int i = 0; i < wobbleSegments; i++)
             {
@@ -427,7 +427,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             
             // Draw the filled circle with randomized transparency
             float fillAlpha = 1f + (float)Game.Random.NextDouble() * 0.1f; // 1.0-1.1 slight variation
-            Color randomizedBubbleColor = new Color(bubbleColor.R, bubbleColor.G, bubbleColor.B, (byte)(bubbleColor.A * fillAlpha));
+            Color randomizedBubbleColor = new(bubbleColor.R, bubbleColor.G, bubbleColor.B, (byte)(bubbleColor.A * fillAlpha));
             Raylib.DrawCircle((int)Rect.X + (int)currentCenter.X, (int)Rect.Y + (int)currentCenter.Y, currentRadius, randomizedBubbleColor);
             
             // Draw the wobbled outline
@@ -442,7 +442,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             float connectionStrength = (1f - progress) * (0.9f + (float)Game.Random.NextDouble() * 0.2f); // 0.9-1.1 variation
             if (connectionStrength > 0)
             {
-                Color fadingSoapColor = new Color(
+                Color fadingSoapColor = new(
                     soapColor.R,
                     soapColor.G,
                     soapColor.B,
@@ -499,7 +499,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
             // Create wobbled outline for the traveling bubble with randomized complexity
             int wobbleSegments = 28 + Game.Random.Next(8); // 28-35 segments for variation
-            List<Vector2> wobbledPoints = new List<Vector2>();
+            List<Vector2> wobbledPoints = [];
 
             for (int i = 0; i < wobbleSegments; i++)
             {
@@ -597,7 +597,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
             // Get bubble center for the popping animation
             float directionMultiplier = _owner.IsPlayer1 ? 1f : -1f;
-            Vector2 prongCenterPoint = new Vector2(12.78f, 50f);
+            Vector2 prongCenterPoint = new(12.78f, 50f);
             Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
 
             // Draw the bubble rapidly expanding and distorting
@@ -605,12 +605,9 @@ namespace GalagaFighter.Core.Models.Projectiles
             float distortion = stageProgress * 15f; // Heavy distortion during burst
             
             // Get bubble colors but make them more intense during burst
-            Color bubbleColor = GetAverageBubbleColor();
             Color soapColor = GetAverageSoapColor();
-            Color highlightColor = GetAverageHighlightColor();
             
             // Make colors more intense and opaque during burst
-            bubbleColor = new Color(bubbleColor.R, bubbleColor.G, bubbleColor.B, (byte)(bubbleColor.A * (2f - stageProgress)));
             soapColor = new Color(soapColor.R, soapColor.G, soapColor.B, (byte)(soapColor.A * (1.5f - stageProgress)));
             
             // Draw heavily distorted bubble outline that's breaking apart
@@ -646,7 +643,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             
             // Draw central burst flash
             float flashRadius = _finalBubbleRadius * stageProgress * 0.6f;
-            Color flashColor = new Color((byte)200, (byte)255, (byte)200, (byte)(100 * (1f - stageProgress)));
+            Color flashColor = new((byte)200, (byte)255, (byte)200, (byte)(100 * (1f - stageProgress)));
             Raylib.DrawCircle((int)Rect.X + (int)bubbleCenter.X, (int)Rect.Y + (int)bubbleCenter.Y, flashRadius, flashColor);
             
             // Draw radiating shock lines
@@ -665,7 +662,7 @@ namespace GalagaFighter.Core.Models.Projectiles
                     (float)Math.Sin(angle) * (_finalBubbleRadius + shockLength)
                 );
                 
-                Color shockColor = new Color((byte)180, (byte)255, (byte)180, (byte)(120 * (1f - stageProgress)));
+                Color shockColor = new((byte)180, (byte)255, (byte)180, (byte)(120 * (1f - stageProgress)));
                 Raylib.DrawLineEx(Rect.Position + shockStart, Rect.Position + shockEnd, 2f * (1f - stageProgress), shockColor);
             }
         }
@@ -676,7 +673,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
             // Get bubble center for the popping animation
             float directionMultiplier = _owner.IsPlayer1 ? 1f : -1f;
-            Vector2 prongCenterPoint = new Vector2(12.78f, 50f);
+            Vector2 prongCenterPoint = new(12.78f, 50f);
             Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
 
             // Calculate expanding cloud properties
@@ -714,14 +711,14 @@ namespace GalagaFighter.Core.Models.Projectiles
                     
                     // Draw cloud puff as small circle
                     float puffSize = 2f + stageProgress * 3f + layer * 0.5f;
-                    Color cloudColor = new Color((byte)100, (byte)160, (byte)100, (byte)(80 * layerOpacity)); // Dark green poison
+                    Color cloudColor = new((byte)100, (byte)160, (byte)100, (byte)(80 * layerOpacity)); // Dark green poison
                     Raylib.DrawCircle((int)Rect.X + (int)cloudPoint.X, (int)Rect.Y + (int)cloudPoint.Y, puffSize, cloudColor);
                 }
             }
             
             // Draw central poison concentration
             float centralRadius = _finalBubbleRadius * (0.8f - stageProgress * 0.3f);
-            Color centralColor = new Color((byte)80, (byte)140, (byte)80, (byte)(60 * opacity));
+            Color centralColor = new((byte)80, (byte)140, (byte)80, (byte)(60 * opacity));
             Raylib.DrawCircle((int)Rect.X + (int)bubbleCenter.X, (int)Rect.Y + (int)bubbleCenter.Y, centralRadius, centralColor);
             
             // Draw swirling tendrils extending outward
@@ -752,7 +749,7 @@ namespace GalagaFighter.Core.Models.Projectiles
                     );
                     
                     float tendrilOpacity = opacity * (1f - segProgress * 0.7f);
-                    Color tendrilColor = new Color((byte)90, (byte)150, (byte)90, (byte)(100 * tendrilOpacity));
+                    Color tendrilColor = new((byte)90, (byte)150, (byte)90, (byte)(100 * tendrilOpacity));
                     float tendrilThickness = 2f * (1f - segProgress * 0.5f);
                     
                     Raylib.DrawLineEx(Rect.Position + tendrilStart, Rect.Position + tendrilEnd, tendrilThickness, tendrilColor);
@@ -766,7 +763,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
             // Get bubble center for the popping animation
             float directionMultiplier = _owner.IsPlayer1 ? 1f : -1f;
-            Vector2 prongCenterPoint = new Vector2(12.78f, 50f);
+            Vector2 prongCenterPoint = new(12.78f, 50f);
             Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
 
             float fadeOpacity = 1f - stageProgress; // Complete fade out
@@ -787,7 +784,7 @@ namespace GalagaFighter.Core.Models.Projectiles
                 );
                 
                 float wispSize = 3f + (float)Math.Sin(_lifeTime * 10f + i) * 1f;
-                Color wispColor = new Color((byte)120, (byte)180, (byte)120, (byte)(40 * fadeOpacity));
+                Color wispColor = new((byte)120, (byte)180, (byte)120, (byte)(40 * fadeOpacity));
                 Raylib.DrawCircle((int)Rect.X + (int)wispPosition.X, (int)Rect.Y + (int)wispPosition.Y, wispSize, wispColor);
             }
             
@@ -805,7 +802,7 @@ namespace GalagaFighter.Core.Models.Projectiles
                 
                 // Twinkling effect
                 float twinkle = (float)Math.Sin(_lifeTime * 20f + i * 3) * 0.5f + 0.5f;
-                Color sparkleColor = new Color((byte)200, (byte)220, (byte)255, (byte)(60 * fadeOpacity * twinkle));
+                Color sparkleColor = new((byte)200, (byte)220, (byte)255, (byte)(60 * fadeOpacity * twinkle));
                 Raylib.DrawPixel((int)Rect.X + (int)sparklePosition.X, (int)Rect.Y + (int)sparklePosition.Y, sparkleColor);
                 
                 // Occasionally draw small cross sparkle
@@ -826,12 +823,12 @@ namespace GalagaFighter.Core.Models.Projectiles
             if (fadeOpacity > 0.1f)
             {
                 float glowRadius = _finalBubbleRadius * 0.3f;
-                Color glowColor = new Color((byte)150, (byte)200, (byte)150, (byte)(30 * fadeOpacity));
+                Color glowColor = new((byte)150, (byte)200, (byte)150, (byte)(30 * fadeOpacity));
                 Raylib.DrawCircle((int)Rect.X + (int)bubbleCenter.X, (int)Rect.Y + (int)bubbleCenter.Y, glowRadius, glowColor);
             }
         }
 
-        private void DrawPopComplete()
+        private static void DrawPopComplete()
         {
         }
 
@@ -847,17 +844,17 @@ namespace GalagaFighter.Core.Models.Projectiles
 
 
         
-        private Color GetAverageBubbleColor()
+        private static Color GetAverageBubbleColor()
         {
             return new Color(180, 200, 255, 24); // average values
         }
 
-        private Color GetAverageSoapColor()
+        private static Color GetAverageSoapColor()
         {
             return new Color(160, 180, 255, 120); // average values
         }
 
-        private Color GetAverageHighlightColor()
+        private static Color GetAverageHighlightColor()
         {
             return new Color(220, 230, 255, 80); // average values
         }

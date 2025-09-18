@@ -166,12 +166,15 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override void Draw()
         {
-            Raylib.DrawRectangleLines((int)Rect.X, (int)Rect.Y, (int)Rect.Width, (int)Rect.Height, Color.Red);
+            //Raylib.DrawRectangleLines((int)Rect.X, (int)Rect.Y, (int)Rect.Width, (int)Rect.Height, Color.Red);
 
             if (_bubblePopTime > .5f)
                 DrawPopComplete();
             else if (_bubblePopTime > 0f)
-                DrawPop();
+            {
+                int frameNumber = GetAnimationFrame(_bubblePopTime % .5f, .5f, 30);
+                DrawPop(frameNumber);
+            }
             else
             {
                 var directionMultiplier = _owner.IsPlayer1 ? 1f : -1f; // Mirror for Player 2
@@ -182,12 +185,12 @@ namespace GalagaFighter.Core.Models.Projectiles
                 var highlightColor = GetAverageHighlightColor();
 
                 if (_bubbleFormationComplete)
-                { 
+                {
                     int frameNumber = GetAnimationFrame(_lifeTime % _travelAnimationTime, _travelAnimationTime, 75);
                     DrawTravel(frameNumber, directionMultiplier, bubbleColor, soapColor, highlightColor);
                 }
                 else
-                { 
+                {
                     int frameNumber = GetAnimationFrame(_lifeTime, _bubbleFormationTime, 20);
                     DrawFormation(frameNumber, bubbleColor, soapColor, highlightColor, directionMultiplier);
                 }
@@ -593,11 +596,10 @@ namespace GalagaFighter.Core.Models.Projectiles
                 new Color((byte)200, (byte)210, (byte)255, (byte)(35 + Game.Random.Next(10)))); // 35-44 alpha variation
         }
 
-        private void DrawPop()
+        private void DrawPop(int frameNumber)
         {
             // Calculate pop progress (0.0 to 1.0 over 0.5 seconds)
-            float popProgress = Math.Clamp(_bubblePopTime / 0.5f, 0f, 1f);
-
+            float popProgress = frameNumber / 30f;// Math.Clamp(_bubblePopTime / 0.5f, 0f, 1f);
             
             // Pop animation in 3 stages over 0.5 seconds: burst (0-0.4), expand (0.4-0.8), fade (0.8-1.0)
             if (popProgress <= 0.4f)
@@ -857,18 +859,6 @@ namespace GalagaFighter.Core.Models.Projectiles
         private static void DrawPopComplete()
         {
         }
-
-        private void RandomizeBubbleCharacteristics()
-        {
-            // Use fixed average values
-            _wobbleFrequency1 = 1.6f;
-            _wobbleFrequency2 = .8f;
-            _wobbleAmplitude = 0.8f;
-            _finalBubbleRadius = 35f;
-            //_bubbleFormationTime = 0.35f;
-        }
-
-
         
         private static Color GetAverageBubbleColor()
         {

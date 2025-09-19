@@ -134,7 +134,7 @@ namespace GalagaFighter.Core
                 Texture,
                 source,
                 new Rectangle(position.X, position.Y, width, height),
-                new Vector2(width / 2f, height / 2f),
+                Vector2.Zero, //new Vector2(width / 2f, height / 2f),
                 rotation,
                 color ?? Color.White);
         }

@@ -2,6 +2,7 @@
 using GalagaFighter.Core.Models.Effects;
 using GalagaFighter.Core.Models.Effects.Statuses;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.Services;
 using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
@@ -41,6 +42,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         private float _wobbleFrequency2 = 1.6f;  // average value 
         private float _wobbleAmplitude = 1.3f;   // average value
 
+        private SpriteWrapper _formationSprite;
+
         private readonly ParticleEffect _poisonEffect;
 
         public PoisonProjectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, PlayerProjectile modifiers) 
@@ -74,6 +77,10 @@ namespace GalagaFighter.Core.Models.Projectiles
             _poisonEffect.ParticleStartColor = Color.DarkGreen;
             _poisonEffect.ParticleEndColor = Color.DarkGreen.ApplyAlpha(0f);
             ParticleEffects.Add(_poisonEffect);
+
+            _formationSprite = SpriteGenerationService2.CreatePoisonFormationSprite();
+            //_travelSprite = SpriteGenerationService2.CreatePoisonTravelSprite();
+            //_popSprite = SpriteGenerationService2.CreatePoisonPopSprite();
         }
 
         private float _lifeTime = 0f;
@@ -104,6 +111,8 @@ namespace GalagaFighter.Core.Models.Projectiles
             Vector2 newPosition = _owner.Center + _initialOffsetFromOwnerCenter;
             MoveTo(newPosition.X, newPosition.Y);
             _originalPosition = newPosition;
+
+            _formationSprite.Update(Raylib.GetFrameTime());
         }
 
         private void UpdateTravel()
@@ -168,6 +177,12 @@ namespace GalagaFighter.Core.Models.Projectiles
         {
             //Raylib.DrawRectangleLines((int)Rect.X, (int)Rect.Y, (int)Rect.Width, (int)Rect.Height, Color.Red);
 
+            var texture = TextureService.Get("PoisonFormation_20");
+            Raylib.DrawRectangleLines((int)200, (int)200, (int)2000, (int)100, Color.Red);
+            Raylib.DrawTexture(texture, 200, 200, Color.White);
+            //var sprite = new SpriteWrapper(texture);
+            //sprite.Draw(new Vector2(100,100), 0, 2000, 100, Color.White);
+
             if (_bubblePopTime > .5f)
                 DrawPopComplete();
             else if (_bubblePopTime > 0f)
@@ -191,8 +206,7 @@ namespace GalagaFighter.Core.Models.Projectiles
                 }
                 else
                 {
-                    int frameNumber = GetAnimationFrame(_lifeTime, _bubbleFormationTime, 20);
-                    DrawFormation(frameNumber, bubbleColor, soapColor, highlightColor, directionMultiplier);
+                    _formationSprite.Draw(Rect.Position, Rotation, Rect.Width, Rect.Height, Color.White);
                 }
             }
         }

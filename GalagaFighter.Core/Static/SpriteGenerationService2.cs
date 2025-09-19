@@ -322,11 +322,12 @@ namespace GalagaFighter.Core.Static
         private static float _wobbleAmplitude = 1.3f;   // average value
         private static float _finalBubbleRadius = 35f; // average value
 
-        public static SpriteWrapper CreatePoisonFormationSprite(int frameCount = 20, float frameDuration = 0.017f)
+        public static SpriteWrapper CreatePoisonFormationSprite(int frameCount = 20, float frameDuration = 0.01666667f)
         {
             string key = $"PoisonFormation_{frameCount}";
             if (TextureService.TryGetFromKey(key, out Texture2D texture))
                 return new SpriteWrapper(texture, frameCount, frameDuration);
+
 
             int frameWidth = 100;
             int frameHeight = 100;
@@ -348,10 +349,7 @@ namespace GalagaFighter.Core.Static
             for (int frame = 0; frame < frameCount; frame++)
             {
                 int xOffset = frame * frameWidth;
-                //Raylib.DrawCircle(xOffset + 50, 50, 20, Color.White);
                 DrawFormation(xOffset, frame, bubbleColor, soapColor, highlightColor, directionMultiplier);
-                // TODO: Call PoisonProjectile.DrawFormationFrame(frame, frameCount, xOffset, frameHeight)
-                // This method should draw the formation animation for the given frame at (xOffset, 0)
             }
 
             Raylib.EndBlendMode();
@@ -360,10 +358,9 @@ namespace GalagaFighter.Core.Static
             return new SpriteWrapper(renderTexture.Texture, frameCount, frameDuration);
         }
 
-
         private static void DrawFormation(float xOffset, int frame, Color bubbleColor, Color soapColor, Color highlightColor, float directionMultiplier)
         {
-            var progress = frame / 20f;
+            var progress = frame / 30f;
 
             // Stage 1 (0.0 - 0.3): Semi-circle formation connected to prongs
             if (progress <= 0.3f)
@@ -665,5 +662,424 @@ namespace GalagaFighter.Core.Static
             }
         }
 
+        public static SpriteWrapper CreatePoisonTravelSprite(int frameCount = 75, float frameDuration = 0.01666667f)
+        {
+            string key = $"PoisonTravel_{frameCount}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture, frameCount, frameDuration);
+
+            frameDuration = .016666666666667f;
+
+            int frameWidth = 100;
+            int frameHeight = 100;
+            int textureWidth = frameWidth * frameCount;
+            int textureHeight = frameHeight;
+
+            var directionMultiplier = 1f; // Mirror for Player 2
+
+            // Use average bubble colors
+            var bubbleColor = GetAverageBubbleColor();
+            var soapColor = GetAverageSoapColor();
+            var highlightColor = GetAverageHighlightColor();
+
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(textureWidth, textureHeight);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            Raylib.BeginBlendMode(BlendMode.AlphaPremultiply);
+
+            for (int frame = 0; frame < frameCount; frame++)
+            {
+                int xOffset = frame * frameWidth;
+                //Raylib.DrawCircle(xOffset + 50, 50, 20, Color.White);
+                DrawTravel(xOffset, frame, directionMultiplier, bubbleColor, soapColor, highlightColor);
+                // TODO: Call PoisonProjectile.DrawFormationFrame(frame, frameCount, xOffset, frameHeight)
+                // This method should draw the formation animation for the given frame at (xOffset, 0)
+            }
+
+            Raylib.EndBlendMode();
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture, frameCount, frameDuration);
+        }
+
+        private static void DrawTravel(float xOffset, int frame, float directionMultiplier, Color bubbleColor, Color soapColor, Color highlightColor)
+        {
+            //Progress is based on lifetime. This animation lasts 1.25 seconds
+            //  so progress should go from 0 to 1.25. 
+            var progress = frame / 60f;
+
+            // Fully formed transparent bubble traveling independently with realistic wobble
+            var prongCenterPoint = new Vector2(12.78f + xOffset, 50f);
+            Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
+
+            // Full wobble intensity for traveling bubble - most realistic motion
+            float wobbleIntensity = 1.0f;
+
+            // Create wobbled outline for the traveling bubble with randomized complexity
+            int wobbleSegments = 28 + Game.Random.Next(8); // 28-35 segments for variation
+            List<Vector2> wobbledPoints = [];
+
+            for (int i = 0; i < wobbleSegments; i++)
+            {
+                float angle = (i / (float)wobbleSegments) * (float)Math.PI * 2f;
+
+                // Complex wobble with randomized phase shifts for unique patterns
+                float randomPhase1 = (float)Math.Sin(progress * 0.1f) * 2f; // Slow phase drift
+                float randomPhase2 = (float)Math.Cos(progress * 0.07f) * 1.5f; // Different phase drift
+                float wobble1 = (float)Math.Sin(progress * _wobbleFrequency1 * Math.PI * 2 + angle * 3 + randomPhase1) * _wobbleAmplitude * wobbleIntensity;
+                float wobble2 = (float)Math.Sin(progress * _wobbleFrequency2 * Math.PI * 2 + angle * 5 + randomPhase2) * _wobbleAmplitude * wobbleIntensity * 0.7f;
+                float wobble3 = (float)Math.Sin(progress * (_wobbleFrequency1 + _wobbleFrequency2) * 0.5f * Math.PI * 2 + angle * 2) * _wobbleAmplitude * wobbleIntensity * 0.4f;
+                float totalWobble = wobble1 + wobble2 + wobble3;
+
+                Vector2 wobbledPoint = bubbleCenter + new Vector2(
+                    (float)Math.Cos(angle) * (_finalBubbleRadius + totalWobble),
+                    (float)Math.Sin(angle) * (_finalBubbleRadius + totalWobble)
+                );
+                wobbledPoints.Add(wobbledPoint);
+            }
+
+            // Draw the transparent bubble fill (static center for stability)
+            Raylib.DrawCircle((int)bubbleCenter.X, (int)bubbleCenter.Y, _finalBubbleRadius, bubbleColor);
+
+            // Draw the wobbled outline
+            for (int i = 0; i < wobbledPoints.Count; i++)
+            {
+                Vector2 point1 = wobbledPoints[i];
+                Vector2 point2 = wobbledPoints[(i + 1) % wobbledPoints.Count];
+                Raylib.DrawLineEx(point1, point2, 2f, soapColor);
+            }
+
+            // Draw multiple soap film highlights with randomized wobble
+            DrawTravelHighlights(xOffset, progress, bubbleCenter, highlightColor);
+        }
+
+        private static void DrawTravelHighlights(float xOffset, float progress, Vector2 bubbleCenter, Color highlightColor)
+        {
+            // Randomize highlight positions and sizes for organic variety
+            float highlight1Scale = 0.65f + (float)Game.Random.NextDouble() * 0.1f; // 0.65-0.75
+            float highlight2Scale = 0.35f + (float)Game.Random.NextDouble() * 0.1f; // 0.35-0.45
+
+            float highlightRadius1 = _finalBubbleRadius * highlight1Scale;
+            float highlightRadius2 = _finalBubbleRadius * highlight2Scale;
+
+            // Main highlight with randomized wobble and offset
+            float mainOffsetX = -8f + (float)Game.Random.NextDouble() * 3f; // -8 to -5
+            float mainOffsetY = -8f + (float)Game.Random.NextDouble() * 3f; // -8 to -5
+            float mainWobbleX = (float)Math.Sin(progress * _wobbleFrequency1 * Math.PI) * 2f;
+            float mainWobbleY = (float)Math.Sin(progress * _wobbleFrequency2 * Math.PI) * 1.5f;
+            Raylib.DrawCircleLines((int)(bubbleCenter.X + mainOffsetX + mainWobbleX), (int)(bubbleCenter.Y + mainOffsetY + mainWobbleY), highlightRadius1 * 0.4f, highlightColor);
+
+            // Secondary highlight with different randomized pattern
+            float secOffsetX = -12f + (float)Game.Random.NextDouble() * 2f; // -12 to -10
+            float secOffsetY = -5f + (float)Game.Random.NextDouble() * 2f; // -5 to -3
+            float secondaryWobbleX = (float)Math.Sin(progress * _wobbleFrequency2 * Math.PI * 1.3f) * 1.8f;
+            float secondaryWobbleY = (float)Math.Sin(progress * _wobbleFrequency1 * Math.PI * 0.8f) * 1.2f;
+            Raylib.DrawCircleLines((int)(bubbleCenter.X + secOffsetX + secondaryWobbleX), (int)(bubbleCenter.Y + secOffsetY + secondaryWobbleY), highlightRadius2 * 0.2f,
+                new Color((byte)255, (byte)255, (byte)255, (byte)(55 + Game.Random.Next(10)))); // 55-64 alpha variation
+
+            // Rim highlight with subtle randomization
+            float rimOffset = (float)Game.Random.NextDouble() * 1.5f; // 0-1.5 pixel variation
+            float rimWobble = (float)Math.Sin(progress * (_wobbleFrequency1 + _wobbleFrequency2) * 0.5f * Math.PI) * 0.8f;
+            Raylib.DrawCircleLines((int)(bubbleCenter.X + rimOffset + rimWobble),
+                (int)bubbleCenter.Y, _finalBubbleRadius - 1,
+                new Color((byte)200, (byte)210, (byte)255, (byte)(35 + Game.Random.Next(10)))); // 35-44 alpha variation
+        }
+
+        public static SpriteWrapper CreatePoisonPopSprite(int frameCount = 30, float frameDuration = 0.01666667f)
+        {
+            string key = $"PoisonPop_{frameCount}";
+            if (TextureService.TryGetFromKey(key, out Texture2D texture))
+                return new SpriteWrapper(texture, frameCount, frameDuration);
+
+            frameDuration = .016666666666667f;
+
+            int frameWidth = 100;
+            int frameHeight = 100;
+            int textureWidth = frameWidth * frameCount;
+            int textureHeight = frameHeight;
+
+            var directionMultiplier = 1f; // Mirror for Player 2
+
+            // Use average bubble colors
+            var bubbleColor = GetAverageBubbleColor();
+            var soapColor = GetAverageSoapColor();
+            var highlightColor = GetAverageHighlightColor();
+
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(textureWidth, textureHeight);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            Raylib.BeginBlendMode(BlendMode.AlphaPremultiply);
+
+            for (int frame = 0; frame < frameCount; frame++)
+            {
+                int xOffset = frame * frameWidth;
+                //Raylib.DrawCircle(xOffset + 50, 50, 20, Color.White);
+                DrawPop(xOffset, frame, directionMultiplier);
+                // TODO: Call PoisonProjectile.DrawFormationFrame(frame, frameCount, xOffset, frameHeight)
+                // This method should draw the formation animation for the given frame at (xOffset, 0)
+            }
+
+            Raylib.EndBlendMode();
+            Raylib.EndTextureMode();
+            TextureService.Set(key, renderTexture.Texture);
+            return new SpriteWrapper(renderTexture.Texture, frameCount, frameDuration);
+        }
+
+        private static void DrawPop(float xOffset, int frameNumber, float directionMultiplier)
+        {
+            // Calculate pop progress (0.0 to 1.0 over 0.5 seconds)
+            float popProgress = frameNumber / 60f;// Math.Clamp(_bubblePopTime / 0.5f, 0f, 1f);
+
+            // Pop animation in 3 stages over 0.5 seconds: burst (0-0.4), expand (0.4-0.8), fade (0.8-1.0)
+            if (popProgress <= 0.4f)
+            {
+                // Stage 1: Explosive burst with fragments (0.0 to 0.2 seconds)
+                DrawPopBurstStage(xOffset, popProgress, popProgress / 0.4f, directionMultiplier);
+            }
+            else if (popProgress <= 0.8f)
+            {
+                // Stage 2: Expanding poison cloud (0.2 to 0.4 seconds)
+                DrawPopExpandStage(xOffset, popProgress, (popProgress - 0.4f) / 0.4f, directionMultiplier);
+            }
+            else
+            {
+                // Stage 3: Final fade with lingering wisps (0.4 to 0.5 seconds)
+                DrawPopFadeStage(xOffset, popProgress, (popProgress - 0.8f) / 0.2f, directionMultiplier);
+            }
+        }
+
+        private static void DrawPopBurstStage(float xOffset, float popProgress, float stageProgress, float directionMultiplier)
+        {
+            // Explosive burst effect with soap bubble fragments flying outward
+
+            // Get bubble center for the popping animation
+            Vector2 prongCenterPoint = new(12.78f + xOffset, 50f);
+            Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
+
+            // Draw the bubble rapidly expanding and distorting
+            float burstRadius = _finalBubbleRadius * (1f + stageProgress * 0.8f); // Grows 80% larger
+            float distortion = stageProgress * 15f; // Heavy distortion during burst
+
+            // Get bubble colors but make them more intense during burst
+            Color soapColor = GetAverageSoapColor();
+
+            // Make colors more intense and opaque during burst
+            soapColor = new Color(soapColor.R, soapColor.G, soapColor.B, (byte)(soapColor.A * (1.5f - stageProgress)));
+
+            // Draw heavily distorted bubble outline that's breaking apart
+            int segments = 20 + Game.Random.Next(8); // Irregular segments
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = (i / (float)segments) * (float)Math.PI * 2f;
+
+                // Extreme distortion with fragments breaking away
+                float fragmentWobble = (float)Math.Sin(popProgress * 25f + angle * 8) * distortion;
+                float burstWobble = (float)Math.Sin(popProgress * 40f + angle * 12) * distortion * 0.7f;
+                float totalWobble = fragmentWobble + burstWobble;
+
+                // Some fragments fly further out
+                float fragmentDistance = burstRadius + totalWobble + (Game.Random.NextSingle() * stageProgress * 20f);
+
+                Vector2 fragmentPoint = bubbleCenter + new Vector2(
+                    (float)Math.Cos(angle) * fragmentDistance,
+                    (float)Math.Sin(angle) * fragmentDistance
+                );
+
+                // Draw fragment as small wobbling line
+                if (i % 3 == 0) // Only draw some fragments for scattered effect
+                {
+                    float fragmentLength = 3f + stageProgress * 4f;
+                    Vector2 fragmentEnd = fragmentPoint + new Vector2(
+                        (float)Math.Cos(angle) * fragmentLength,
+                        (float)Math.Sin(angle) * fragmentLength
+                    );
+                    Raylib.DrawLineEx(fragmentPoint, fragmentEnd, 1f + stageProgress, soapColor);
+                }
+            }
+
+            // Draw central burst flash
+            float flashRadius = _finalBubbleRadius * stageProgress * 0.6f;
+            Color flashColor = new((byte)200, (byte)255, (byte)200, (byte)(100 * (1f - stageProgress)));
+            Raylib.DrawCircle((int)bubbleCenter.X, (int)bubbleCenter.Y, flashRadius, flashColor);
+
+            // Draw radiating shock lines
+            int shockLines = 8;
+            for (int i = 0; i < shockLines; i++)
+            {
+                float angle = (i / (float)shockLines) * (float)Math.PI * 2f;
+                float shockLength = 15f + stageProgress * 25f;
+
+                Vector2 shockStart = bubbleCenter + new Vector2(
+                    (float)Math.Cos(angle) * _finalBubbleRadius,
+                    (float)Math.Sin(angle) * _finalBubbleRadius
+                );
+                Vector2 shockEnd = bubbleCenter + new Vector2(
+                    (float)Math.Cos(angle) * (_finalBubbleRadius + shockLength),
+                    (float)Math.Sin(angle) * (_finalBubbleRadius + shockLength)
+                );
+
+                Color shockColor = new((byte)180, (byte)255, (byte)180, (byte)(120 * (1f - stageProgress)));
+                Raylib.DrawLineEx(shockStart, shockEnd, 2f * (1f - stageProgress), shockColor);
+            }
+        }
+
+        private static void DrawPopExpandStage(float xOffset, float popProgress, float stageProgress, float directionMultiplier)
+        {
+            // Expanding poison cloud with swirling green mist
+
+            // Get bubble center for the popping animation
+            Vector2 prongCenterPoint = new(12.78f, 50f);
+            Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
+
+            // Calculate expanding cloud properties
+            float cloudRadius = _finalBubbleRadius * (1.5f + stageProgress * 2f); // Expands to 3.5x original size
+            float opacity = 1f - stageProgress * 0.7f; // Gradually becomes more transparent
+
+            // Draw multiple layers of expanding poison cloud
+            int cloudLayers = 4;
+            for (int layer = 0; layer < cloudLayers; layer++)
+            {
+                float layerScale = 0.6f + (layer * 0.3f); // Different sizes for depth
+                float layerRadius = cloudRadius * layerScale;
+                float layerOpacity = opacity * (1f - layer * 0.2f); // Outer layers more transparent
+
+                // Swirling motion for each layer
+                float swirl = stageProgress * (layer + 1) * 180f; // Different swirl speeds per layer
+
+                // Draw cloud as irregular circles with gaps
+                int cloudSegments = 16 + layer * 4;
+                for (int i = 0; i < cloudSegments; i++)
+                {
+                    float angle = (i / (float)cloudSegments) * (float)Math.PI * 2f + swirl * (float)Math.PI / 180f;
+
+                    // Create gaps and irregularities in the cloud
+                    if ((i + layer) % 3 == 0) continue; // Skip some segments for wispy effect
+
+                    // Turbulent wobble for cloud edge
+                    float turbulence = (float)Math.Sin(popProgress * 15f + angle * 6 + layer * 2) * (2f + stageProgress * 3f);
+                    float cloudDistance = layerRadius + turbulence;
+
+                    Vector2 cloudPoint = bubbleCenter + new Vector2(
+                        (float)Math.Cos(angle) * cloudDistance,
+                        (float)Math.Sin(angle) * cloudDistance
+                    );
+
+                    // Draw cloud puff as small circle
+                    float puffSize = 2f + stageProgress * 3f + layer * 0.5f;
+                    Color cloudColor = new((byte)100, (byte)160, (byte)100, (byte)(80 * layerOpacity)); // Dark green poison
+                    Raylib.DrawCircle((int)cloudPoint.X, (int)cloudPoint.Y, puffSize, cloudColor);
+                }
+            }
+
+            // Draw central poison concentration
+            float centralRadius = _finalBubbleRadius * (0.8f - stageProgress * 0.3f);
+            Color centralColor = new((byte)80, (byte)140, (byte)80, (byte)(60 * opacity));
+            Raylib.DrawCircle((int)bubbleCenter.X, (int)bubbleCenter.Y, centralRadius, centralColor);
+
+            // Draw swirling tendrils extending outward
+            int tendrils = 6;
+            for (int i = 0; i < tendrils; i++)
+            {
+                float tendrilAngle = (i / (float)tendrils) * (float)Math.PI * 2f + stageProgress * 90f * (float)Math.PI / 180f;
+                float tendrilLength = 20f + stageProgress * 40f;
+
+                // Create curving tendril path
+                int tendrilSegments = 8;
+                for (int seg = 0; seg < tendrilSegments - 1; seg++)
+                {
+                    float segProgress = seg / (float)(tendrilSegments - 1);
+                    float nextSegProgress = (seg + 1) / (float)(tendrilSegments - 1);
+
+                    // Curve the tendril with sine wave
+                    float curve1 = (float)Math.Sin(segProgress * Math.PI) * 8f;
+                    float curve2 = (float)Math.Sin(nextSegProgress * Math.PI) * 8f;
+
+                    Vector2 tendrilStart = bubbleCenter + new Vector2(
+                        (float)Math.Cos(tendrilAngle) * (centralRadius + segProgress * tendrilLength) + curve1,
+                        (float)Math.Sin(tendrilAngle) * (centralRadius + segProgress * tendrilLength)
+                    );
+                    Vector2 tendrilEnd = bubbleCenter + new Vector2(
+                        (float)Math.Cos(tendrilAngle) * (centralRadius + nextSegProgress * tendrilLength) + curve2,
+                        (float)Math.Sin(tendrilAngle) * (centralRadius + nextSegProgress * tendrilLength)
+                    );
+
+                    float tendrilOpacity = opacity * (1f - segProgress * 0.7f);
+                    Color tendrilColor = new((byte)90, (byte)150, (byte)90, (byte)(100 * tendrilOpacity));
+                    float tendrilThickness = 2f * (1f - segProgress * 0.5f);
+
+                    Raylib.DrawLineEx(tendrilStart, tendrilEnd, tendrilThickness, tendrilColor);
+                }
+            }
+        }
+
+        private static void DrawPopFadeStage(float xOffset, float popProgress, float stageProgress, float directionMultiplier)
+        {
+            // Final fade with lingering wisps and sparkles
+
+            // Get bubble center for the popping animation
+            Vector2 prongCenterPoint = new(12.78f, 50f);
+            Vector2 bubbleCenter = prongCenterPoint + new Vector2(_finalBubbleRadius * directionMultiplier, 0f);
+
+            float fadeOpacity = 1f - stageProgress; // Complete fade out
+
+            // Draw fading poison wisps
+            int wisps = 8;
+            for (int i = 0; i < wisps; i++)
+            {
+                float wispAngle = (i / (float)wisps) * (float)Math.PI * 2f;
+                float wispDistance = _finalBubbleRadius * (2f + stageProgress * 1.5f); // Continue expanding while fading
+
+                // Floating motion for wisps
+                float drift = (float)Math.Sin(popProgress * 8f + i * 2) * 5f;
+
+                Vector2 wispPosition = bubbleCenter + new Vector2(
+                    (float)Math.Cos(wispAngle) * wispDistance + drift,
+                    (float)Math.Sin(wispAngle) * wispDistance
+                );
+
+                float wispSize = 3f + (float)Math.Sin(popProgress * 10f + i) * 1f;
+                Color wispColor = new((byte)120, (byte)180, (byte)120, (byte)(40 * fadeOpacity));
+                Raylib.DrawCircle((int)wispPosition.X, (int)wispPosition.Y, wispSize, wispColor);
+            }
+
+            // Draw tiny sparkles from soap film remnants
+            int sparkles = 12;
+            for (int i = 0; i < sparkles; i++)
+            {
+                float sparkleAngle = (i / (float)sparkles) * (float)Math.PI * 2f + stageProgress * 720f * (float)Math.PI / 180f;
+                float sparkleDistance = _finalBubbleRadius * (0.8f + stageProgress * 2.2f);
+
+                Vector2 sparklePosition = bubbleCenter + new Vector2(
+                    (float)Math.Cos(sparkleAngle) * sparkleDistance,
+                    (float)Math.Sin(sparkleAngle) * sparkleDistance
+                );
+
+                // Twinkling effect
+                float twinkle = (float)Math.Sin(popProgress * 20f + i * 3) * 0.5f + 0.5f;
+                Color sparkleColor = new((byte)200, (byte)220, (byte)255, (byte)(60 * fadeOpacity * twinkle));
+                Raylib.DrawPixel((int)sparklePosition.X, (int)sparklePosition.Y, sparkleColor);
+
+                // Occasionally draw small cross sparkle
+                if (twinkle > 0.8f)
+                {
+                    Raylib.DrawLineEx(
+                        sparklePosition + new Vector2(-1, 0),
+                        sparklePosition + new Vector2(1, 0),
+                        1f, sparkleColor);
+                    Raylib.DrawLineEx(
+                        sparklePosition + new Vector2(0, -1),
+                        sparklePosition + new Vector2(0, 1),
+                        1f, sparkleColor);
+                }
+            }
+
+            // Final central glow fade
+            if (fadeOpacity > 0.1f)
+            {
+                float glowRadius = _finalBubbleRadius * 0.3f;
+                Color glowColor = new((byte)150, (byte)200, (byte)150, (byte)(30 * fadeOpacity));
+                Raylib.DrawCircle((int)bubbleCenter.X, (int)bubbleCenter.Y, glowRadius, glowColor);
+            }
+        }
     }
 }

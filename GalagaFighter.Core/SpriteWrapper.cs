@@ -133,8 +133,8 @@ namespace GalagaFighter.Core
             Raylib.DrawTexturePro(
                 Texture,
                 source,
-                new Rectangle(position.X, position.Y, width, height),
-                Vector2.Zero, //new Vector2(width / 2f, height / 2f),
+                new Rectangle(position.X + width/2f, position.Y + height/2f, width, height),
+                new Vector2(width / 2f, height / 2f),
                 rotation,
                 color ?? Color.White);
         }

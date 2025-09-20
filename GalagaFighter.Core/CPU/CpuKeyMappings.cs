@@ -20,5 +20,6 @@ namespace GalagaFighter.Core.CPU
         public bool IsMoveRightDown() => _cpuDecisionMaker.IsMoveRightDown();
         public bool IsShootDown()     => _cpuDecisionMaker.IsShootDown();
         public bool IsSwitchDown()    => _cpuDecisionMaker.IsSwitchDown();
+        public bool IsDeployDown()    => _cpuDecisionMaker.IsDeployDown();
     }
 }

@@ -148,10 +148,10 @@ namespace GalagaFighter.Core
             GiveAllEffects(_player2);
 #endif
 
-            var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A);
+            var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A, KeyboardKey.Q);
 
             //For Human player 2:
-            var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6);
+            var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6, KeyboardKey.Kp9);
             //For CPU Player 2:
             //_cpuDecisionMaker = new CpuDecisionMaker(_objectService, _playerManagerFactory, _player2.Id);
             //var player2Mappings = new CpuKeyMappings(_cpuDecisionMaker);

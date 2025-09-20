@@ -14,6 +14,7 @@ namespace GalagaFighter.Core.Services
         ButtonState GetMoveLeft(Guid owner);
         ButtonState GetMoveRight(Guid owner);
         ButtonState GetSwitch(Guid owner);
+        ButtonState GetDeploy(Guid owner);
     }
 
     public class InputService : IInputService
@@ -37,6 +38,7 @@ namespace GalagaFighter.Core.Services
                 player.MoveRight.Update(player.Mappings.IsMoveRightDown(), frameTime, _gameTime);
                 player.Shoot.Update(player.Mappings.IsShootDown(), frameTime, _gameTime);
                 player.Switch.Update(player.Mappings.IsSwitchDown(), frameTime, _gameTime);
+                player.Deploy.Update(player.Mappings.IsDeployDown(), frameTime, _gameTime);
             }
         }
 
@@ -44,6 +46,7 @@ namespace GalagaFighter.Core.Services
         public ButtonState GetMoveRight(Guid owner) => _players[owner].MoveRight.ToButtonState();
         public ButtonState GetShoot(Guid owner) => _players[owner].Shoot.ToButtonState();
         public ButtonState GetSwitch(Guid owner) => _players[owner].Switch.ToButtonState();
+        public ButtonState GetDeploy(Guid owner) => _players[owner].Deploy.ToButtonState();
     }
 
     public class ButtonState
@@ -74,6 +77,7 @@ namespace GalagaFighter.Core.Services
 
     public interface IInputMappings
     {
+        bool IsDeployDown();
         bool IsMoveLeftDown();
         bool IsMoveRightDown();
         bool IsShootDown();
@@ -86,19 +90,22 @@ namespace GalagaFighter.Core.Services
         public KeyboardKey MoveRight { get; set; } = KeyboardKey.S;
         public KeyboardKey Shoot { get; set; } = KeyboardKey.D;
         public KeyboardKey Switch { get; set; } = KeyboardKey.A;
+        public KeyboardKey Deploy { get; set; } = KeyboardKey.Q;
 
-        public KeyMappings(KeyboardKey left, KeyboardKey right, KeyboardKey shoot, KeyboardKey switchButton)
+        public KeyMappings(KeyboardKey left, KeyboardKey right, KeyboardKey shoot, KeyboardKey switchButton, KeyboardKey deployButton)
         {
             MoveLeft = left;
             MoveRight = right;
             Shoot = shoot;
             Switch = switchButton;
+            Deploy = deployButton;
         }
 
         public bool IsMoveLeftDown() => Raylib.IsKeyDown(MoveLeft);
         public bool IsMoveRightDown() => Raylib.IsKeyDown(MoveRight);
         public bool IsShootDown() => Raylib.IsKeyDown(Shoot);
         public bool IsSwitchDown() => Raylib.IsKeyDown(Switch);
+        public bool IsDeployDown() => Raylib.IsKeyDown(Deploy);
     }
 
     // Consolidated button tracking data
@@ -193,5 +200,6 @@ namespace GalagaFighter.Core.Services
         public ButtonData MoveRight { get; set; } = new();
         public ButtonData Shoot { get; set; } = new();
         public ButtonData Switch { get; set; } = new();
+        public ButtonData Deploy { get; set; } = new();
     }
 }

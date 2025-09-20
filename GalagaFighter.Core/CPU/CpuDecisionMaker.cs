@@ -18,6 +18,7 @@ namespace GalagaFighter.Core.CPU
         bool IsMoveRightDown();
         bool IsShootDown();
         bool IsSwitchDown();
+        bool IsDeployDown();
 
         void Update();
     }
@@ -37,11 +38,13 @@ namespace GalagaFighter.Core.CPU
         public bool _moveRight;
         public bool _shoot;
         public bool _switch;
+        public bool _deploy;
 
         public bool IsMoveLeftDown() => _moveLeft;
         public bool IsMoveRightDown() => _moveRight;
         public bool IsShootDown() => _shoot;
         public bool IsSwitchDown() => _switch;
+        public bool IsDeployDown() => _deploy;
 
         private readonly int _maxFrameCount = 10;
         private readonly int _difficulty = 1;

@@ -148,11 +148,19 @@ namespace GalagaFighter.Core.Static
             var baseHeight = 30;
 
             var remainingHealthPercentage = player.Health / 100f;
+            var remainingShieldPercentage = player.Shield / 100f;
 
             var remainingHealthStartX = GetUiResourceStartX(remainingHealthPercentage, baseWidth, reverse);
             var healthBarLinesStart = GetUiResourceStartX(1f, baseWidth, reverse);
 
+            // Draw health bar (red)
             Raylib.DrawRectangle(remainingHealthStartX, _margin, (int)(remainingHealthPercentage * baseWidth * Game.UniformScale), baseHeight, Color.Red);
+
+            // Draw shield bar (translucent silvery) over health
+            var shieldColor = new Color(200, 200, 220, 120); // Silvery with alpha
+            var remainingShieldStartX = GetUiResourceStartX(remainingShieldPercentage, baseWidth, reverse);
+            Raylib.DrawRectangle(remainingShieldStartX, _margin, (int)(remainingShieldPercentage * baseWidth * Game.UniformScale), baseHeight, shieldColor);
+
             Raylib.DrawRectangleLines(healthBarLinesStart, _margin, (int)(baseWidth * Game.UniformScale), baseHeight, Color.White);
         }
 

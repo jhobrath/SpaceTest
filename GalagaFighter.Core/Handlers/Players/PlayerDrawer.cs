@@ -83,11 +83,14 @@ namespace GalagaFighter.Core.Handlers.Players
 
             player.Move(-jiggle.X, -jiggle.Y);
             //player.Move(x: -lastShotKickback);
-            DrawHitbox(player);
+            //DrawHitbox(player);
         }
 
         private void DrawHitbox(Player player)
         {
+            if (player.Hitbox == null)
+                return;
+
             var verts = player.Hitbox.Vertices;
             verts = ContactCollisionDetector.GetActualBounds(player);
             Raylib.DrawTriangleLines(verts[2], verts[1], verts[0], Color.Red);
@@ -181,11 +184,14 @@ namespace GalagaFighter.Core.Handlers.Players
             var jiggleFactorX = modifiers.Jiggle > 0 ? (float)Game.Random.NextDouble() * modifiers.Jiggle - modifiers.Jiggle / 2f : 0;
             var jiggleFactorY = modifiers.Jiggle > 0 ? (float)Game.Random.NextDouble() * modifiers.Jiggle - modifiers.Jiggle / 2f : 0;
 
-            //var color = Color.White.ApplyAlpha(Math.Clamp(modifiers.Stats.Shield, 0, 1));
+            if (modifiers.Decorations?.Shield == null)
+                return;
+
+            var color = modifiers.Decorations.Shield.Sprite.Color.ApplyAlpha(Math.Clamp(player.Shield/100f, 0, 1));
 
             DrawWithPhantoms(player, modifiers, p =>
             {
-                modifiers.Decorations?.Shield?.Draw(p.Rect.Position + new Vector2(jiggleFactorX, jiggleFactorY), new Vector2(player.Rect.Width, player.Rect.Height), modifiers.Decorations.Shield.FollowRotation ? p.Rotation : (player.IsPlayer1 ? 90 : -90), modifiers.Decorations?.Shield?.Sprite.Color ?? Color.White);
+                modifiers.Decorations?.Shield?.Draw(p.Rect.Position + new Vector2(jiggleFactorX, jiggleFactorY), new Vector2(player.Rect.Width, player.Rect.Height), modifiers.Decorations.Shield.FollowRotation ? p.Rotation : (player.IsPlayer1 ? 90 : -90), color);
             });
         }
 

@@ -3,6 +3,7 @@ using GalagaFighter.Core.Models.Projectiles;
 using GalagaFighter.Core.Handlers.Collisions;
 using System;
 using GalagaFighter.Core.Models.Effects.Statuses;
+using GalagaFighter.Core.Handlers.Players;
 
 namespace GalagaFighter.Core.Services
 {
@@ -18,17 +19,20 @@ namespace GalagaFighter.Core.Services
         private readonly ICollisionCreationService _collisionCreationService;
         private readonly IPlayerManagerFactory _playerManagerFactory;
         private readonly INearbyCollisionDetector _nearbyCollisionDetector;
+        private readonly IPlayerDamager _playerDamager;
 
         private float _testVal = 0f;
 
         public PlayerProjectileCollisionService(IObjectService objectService, IPlayerProjectileCollisionPlanker planker,
-            ICollisionCreationService collisionCreationService, IPlayerManagerFactory playerManagerFactory, INearbyCollisionDetector nearbyCollisionDetector)
+            ICollisionCreationService collisionCreationService, IPlayerManagerFactory playerManagerFactory, 
+            INearbyCollisionDetector nearbyCollisionDetector, IPlayerDamager playerDamager)
         {
             _objectService = objectService;
             _planker = planker;
             _collisionCreationService = collisionCreationService;
             _playerManagerFactory = playerManagerFactory;
             _nearbyCollisionDetector = nearbyCollisionDetector;
+            _playerDamager = playerDamager;
         }
 
         public void HandleCollisions()
@@ -106,8 +110,7 @@ namespace GalagaFighter.Core.Services
             }
 
             var damage = projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * (1 / modifiers.Stats.Shield) * (1 / player.BaseStats.Shield);
-            player.Health -= damage;
-            effectManager.AddEffect(new ShieldTakeDamageEffect());
+            _playerDamager.Damage(player, damage, projectile.Center);
 
             var collisionObjects = projectile.Modifiers.OnCollide?.Invoke(player, projectile);
             if (collisionObjects != null && collisionObjects.Count > 0)

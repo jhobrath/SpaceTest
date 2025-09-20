@@ -28,7 +28,7 @@ namespace GalagaFighter.Core.Handlers.Collisions
             return false;
         }
 
-        private static Vector2[] GetActualBounds(GameObject obj)
+        public static Vector2[] GetActualBounds(GameObject obj)
         {
             var worldVertices = ConvertPercentagesToWorldCoordinates(
                 obj.Hitbox!.Vertices,

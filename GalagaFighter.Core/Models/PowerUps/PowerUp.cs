@@ -26,7 +26,7 @@ namespace GalagaFighter.Core.Models.PowerUps
 
         public override void Draw()
         {
-            Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
+            Sprite.Draw(Rect.Position, Rotation, Rect.Width, Rect.Height, Color);
         }
 
         public abstract List<PlayerEffect> CreateEffects(Player player);

@@ -32,6 +32,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public float Lifetime { get; set; } = 0f;
         public virtual Action<Player>? OnCollide { get; } = null;
+        public virtual bool RotationDrivenBySpeed => true;
 
         protected Projectile(IProjectileController controller, Player owner, SpriteWrapper sprite, Vector2 initialPosition, Vector2 initialSize, Vector2 initialSpeed, PlayerProjectile modifiers) 
             : base(owner.Id, sprite, initialPosition, initialSize, new Vector2(initialSpeed.X * (owner.IsPlayer1 ? 1: -1), 0f))
@@ -50,8 +51,7 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override void Draw()
         {
-            Sprite.Draw(Rect.Position, Rotation, CurrentFrameRect.Width, CurrentFrameRect.Height, Color);
-            Raylib.DrawRectangleLines((int)Rect.Position.X, (int)Rect.Position.Y, (int)Rect.Size.X, (int)Rect.Size.Y, Color.Red);
+            Sprite.Draw(Rect.Position, Rotation, Rect.Size.X, Rect.Size.Y, Color);
         }
 
         public virtual bool? IsColliding(Player player)

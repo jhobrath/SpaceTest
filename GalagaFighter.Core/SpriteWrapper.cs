@@ -98,7 +98,7 @@ namespace GalagaFighter.Core
         public void DrawFromTopLeft(Vector2 position, float rotation, float width, float height, Color? color = null)
         {
             var center = new Vector2(position.X + width / 2f, position.Y + height / 2f);
-            Draw(center, rotation, width, height, color);
+            Draw(position, rotation, width, height, color);
         }
 
         public void Draw(Vector2 position, float rotation, float width, float height, Color? color = null)
@@ -115,8 +115,8 @@ namespace GalagaFighter.Core
                     Raylib.DrawTexturePro(
                         Texture,
                         new Rectangle(0, 0, Texture.Width, Texture.Height),
-                        new Rectangle(position.X, position.Y, width, height),
-                        new Vector2(width / 2, height / 2),
+                        new Rectangle(position.X + width / 2f, position.Y + height / 2f, width, height),
+                        new Vector2(width / 2f, height / 2f),
                         rotation,
                         color ?? Color.White);
                     break;

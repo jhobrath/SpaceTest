@@ -69,7 +69,7 @@ namespace GalagaFighter.Core.Models.Collisions
 
         public override void Draw()
         {
-            Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, Color);
+            Sprite.Draw(Rect.Position, Rotation, Rect.Width, Rect.Height, Color);
         }
 
         public void GlueVerticallyTo(Player target)

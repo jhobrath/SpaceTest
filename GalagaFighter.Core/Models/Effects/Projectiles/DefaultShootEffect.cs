@@ -34,12 +34,14 @@ namespace GalagaFighter.Core.Models.Effects.Projectiles
                 ShootLeft = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_ShootLeft.png"))),
                 ShootRight = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_ShootRight.png"))),
                 Move = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShip_Move.png"))),
-                Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipGuns.png")))
+                Guns = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipGuns.png"))),
+                Shield = new SpriteDecoration(new SpriteWrapper(TextureService.Get("Sprites/Ships/MainShipBodyShield.png"))) { FollowRotation = true }
             };
         }
 
         public override void Apply(EffectModifiers modifiers)
         {
+            _decorations = SetDecorations();
             modifiers.Decorations.Apply(_decorations);
             modifiers.Projectile.OnShootProjectiles.Add((updater, owner, position, modifiers) => new DefaultProjectile(updater, owner, position, modifiers, owner.PalleteSwap));
             modifiers.Projectile.Homing += .5f;

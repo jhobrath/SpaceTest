@@ -107,6 +107,7 @@ namespace GalagaFighter.Core.Services
 
             var damage = projectile.BaseDamage * projectile.Modifiers.DamageMultiplier * (1 / modifiers.Stats.Shield) * (1 / player.BaseStats.Shield);
             player.Health -= damage;
+            effectManager.AddEffect(new ShieldTakeDamageEffect());
 
             var collisionObjects = projectile.Modifiers.OnCollide?.Invoke(player, projectile);
             if (collisionObjects != null && collisionObjects.Count > 0)

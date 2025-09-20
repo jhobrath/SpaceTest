@@ -28,6 +28,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         public override Vector2 SpawnOffset => Vector2.Zero;
         public override bool DamageOverTime => true;
 
+        public override bool RotationDrivenBySpeed => false;
+
         // Animation variables (changed from constants for debugging flexibility)
         private readonly float _bubbleFormationTime = .35f;//.35f; // average value
         
@@ -76,7 +78,6 @@ namespace GalagaFighter.Core.Models.Projectiles
 
             _formationSprite = SpriteGenerationService2.CreatePoisonFormationSprite();
             _travelSprite = SpriteGenerationService2.CreatePoisonTravelSprite();
-            _popSprite = SpriteGenerationService2.CreatePoisonPopSprite();
             _popSprite = SpriteGenerationService2.CreatePoisonPopSprite();
 
             Modifiers.RotationOffsetIncrement = 50f;
@@ -149,7 +150,7 @@ namespace GalagaFighter.Core.Models.Projectiles
             _poisonEffect.ParticleEndSize = 300f;
             _poisonEffect.EmissionRate *= 2;
             _poisonEffect.FollowRotation = true;
-            Modifiers.RotationOffsetIncrement = 5f;
+            //Modifiers.RotationOffsetIncrement = 5f;
             _poisonEffect.Offset += Vector2.One * -35;
             _poisonEffect.ParticleSpeed = new Vector2(Speed.X / 2.1f, -20 - (float)Game.Random.NextDouble() * 40f);
             _poisonEffect.ParticleSizeVariation = 100f;

@@ -26,8 +26,12 @@ namespace GalagaFighter.Core.Handlers.Projectiles
 
             projectile.Modifiers.RotationOffsetIncrement += ((projectile.Modifiers.RotationOffsetMultiplier * projectile.Modifiers.RotationOffsetIncrement) - projectile.Modifiers.RotationOffsetIncrement) * frameTime;
             projectile.Modifiers.RotationOffset += projectile.Modifiers.RotationOffsetIncrement * frameTime;
-            var rotationBasedOnSpeed = MathF.Atan2(projectile.BaseSpeed.Y, projectile.BaseSpeed.X) * 180/MathF.PI;
 
+
+            if (!projectile.RotationDrivenBySpeed)
+                return;
+
+            var rotationBasedOnSpeed = MathF.Atan2(projectile.BaseSpeed.Y, projectile.BaseSpeed.X) * 180 / MathF.PI;
             projectile.Rotation = rotationBasedOnSpeed + projectile.Modifiers.RotationOffset;
         }
     }

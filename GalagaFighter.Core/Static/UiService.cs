@@ -131,7 +131,7 @@ namespace GalagaFighter.Core.Static
                 if (shouldHighlight(effects[key].IconPath, i))
                     Raylib.DrawRectangle((int)position.X + 1, (int)position.Y + 1, (int)slot.X - 2, (int)slot.Y - 2, Color.LightGray);
 
-                texture.Draw(center, 0f, iconSize, iconSize, Color.White);
+                texture.Draw(position, 0f, iconSize, iconSize, Color.White);
 
                 // Show count for status effects (which can have multiple instances)
                 var isStatusEffect = typeof(StatusEffect).IsAssignableFrom(key);
@@ -242,7 +242,7 @@ namespace GalagaFighter.Core.Static
             var color = Color.White;
             color.A = (byte)(255 * opacity);
             
-            texture.Draw(center, 0f, size, size, color);
+            texture.Draw(new Vector2(x,y), 0f, size, size, color);
         }
 
         public static void DrawWinner(Player player1, Player player2)

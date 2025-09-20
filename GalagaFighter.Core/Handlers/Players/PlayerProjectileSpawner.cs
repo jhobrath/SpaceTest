@@ -106,7 +106,7 @@ namespace GalagaFighter.Core.Handlers.Players
             projectileModifiers.OnClone?.Invoke(projectileModifiers);
 
             var projectile = projectileFunc(_projectileController.Create(), player, spawnPosition, projectileModifiers);
-            SetRotation(projectile);
+            SetRotation(player, projectile);
             SetProjectilePlacement(player, modifiers, lastGunLeft, projectile);
 
             projectile.Modifiers.OnShoot.ForEach(x => x.Invoke(player, projectile));
@@ -127,9 +127,9 @@ namespace GalagaFighter.Core.Handlers.Players
             projectile.Move(y: (player.IsPlayer1 ? -1 : -1) * (projectile.Rect.Height / 2));
         }
 
-        private void SetRotation(Projectile projectile)
+        private void SetRotation(Player player, Projectile projectile)
         {
-            if (projectile.Speed.X < 0)
+            if (!player.IsPlayer1)
                 projectile.Rotation += -180f;
         }
     }

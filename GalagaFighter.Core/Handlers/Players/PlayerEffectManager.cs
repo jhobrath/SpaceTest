@@ -108,10 +108,7 @@ namespace GalagaFighter.Core.Handlers.Players
             var effectsToRemove = _effects.Where(x => x.IsActive == false).ToList();
             if (effectsToRemove.Any())
             {
-                foreach(var effect in effectsToRemove)
-                    foreach(var key in effect.DecorationKeys)
-                        if(_modifiers.Decorations?.ContainsKey(key) ?? false)
-                            _modifiers.Decorations?.Remove(key);
+                _modifiers.Decorations.Clear();
 
                 _effects.RemoveAll(x => x.IsActive == false);
 

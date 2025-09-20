@@ -113,7 +113,7 @@ namespace GalagaFighter.Core.Models.Particles
         {
             if (Sprite != null)
             {
-                Sprite.Draw(Center, Rotation, Rect.Width, Rect.Height, _currentColor);
+                Sprite.Draw(Rect.Position, Rotation, Rect.Width, Rect.Height, _currentColor);
             }
             else
             {

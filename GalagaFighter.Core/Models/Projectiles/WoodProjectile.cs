@@ -27,6 +27,8 @@ namespace GalagaFighter.Core.Models.Projectiles
         private readonly int SpriteIndex = Game.Random.Next(1, 4);
         public bool IsPlanked => _plankedIntoPlayer;
 
+        public override bool RotationDrivenBySpeed => false;
+
         public WoodProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, new SpriteWrapper("Temp"), initialPosition, _baseSize, _baseSpeed, modifiers)
         {

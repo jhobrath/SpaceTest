@@ -11,6 +11,7 @@ namespace GalagaFighter.Core.Models.Players
     public class Player : GameObject, IDrawnPlayer
     {
         public float Health { get; set; } = 100f;
+        public float Shield { get; set; } = 100f;
 
         public PlayerStats BaseStats { get; private set; } = new PlayerStats();
         public Color? PalleteSwap { get; set; }
@@ -62,6 +63,7 @@ namespace GalagaFighter.Core.Models.Players
     public interface IDrawnPlayer
     {
         public Vector2 Center { get; }
+        public Rectangle Rect { get; }
         public Vector2 Speed { get; }
         public float Rotation { get; }
     }
@@ -74,6 +76,7 @@ namespace GalagaFighter.Core.Models.Players
 
         public Vector2 Center => _center;
         public Vector2 Speed => _speed;
+        public Rectangle Rect => _owner.Rect;
         public float Rotation => GetRotation();
 
         private float GetRotation()

@@ -17,14 +17,16 @@ namespace GalagaFighter.Core
         public SpriteDecoration? Move { get => this.GetValueOrDefault(nameof(Move)); set => this[nameof(Move)] = value; }
         public SpriteDecoration? Guns { get => this.GetValueOrDefault(nameof(Guns)); set => this[nameof(Guns)] = value; }
         public SpriteDecoration? Glow { get => this.GetValueOrDefault(nameof(Glow)); set => this[nameof(Glow)] = value; } 
+        public SpriteDecoration? Shield { get => this.GetValueOrDefault(nameof(Shield)); set => this[nameof(Shield)] = value; }
 
         public List<SpriteDecoration> Other => this.Where(kv => 
             kv.Key != nameof(ShootLeft) && kv.Key != nameof(ShootRight) && kv.Key != nameof(ShootBoth) &&
             kv.Key != nameof(WindUpLeft) && kv.Key != nameof(WindUpRight) && kv.Key != nameof(WindUpBoth) &&
-            kv.Key != nameof(Move) && kv.Key != nameof(Guns) && kv.Key != nameof(Glow))
+            kv.Key != nameof(Move) && kv.Key != nameof(Guns) && kv.Key != nameof(Glow) && kv.Key != nameof(Shield))
             .Select(kv => kv.Value)
             .Where(v => v != null)
             .ToList()!;
+
 
         public void Apply(SpriteDecorations decorations)
         {
@@ -56,9 +58,9 @@ namespace GalagaFighter.Core
             }
         }
 
-        public void Draw(Vector2 center, Vector2 size, float rotation, Color color)
+        public void Draw(Vector2 position, Vector2 size, float rotation, Color color)
         {
-            Sprite.Draw(center, rotation, size.X, size.Y, color);
+            Sprite.Draw(position, rotation, size.X, size.Y, color);
         }
     }
 }

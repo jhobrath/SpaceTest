@@ -27,11 +27,13 @@ namespace GalagaFighter.Core.Models.Projectiles
 
         public override float? OnNearEdgeDistance => 60f;
         public override Action? OnNearEdge => HandleNearEdge;
+        private readonly bool _isPlayer1 = false;
 
 
         public MudProjectile(IProjectileController controller, Player owner, Vector2 initialPosition, PlayerProjectile modifiers)
             : base(controller, owner, GetSprite(), initialPosition, _baseSize, _baseSpeed, modifiers)
         {
+            _isPlayer1 = owner.IsPlayer1;
             AudioService.PlayShootSound();
         }
 
@@ -56,7 +58,9 @@ namespace GalagaFighter.Core.Models.Projectiles
             var mudSplatSprite = new SpriteWrapper(mudSplatTexture);
             mudSplatSprite.Color = Raylib_cs.Color.White.ApplyAlpha(.8f);
             Modifiers.Sprite = mudSplatSprite;
-            Modifiers.SizeMultiplier = new Vector2(3f,6f);
+            Move(x:(_isPlayer1 ? -1 : 1) * (Rect.Size.X*3f/2f),
+                -(Rect.Size.Y * 6f)/2 + Rect.Size.Y/2);
+            Scale(3f, 6f);
             Modifiers.SpeedMultiplier = 0f;
             Modifiers.Opacity = 1f;
             IsMagnetic = false;

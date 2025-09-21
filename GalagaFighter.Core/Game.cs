@@ -50,6 +50,7 @@ namespace GalagaFighter.Core
         private readonly IAsteroidCreationService _asteroidCreationService;
         private readonly IProjectileAsteroidCollisionService _projectileAsteroidCollisionService;
         private readonly IAsteroidPlayerCollisionService _asteroidPlayerCollisionService;
+        private readonly IProjectileTetherCollisionService _projectileTetherCollisionService;
         private  ICpuDecisionMaker _cpuDecisionMaker;
 
         // Player-specific controllers
@@ -74,6 +75,7 @@ namespace GalagaFighter.Core
             _asteroidCreationService = Registry.Get<IAsteroidCreationService>();
             _projectileAsteroidCollisionService = Registry.Get<IProjectileAsteroidCollisionService>();
             _asteroidPlayerCollisionService = Registry.Get<IAsteroidPlayerCollisionService>();
+            _projectileTetherCollisionService = Registry.Get<IProjectileTetherCollisionService>();
             // Create separate controller instances for each player
             _playerController1 = Registry.Get<IPlayerController>();
             _playerController2 = Registry.Get<IPlayerController>();
@@ -293,6 +295,7 @@ namespace GalagaFighter.Core
             _projectileProjectileCollisionService.HandleCollisions();
             _playerProjectileCollisionService.HandleCollisions();
             _projectileAsteroidCollisionService.HandleCollisions();
+            _projectileTetherCollisionService.HandleCollisions();
             //_asteroidPlayerCollisionService.HandleCollisions();
             _inputService.Update();
             _cpuDecisionMaker?.Update();

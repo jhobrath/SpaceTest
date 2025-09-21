@@ -27,6 +27,7 @@ namespace GalagaFighter.Core.Controllers
         private readonly IPlayerWarpService _playerWarpService;
         private readonly IPlayerBulletShielder _playerBulletShielder;
         private readonly IPlayerShielder _playerShielder;
+        private readonly IPlayerTetherDeployer _playerTetherDeployer;
 
         // Per-player instance state (no more dictionaries!)
         private PlayerShootState _shootState = PlayerShootState.Idle;
@@ -35,7 +36,8 @@ namespace GalagaFighter.Core.Controllers
             IPlayerDrawer playerDrawer, IPlayerManagerFactory playerManagerFactory,
             IPlayerSpender playerSpender, IRepulsionProjectileService repulsionProjectileService,
             IPlayerParticleManager playerParticleManager, IParryProjectileService parryProjectileService,
-            IPlayerWarpService playerWarpService, IPlayerBulletShielder playerBulletShielder, IPlayerShielder playerShielder)
+            IPlayerWarpService playerWarpService, IPlayerBulletShielder playerBulletShielder, 
+            IPlayerShielder playerShielder, IPlayerTetherDeployer playerTetherDeployer)
         {
             _playerMover = playerMover;
             _playerShooter = playerShooter;
@@ -48,6 +50,7 @@ namespace GalagaFighter.Core.Controllers
             _playerWarpService = playerWarpService;
             _playerBulletShielder = playerBulletShielder;
             _playerShielder = playerShielder;
+            _playerTetherDeployer = playerTetherDeployer;
         }
 
         public void Update(Game game, Player player)
@@ -84,6 +87,7 @@ namespace GalagaFighter.Core.Controllers
             _playerShielder.Shield(player);
             _playerSpender.HandleDefensiveSpend(player, modifiers);
             _playerSpender.HandleOffensiveSpend(player, modifiers);
+            _playerTetherDeployer.Deploy(player);
             _playerParticleManager.UpdateModifierEffects(player, modifiers);
         }
 

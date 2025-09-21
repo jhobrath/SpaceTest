@@ -28,6 +28,10 @@
     <None Remove="Sounds\mudsplat.wav" />
     <None Remove="Sounds\ninjashot.mp3" />
     <None Remove="Sprites\Collisions\burst.png" />
+    <None Remove="Sprites\Debris\TetherShield.png" />
+    <None Remove="Sprites\Debris\TetherShield_damage1.png" />
+    <None Remove="Sprites\Debris\TetherShield_damage2.png" />
+    <None Remove="Sprites\Debris\TetherShield_damage3.png" />
     <None Remove="Sprites\Effects\Defensives\BulletShield.png" />
     <None Remove="Sprites\Effects\Defensives\Burst.png" />
     <None Remove="Sprites\Effects\Defensives\Duck.png" />
@@ -176,6 +180,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Sprites\Debris\TetherShield.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Debris\TetherShield_damage1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Debris\TetherShield_damage2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprites\Debris\TetherShield_damage3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sprites\Ships\MainShipBodyShield.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -126,7 +126,8 @@ namespace GalagaFighter.Core.Services
                 return;
             }
 
-            _collisionCreationService.Create(player, projectile);
+            if(player.Shield <= 0f)
+                _collisionCreationService.Create(player, projectile);
 
             if(projectile.Modifiers.DeactivateOnCollision)
             { 

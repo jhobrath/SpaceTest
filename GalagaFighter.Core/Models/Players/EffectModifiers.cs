@@ -6,7 +6,13 @@ namespace GalagaFighter.Core.Models.Players
 {
     public class EffectModifiers
     {
-        public SpriteDecorations Decorations { get; private set; } = [];
+        public SpriteDecorations Decorations { get; private set; } = new() 
+        { 
+            Shield = new SpriteDecoration(
+                new SpriteWrapper("Sprites/Ships/MainShipBodyShield.png"),
+                Vector2.Zero,
+                Vector2.One * 160)
+        };
 
         public PlayerStats Stats { get; set; } = new();
         public PlayerDisplay Display { get; set; } = new();

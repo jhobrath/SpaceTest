@@ -60,6 +60,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IPlayerDamager, PlayerDamager>();
             services.AddTransient<IPlayerTetherDeployer, PlayerTetherDeployer>();
             services.AddTransient<IPlayerPhaseShifterDeployer, PlayerPhaseShifterDeployer>();
+            services.AddTransient<IPlayerPhaseShifterCollisionService, PlayerPhaseShifterCollisionService>();
             services.AddTransient<IAsteroidPlayerCollisionService, AsteroidPlayerCollisionService>();
             services.AddTransient<IProjectileTetherCollisionService, ProjectileTetherCollisionService>();
             services.AddTransient<IParticleRenderService>((provider) =>

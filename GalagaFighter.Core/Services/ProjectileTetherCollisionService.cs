@@ -21,8 +21,6 @@ namespace GalagaFighter.Core.Services
     {
         private readonly IObjectService _objectService;
 
-        private readonly ParticleEffect _collisionEffect;
-
         public ProjectileTetherCollisionService(IObjectService objectService)
         {
             _objectService = objectService;

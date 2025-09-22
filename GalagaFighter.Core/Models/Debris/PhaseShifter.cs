@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Static;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,11 @@ namespace GalagaFighter.Core.Models.Debris
         public override void Draw()
         {
             Sprite.Draw(Position, Rotation, 160, 30, Raylib_cs.Color.White);
+
+            var lifePct = Health / 100f;
+            var lifebarColor = Color.White.ApplyRed(1 - lifePct).ApplyGreen(lifePct);
+            Raylib.DrawRectangle((int)Position.X + 5, (int)(Position.Y + Rect.Height), (int)(Rect.Width - 10), 1, Color.Gray);
+            Raylib.DrawRectangle((int)Position.X + 5, (int)(Position.Y + Rect.Height), (int)((Rect.Width-10)*lifePct), 1, lifebarColor);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GalagaFighter.Core.Handlers.Players
         private const float _minimumDeployChangeTime = 1f;
         private float _deployTime = _minimumDeployChangeTime;
 
-        private const float _minimumDeadShifterTimeout = 5f;
+        private const float _minimumDeadShifterTimeout = 10f;
         private float _deadShifterTime = 0f;
 
 

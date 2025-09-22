@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core.Handlers.Collisions;
+using GalagaFighter.Core.Models.Debris;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
+using GalagaFighter.Core.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -61,6 +63,8 @@ namespace GalagaFighter.Core.Handlers.Players
             DrawPlayer(player, modifiers, playerShootState);
             DrawShield(player, modifiers, shootMeter);
             DrawGuns(player, modifiers, shootMeter);
+
+
 
             foreach (var decoration in modifiers.Decorations?.Other ?? [])
             {
@@ -187,7 +191,7 @@ namespace GalagaFighter.Core.Handlers.Players
             if (modifiers.Decorations?.Shield == null)
                 return;
 
-            var color = modifiers.Decorations.Shield.Sprite.Color.ApplyAlpha(Math.Clamp(player.Shield/100f, 0, 1));
+            var color = modifiers.Decorations.Shield.Sprite.Color.ApplyAlpha(modifiers.Display.Opacity * Math.Clamp(player.Shield/100f, 0, 1));
 
             DrawWithPhantoms(player, modifiers, p =>
             {

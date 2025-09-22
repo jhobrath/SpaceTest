@@ -18,8 +18,8 @@ namespace GalagaFighter.Core.Static
             int textureHeight = frameHeight;
             string key = "PhaseShifter";
 
-            //if (TextureService.TryGetFromKey(key, out Texture2D cachedTexture))
-            //    return new SpriteWrapper(cachedTexture, frameCount, frameDuration);
+            if (TextureService.TryGetFromKey(key, out Texture2D cachedTexture))
+               return new SpriteWrapper(cachedTexture, frameCount, frameDuration);
 
             // Gradient colors
             Color[] gradientColors = new[] {
@@ -122,6 +122,68 @@ namespace GalagaFighter.Core.Static
                 }
             }
 
+            Raylib.EndTextureMode();
+            Texture2D texture = renderTexture.Texture;
+            TextureService.Set(key, texture);
+            return new SpriteWrapper(texture, frameCount, frameDuration);
+        }
+
+        internal static SpriteWrapper CreatePhaseShifterOverlay()
+        {
+            int texWidth = 160;
+            int texHeight = 160;
+            int frameCount = 30;
+            float frameDuration = 0.5f / frameCount;
+            string key = "PhaseShifterOverlay2";
+
+            if (TextureService.TryGetFromKey(key, out Texture2D existingTexture))
+                return new SpriteWrapper(existingTexture, frameCount, frameDuration);
+
+            // Use actual Player hitbox vertices as percentages, but flip Y coordinates
+            Vector2 vTip = new Vector2(0.5f * texWidth, (1.0f - 0.08f) * texHeight);      // Ship tip: 50% in, 92% down (flipped)
+            Vector2 vLeft = new Vector2(0.045f * texWidth, (1.0f - 0.685f) * texHeight);  // Left wing: 4.5% in, 31.5% down (flipped)
+            Vector2 vRight = new Vector2(0.955f * texWidth, (1.0f - 0.685f) * texHeight); // Right wing: 95.5% in, 31.5% down (flipped)
+
+            RenderTexture2D renderTexture = Raylib.LoadRenderTexture(texWidth * frameCount, texHeight);
+            Raylib.BeginTextureMode(renderTexture);
+            Raylib.ClearBackground(Color.Blank);
+            Raylib.BeginBlendMode(BlendMode.AlphaPremultiply);
+            for (int frame = 0; frame < frameCount; frame++)
+            {
+                int xOffset = frame * texWidth;
+                float t = frame / (float)frameCount;
+                // Wavy effect parameters
+                int lines = 48;
+                float waveAmplitude = 8f + 6f * MathF.Sin(t * 2 * MathF.PI);
+                float waveFrequency = 3.5f;
+                float phase = t * 2 * MathF.PI;
+                Color waveColor = new Color(0, 255, 255, 80); // Cyan, transparent
+                
+                for (int i = 0; i < lines; i++)
+                {
+                    float pct = i / (float)(lines - 1);
+                    // Interpolate from tip to base (left wing to right wing)
+                    Vector2 left = Vector2.Lerp(vTip, vLeft, pct);
+                    Vector2 right = Vector2.Lerp(vTip, vRight, pct);
+                    
+                    // Draw a wavy line between left and right
+                    int segments = 32;
+                    for (int s = 0; s < segments - 1; s++)
+                    {
+                        float segPct0 = s / (float)(segments - 1);
+                        float segPct1 = (s + 1) / (float)(segments - 1);
+                        Vector2 p0 = Vector2.Lerp(left, right, segPct0);
+                        Vector2 p1 = Vector2.Lerp(left, right, segPct1);
+                        // Modulate y with sine wave
+                        float wave0 = MathF.Sin(phase + segPct0 * waveFrequency * 2 * MathF.PI + pct * MathF.PI) * waveAmplitude * pct;
+                        float wave1 = MathF.Sin(phase + segPct1 * waveFrequency * 2 * MathF.PI + pct * MathF.PI) * waveAmplitude * pct;
+                        p0.Y += wave0;
+                        p1.Y += wave1;
+                        Raylib.DrawLine((int)(xOffset + p0.X), (int)p0.Y, (int)(xOffset + p1.X), (int)p1.Y, waveColor);
+                    }
+                }
+            }
+            Raylib.EndBlendMode();
             Raylib.EndTextureMode();
             Texture2D texture = renderTexture.Texture;
             TextureService.Set(key, texture);

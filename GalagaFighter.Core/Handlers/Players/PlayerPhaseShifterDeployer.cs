@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core.Models;
+﻿using GalagaFighter.Core.Handlers.Collisions;
+using GalagaFighter.Core.Models;
 using GalagaFighter.Core.Models.Debris;
 using GalagaFighter.Core.Models.Players;
 using GalagaFighter.Core.Services;
@@ -25,7 +26,7 @@ namespace GalagaFighter.Core.Handlers.Players
         private float _deployTime = _minimumDeployChangeTime;
 
         private const float _minimumDeadShifterTimeout = 10f;
-        private float _deadShifterTime = 0f;
+        private float _deadShifterTime = _minimumDeadShifterTimeout;
 
 
         private List<PhaseShifter> _shifters = [];
@@ -40,26 +41,26 @@ namespace GalagaFighter.Core.Handlers.Players
         public void Deploy(Player player)
         {
             _deployTime += Raylib.GetFrameTime();
-            if (_shifters.Count > 0 && _shifters[0].Health <= 0)
-                _deadShifterTime = 0f;
+            _deadShifterTime += Raylib.GetFrameTime();
 
             DeployShifter(player);
 
-            foreach (var shifter in _shifters)
+            for (var i = _shifters.Count - 1;i>=0;i--)
             {
-                UpdateShifter(shifter);
+                var shifter = _shifters[i];
+                UpdateShifter(player, shifter);
                 DestroyShifter(shifter);
             }
         }
 
-        private void UpdateShifter(PhaseShifter shifter)
+        private void UpdateShifter(Player player, PhaseShifter shifter)
         {
             shifter.Sprite.Update(Raylib.GetFrameTime());
         }
 
         private void DeployShifter(Player player)
         {
-            if (_deadShifterTime >= _minimumDeadShifterTimeout)
+            if (_deadShifterTime < _minimumDeadShifterTimeout)
                 return;
 
             var deploy = _inputService.GetDeploy(player.Id);
@@ -75,6 +76,7 @@ namespace GalagaFighter.Core.Handlers.Players
                 {
                     _shifters[0].IsActive = false;
                     _shifters.Remove(_shifters[0]);
+                    _deadShifterTime = 0f;
                 }
 
                 _deployTime = 0f;
@@ -87,6 +89,8 @@ namespace GalagaFighter.Core.Handlers.Players
                 return;
 
             shifter.IsActive = false;
+            _shifters.Remove(shifter);
+            _deadShifterTime = 0f;
         }
     }
 }

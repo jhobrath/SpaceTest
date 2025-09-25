@@ -29,7 +29,7 @@ namespace GalagaFighter.Core.Handlers.Players
 
             if (player.Shield > 0f)
             {
-                var shieldDamage = Math.Min(player.Shield, damage);
+                var shieldDamage = Math.Min(player.Shield, damage*5);
                 player.Shield -= shieldDamage;
                 damage -= Math.Min(player.Shield, damage);
                 AddEffect(player, new ShieldTakeDamageEffect(point.Value - player.Center));

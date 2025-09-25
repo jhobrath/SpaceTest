@@ -27,9 +27,6 @@ namespace GalagaFighter.Core.Services
             var groupedProjectiles = projectiles.GroupBy(x => x.Owner).ToList();
             if (groupedProjectiles.Count() < 2) return;
 
-            DebugWriter.Write(projectiles.Count.ToString());
-
-
             var p1Projectiles = groupedProjectiles.First();
             var p2Projectiles = groupedProjectiles.Last();
 

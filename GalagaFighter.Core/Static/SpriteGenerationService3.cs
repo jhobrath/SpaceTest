@@ -134,7 +134,8 @@ namespace GalagaFighter.Core.Static
             int texHeight = 160;
             int frameCount = 30;
             float frameDuration = 0.5f / frameCount;
-            string key = "PhaseShifterOverlay2";
+            var waveColor = Color.White;//Colored by tint
+            string key = $"PhaseShifterOverlay";
 
             if (TextureService.TryGetFromKey(key, out Texture2D existingTexture))
                 return new SpriteWrapper(existingTexture, frameCount, frameDuration);
@@ -143,6 +144,7 @@ namespace GalagaFighter.Core.Static
             Vector2 vTip = new Vector2(0.5f * texWidth, (1.0f - 0.08f) * texHeight);      // Ship tip: 50% in, 92% down (flipped)
             Vector2 vLeft = new Vector2(0.045f * texWidth, (1.0f - 0.685f) * texHeight);  // Left wing: 4.5% in, 31.5% down (flipped)
             Vector2 vRight = new Vector2(0.955f * texWidth, (1.0f - 0.685f) * texHeight); // Right wing: 95.5% in, 31.5% down (flipped)
+
 
             RenderTexture2D renderTexture = Raylib.LoadRenderTexture(texWidth * frameCount, texHeight);
             Raylib.BeginTextureMode(renderTexture);
@@ -157,7 +159,6 @@ namespace GalagaFighter.Core.Static
                 float waveAmplitude = 8f + 6f * MathF.Sin(t * 2 * MathF.PI);
                 float waveFrequency = 3.5f;
                 float phase = t * 2 * MathF.PI;
-                Color waveColor = new Color(0, 255, 255, 80); // Cyan, transparent
                 
                 for (int i = 0; i < lines; i++)
                 {

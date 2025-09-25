@@ -50,7 +50,7 @@ namespace GalagaFighter.Core.Services
                     {
                         shifter.Health -= 10;
                         
-                        effectManager.AddEffect(new PhaseShiftedEffect());
+                        effectManager.AddEffect(new PhaseShiftedEffect(player, shifter));
                     }
                 }
             }

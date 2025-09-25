@@ -34,7 +34,6 @@ namespace GalagaFighter.Core.Models.Effects.Statuses
         public override void OnUpdate(float frameTime)
         {
             _lifetime += frameTime;
-            DebugWriter.Write(_lifetime.ToString());
             base.OnUpdate(frameTime);
         }
     }

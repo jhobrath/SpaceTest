@@ -33,8 +33,8 @@ namespace GalagaFighter.Core.Handlers.Players
             if (_lastDamageOccurred < 3f)
                 return;
 
-            var maxAmountGained = 5f;
-            var amountGained = Math.Clamp((_lastDamageOccurred - 3f)/5f, 0, 1);
+            var maxAmountGained = 50f;
+            var amountGained = Math.Clamp((_lastDamageOccurred - 3f), 0, 1);
             amountGained = amountGained * maxAmountGained;
 
             player.Shield += amountGained * Raylib.GetFrameTime();

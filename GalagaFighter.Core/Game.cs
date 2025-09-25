@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core.Controllers;
 using GalagaFighter.Core.CPU;
+using GalagaFighter.Core.CPU.Gambits;
 using GalagaFighter.Core.Models.Effects.Defensives;
 using GalagaFighter.Core.Models.Effects.Offensives;
 using GalagaFighter.Core.Models.Effects.Projectiles;
@@ -52,6 +53,7 @@ namespace GalagaFighter.Core
         private readonly IAsteroidPlayerCollisionService _asteroidPlayerCollisionService;
         private readonly IProjectileTetherCollisionService _projectileTetherCollisionService;
         private readonly IPlayerPhaseShifterCollisionService _playerPhaseShifterCollisionService;
+        private readonly IOpponentBulletWatcher _opponentBulletWatcher;
         private  ICpuDecisionMaker _cpuDecisionMaker;
 
         // Player-specific controllers
@@ -78,6 +80,7 @@ namespace GalagaFighter.Core
             _asteroidPlayerCollisionService = Registry.Get<IAsteroidPlayerCollisionService>();
             _projectileTetherCollisionService = Registry.Get<IProjectileTetherCollisionService>();
             _playerPhaseShifterCollisionService = Registry.Get<IPlayerPhaseShifterCollisionService>();
+            _opponentBulletWatcher = Registry.Get<IOpponentBulletWatcher>();
             // Create separate controller instances for each player
             _playerController1 = Registry.Get<IPlayerController>();
             _playerController2 = Registry.Get<IPlayerController>();
@@ -155,10 +158,11 @@ namespace GalagaFighter.Core
             var player1Mappings = new KeyMappings(KeyboardKey.W, KeyboardKey.S, KeyboardKey.D, KeyboardKey.A, KeyboardKey.Q);
 
             //For Human player 2:
-            var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6, KeyboardKey.Kp9);
+            //var player2Mappings = new KeyMappings(KeyboardKey.Kp5, KeyboardKey.Kp8, KeyboardKey.Kp4, KeyboardKey.Kp6, KeyboardKey.Kp9);
             //For CPU Player 2:
-            //_cpuDecisionMaker = new CpuDecisionMaker(_objectService, _playerManagerFactory, _player2.Id);
-            //var player2Mappings = new CpuKeyMappings(_cpuDecisionMaker);
+            _cpuDecisionMaker = new CpuDecisionMaker2(_opponentBulletWatcher, _objectService, _playerManagerFactory); //new CpuDecisionMaker(_objectService, _playerManagerFactory, _player2.Id);
+            ((CpuDecisionMaker2)_cpuDecisionMaker).InitializePlayer(_player2);
+            var player2Mappings = new CpuKeyMappings(_cpuDecisionMaker);
 
             _inputService.AddPlayer(_player1.Id, player1Mappings);
             _inputService.AddPlayer(_player2.Id, player2Mappings);
@@ -374,6 +378,10 @@ namespace GalagaFighter.Core
             Raylib.ClearBackground(Color.Black);
 
             DrawGameObjects();
+
+            var bulletScore = _opponentBulletWatcher.GetThreat(_player2);
+            DebugWriter.Write($"{bulletScore.Above:0.00}|{bulletScore.Below:0.00}");
+
             UiService.DrawUi(_player1, _player2);
             Raylib.EndDrawing();
         }

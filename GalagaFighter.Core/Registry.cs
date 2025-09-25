@@ -7,6 +7,7 @@ using GalagaFighter.Core.Handlers.Projectiles;
 using System;
 using GalagaFighter.Core.CPU;
 using GalagaFighter.Core.Models.Players;
+using GalagaFighter.Core.CPU.Gambits;
 
 namespace GalagaFighter.Core
 {
@@ -63,6 +64,7 @@ namespace GalagaFighter.Core
             services.AddTransient<IPlayerPhaseShifterCollisionService, PlayerPhaseShifterCollisionService>();
             services.AddTransient<IAsteroidPlayerCollisionService, AsteroidPlayerCollisionService>();
             services.AddTransient<IProjectileTetherCollisionService, ProjectileTetherCollisionService>();
+            services.AddTransient<IOpponentBulletWatcher, OpponentBulletWatcher>();
             services.AddTransient<IParticleRenderService>((provider) =>
                 new ParticleRenderService(
                     provider.GetRequiredService<IObjectService>()));

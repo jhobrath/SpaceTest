@@ -65,7 +65,6 @@ namespace GalagaFighter.Core.Handlers.Players
             DrawGuns(player, modifiers, shootMeter);
 
 
-
             foreach (var decoration in modifiers.Decorations?.Other ?? [])
             {
                 // Apply rotation transformation to the offset

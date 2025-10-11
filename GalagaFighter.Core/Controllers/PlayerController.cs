@@ -92,7 +92,8 @@ namespace GalagaFighter.Core.Controllers
             _playerSpender.HandleOffensiveSpend(player, modifiers);
 
             //_playerTetherDeployer.Deploy(player);
-            _playerPhaseShifterDeployer.Deploy(player);
+            //_playerPhaseShifterDeployer.Deploy(player);
+            _playerTetherDeployer.Deploy(player);
 
             _playerParticleManager.UpdateModifierEffects(player, modifiers);
         }

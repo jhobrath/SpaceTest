@@ -15,9 +15,16 @@ namespace GalagaFighter.Core.Handlers.Players
 
     public class PlayerShielder : IPlayerShielder
     {
-        private float _lastShield = 3f;
+        //How long does it take after a hit for the shield to start recharging
+        private const float _shieldRechargeTime = 1f;
+
+        //How much more damage does a bullet do to a shield than a player
+        private const float _shieldDamageMultiplier = 10f;
+
+        private float _lastShield = _shieldRechargeTime;
+        private float _lastDamageOccurred = _shieldRechargeTime;
         private float _lastHealth = 100f;
-        private float _lastDamageOccurred = 3f;
+        private float _shieldRechargeStartValue = 100f; // Track what shield value was when recharge began
 
         public void Shield(Player player)
         {
@@ -26,21 +33,29 @@ namespace GalagaFighter.Core.Handlers.Players
                 _lastShield = player.Shield;
                 _lastHealth = player.Health;
                 _lastDamageOccurred = 0f;
+                _shieldRechargeStartValue = player.Shield; // Store the starting shield value for this recharge cycle
                 return;
             }
 
             _lastDamageOccurred += Raylib.GetFrameTime();
-            if (_lastDamageOccurred < 3f)
+            
+            // If we haven't reached the recharge delay yet, don't start recharging
+            if (_lastDamageOccurred < _shieldRechargeTime)
                 return;
 
-            var maxAmountGained = 50f;
-            var amountGained = Math.Clamp((_lastDamageOccurred - 3f), 0, 1);
-            amountGained = amountGained * maxAmountGained;
+            if (player.Shield >= 100)
+                return;
 
-            player.Shield += amountGained * Raylib.GetFrameTime();
-
-            if (player.Shield > 100f)
-                player.Shield = 100f;
+            // Calculate time elapsed since recharge delay finished (this starts at 0 when recharge begins)
+            float rechargeTimeElapsed = _lastDamageOccurred - _shieldRechargeTime;
+            
+            // Logarithmic recharge formula: newShield = 100 - (100 - startShield) * e^(-k * timeElapsed)
+            // Where k is chosen so that after _shieldRechargeTime seconds, we reach ~99.9% of full
+            // Using k = 6.9 / _shieldRechargeTime gives us ~99.9% completion after _shieldRechargeTime seconds
+            float k = 6.9f / _shieldRechargeTime;
+            float targetShield = 100f - (100f - _shieldRechargeStartValue) * (float)Math.Exp(-k * rechargeTimeElapsed);
+            
+            player.Shield = Math.Clamp(targetShield, _shieldRechargeStartValue, 100f);
 
             _lastShield = player.Shield;
             _lastHealth = player.Health;

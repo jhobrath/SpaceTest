@@ -11,9 +11,11 @@ namespace GalagaFighter.Core.Handlers.Players
         bool Spend(float amount);
         void Update();
         void HandleShootMeter(ButtonState shootState);
+        void HandleMoveCharge(ButtonState moveUp, ButtonState moveDown);
 
         float ShieldMeter { get; }
         float ShootMeter { get; }
+        float MoveCharge { get; }
     }
     public class PlayerResourceManager : IPlayerResourceManager
     {
@@ -23,13 +25,14 @@ namespace GalagaFighter.Core.Handlers.Players
 
         //TODO: This is duplicate logic to whats in default shoot effect. Any idea on how to share logic?
         public float ShootMeter => Math.Clamp(_shootMeter / 3f, 0, 1);
-
+        public float MoveCharge => (_moveCharge + 2f)/4f; // Ranges from 0-1f (the less you move, the lower)
 
         private const float WindowSeconds = 3f;
         private const float MaxShotCount = 12f;
 
         private float _amountLeftToSpend = 0f;
         private float _shootMeter = 5f;
+        private float _moveCharge = -2f;
 
         private List<double> _shotTimestamps = new();
 
@@ -89,6 +92,20 @@ namespace GalagaFighter.Core.Handlers.Players
             {
                 _shootMeter = Math.Min(5, _shootMeter + Raylib.GetFrameTime()*2f);
             }
+        }
+
+        public void HandleMoveCharge(ButtonState moveUp, ButtonState moveDown)
+        {
+            if(moveUp.IsDown || moveDown.IsDown)
+            {
+                _moveCharge += Raylib.GetFrameTime();
+            }
+            else
+            {
+                _moveCharge -= Raylib.GetFrameTime();
+            }
+
+            _moveCharge = Math.Clamp(_moveCharge, -2f, 2f);
         }
     }
 }

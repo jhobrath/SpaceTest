@@ -18,6 +18,9 @@ namespace GalagaFighter.Core.Handlers.Players
     {
         private readonly IPlayerManagerFactory _playerManagerFactory;
 
+        //How much more damage does a bullet do to a shield than a player
+        private const float _shieldDamageMultiplier = 10f;
+
         public PlayerDamager(IPlayerManagerFactory playerManagerFactory)
         {
             _playerManagerFactory = playerManagerFactory;
@@ -27,15 +30,18 @@ namespace GalagaFighter.Core.Handlers.Players
         {
             point = point ?? player.Center;
 
-            if (player.Shield > 0f)
+            if(player.Shield > 50f)
             {
-                var shieldDamage = Math.Min(player.Shield, damage*5);
-                player.Shield -= shieldDamage;
-                damage -= Math.Min(player.Shield, damage);
+                player.Shield = 50f;
+                AddEffect(player, new ShieldTakeDamageEffect(point.Value - player.Center));
+                return;
+            }
+            else if (player.Shield > 0f)
+            {
+                player.Shield = 0f;
                 AddEffect(player, new ShieldTakeDamageEffect(point.Value - player.Center));
             }
-
-            if (damage > 0f)
+            else 
             {
                 player.Health -= Math.Min(player.Health, damage);
                 AddEffect(player, new HealthTakeDamageEffect(point.Value - player.Center));

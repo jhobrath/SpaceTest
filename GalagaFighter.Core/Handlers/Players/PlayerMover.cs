@@ -3,6 +3,7 @@ using GalagaFighter.Core.Services;
 using Raylib_cs;
 using System;
 using System.Numerics;
+using System.Resources;
 
 namespace GalagaFighter.Core.Handlers.Players
 {
@@ -14,19 +15,25 @@ namespace GalagaFighter.Core.Handlers.Players
     {
         private readonly IInputService _inputService;
         private readonly IPlayerParticleManager _particleManager;
+        private readonly IPlayerManagerFactory _playerManagerFactory;
 
         private bool _particleInitialized = false;
 
-        public PlayerMover(IInputService inputService, IPlayerParticleManager particleManager)
+        public PlayerMover(IInputService inputService, IPlayerParticleManager particleManager, 
+            IPlayerManagerFactory playerManagerFactory)
         {
             _inputService = inputService;
             _particleManager = particleManager;
+            _playerManagerFactory = playerManagerFactory;
         }
 
         public void Move(Player player, EffectModifiers modifiers)
         {
             var left = _inputService.GetMoveLeft(player.Id);
             var right = _inputService.GetMoveRight(player.Id);
+
+            var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
+            resourceManager.HandleMoveCharge(left, right);
 
             SetSpeed(player, modifiers, left, right);
             SetPosition(player, modifiers);

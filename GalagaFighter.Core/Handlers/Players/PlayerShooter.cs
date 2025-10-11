@@ -8,6 +8,7 @@ using Raylib_cs;
 using System;
 using System.Linq;
 using System.Numerics;
+using System.Resources;
 
 namespace GalagaFighter.Core.Handlers.Players
 {
@@ -84,21 +85,7 @@ namespace GalagaFighter.Core.Handlers.Players
 
         private void UpdateShootMeter(Player player, EffectModifiers modifiers, ButtonState shootButton)
         {
-            if (!modifiers.AffectedByShootMeter)
-                return;
-
-            var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
-            resourceManager.HandleShootMeter(shootButton);
-
-            if (modifiers.WereReset)
-                _lastFireRateFactor = 1f;
-
-            var shootMeter = .5f + .5f*resourceManager.ShootMeter;
             
-            modifiers.Stats.FireRateMultiplier *= _lastFireRateFactor;
-            modifiers.Stats.FireRateMultiplier /= shootMeter;
-
-            _lastFireRateFactor = shootMeter;
         }
 
         protected virtual bool GetCanShoot(Player player, EffectModifiers modifiers, ButtonState shootButton)
@@ -115,10 +102,23 @@ namespace GalagaFighter.Core.Handlers.Players
                     return canMagnet.Value;
             }
 
+            var resourceManager = _playerManagerFactory.GetResourceManager(player.Id);
+            resourceManager.HandleShootMeter(shootButton);
+
+            var fireRateMultiplier = modifiers.Stats.FireRateMultiplier;
+            if (modifiers.AffectedByShootMeter)
+            {
+                //fireRateMultiplier /= .5f + .5f * resourceManager.ShootMeter;
+                //fireRateMultiplier *= .5f + (1f - resourceManager.MoveCharge);
+            }
+
+            if (player.IsPlayer1)
+                DebugWriter.Write(fireRateMultiplier.ToString());
+
             if (!shootButton)
                 return false;
 
-            var fireRate = modifiers.Stats.FireRateMultiplier * EffectiveFireRate * player.BaseStats.FireRateMultiplier;
+            var fireRate = fireRateMultiplier * EffectiveFireRate * player.BaseStats.FireRateMultiplier;
             if (_fireRateTimer < fireRate)
                 return false;
 

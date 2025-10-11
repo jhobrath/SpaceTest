@@ -311,7 +311,7 @@ namespace GalagaFighter.Core
             HandleInput();
             UpdateGameObjects();
 
-            _powerUpService.Roll();
+            //_powerUpService.Roll();
         }
 
         private void HandleInput()
@@ -380,7 +380,7 @@ namespace GalagaFighter.Core
             DrawGameObjects();
 
             var bulletScore = _opponentBulletWatcher.GetThreat(_player2);
-            DebugWriter.Write($"{bulletScore.Above:0.00}|{bulletScore.Below:0.00}");
+            //DebugWriter.Write($"{bulletScore.Above:0.00}|{bulletScore.Below:0.00}");
 
             UiService.DrawUi(_player1, _player2);
             Raylib.EndDrawing();

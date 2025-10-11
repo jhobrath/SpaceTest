@@ -95,7 +95,7 @@ namespace GalagaFighter.Core.Handlers.Players
 
         private void DeployTether(Player player)
         {
-            if (_deadTetherTime >= _minimumDeadTetherTimeout)
+            if (_deadTetherTime <= _minimumDeadTetherTimeout)
                 return;
 
                 var deploy = _inputService.GetDeploy(player.Id);

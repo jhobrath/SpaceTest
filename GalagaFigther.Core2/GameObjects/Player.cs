@@ -1,4 +1,4 @@
-﻿using GalagaFigther.Core2.Helper;
+﻿using GalagaFigther.Core2.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

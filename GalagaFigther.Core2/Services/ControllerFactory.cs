@@ -20,10 +20,10 @@ namespace GalagaFigther.Core2.Services
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly ControllerBase<Player> _playerController; 
 
-        public ControllerFactory(IGameDataRegistry gameDataRegistry)
+        public ControllerFactory(IGameDataRegistry gameDataRegistry, IInputService inputService)
         {
             _gameDataRegistry = gameDataRegistry;
-            _playerController = new PlayerController(_gameDataRegistry);
+            _playerController = new PlayerController(_gameDataRegistry, inputService);
         }
 
         public void Update<T>(T gameObject, float frameTime) where T : GameObject

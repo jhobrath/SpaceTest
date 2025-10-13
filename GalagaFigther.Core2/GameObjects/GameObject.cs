@@ -1,4 +1,4 @@
-﻿using GalagaFigther.Core2.Helper;
+﻿using GalagaFigther.Core2.Helpers;
 using GalagaFigther.Core2.Services;
 using Raylib_cs;
 using System;
@@ -16,6 +16,7 @@ namespace GalagaFigther.Core2.GameObjects
         public Guid Id { get; set; }
         public Rectangle Rect { get; set; }
         public Vector2 Speed { get; set; }
+        public Vector2 Acceleration { get; set; }
         public virtual Vector2 Origin => TopLeft;
         public SpriteBase Sprite { get; set; }
         public float Rotation { get; set; }
@@ -58,6 +59,15 @@ namespace GalagaFigther.Core2.GameObjects
 
         public void HurryBy(float? x = null, float? y = null) =>
             Speed *= new Vector2(x ?? 1, y ?? 1);
+
+        public void Accel(float? x = null, float? y = null) =>
+            Acceleration += new Vector2(x ?? 0, y ?? 0);
+
+        public void AccelTo(float? x = null, float? y = null) =>
+            Acceleration = new(x ?? Acceleration.X, y ?? Acceleration.Y);
+
+        public void AccelBy(float? x = null, float? y = null) =>
+            Acceleration *= new Vector2(x ?? 1, y ?? 1);
 
         public virtual void Update(IControllerFactory controllerFactory, float frameTime)
         {

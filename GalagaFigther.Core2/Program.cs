@@ -5,8 +5,6 @@ using GalagaFigther.Core2.Models;
 using GalagaFigther.Core2.Services;
 using System.Numerics;
 
-Console.WriteLine("Hello, World!");
-
 var gameState = new GameState
 {
     ScreenSize = new Vector2(1920, 1080)
@@ -14,8 +12,10 @@ var gameState = new GameState
 
 var objectService = new ObjectService();
 var gameDataRegistry = new GameDataRegistry();
-var controllerFactory = new ControllerFactory(gameDataRegistry);
-var initialObjectBuilder = new InitialObjectBuilder(objectService);
+var inputService = new InputService();
+var controllerFactory = new ControllerFactory(gameDataRegistry, inputService);
+var persistentValueHandler = new PersistentValueHandler();
+var initialObjectBuilder = new InitialObjectBuilder(objectService, persistentValueHandler);
 
-var game = new Game(objectService, controllerFactory, initialObjectBuilder);
+var game = new Game(objectService, controllerFactory, initialObjectBuilder, inputService, persistentValueHandler);
 game.Run(gameState);

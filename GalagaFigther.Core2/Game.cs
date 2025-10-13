@@ -10,18 +10,22 @@ namespace GalagaFigther.Core2
         private readonly IObjectService _objectService;
         private readonly IControllerFactory _controllerFactory;
         private readonly IInitialObjectBuilder _initialObjectBuilder;
+        private readonly IInputService _inputService;
+        private readonly IPersistentValueHandler _persistentValueHandler;
 
-        public Game(IObjectService objectService, IControllerFactory controllerFactory, IInitialObjectBuilder initialObjectBuilder)
+        public Game(IObjectService objectService, IControllerFactory controllerFactory, IInitialObjectBuilder initialObjectBuilder,
+            IInputService inputService, IPersistentValueHandler persistentValueHandler)
         {
             _objectService = objectService;
             _controllerFactory = controllerFactory;
             _initialObjectBuilder = initialObjectBuilder;
+            _inputService = inputService;
+            _persistentValueHandler = persistentValueHandler;
         }
 
         public void Run(GameState state)
         {
             CreateWindow(state);
-            RegisterControllers();
 
             _initialObjectBuilder.Build();
 
@@ -30,30 +34,48 @@ namespace GalagaFigther.Core2
                 var frameTime = Raylib.GetFrameTime();
                 var gameObjects = _objectService.GetAll();
                 
-                foreach(var gameObject in gameObjects)
-                {
-                    gameObject.Update(_controllerFactory, frameTime);
-                }
+                UpdateGameObjects(frameTime, gameObjects);
+                UpdateServices(frameTime);
+                DrawGameObjects(frameTime, gameObjects);
 
-                Raylib.ClearBackground(Color.Black);
-                Raylib.BeginDrawing();
-
-                foreach (var gameObject in gameObjects)
-                {
-                    gameObject.Draw(_controllerFactory, frameTime);
-                }
-
-                Raylib.EndDrawing();
-
-                if(Raylib.WindowShouldClose())
+                if (Raylib.WindowShouldClose())
                     break;
+
+                if(Raylib.IsKeyPressed(KeyboardKey.Space))
+                {
+                    _objectService.Clear();
+                    _initialObjectBuilder.Build();
+                }
             }
 
             CloseWindow();
         }
 
-        private void RegisterControllers()
+        private void UpdateServices(float frameTime)
         {
+            _inputService.Update(frameTime);
+            _persistentValueHandler.Update();
+        }
+
+        private void DrawGameObjects(float frameTime, IEnumerable<GameObjects.GameObject> gameObjects)
+        {
+            Raylib.ClearBackground(Color.Black);
+            Raylib.BeginDrawing();
+
+            foreach (var gameObject in gameObjects)
+            {
+                gameObject.Draw(_controllerFactory, frameTime);
+            }
+
+            Raylib.EndDrawing();
+        }
+
+        private void UpdateGameObjects(float frameTime, IEnumerable<GameObjects.GameObject> gameObjects)
+        {
+            foreach (var gameObject in gameObjects)
+            {
+                gameObject.Update(_controllerFactory, frameTime);
+            }
         }
 
         private static void CreateWindow(GameState state)

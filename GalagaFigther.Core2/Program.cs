@@ -13,10 +13,12 @@ var objectService = new ObjectService();
 var inputService = new InputService();
 var playerMover = new PlayerMover(gameDataRegistry, inputService);
 var playerRotator = new PlayerRotator(gameDataRegistry);
-var playerController = new PlayerController(playerMover, playerRotator);
+var playerDrawer = new PlayerDrawer(gameDataRegistry);
+var playerAffector = new PlayerAffector(gameDataRegistry);
+var playerController = new PlayerController(playerMover, playerRotator, playerAffector, playerDrawer);
 var controllerFactory = new ControllerFactory(playerController);
 var persistentValueHandler = new PersistentValueHandler();
-var initialObjectBuilder = new InitialObjectBuilder(objectService, persistentValueHandler);
+var initialObjectBuilder = new InitialObjectBuilder(objectService, persistentValueHandler, gameDataRegistry);
 
 var game = new Game(objectService, controllerFactory, initialObjectBuilder, inputService, persistentValueHandler);
 game.Run(gameState);

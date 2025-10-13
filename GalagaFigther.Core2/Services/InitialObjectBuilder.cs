@@ -1,12 +1,10 @@
-﻿using GalagaFigther.Core2.GameObjects;
+﻿using GalagaFigther.Core2.Controllers;
+using GalagaFigther.Core2.Effects;
+using GalagaFigther.Core2.Effects.Projectiles;
+using GalagaFigther.Core2.GameObjects;
 using GalagaFigther.Core2.Helpers;
 using Raylib_cs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFigther.Core2.Services
 {
@@ -18,11 +16,13 @@ namespace GalagaFigther.Core2.Services
     {
         private IObjectService _objectService;
         private IPersistentValueHandler _persistentValueHandler;
+        private IGameDataRegistry _gameDataRegistry;
 
-        public InitialObjectBuilder(IObjectService objectService, IPersistentValueHandler persistentValueHandler)
+        public InitialObjectBuilder(IObjectService objectService, IPersistentValueHandler persistentValueHandler, IGameDataRegistry gameDataRegistry)
         {
             _objectService = objectService;
             _persistentValueHandler = persistentValueHandler;
+            _gameDataRegistry = gameDataRegistry;
         }
 
         public void Build()
@@ -45,7 +45,10 @@ namespace GalagaFigther.Core2.Services
 
             _persistentValueHandler.RegisterRange(player, p => p.X, 0, 400f);
             _persistentValueHandler.RegisterRange(player, p => p.Y, 0, screenHeight - player.Height);
-            //_persistentValueHandler.RegisterRange(player, p => p.Speed, new(-1000f, -1000f), new(1000f,1000f));
+
+            var effects = _gameDataRegistry.Get<List<PlayerEffect>>(player);
+            effects.Add(new DefaultShootEffect());
+
             _objectService.Add(player);
         }
     }

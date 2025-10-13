@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Models.Player
+namespace GalagaFigther.Core2.Models.Players
 {
     public class PlayerRotationData
     {

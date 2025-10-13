@@ -1,7 +1,7 @@
 ﻿using GalagaFigther.Core2.Controllers;
 using GalagaFigther.Core2.GameObjects;
 using GalagaFigther.Core2.Models.Game;
-using GalagaFigther.Core2.Models.Player;
+using GalagaFigther.Core2.Models.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,6 @@
 ﻿using GalagaFigther.Core2.GameObjects;
 using GalagaFigther.Core2.Handlers.Players;
-using GalagaFigther.Core2.Models.Player;
+using GalagaFigther.Core2.Models.Players;
 using GalagaFigther.Core2.Services;
 using GalagaFigther.Core2.Services.Static;
 using System;
@@ -20,25 +20,31 @@ namespace GalagaFigther.Core2.Controllers
 
     public class PlayerController : IController<Player>
     {
-        public readonly IPlayerMover _playerMover;
-        public readonly IPlayerRotator _playerRotator;
+        private readonly IPlayerMover _playerMover;
+        private readonly IPlayerRotator _playerRotator;
+        private readonly IPlayerAffector _playerAffector;
+        private readonly IPlayerDrawer _playerDrawer;
 
-        public PlayerController(IPlayerMover playerMover, IPlayerRotator playerRotator)
+        public PlayerController(IPlayerMover playerMover, IPlayerRotator playerRotator,
+            IPlayerAffector playerAffector, IPlayerDrawer playerDrawer)
             : base()
         {
             _playerMover = playerMover;
             _playerRotator = playerRotator;
+            _playerAffector = playerAffector;
+            _playerDrawer = playerDrawer;
         }
 
         public void Update(Player player, float frameTime)
         {
             _playerMover.Move(player, frameTime);
             _playerRotator.Rotate(player, frameTime);
+            _playerAffector.Affect(player, frameTime);
         }
 
         public void Draw(Player player, float frameTime)
         {
-            player.Sprite.Draw(player);
+            _playerDrawer.Draw(player, frameTime);
         }
     }
 }

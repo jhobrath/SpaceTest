@@ -20,7 +20,7 @@ namespace GalagaFigther.Core2.Effects.Projectiles
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.Decorations.Add(new SpriteDecoration(_sprite, followRotation: false));
+            modifiers.Decorations.Add(new SpriteDecoration(_sprite) { MaintainAlpha = true });
         }
     }
 }

@@ -11,6 +11,7 @@ namespace GalagaFigther.Core2.Models
         public bool MaintainRotation { get; set; }
         public bool MaintainColor { get; set; }
         public float InitialRotation { get; set; } = 0f;
+        public bool MaintainAlpha { get; set; } = true;
         public int Depth { get; set; } = 0;
 
         public abstract void Update(GameObject gameObject, float frameTime);
@@ -39,6 +40,9 @@ namespace GalagaFigther.Core2.Models
             var rect = new Rectangle(gameObject.Rect.Position + Offset, gameObject.Rect.Size);
             var rotation = MaintainRotation ? gameObject.Rotation : 0;
             var color = MaintainColor ? gameObject.Color : Color.White;
+
+            if (!MaintainColor && MaintainAlpha)
+                color = new Color(1f, 1f, 1f, gameObject.Color.A/255f);
 
             Sprite.Draw(rect, InitialRotation + rotation, color);
         }

@@ -10,5 +10,10 @@ namespace GalagaFigther.Core2.Models.Players
     public class PlayerModifiers
     {
         public List<Decoration> Decorations { get; set; } = [];
+
+        public float RedAlpha { get; set; } = 1f;
+        public float BlueAlpha { get; set; } = 1f;
+        public float GreenAlpha { get; set; } = 1f;
+        public float Alpha { get; set; } = 1f;
     }
 }

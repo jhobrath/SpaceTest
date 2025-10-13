@@ -31,15 +31,19 @@ namespace GalagaFigther.Core2.Handlers.Players
         {
             if (_gameDataRegistry.Has<PlayerModifiers>(player) && effects.All(x => x.IsActive))
                 return;
-         
+
             var modifiers = new PlayerModifiers();
-            
+
             effects.RemoveAll(x => !x.IsActive);
             foreach (var effect in effects)
                 effect.Apply(modifiers);
 
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
-            modifiers.Decorations.ForEach(x => x.InitialRotation = rotationData.InitialRotation);
+            foreach (var deco in modifiers.Decorations)
+            {
+                if (!deco.MaintainRotation)
+                    deco.InitialRotation = rotationData.InitialRotation;
+            }
 
             _gameDataRegistry.Set(player, modifiers);
         }

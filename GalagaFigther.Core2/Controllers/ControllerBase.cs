@@ -69,6 +69,8 @@ namespace GalagaFigther.Core2.Controllers
             var reg = _instanceRegistry[typeof(T)];
             if (!reg.ContainsKey(gameObject.Id))
                 reg.Add(gameObject.Id, value);
+            else
+                reg[gameObject.Id] = value;
         }
     }
 

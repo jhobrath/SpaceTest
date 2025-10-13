@@ -1,5 +1,5 @@
 ﻿using GalagaFigther.Core2.Controllers;
-using GalagaFigther.Core2.Models;
+using GalagaFigther.Core2.Models.Game;
 using GalagaFigther.Core2.Services;
 using Raylib_cs;
 

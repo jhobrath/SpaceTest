@@ -1,12 +1,12 @@
-﻿using GalagaFigther.Core2.Controllers;
-using GalagaFigther.Core2.GameObjects;
+﻿using GalagaFigther.Core2.GameObjects;
+using GalagaFigther.Core2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Services
+namespace GalagaFigther.Core2.Controllers
 {
     public interface IControllerFactory
     {
@@ -17,13 +17,11 @@ namespace GalagaFigther.Core2.Services
     public class ControllerFactory : IControllerFactory
     {
         private readonly Dictionary<Type, object> _controllerRegistry = [];
-        private readonly IGameDataRegistry _gameDataRegistry;
-        private readonly ControllerBase<Player> _playerController; 
+        private readonly IController<Player> _playerController; 
 
-        public ControllerFactory(IGameDataRegistry gameDataRegistry, IInputService inputService)
+        public ControllerFactory(IController<Player> playerController)
         {
-            _gameDataRegistry = gameDataRegistry;
-            _playerController = new PlayerController(_gameDataRegistry, inputService);
+            _playerController = playerController;
         }
 
         public void Update<T>(T gameObject, float frameTime) where T : GameObject

@@ -1,19 +1,20 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using GalagaFigther.Core2;
 using GalagaFigther.Core2.Controllers;
+using GalagaFigther.Core2.Handlers.Players;
 using GalagaFigther.Core2.Models;
+using GalagaFigther.Core2.Models.Game;
 using GalagaFigther.Core2.Services;
 using System.Numerics;
 
-var gameState = new GameState
-{
-    ScreenSize = new Vector2(1920, 1080)
-};
-
-var objectService = new ObjectService();
 var gameDataRegistry = new GameDataRegistry();
+var gameState = gameDataRegistry.Get<GameState>();
+var objectService = new ObjectService();
 var inputService = new InputService();
-var controllerFactory = new ControllerFactory(gameDataRegistry, inputService);
+var playerMover = new PlayerMover(gameDataRegistry, inputService);
+var playerRotator = new PlayerRotator(gameDataRegistry);
+var playerController = new PlayerController(playerMover, playerRotator);
+var controllerFactory = new ControllerFactory(playerController);
 var persistentValueHandler = new PersistentValueHandler();
 var initialObjectBuilder = new InitialObjectBuilder(objectService, persistentValueHandler);
 

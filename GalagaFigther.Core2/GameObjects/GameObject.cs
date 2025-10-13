@@ -1,5 +1,5 @@
-﻿using GalagaFigther.Core2.Helpers;
-using GalagaFigther.Core2.Services;
+﻿using GalagaFigther.Core2.Controllers;
+using GalagaFigther.Core2.Helpers;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -69,12 +69,12 @@ namespace GalagaFigther.Core2.GameObjects
         public void AccelBy(float? x = null, float? y = null) =>
             Acceleration *= new Vector2(x ?? 1, y ?? 1);
 
-        public virtual void Update(IControllerFactory controllerFactory, float frameTime)
+        public void Update(IControllerFactory controllerFactory, float frameTime)
         {
             controllerFactory.Update(this, frameTime);
         }
 
-        public virtual void Draw(IControllerFactory controllerFactory, float frameTime)
+        public void Draw(IControllerFactory controllerFactory, float frameTime)
         {
             controllerFactory.Draw(this, frameTime);
         }

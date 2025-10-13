@@ -3,7 +3,7 @@ using GalagaFigther.Core2.Services.Static;
 using Raylib_cs;
 using System.Numerics;
 
-namespace GalagaFigther.Core2.Helper
+namespace GalagaFigther.Core2.Helpers
 {
     public abstract class SpriteBase
     {
@@ -16,9 +16,14 @@ namespace GalagaFigther.Core2.Helper
 
         public virtual void Draw(GameObject gameObject)
         {
+            Draw(gameObject.Rect, gameObject.Rotation, gameObject.Color);
+        }
+
+        public virtual void Draw(Rectangle rect, float rotation = 0f, Color? color = null)
+        {
             var source = _source ?? new Rectangle(0, 0, _texture.Width, _texture.Height);
-            var dest = new Rectangle(gameObject.Center, gameObject.Rect.Size);
-            Raylib.DrawTexturePro(_texture, source, dest, gameObject.Center - gameObject.TopLeft, gameObject.Rotation, Color.White);
+            var dest = new Rectangle(rect.Position + rect.Size/2, rect.Size);
+            Raylib.DrawTexturePro(_texture, source, dest, dest.Position - rect.Position, rotation, color ?? Color.White);
         }
 
         public SpriteBase()

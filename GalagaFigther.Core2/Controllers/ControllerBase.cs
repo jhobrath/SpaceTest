@@ -11,18 +11,25 @@ namespace GalagaFigther.Core2.Controllers
     public interface IGameDataRegistry
     {
         T Get<T>(GameObject gameObject) where T : new();
+        T Get<T>() where T : new();
     }
 
     public class GameDataRegistry : IGameDataRegistry
     {
-        private readonly Dictionary<Type, Type> _typeRegistry = [];
         private readonly Dictionary<Type, Dictionary<Guid, object>> _instanceRegistry = [];
 
-        public void RegisterType<TGameObject, TGameData>() 
-            where TGameObject : GameObject
-            where TGameData: new()
+        private readonly Guid _gameId = Guid.NewGuid();
+
+        public T Get<T>() where T : new()
         {
-            _typeRegistry.Add(typeof(TGameObject), typeof(TGameData));
+            if (!_instanceRegistry.ContainsKey(typeof(T)))
+                _instanceRegistry.Add(typeof(T), new());
+
+            var reg = _instanceRegistry[typeof(T)];
+            if (!reg.ContainsKey(_gameId))
+                reg.Add(_gameId, new T());
+
+            return (T)reg[_gameId];
         }
 
         public T Get<T>(GameObject gameObject) where T : new()
@@ -40,10 +47,8 @@ namespace GalagaFigther.Core2.Controllers
 
     public abstract class ControllerBase<T> where T : GameObject
     {
-        protected readonly IGameDataRegistry _gameDataRegistry;
-        protected ControllerBase(IGameDataRegistry gameDataRegistry)
+        protected ControllerBase()
         {
-            _gameDataRegistry = gameDataRegistry;
         }
 
         public abstract void Update(T gameObject, float frameTime);

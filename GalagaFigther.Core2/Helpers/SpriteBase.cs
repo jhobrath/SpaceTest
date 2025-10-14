@@ -27,6 +27,14 @@ namespace GalagaFigther.Core2.Helpers
         }
     }
 
+    public class DrawnSprite : SpriteBase
+    {
+        public DrawnSprite(Texture2D texture)
+        {
+            _texture = texture;
+        }
+    }
+
     public class StillImageSprite : SpriteBase
     {
         public StillImageSprite(string texturePath)

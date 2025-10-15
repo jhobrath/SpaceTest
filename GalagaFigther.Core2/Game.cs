@@ -5,18 +5,23 @@ using Raylib_cs;
 
 namespace GalagaFigther.Core2
 {
-    public class Game
+    public interface IGame
+    {
+        void Run(GameState state);
+    }
+
+    public class Game : IGame
     {
         private readonly IObjectService _objectService;
         private readonly IInitialObjectBuilder _initialObjectBuilder;
         private readonly IInputService _inputService;
         private readonly IPersistentValueHandler _persistentValueHandler;
-        private readonly GameObjectUpdateService _gameObjectUpdateService;
+        private readonly IGameObjectUpdateService _gameObjectUpdateService;
         private readonly IPowerUpCreationService _powerUpCreationService;
 
         public Game(IObjectService objectService, IInitialObjectBuilder initialObjectBuilder,
             IInputService inputService, IPersistentValueHandler persistentValueHandler, 
-            GameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService)
+            IGameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService)
         {
             _objectService = objectService;
             _initialObjectBuilder = initialObjectBuilder;

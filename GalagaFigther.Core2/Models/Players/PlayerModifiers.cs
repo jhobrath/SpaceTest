@@ -25,6 +25,6 @@ namespace GalagaFigther.Core2.Models.Players
     {
         public List<Decoration> Decorations { get; set; } = [];
 
-        public Dictionary<string, Func<Vector2, List<GameObject>>> OnShoot { get; set; } = [];
+        public Dictionary<string, Func<Guid, Vector2, List<GameObject>>> OnShoot { get; set; } = [];
     }
 }

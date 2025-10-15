@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFigther.Core2.GameObjects
 {
-    public class GameObject
+    public abstract class GameObject
     {
         //Primary State
         public Guid Id { get; set; }

@@ -1,4 +1,5 @@
 ﻿using GalagaFigther.Core2.GameObjects;
+using GalagaFigther.Core2.GameObjects.Projectiles;
 using GalagaFigther.Core2.Services;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,14 @@ namespace GalagaFigther.Core2.Controllers
 
     public class ControllerFactory : IControllerFactory
     {
-        private readonly Dictionary<Type, object> _controllerRegistry = [];
-        private readonly IController<Player> _playerController; 
+        private readonly IController<Player> _playerController;
+        private readonly IController<DefaultProjectile> _defaultProjectileController;
 
-        public ControllerFactory(IController<Player> playerController)
+        public ControllerFactory(IController<Player> playerController,
+            IController<DefaultProjectile> defaultProjectileController)
         {
             _playerController = playerController;
+            _defaultProjectileController = defaultProjectileController;
         }
 
         public void Update<T>(T gameObject, float frameTime) where T : GameObject
@@ -30,6 +33,9 @@ namespace GalagaFigther.Core2.Controllers
             {
                 case Player player:
                     _playerController.Update(player, frameTime);
+                    return;
+                case DefaultProjectile projectile:
+                    _defaultProjectileController.Update(projectile, frameTime);
                     return;
             }
 
@@ -42,6 +48,9 @@ namespace GalagaFigther.Core2.Controllers
             {
                 case Player player:
                     _playerController.Draw(player, frameTime);
+                    return;
+                case DefaultProjectile projectile:
+                    _defaultProjectileController.Draw(projectile, frameTime);
                     return;
             }
             

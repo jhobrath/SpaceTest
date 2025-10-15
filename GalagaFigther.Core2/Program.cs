@@ -15,8 +15,10 @@ var playerMover = new PlayerMover(gameDataRegistry, inputService);
 var playerRotator = new PlayerRotator(gameDataRegistry);
 var playerDrawer = new PlayerDrawer(gameDataRegistry);
 var playerAffector = new PlayerAffector(gameDataRegistry);
-var playerController = new PlayerController(playerMover, playerRotator, playerAffector, playerDrawer);
-var controllerFactory = new ControllerFactory(playerController);
+var playerShooter = new PlayerShooter(inputService, gameDataRegistry, objectService);
+var playerController = new PlayerController(playerMover, playerRotator, playerAffector, playerDrawer, playerShooter);
+var defaultProjectileController = new DefaultProjectileController(gameDataRegistry);
+var controllerFactory = new ControllerFactory(playerController, defaultProjectileController);
 var persistentValueHandler = new PersistentValueHandler();
 var initialObjectBuilder = new InitialObjectBuilder(objectService, persistentValueHandler, gameDataRegistry);
 

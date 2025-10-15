@@ -24,12 +24,12 @@ namespace GalagaFigther.Core2.Effects.Projectiles
         public override void Apply(PlayerModifiers modifiers)
         {
             modifiers.Decorations.Add(new SpriteDecoration(_sprite) { MaintainAlpha = true });
-          //  modifiers.Projectile.OnShoot[nameof(DefaultShootEffect)] = HandleShoot;
+            modifiers.Projectile.OnShoot[nameof(DefaultShootEffect)] = HandleShoot;
         }
 
-        //private List<GameObject> HandleShoot(Vector2 position)
-        //{
-        //    return new DefaultProjectile(position);
-        //}
+        private List<GameObject> HandleShoot(Guid owner, Vector2 position)
+        {
+            return [new DefaultProjectile(owner, position)];
+        }
     }
 }

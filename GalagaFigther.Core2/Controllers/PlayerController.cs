@@ -12,27 +12,23 @@ using System.Threading.Tasks;
 
 namespace GalagaFigther.Core2.Controllers
 {
-    public interface IController<T> where T : GameObject
-    {
-        void Update(T gameObject, float frameTime);
-        void Draw(T gameObject, float frameTime);
-    }
-
     public class PlayerController : IController<Player>
     {
         private readonly IPlayerMover _playerMover;
         private readonly IPlayerRotator _playerRotator;
         private readonly IPlayerAffector _playerAffector;
         private readonly IPlayerDrawer _playerDrawer;
+        private readonly IPlayerShooter _playerShooter;
 
         public PlayerController(IPlayerMover playerMover, IPlayerRotator playerRotator,
-            IPlayerAffector playerAffector, IPlayerDrawer playerDrawer)
+            IPlayerAffector playerAffector, IPlayerDrawer playerDrawer, IPlayerShooter playerShooter)
             : base()
         {
             _playerMover = playerMover;
             _playerRotator = playerRotator;
             _playerAffector = playerAffector;
             _playerDrawer = playerDrawer;
+            _playerShooter = playerShooter;
         }
 
         public void Update(Player player, float frameTime)
@@ -40,6 +36,7 @@ namespace GalagaFigther.Core2.Controllers
             _playerMover.Move(player, frameTime);
             _playerRotator.Rotate(player, frameTime);
             _playerAffector.Affect(player, frameTime);
+            _playerShooter.Shoot(player, frameTime);
         }
 
         public void Draw(Player player, float frameTime)

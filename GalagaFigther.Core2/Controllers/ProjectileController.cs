@@ -30,20 +30,28 @@ namespace GalagaFigther.Core2.Controllers
 
         public void Update(Projectile projectile, float frameTime)
         {
-            projectile.Rotation = GetRotationFromSpeed(projectile);
-
-            projectile.Move(projectile.Speed.X * frameTime, projectile.Speed.Y * frameTime);
-
-            var screenData = _gameDataRegistry.Get<GameState>();
-            if(projectile.X > screenData.ScreenSize.X)
-            {
-                projectile.IsActive = false;
-            }
+            Rotate(projectile);
+            Move(projectile, frameTime);
+            Deactivate(projectile);
         }
 
-        private float GetRotationFromSpeed(Projectile projectile)
+        private static void Move(Projectile projectile, float frameTime)
         {
-            return (float)(Math.Atan2(projectile.Speed.Y, projectile.Speed.X) * 180.0 / Math.PI);
+            projectile.Move(projectile.Speed.X * frameTime, projectile.Speed.Y * frameTime);
+        }
+
+        private void Rotate(Projectile projectile)
+        {
+            var theta = MathF.Atan2(projectile.Speed.Y, projectile.Speed.X);
+            var rotation = theta * 180.0f / MathF.PI;
+            projectile.Rotation = rotation;
+        }
+
+        private void Deactivate(Projectile projectile)
+        {
+            var screenData = _gameDataRegistry.Get<GameState>();
+            if (projectile.X < -projectile.Width || projectile.X > screenData.ScreenSize.X)
+                projectile.IsActive = false;
         }
     }
 }

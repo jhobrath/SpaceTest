@@ -19,6 +19,7 @@ namespace GalagaFigther.Core2.Models.Players
         public float Alpha { get; set; } = 1f;
 
         public ProjectileModifiers Projectile { get; set; } = new();
+        public Vector2 GunOffset { get; internal set; }
     }
 
     public class ProjectileModifiers

@@ -12,9 +12,11 @@ using System.Threading.Tasks;
 
 namespace GalagaFigther.Core2.Effects.Projectiles
 {
-    public class DefaultShootEffect : PlayerEffect
+    public class DefaultShootEffect : ProjectileEffect
     {
         protected override float Duration => 0f;
+
+        public override Vector2 GunOffset => new(-87f, -47f);
 
         private readonly StillImageSprite _sprite;
 
@@ -27,6 +29,7 @@ namespace GalagaFigther.Core2.Effects.Projectiles
         {
             modifiers.Decorations.Add(new SpriteDecoration(_sprite) { MaintainAlpha = true });
             modifiers.Projectile.OnShoot[nameof(DefaultShootEffect)] = HandleShoot;
+            base.Apply(modifiers);
         }
 
         private List<GameObject> HandleShoot(Guid owner, Vector2 position)

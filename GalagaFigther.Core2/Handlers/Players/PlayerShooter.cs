@@ -32,33 +32,40 @@ namespace GalagaFigther.Core2.Handlers.Players
         public void Shoot(Player player, float frameTime)
         {
             var shootData = _gameDataRegistry.Get<PlayerShootData>();
-                var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
 
-            if(shootData.ShotCountdown > 0)
+            if (shootData.ShotCountdown > 0)
             {
                 shootData.ShotCountdown -= frameTime;
                 return;
             }
 
-            if(_inputService.Shoot.IsDown)
+            if (!_inputService.Shoot.IsDown)
+                return;
+
+            Shoot(player, shootData, modifiers);
+        }
+
+        private void Shoot(Player player, PlayerShootData shootData, PlayerModifiers modifiers)
+        {
+            var posX = player.X + player.Width + modifiers.GunOffset.X;
+            var posY = player.Center.Y + modifiers.GunOffset.Y * (shootData.LastShotLeft ? -1 : 1);
+            var position = new Vector2(posX, posY);
+
+            foreach (var onShoot in modifiers.Projectile.OnShoot)
+                ShootProjectile(player, position, onShoot);
+
+            shootData.LastShotLeft = !shootData.LastShotLeft;
+            shootData.ShotCountdown = .15f;
+        }
+
+        private void ShootProjectile(Player player, Vector2 position, KeyValuePair<string, Func<Guid, Vector2, List<GameObject>>> onShoot)
+        {
+            var projectiles = onShoot.Value(player.Id, position);
+            foreach (var projectile in projectiles)
             {
-                var posX = player.X + player.Width;
-                var posY = player.Center.Y + (shootData.LastShotLeft ? 1 : -1) * 47f;
-                var position = new Vector2(posX, posY);
-
-                foreach(var item in modifiers.Projectile.OnShoot)
-                {
-                    var projectiles = item.Value(player.Id, position);
-                    foreach(var projectile in projectiles)
-                    { 
-                        projectile.Move(y: -projectile.Height / 2);
-                        _objectService.Add(projectile);
-                    }
-                }
-
-                shootData.LastShotLeft = !shootData.LastShotLeft;
-                shootData.ShotCountdown = .15f;
-
+                projectile.Move(y: -projectile.Height / 2);
+                _objectService.Add(projectile);
             }
         }
     }

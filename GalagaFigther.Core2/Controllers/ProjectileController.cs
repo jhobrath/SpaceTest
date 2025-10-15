@@ -9,21 +9,26 @@ using System.Threading.Tasks;
 
 namespace GalagaFigther.Core2.Controllers
 {
-    public class DefaultProjectileController : IController<DefaultProjectile>
+    public interface IProjectileController : IController<Projectile>
+    {
+
+    }
+
+    public class ProjectileController : IProjectileController 
     {
         private readonly IGameDataRegistry _gameDataRegistry;
 
-        public DefaultProjectileController(IGameDataRegistry gameDataRegistry)
+        public ProjectileController(IGameDataRegistry gameDataRegistry)
         {
             _gameDataRegistry = gameDataRegistry;
         }
 
-        public void Draw(DefaultProjectile projectile, float frameTime)
+        public void Draw(Projectile projectile, float frameTime)
         {
             projectile.Sprite.Draw(projectile.Rect, projectile.Rotation, projectile.Color);
         }
 
-        public void Update(DefaultProjectile projectile, float frameTime)
+        public void Update(Projectile projectile, float frameTime)
         {
             projectile.Rotation = GetRotationFromSpeed(projectile);
 
@@ -36,7 +41,7 @@ namespace GalagaFigther.Core2.Controllers
             }
         }
 
-        private float GetRotationFromSpeed(DefaultProjectile projectile)
+        private float GetRotationFromSpeed(Projectile projectile)
         {
             return (float)(Math.Atan2(projectile.Speed.Y, projectile.Speed.X) * 180.0 / Math.PI);
         }

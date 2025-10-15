@@ -42,8 +42,10 @@ namespace GalagaFigther.Core2.Handlers.Players
 
             if(_inputService.Shoot.IsDown)
             {
+                var posX = player.X + player.Width;
+                var posY = player.Center.Y + (shootData.LastShotLeft ? 1 : -1) * 47f;
+                var position = new Vector2(posX, posY);
 
-                var position = new Vector2(player.X + player.Width, player.Center.Y);
                 foreach(var item in modifiers.Projectile.OnShoot)
                 {
                     var projectiles = item.Value(player.Id, position);
@@ -53,7 +55,10 @@ namespace GalagaFigther.Core2.Handlers.Players
                         _objectService.Add(projectile);
                     }
                 }
-                shootData.ShotCountdown = .5f;
+
+                shootData.LastShotLeft = !shootData.LastShotLeft;
+                shootData.ShotCountdown = .15f;
+
             }
         }
     }

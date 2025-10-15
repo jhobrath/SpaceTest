@@ -17,10 +17,10 @@ var playerDrawer = new PlayerDrawer(gameDataRegistry);
 var playerAffector = new PlayerAffector(gameDataRegistry);
 var playerShooter = new PlayerShooter(inputService, gameDataRegistry, objectService);
 var playerController = new PlayerController(playerMover, playerRotator, playerAffector, playerDrawer, playerShooter);
-var defaultProjectileController = new DefaultProjectileController(gameDataRegistry);
-var controllerFactory = new ControllerFactory(playerController, defaultProjectileController);
+var projectileController = new ProjectileController(gameDataRegistry);
+var gameObjectUpdateService = new GameObjectUpdateService(objectService, playerController, projectileController);
 var persistentValueHandler = new PersistentValueHandler();
 var initialObjectBuilder = new InitialObjectBuilder(objectService, persistentValueHandler, gameDataRegistry);
 
-var game = new Game(objectService, controllerFactory, initialObjectBuilder, inputService, persistentValueHandler);
+var game = new Game(objectService, initialObjectBuilder, inputService, persistentValueHandler, gameObjectUpdateService);
 game.Run(gameState);

@@ -14,6 +14,8 @@ namespace GalagaFigther.Core2.Effects.Projectiles
 {
     public class DefaultShootEffect : PlayerEffect
     {
+        protected override float Duration => 0f;
+
         private readonly StillImageSprite _sprite;
 
         public DefaultShootEffect()

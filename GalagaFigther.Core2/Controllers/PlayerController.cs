@@ -12,7 +12,11 @@ using System.Threading.Tasks;
 
 namespace GalagaFigther.Core2.Controllers
 {
-    public class PlayerController : IController<Player>
+    public interface IPlayerController : IController<Player>
+    {
+
+    }
+    public class PlayerController : IPlayerController 
     {
         private readonly IPlayerMover _playerMover;
         private readonly IPlayerRotator _playerRotator;

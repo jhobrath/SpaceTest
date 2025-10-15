@@ -9,5 +9,6 @@ namespace GalagaFigther.Core2.Models.Players
     public class PlayerShootData
     {
         public float ShotCountdown { get; set; }
+        public bool LastShotLeft { get; set; }
     }
 }

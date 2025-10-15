@@ -69,16 +69,6 @@ namespace GalagaFigther.Core2.GameObjects
         public void AccelBy(float? x = null, float? y = null) =>
             Acceleration *= new Vector2(x ?? 1, y ?? 1);
 
-        public void Update(IControllerFactory controllerFactory, float frameTime)
-        {
-            controllerFactory.Update(this, frameTime);
-        }
-
-        public void Draw(IControllerFactory controllerFactory, float frameTime)
-        {
-            controllerFactory.Draw(this, frameTime);
-        }
-
         public virtual void Deactivate()
         {
             IsActive = false;

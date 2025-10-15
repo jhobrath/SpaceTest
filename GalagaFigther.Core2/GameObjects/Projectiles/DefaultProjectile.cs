@@ -6,11 +6,12 @@ namespace GalagaFigther.Core2.GameObjects.Projectiles
 {
     public class DefaultProjectile : Projectile
     {
-        private static Vector2 _baseSpeed => new(1000f, 0f);
-        private static Vector2 _baseSize => new(50f, 10f);
+        private static Vector2 _baseSpeed => new(2000f, 0f);
+        private static Vector2 _baseSize => new(30f, 10f);
+        private static Vector2 _offset = new(-87f, 0f);
 
         public DefaultProjectile(Guid owner, Vector2 position)
-            : base(owner, position, _baseSize, GetSpeed(_baseSpeed), GetSprite())
+            : base(owner, position + _offset, _baseSize, GetSpeed(_baseSpeed), GetSprite())
         {
         }
 

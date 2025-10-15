@@ -11,16 +11,19 @@ namespace GalagaFigther.Core2
         private readonly IInitialObjectBuilder _initialObjectBuilder;
         private readonly IInputService _inputService;
         private readonly IPersistentValueHandler _persistentValueHandler;
-        private readonly IGameObjectUpdateService _gameObjectUpdateService;
+        private readonly GameObjectUpdateService _gameObjectUpdateService;
+        private readonly IPowerUpCreationService _powerUpCreationService;
 
         public Game(IObjectService objectService, IInitialObjectBuilder initialObjectBuilder,
-            IInputService inputService, IPersistentValueHandler persistentValueHandler, IGameObjectUpdateService gameObjectUpdateService)
+            IInputService inputService, IPersistentValueHandler persistentValueHandler, 
+            GameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService)
         {
             _objectService = objectService;
             _initialObjectBuilder = initialObjectBuilder;
             _inputService = inputService;
             _persistentValueHandler = persistentValueHandler;
             _gameObjectUpdateService = gameObjectUpdateService;
+            _powerUpCreationService = powerUpCreationService;
         }
 
         public void Run(GameState state)
@@ -36,6 +39,7 @@ namespace GalagaFigther.Core2
                 UpdateGameObjects(frameTime);
                 UpdateServices(frameTime);
                 DrawGameObjects(frameTime);
+                DeactivateObjects(frameTime);
 
                 if (Raylib.WindowShouldClose())
                     break;
@@ -58,6 +62,7 @@ namespace GalagaFigther.Core2
         private void UpdateServices(float frameTime)
         {
             _inputService.Update(frameTime);
+            _powerUpCreationService.Update(frameTime);
             _persistentValueHandler.Update();
         }
 
@@ -69,6 +74,12 @@ namespace GalagaFigther.Core2
             _gameObjectUpdateService.Draw(frameTime);
 
             Raylib.EndDrawing();
+        }
+
+
+        private void DeactivateObjects(float frameTime)
+        {
+            _objectService.CleanUp();
         }
 
         private static void CreateWindow(GameState state)

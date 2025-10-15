@@ -15,6 +15,7 @@ namespace GalagaFigther.Core2.Services
         void Add(GameObject gameObject);
         void Remove(GameObject gameObject);
         void Clear();
+        void CleanUp();
     }
 
     public class ObjectService : Dictionary<Guid, GameObject>, IObjectService, IDictionary<Guid, GameObject>
@@ -22,6 +23,17 @@ namespace GalagaFigther.Core2.Services
         public void Add(GameObject gameObject)
         {
             Add(gameObject.Id, gameObject);
+        }
+
+        public void CleanUp()
+        {
+            var toRemove = new List<Guid>();
+            foreach (var item in this)
+                if (!item.Value.IsActive)
+                    toRemove.Add(item.Key);
+
+            foreach (var key in toRemove)
+                Remove(key);
         }
 
         public GameObject Get(Guid id)

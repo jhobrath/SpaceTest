@@ -20,18 +20,22 @@ namespace GalagaFigther.Core2.Services
         private readonly IObjectService _objectService;
         private readonly IPlayerController _playerController;
         private readonly IProjectileController _projectileController;
+        private readonly IPowerUpController _powerUpController;
 
-        public GameObjectUpdateService(IObjectService objectService, IPlayerController playerController, IProjectileController projectileController)
+        public GameObjectUpdateService(IObjectService objectService, IPlayerController playerController, 
+            IProjectileController projectileController, IPowerUpController powerUpController)
         {
             _objectService = objectService;
             _playerController = playerController;
             _projectileController = projectileController;
+            _powerUpController = powerUpController;
         }
 
         public void Update(float frameTime)
         {
             UpdateType(_playerController, frameTime);
             UpdateType(_projectileController, frameTime);
+            UpdateType(_powerUpController, frameTime);
         }
 
         private void UpdateType<T>(IController<T> controller, float frameTime)
@@ -46,6 +50,7 @@ namespace GalagaFigther.Core2.Services
         {
             DrawType(_playerController, frameTime);
             DrawType(_projectileController, frameTime);
+            DrawType(_powerUpController, frameTime);
         }
 
         private void DrawType<T>(IController<T> controller, float frameTime)

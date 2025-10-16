@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Models.Players
 {
-    public class PlayerModifiers
+    public class PlayerModifiers : IGameObjectData<Player>
     {
         public int EffectCount { get; set; }
         public List<Decoration> Decorations { get; set; } = [];

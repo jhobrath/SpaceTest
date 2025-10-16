@@ -2,6 +2,7 @@
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.PowerUps;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,10 @@ namespace GalagaFighter.Core2.Handlers.Collisions
 
         public void Handle(Player player, PowerUp powerUp)
         {
-            var playerEffects = _gameDataRegistry.Get<List<PlayerEffect>>(player);
+            var playerEffects = _gameDataRegistry.Get<PlayerEffects>(player);
             var powerUpEffects = powerUp.CreateEffects(player);
             playerEffects.AddRange(powerUpEffects);
+            playerEffects.RequireRerolling = true;
             powerUp.IsActive = false;
         }
     }

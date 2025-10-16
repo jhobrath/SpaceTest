@@ -1,7 +1,7 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.PowerUps;
 using GalagaFighter.Core2.Models.Game;
-using GalagaFighter.Core2.Models.PowerUp;
+using GalagaFighter.Core2.Models.PowerUps;
 using GalagaFighter.Core2.Services;
 using Raylib_cs;
 using System.Numerics;

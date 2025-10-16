@@ -21,14 +21,14 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         public void Affect(Player player, float frameTime)
         {
-            var effects = _gameDataRegistry.Get<List<PlayerEffect>>(player);
+            var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             RecalculateEffectsIfNecessary(player, effects);
 
             foreach(var effect in effects)
                 effect.Update(frameTime);
         }
 
-        private void RecalculateEffectsIfNecessary(Player player, List<PlayerEffect> effects)
+        private void RecalculateEffectsIfNecessary(Player player, PlayerEffects effects)
         {
             if (!_gameDataRegistry.Has<PlayerModifiers>(player))
                 RecalculateModifiers(player, effects);
@@ -36,15 +36,11 @@ namespace GalagaFighter.Core2.Handlers.Players
             else if (effects.Any(x => !x.IsActive))
                 RecalculateModifiers(player, effects);
 
-            else
-            {
-                var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
-                if (modifiers.EffectCount != effects.Count)
-                    RecalculateModifiers(player, effects);
-            }
+            else if(effects.RequireRerolling)
+                RecalculateModifiers(player, effects);
         }
 
-        private void RecalculateModifiers(Player player, List<PlayerEffect> effects)
+        private void RecalculateModifiers(Player player, PlayerEffects effects)
         {
             var modifiers = new PlayerModifiers();
             

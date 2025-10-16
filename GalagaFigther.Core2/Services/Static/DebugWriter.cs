@@ -9,9 +9,9 @@ namespace GalagaFighter.Core2.Services.Static
 {
     public static class DebugWriter
     {
-        public static void Write(string text)
+        public static void Write<T>(T text)
         {
-            Raylib.DrawText(text, 500, 200, 18, Color.White);
+            Raylib.DrawText(text.ToString(), 500, 200, 18, Color.White);
         }
     }
 }

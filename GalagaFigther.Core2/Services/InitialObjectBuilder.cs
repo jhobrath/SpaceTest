@@ -3,6 +3,7 @@ using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Effects.Projectiles;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models.Players;
 using Raylib_cs;
 using System.Numerics;
 
@@ -46,7 +47,7 @@ namespace GalagaFighter.Core2.Services
             _persistentValueHandler.RegisterRange(player, p => p.X, 0, 400f);
             _persistentValueHandler.RegisterRange(player, p => p.Y, 0, screenHeight - player.Height);
 
-            var effects = _gameDataRegistry.Get<List<PlayerEffect>>(player);
+            var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
 
             _objectService.Add(player);

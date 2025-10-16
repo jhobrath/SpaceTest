@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Models.Game
 {
-    public class PlayerRanges
+    public class PlayerRanges : IGameData
     {
         public float MaxSpeedX { get; set; } = 500f;
         public float MaxSpeedY { get; set; } = 1000f;

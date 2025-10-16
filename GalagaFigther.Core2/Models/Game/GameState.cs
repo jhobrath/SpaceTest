@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Models.Game
 {
-    public class GameState
+    public class GameState : IGameData
     {
         public Vector2 ScreenSize { get; set; } = new Vector2(1920, 1080);
         public Vector2 UniformScale => ScreenSize / new Vector2(1920, 1080);

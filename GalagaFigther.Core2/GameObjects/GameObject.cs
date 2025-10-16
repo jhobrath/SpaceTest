@@ -69,6 +69,18 @@ namespace GalagaFighter.Core2.GameObjects
         public void AccelBy(float? x = null, float? y = null) =>
             Acceleration *= new Vector2(x ?? 1, y ?? 1);
 
+        public void Scale(float? x = null, float? y = null) =>
+            ScaleTo(Width + (x ?? 0), Height + (y ?? 0));
+
+        public void ScaleTo(float? x = null, float? y = null)
+        {
+            var offset = new Vector2(x ?? Width, y ?? Height) - Rect.Size;
+            Rect = new(Rect.Position - offset/2, Rect.Size + offset);
+        }
+
+        public void ScaleBy(float? x = null, float? y = null) =>
+            ScaleTo(Width * (x ?? 1), Height * (x ?? 1));
+
         public virtual void Deactivate()
         {
             IsActive = false;

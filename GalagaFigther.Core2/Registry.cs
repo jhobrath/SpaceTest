@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.Controllers;
+using GalagaFighter.Core2.Handlers.Collisions;
 using GalagaFighter.Core2.Handlers.Players;
 using GalagaFighter.Core2.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,8 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IPersistentValueHandler, PersistentValueHandler>();
             services.AddSingleton<IInitialObjectBuilder, InitialObjectBuilder>();
             services.AddSingleton<IPowerUpCreationService, PowerUpCreationService>();
+            services.AddSingleton<IProjectilePowerUpCollisionHandler, ProjectilePowerUpCollisionHandler>();
+            services.AddSingleton<ICollisionService, CollisionService>();
             services.AddSingleton<IGame, Game>();
 
             _provider = services.BuildServiceProvider();

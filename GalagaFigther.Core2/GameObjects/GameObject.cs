@@ -1,5 +1,5 @@
-﻿using GalagaFigther.Core2.Controllers;
-using GalagaFigther.Core2.Helpers;
+﻿using GalagaFighter.Core2.Controllers;
+using GalagaFighter.Core2.Helpers;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.GameObjects
+namespace GalagaFighter.Core2.GameObjects
 {
     public abstract class GameObject
     {

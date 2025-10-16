@@ -1,12 +1,12 @@
-﻿using GalagaFigther.Core2.Controllers;
-using GalagaFigther.Core2.Effects;
-using GalagaFigther.Core2.Effects.Projectiles;
-using GalagaFigther.Core2.GameObjects;
-using GalagaFigther.Core2.Helpers;
+﻿using GalagaFighter.Core2.Controllers;
+using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Effects.Projectiles;
+using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.Helpers;
 using Raylib_cs;
 using System.Numerics;
 
-namespace GalagaFigther.Core2.Services
+namespace GalagaFighter.Core2.Services
 {
     public interface IInitialObjectBuilder
     {

@@ -1,7 +1,7 @@
 ﻿using Raylib_cs;
 using System;
 
-namespace GalagaFigther.Core2.Helpers
+namespace GalagaFighter.Core2.Helpers
 {
     public static class ColorExtensions
     {

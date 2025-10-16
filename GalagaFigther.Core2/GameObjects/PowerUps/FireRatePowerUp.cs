@@ -1,4 +1,4 @@
-﻿using GalagaFigther.Core2.Effects;
+﻿using GalagaFighter.Core2.Effects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.GameObjects.PowerUps
+namespace GalagaFighter.Core2.GameObjects.PowerUps
 {
     public class FireRatePowerUp : PowerUp
     {

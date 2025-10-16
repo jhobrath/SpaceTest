@@ -1,13 +1,13 @@
-﻿using GalagaFigther.Core2.GameObjects.Projectiles;
-using GalagaFigther.Core2.Models.Game;
-using GalagaFigther.Core2.Services;
+﻿using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Models.Game;
+using GalagaFighter.Core2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Controllers
+namespace GalagaFighter.Core2.Controllers
 {
     public interface IProjectileController : IController<Projectile>
     {

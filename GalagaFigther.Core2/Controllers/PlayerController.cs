@@ -1,8 +1,8 @@
-﻿using GalagaFigther.Core2.GameObjects;
-using GalagaFigther.Core2.Handlers.Players;
-using GalagaFigther.Core2.Models.Players;
-using GalagaFigther.Core2.Services;
-using GalagaFigther.Core2.Services.Static;
+﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.Handlers.Players;
+using GalagaFighter.Core2.Models.Players;
+using GalagaFighter.Core2.Services;
+using GalagaFighter.Core2.Services.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Controllers
+namespace GalagaFighter.Core2.Controllers
 {
     public interface IPlayerController : IController<Player>
     {

@@ -1,6 +1,6 @@
-﻿using GalagaFigther.Core2;
-using GalagaFigther.Core2.Models.Game;
-using GalagaFigther.Core2.Services;
+﻿using GalagaFighter.Core2;
+using GalagaFighter.Core2.Models.Game;
+using GalagaFighter.Core2.Services;
 
 var gameDataRegistry = Registry.Get<IGameDataRegistry>();
 var gameState = gameDataRegistry.Get<GameState>();

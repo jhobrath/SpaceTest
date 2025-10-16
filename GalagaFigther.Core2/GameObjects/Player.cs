@@ -1,4 +1,4 @@
-﻿using GalagaFigther.Core2.Helpers;
+﻿using GalagaFighter.Core2.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.GameObjects
+namespace GalagaFighter.Core2.GameObjects
 {
     public class Player : GameObject
     {

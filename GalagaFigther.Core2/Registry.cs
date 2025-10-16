@@ -1,6 +1,6 @@
-﻿using GalagaFigther.Core2.Controllers;
-using GalagaFigther.Core2.Handlers.Players;
-using GalagaFigther.Core2.Services;
+﻿using GalagaFighter.Core2.Controllers;
+using GalagaFighter.Core2.Handlers.Players;
+using GalagaFighter.Core2.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2
+namespace GalagaFighter.Core2
 {
 
     public static class Registry

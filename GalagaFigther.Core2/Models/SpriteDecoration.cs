@@ -1,9 +1,9 @@
-﻿using GalagaFigther.Core2.GameObjects;
-using GalagaFigther.Core2.Helpers;
+﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.Helpers;
 using Raylib_cs;
 using System.Numerics;
 
-namespace GalagaFigther.Core2.Models
+namespace GalagaFighter.Core2.Models
 {
     public abstract class Decoration
     {

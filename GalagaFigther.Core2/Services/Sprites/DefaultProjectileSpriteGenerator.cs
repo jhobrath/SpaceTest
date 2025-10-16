@@ -1,4 +1,4 @@
-﻿using GalagaFigther.Core2.Services.Static;
+﻿using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Services.Sprites
+namespace GalagaFighter.Core2.Services.Sprites
 {
     public static class DefaultProjectileSpriteGenerator
     {

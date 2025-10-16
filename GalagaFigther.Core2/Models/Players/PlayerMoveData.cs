@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Models.Players
+namespace GalagaFighter.Core2.Models.Players
 {
     public class PlayerMoveData
     {

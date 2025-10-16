@@ -1,8 +1,8 @@
-﻿using GalagaFigther.Core2.GameObjects;
-using GalagaFigther.Core2.GameObjects.Projectiles;
-using GalagaFigther.Core2.Helpers;
-using GalagaFigther.Core2.Models;
-using GalagaFigther.Core2.Models.Players;
+﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models;
+using GalagaFighter.Core2.Models.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Effects.Projectiles
+namespace GalagaFighter.Core2.Effects.Projectiles
 {
     public class DefaultShootEffect : ProjectileEffect
     {

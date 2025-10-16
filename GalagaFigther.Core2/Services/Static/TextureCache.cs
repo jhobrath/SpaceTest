@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Services.Static
+namespace GalagaFighter.Core2.Services.Static
 {
     public static class TextureCache
     {

@@ -1,11 +1,11 @@
-﻿using GalagaFigther.Core2.GameObjects;
+﻿using GalagaFighter.Core2.GameObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Services
+namespace GalagaFighter.Core2.Services
 {
     public interface IObjectService
     {

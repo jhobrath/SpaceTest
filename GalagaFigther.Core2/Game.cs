@@ -1,9 +1,9 @@
-﻿using GalagaFigther.Core2.Controllers;
-using GalagaFigther.Core2.Models.Game;
-using GalagaFigther.Core2.Services;
+﻿using GalagaFighter.Core2.Controllers;
+using GalagaFighter.Core2.Models.Game;
+using GalagaFighter.Core2.Services;
 using Raylib_cs;
 
-namespace GalagaFigther.Core2
+namespace GalagaFighter.Core2
 {
     public interface IGame
     {

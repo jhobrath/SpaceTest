@@ -1,7 +1,7 @@
 ﻿using Raylib_cs;
 using System;
 
-namespace GalagaFigther.Core2.Services
+namespace GalagaFighter.Core2.Services
 {
     public interface IInputService
     {

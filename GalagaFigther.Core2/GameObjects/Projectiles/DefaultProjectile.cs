@@ -1,8 +1,8 @@
-﻿using GalagaFigther.Core2.Helpers;
-using GalagaFigther.Core2.Services.Sprites;
+﻿using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Services.Sprites;
 using System.Numerics;
 
-namespace GalagaFigther.Core2.GameObjects.Projectiles
+namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
     public class DefaultProjectile : Projectile
     {

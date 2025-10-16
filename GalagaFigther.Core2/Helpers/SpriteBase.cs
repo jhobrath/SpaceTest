@@ -1,9 +1,9 @@
-﻿using GalagaFigther.Core2.GameObjects;
-using GalagaFigther.Core2.Services.Static;
+﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 using System.Numerics;
 
-namespace GalagaFigther.Core2.Helpers
+namespace GalagaFighter.Core2.Helpers
 {
     public abstract class SpriteBase
     {

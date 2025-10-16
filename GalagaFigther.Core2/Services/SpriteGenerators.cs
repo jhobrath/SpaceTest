@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Services
+namespace GalagaFighter.Core2.Services
 {
     internal class SpriteGenerators
     {

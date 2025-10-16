@@ -1,5 +1,5 @@
-﻿using GalagaFigther.Core2.GameObjects.PowerUps;
-using GalagaFigther.Core2.Models.Game;
+﻿using GalagaFighter.Core2.GameObjects.PowerUps;
+using GalagaFighter.Core2.Models.Game;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Services
+namespace GalagaFighter.Core2.Services
 {
     public interface IPowerUpCreationService
     {

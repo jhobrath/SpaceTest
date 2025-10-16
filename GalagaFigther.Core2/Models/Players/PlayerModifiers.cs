@@ -1,5 +1,5 @@
-﻿using GalagaFigther.Core2.Effects;
-using GalagaFigther.Core2.GameObjects;
+﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.GameObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFigther.Core2.Models.Players
+namespace GalagaFighter.Core2.Models.Players
 {
     public class PlayerModifiers
     {

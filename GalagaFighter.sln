@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalagaFighter.Core", "Galag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalagaFighter.CharacterScreen", "GalagaFighter.CharacterScreen\GalagaFighter.CharacterScreen.csproj", "{251E3EED-9CC8-8BFC-6F0F-DEE8CD1C1849}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalagaFigther.Core2", "GalagaFigther.Core2\GalagaFigther.Core2.csproj", "{4EC2EF37-D09F-414A-8BC6-BDD6C21189B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalagaFighter.Core2", "GalagaFigther.Core2\GalagaFighter.Core2.csproj", "{4EC2EF37-D09F-414A-8BC6-BDD6C21189B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

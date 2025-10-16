@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Effects.Statuses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace GalagaFighter.Core2.GameObjects.PowerUps
 
         public override List<PlayerEffect> CreateEffects(Player player)
         {
-            throw new NotImplementedException();
+            return [new FireRateEffect()];
         }
     }
 }

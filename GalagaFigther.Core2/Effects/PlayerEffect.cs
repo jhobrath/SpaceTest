@@ -14,7 +14,7 @@ namespace GalagaFighter.Core2.Effects
 
         protected float _lifeTime = 0f;
 
-        public abstract void Apply(PlayerModifiers player);
+        public abstract void Apply(PlayerModifiers modifiers);
 
         public virtual void Update(float frameTime)
         {

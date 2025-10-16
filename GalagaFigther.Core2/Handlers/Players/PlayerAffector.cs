@@ -30,11 +30,24 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         private void RecalculateEffectsIfNecessary(Player player, List<PlayerEffect> effects)
         {
-            if (_gameDataRegistry.Has<PlayerModifiers>(player) && effects.All(x => x.IsActive))
-                return;
+            if (!_gameDataRegistry.Has<PlayerModifiers>(player))
+                RecalculateModifiers(player, effects);
 
+            else if (effects.Any(x => !x.IsActive))
+                RecalculateModifiers(player, effects);
+
+            else
+            {
+                var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+                if (modifiers.EffectCount != effects.Count)
+                    RecalculateModifiers(player, effects);
+            }
+        }
+
+        private void RecalculateModifiers(Player player, List<PlayerEffect> effects)
+        {
             var modifiers = new PlayerModifiers();
-
+            
             effects.RemoveAll(x => !x.IsActive);
             foreach (var effect in effects)
                 effect.Apply(modifiers);
@@ -45,6 +58,8 @@ namespace GalagaFighter.Core2.Handlers.Players
                 if (!deco.MaintainRotation)
                     deco.InitialRotation = rotationData.InitialRotation;
             }
+
+            modifiers.EffectCount = effects.Count;
 
             _gameDataRegistry.Set(player, modifiers);
         }

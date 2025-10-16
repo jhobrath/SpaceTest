@@ -36,6 +36,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IInitialObjectBuilder, InitialObjectBuilder>();
             services.AddSingleton<IPowerUpCreationService, PowerUpCreationService>();
             services.AddSingleton<IProjectilePowerUpCollisionHandler, ProjectilePowerUpCollisionHandler>();
+            services.AddSingleton<IPlayerPowerUpCollisionHandler, PlayerPowerUpCollisionHandler>();
             services.AddSingleton<ICollisionService, CollisionService>();
             services.AddSingleton<IGame, Game>();
 

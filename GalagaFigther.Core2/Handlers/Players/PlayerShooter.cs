@@ -22,6 +22,8 @@ namespace GalagaFighter.Core2.Handlers.Players
         private readonly IInputService _inputService;
         private readonly IObjectService _objectService;
 
+        private const float _defaultFireRate = .15f;
+
         public PlayerShooter(IInputService inputService, IGameDataRegistry gameDataRegistry, IObjectService objectService)
         {
             _inputService = inputService;
@@ -56,7 +58,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                 ShootProjectile(player, position, onShoot);
 
             shootData.LastShotLeft = !shootData.LastShotLeft;
-            shootData.ShotCountdown = .15f;
+            shootData.ShotCountdown = _defaultFireRate * modifiers.FireRate;
         }
 
         private void ShootProjectile(Player player, Vector2 position, KeyValuePair<string, Func<Guid, Vector2, List<GameObject>>> onShoot)

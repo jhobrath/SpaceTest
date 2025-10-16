@@ -11,6 +11,7 @@ namespace GalagaFighter.Core2.Models.Players
 {
     public class PlayerModifiers
     {
+        public int EffectCount { get; set; }
         public List<Decoration> Decorations { get; set; } = [];
 
         public float RedAlpha { get; set; } = 1f;
@@ -20,6 +21,7 @@ namespace GalagaFighter.Core2.Models.Players
 
         public ProjectileModifiers Projectile { get; set; } = new();
         public Vector2 GunOffset { get; internal set; }
+        public float FireRate { get; set; } = 1f;
     }
 
     public class ProjectileModifiers

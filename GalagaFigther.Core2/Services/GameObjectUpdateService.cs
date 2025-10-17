@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Services.Static;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +60,17 @@ namespace GalagaFighter.Core2.Services
         {
             var gameObjects = _objectService.GetAll<T>();
             foreach (var gameObject in gameObjects)
+            {
                 controller.Draw(gameObject, frameTime);
+
+                var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
+
+                for(var i = 0;i < vertices.Length;i++)
+                {
+                    var endIndex = i == vertices.Length - 1 ? 0 : i + 1;
+                    Raylib.DrawLine((int)vertices[i].X, (int)vertices[i].Y, (int)vertices[endIndex].X, (int)vertices[endIndex].Y, Color.Red);
+                }
+            }
         }
     }
 }

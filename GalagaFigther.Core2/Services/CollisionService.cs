@@ -49,10 +49,10 @@ namespace GalagaFighter.Core2.Services
                         handle(type1, type2);
         }
 
-        private bool CheckCollision(GameObject projectile, GameObject powerUp)
+        private bool CheckCollision(GameObject type1, GameObject type2)
         {
-            var projectileVertices = PolygonVerticesCompiler.GetVertices(projectile.Rect, projectile.Center, projectile.Rotation);
-            var powerUpVertices = PolygonVerticesCompiler.GetVertices(powerUp.Rect, powerUp.Center, powerUp.Rotation);
+            var projectileVertices = PolygonVerticesCompiler.GetVertices(type1);
+            var powerUpVertices = PolygonVerticesCompiler.GetVertices(type2);
             bool collides = PolygonCollisionDetector.Detect(projectileVertices, powerUpVertices);
 
             return collides;

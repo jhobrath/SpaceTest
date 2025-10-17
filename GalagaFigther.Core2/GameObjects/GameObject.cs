@@ -23,6 +23,7 @@ namespace GalagaFighter.Core2.GameObjects
         public Color Color { get; set; } = Color.White;
         public virtual Vector2 Drag => Vector2.Zero;
         public float AngularVelocity { get; set; }
+        public Vector2[]? Bounds { get; set;  }
 
         //Destruction
         public bool IsActive { get; set; } = true;

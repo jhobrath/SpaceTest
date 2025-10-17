@@ -23,7 +23,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGameDataRegistry, GameDataRegistry>();
             services.AddSingleton<IObjectService, ObjectService>();
             services.AddSingleton<IInputService, InputService>();
-            services.AddSingleton<IPlayerMover, PlayerMover>();
+            services.AddSingleton<IPlayerAccelerator, PlayerAccelerator>();
             services.AddSingleton<IPlayerRotator, PlayerRotator>();
             services.AddSingleton<IPlayerDrawer, PlayerDrawer>();
             services.AddSingleton<IPlayerAffector, PlayerAffector>();
@@ -38,6 +38,8 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IProjectilePowerUpCollisionHandler, ProjectilePowerUpCollisionHandler>();
             services.AddSingleton<IPlayerPowerUpCollisionHandler, PlayerPowerUpCollisionHandler>();
             services.AddSingleton<ICollisionService, CollisionService>();
+            services.AddSingleton<IGameObjectPositionService, GameObjectPositionService>();
+            services.AddSingleton<IPlayerBounder, PlayerBounder>();
             services.AddSingleton<IGame, Game>();
 
             _provider = services.BuildServiceProvider();

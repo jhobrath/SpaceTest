@@ -10,7 +10,8 @@ namespace GalagaFighter.Core2.Models.PowerUps
 {
     public class PowerUpCollectionData : IGameObjectData<PowerUp>
     {
-        public Vector2? OriginalSize { get; set; }
+        public bool IsCollecting { get; set; }
+        public Vector2 OriginalSize { get; set; }
         public float? OriginalDistance { get;  set; }
         public float SinceHit { get;  set; }
     }

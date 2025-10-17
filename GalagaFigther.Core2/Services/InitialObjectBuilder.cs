@@ -44,8 +44,9 @@ namespace GalagaFighter.Core2.Services
                 Rotation = 90
             };
 
-            _persistentValueHandler.RegisterRange(player, p => p.X, 0, 400f);
-            _persistentValueHandler.RegisterRange(player, p => p.Y, 0, screenHeight - player.Height);
+            var bounds = _gameDataRegistry.Get<PlayerBoundsData>(player);
+            bounds.Min = new(0, 0);
+            bounds.Max = new(550f, screenHeight);
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());

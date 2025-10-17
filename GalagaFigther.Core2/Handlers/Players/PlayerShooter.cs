@@ -37,7 +37,6 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             var shootData = _gameDataRegistry.Get<PlayerShootData>(player);
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
-            DebugWriter.Write(modifiers.FireRate * _defaultFireRate);
 
             if (shootData.ShotCountdown > 0)
             {

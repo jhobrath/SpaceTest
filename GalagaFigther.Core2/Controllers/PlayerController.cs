@@ -18,29 +18,33 @@ namespace GalagaFighter.Core2.Controllers
     }
     public class PlayerController : IPlayerController 
     {
-        private readonly IPlayerMover _playerMover;
+        private readonly IPlayerAccelerator _playerAccelerator;
         private readonly IPlayerRotator _playerRotator;
         private readonly IPlayerAffector _playerAffector;
         private readonly IPlayerDrawer _playerDrawer;
         private readonly IPlayerShooter _playerShooter;
+        private readonly IPlayerBounder _playerBounder;
 
-        public PlayerController(IPlayerMover playerMover, IPlayerRotator playerRotator,
-            IPlayerAffector playerAffector, IPlayerDrawer playerDrawer, IPlayerShooter playerShooter)
+        public PlayerController(IPlayerAccelerator playerAccelerator, IPlayerRotator playerRotator,
+            IPlayerAffector playerAffector, IPlayerDrawer playerDrawer, IPlayerShooter playerShooter, 
+            IPlayerBounder playerBounder)
             : base()
         {
-            _playerMover = playerMover;
+            _playerAccelerator = playerAccelerator;
             _playerRotator = playerRotator;
             _playerAffector = playerAffector;
             _playerDrawer = playerDrawer;
             _playerShooter = playerShooter;
+            _playerBounder = playerBounder;
         }
 
         public void Update(Player player, float frameTime)
         {
-            _playerMover.Move(player, frameTime);
+            _playerAccelerator.Accelerate(player, frameTime);
             _playerRotator.Rotate(player, frameTime);
             _playerAffector.Affect(player, frameTime);
             _playerShooter.Shoot(player, frameTime);
+            _playerBounder.Bound(player);
         }
 
         public void Draw(Player player, float frameTime)

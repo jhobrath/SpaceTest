@@ -21,6 +21,8 @@ namespace GalagaFighter.Core2.GameObjects
         public SpriteBase Sprite { get; set; }
         public float Rotation { get; set; }
         public Color Color { get; set; } = Color.White;
+        public virtual Vector2 Drag => Vector2.Zero;
+        public float AngularVelocity { get; set; }
 
         //Destruction
         public bool IsActive { get; set; } = true;

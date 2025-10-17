@@ -7,6 +7,7 @@ using GalagaFighter.Core2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,9 @@ namespace GalagaFighter.Core2.Handlers.Collisions
 
         public void Handle(Player player, PowerUp powerUp)
         {
+            if (Vector2.Distance(player.Center, powerUp.Center) > 20)
+                return;
+
             var playerEffects = _gameDataRegistry.Get<PlayerEffects>(player);
             var powerUpEffects = powerUp.CreateEffects(player);
             playerEffects.AddRange(powerUpEffects);

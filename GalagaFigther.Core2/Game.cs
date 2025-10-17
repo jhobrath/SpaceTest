@@ -19,11 +19,12 @@ namespace GalagaFighter.Core2
         private readonly IGameObjectUpdateService _gameObjectUpdateService;
         private readonly IPowerUpCreationService _powerUpCreationService;
         private readonly ICollisionService _collisionService;
+        private readonly IGameObjectPositionService _gameObjectPositionService;
 
         public Game(IObjectService objectService, IInitialObjectBuilder initialObjectBuilder,
             IInputService inputService, IPersistentValueHandler persistentValueHandler,
-            IGameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService, 
-            ICollisionService collisionService)
+            IGameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService,
+            ICollisionService collisionService, IGameObjectPositionService gameObjectPositionService)
         {
             _objectService = objectService;
             _initialObjectBuilder = initialObjectBuilder;
@@ -32,6 +33,7 @@ namespace GalagaFighter.Core2
             _gameObjectUpdateService = gameObjectUpdateService;
             _powerUpCreationService = powerUpCreationService;
             _collisionService = collisionService;
+            _gameObjectPositionService = gameObjectPositionService;
         }
 
         public void Run(GameState state)
@@ -70,6 +72,7 @@ namespace GalagaFighter.Core2
 
         private void UpdateGameObjects(float frameTime)
         {
+            _gameObjectPositionService.Update(frameTime);
             _gameObjectUpdateService.Update(frameTime);
         }
 
@@ -77,7 +80,7 @@ namespace GalagaFighter.Core2
         {
             _inputService.Update(frameTime);
             _powerUpCreationService.Update(frameTime);
-            _persistentValueHandler.Update();
+            _persistentValueHandler.Update(frameTime);
         }
 
         private void DrawGameObjects(float frameTime)

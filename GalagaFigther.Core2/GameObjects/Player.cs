@@ -10,6 +10,7 @@ namespace GalagaFighter.Core2.GameObjects
 {
     public class Player : GameObject
     {
+        public override Vector2 Drag => Vector2.One*6;
         public Player(Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite) 
             : base(position, size, speed, sprite)
         {

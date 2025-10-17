@@ -27,12 +27,11 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         public void Rotate(Player player, float frameTime)
         {
-            var ranges = _gameDataRegistry.Get<PlayerRanges>();
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
             if(rotationData.InitialRotation == float.MinValue)
                 rotationData.InitialRotation = player.Rotation;
-
-            var offset = ranges.MaxRotation * player.Speed.Y / ranges.MaxSpeedY;
+            
+            var offset = rotationData.MaxRotationDueToMovement * Math.Clamp(player.Speed.Y / 1000f, -1, 1);
             player.Rotation = rotationData.InitialRotation + offset;
         }
     }

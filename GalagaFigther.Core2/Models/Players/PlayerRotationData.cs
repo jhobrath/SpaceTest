@@ -9,6 +9,7 @@ namespace GalagaFighter.Core2.Models.Players
 {
     public class PlayerRotationData : IGameObjectData<Player>
     {
+        public float MaxRotationDueToMovement => 10f;
         public float InitialRotation { get; set; } = float.MinValue;
     }
 }

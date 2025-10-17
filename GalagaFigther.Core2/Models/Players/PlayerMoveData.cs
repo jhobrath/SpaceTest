@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Models.Players
 {
-    public class PlayerMoveData : IGameObjectData<Player>
+    public class PlayerBoundsData : IGameObjectData<Player>
     {
-        public float DirectionalSpeed { get; set; }
+        public Vector2 Min { get; set; }
+        public Vector2 Max { get; set; }
     }
 }

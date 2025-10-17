@@ -65,6 +65,7 @@ namespace GalagaFighter.Core2.Services
             var speedY = (isAbove ? 1 : -1) * 200f;
 
             var powerUp = _powerUpTypes[powerUpTypeIndex](new(posX, posY), new(speedX, speedY));
+            powerUp.AngularVelocity = 100f;
 
             return powerUp;
         }

@@ -31,13 +31,7 @@ namespace GalagaFighter.Core2.Controllers
         public void Update(Projectile projectile, float frameTime)
         {
             Rotate(projectile);
-            Move(projectile, frameTime);
             Deactivate(projectile);
-        }
-
-        private static void Move(Projectile projectile, float frameTime)
-        {
-            projectile.Move(projectile.Speed.X * frameTime, projectile.Speed.Y * frameTime);
         }
 
         private void Rotate(Projectile projectile)

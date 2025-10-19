@@ -43,8 +43,8 @@ namespace GalagaFighter.Core2.Services
 
         private static void Hurry(GameObject gameObject, float frameTime)
         {
-            if (gameObject.Speed == Vector2.Zero)
-                return;
+            //if (gameObject.Acceleration == Vector2.Zero)
+            //    return;
 
             var speedDeltaX = gameObject.Acceleration.X * frameTime;
             var speedDeltaY = gameObject.Acceleration.Y * frameTime;
@@ -68,6 +68,9 @@ namespace GalagaFighter.Core2.Services
 
         private static void Move(GameObject gameObject, float frameTime)
         {
+            if (gameObject.Speed == Vector2.Zero)
+                return;
+
             gameObject.Move(gameObject.Speed.X * frameTime, gameObject.Speed.Y * frameTime);
         }
 

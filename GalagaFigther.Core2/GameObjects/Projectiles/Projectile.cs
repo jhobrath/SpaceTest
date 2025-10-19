@@ -20,7 +20,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         protected abstract Vector2 BaseSpeed { get; }
         protected abstract Vector2 BaseSize { get; }
 
-        public Projectile(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite) 
+        public Projectile(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite)
             : base(position, size, speed, sprite)
         {
             Owner = owner;

@@ -6,7 +6,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
     public class DefaultProjectile : Projectile
     {
-        private static Vector2 _baseSpeed => new(2000f, 0f);
+        private static Vector2 _baseSpeed => new(0f, 2000f);
         private static Vector2 _baseSize => new(30f, 10f);
 
         protected override Vector2 BaseSpeed => _baseSpeed;

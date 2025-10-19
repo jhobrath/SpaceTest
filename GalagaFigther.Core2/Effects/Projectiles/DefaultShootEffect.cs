@@ -16,7 +16,7 @@ namespace GalagaFighter.Core2.Effects.Projectiles
     {
         protected override float Duration => 0f;
 
-        public override Vector2 GunOffset => new(-87f, -47f);
+        public override Vector2 GunOffset => new(30, -46);
 
         private readonly StillImageSprite _sprite;
 

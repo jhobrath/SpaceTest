@@ -3,6 +3,7 @@ using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
+using GalagaFighter.Core2.Services.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,13 @@ namespace GalagaFighter.Core2.Handlers.Players
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
             if(rotationData.InitialRotation == float.MinValue)
                 rotationData.InitialRotation = player.Rotation;
-            
-            var offset = rotationData.MaxRotationDueToMovement * Math.Clamp(player.Speed.Y / 1000f, -1, 1);
-            player.Rotation = rotationData.InitialRotation + offset;
+
+            var offsetY = rotationData.MaxRotationDueToMovement * Math.Clamp(player.Speed.Y / 1000f, -1, 1);
+            var offsetX = rotationData.MaxRotationDueToMovement * Math.Clamp(player.Speed.X / 1000f, -1, 1);
+
+            player.Rotation = rotationData.InitialRotation 
+                + offsetY*rotationData.DirectionalVector.Y
+                + offsetX*rotationData.DirectionalVector.X;
         }
     }
 }

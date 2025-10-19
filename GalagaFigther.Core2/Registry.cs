@@ -23,7 +23,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGameDataRegistry, GameDataRegistry>();
             services.AddSingleton<IObjectService, ObjectService>();
             services.AddSingleton<IInputService, InputService>();
-            services.AddSingleton<IPlayerAccelerator, PlayerAccelerator>();
+            services.AddSingleton<IPlayerAccelerator, PlayerMover>();
             services.AddSingleton<IPlayerRotator, PlayerRotator>();
             services.AddSingleton<IPlayerDrawer, PlayerDrawer>();
             services.AddSingleton<IPlayerAffector, PlayerAffector>();

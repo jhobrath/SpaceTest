@@ -11,12 +11,12 @@ namespace GalagaFighter.Core2.Handlers.Players
     {
         void Accelerate(Player player, float frameTime);
     }
-    public class PlayerAccelerator : IPlayerAccelerator
+    public class PlayerMover : IPlayerAccelerator
     {
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IInputService _inputService;
 
-        public PlayerAccelerator(IGameDataRegistry gameDataRegistry, IInputService inputService)
+        public PlayerMover(IGameDataRegistry gameDataRegistry, IInputService inputService)
         {
             _gameDataRegistry = gameDataRegistry;
             _inputService = inputService;

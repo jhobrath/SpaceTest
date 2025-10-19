@@ -28,30 +28,39 @@ namespace GalagaFighter.Core2.Services
 
         public void Build()
         {
+            var screenWidth = Raylib.GetScreenWidth();
             var screenHeight = Raylib.GetScreenHeight();
-            var screenWidth = Raylib.GetScreenHeight();
             CreatePlayer(screenWidth, screenHeight);
         }
 
         private void CreatePlayer(int screenWidth, int screenHeight)
         {
+           var player1 = CreatePlayer(0, 90, new(0,0), new(550f, screenHeight));
+            var player2 = CreatePlayer(screenWidth - 168, -90, new(screenWidth-550f, 0), new(screenWidth,screenHeight));
+
+            _objectService.Add(player1);
+            _objectService.Add(player2);
+        }
+
+        private Player CreatePlayer(int x, float rotation, Vector2 min, Vector2 max)
+        {
             var playerHeight = 168f;
-            var pos = new Vector2(0f, (screenHeight - playerHeight) / 2);
+            var pos = new Vector2(x, (max.Y - playerHeight) / 2);
             var size = Vector2.One * 168;
             var speed = Vector2.Zero;
             var player = new Player(pos, size, speed, new StillImageSprite("Sprites/Ships/MainShipBody.png"))
             {
-                Rotation = 90
+                Rotation = rotation
             };
 
             var bounds = _gameDataRegistry.Get<PlayerBoundsData>(player);
-            bounds.Min = new(0, 0);
-            bounds.Max = new(550f, screenHeight);
+            bounds.Min = min;
+            bounds.Max = max;
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
 
-            _objectService.Add(player);
+            return player;
         }
     }
 }

@@ -47,6 +47,7 @@ namespace GalagaFighter.Core2.Controllers
                 collectionData.IsCollecting = true;
                 collectionData.SinceHit = 0f;
                 collectionData.OriginalSize = powerUp.Rect.Size;
+                powerUp.AngularVelocity = 1000f;
             }
 
             collectionData.SinceHit += frameTime;
@@ -58,7 +59,7 @@ namespace GalagaFighter.Core2.Controllers
 
             powerUp.ScaleTo(newScale.X, newScale.Y);
             powerUp.HurryTo(newDist.X, newDist.Y);
-            powerUp.AngularVelocity = 360f + collectionData.SinceHit*1080f;
+            //powerUp.Rotation = 360f + collectionData.SinceHit*1080f;
         }
 
         private void Deactivate(PowerUp powerUp)

@@ -4,6 +4,7 @@ using GalagaFighter.Core2.Services;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Services.Static;
 using System.Numerics;
+using GalagaFighter.Core2.Models.Players;
 
 namespace GalagaFighter.Core2.Handlers.Players
 {
@@ -26,15 +27,18 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             var accelX = 0f;
             var accelY = 0f;
-            if (_inputService.Left.IsDown && !_inputService.Right.IsDown)
+
+            var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
+                    
+            if (inputData.Left && !inputData.Right)
                 accelX = -500f/.2f;
-            if (_inputService.Right.IsDown && !_inputService.Left.IsDown)
+            if (inputData.Right && !inputData.Left)
                 accelX = 500f/.2f;
 
-            if (_inputService.Forward.IsDown && !_inputService.Back.IsDown)
+            if (inputData.Forward.IsDown && !inputData.Back.IsDown)
                 accelY = -300f/.18f;
 
-            if (_inputService.Back.IsDown && !_inputService.Forward.IsDown)
+            if (inputData.Back.IsDown && !inputData.Forward.IsDown)
                 accelY = 300f/.18f;
 
             player.AccelTo(accelX, accelY);

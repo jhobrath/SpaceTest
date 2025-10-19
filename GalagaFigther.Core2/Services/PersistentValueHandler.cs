@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Services
 {
-    public interface IPersistentValueHandler
+    public interface IPersistentValueHandler : IClearable
     {
         void RegisterGradientValue(GameObject instance1, Expression<Func<GameObject, float>> property1, GameObject instance2, Expression<Func<GameObject, float>> property2, float period);
         void RegisterRange<T>(GameObject instance, Expression<Func<GameObject, T>> property, T min, T max)
@@ -25,6 +25,12 @@ namespace GalagaFighter.Core2.Services
         private Dictionary<GameObject, List<Action<GameObject>>> _registry = [];
 
         private List<GradientAction> _gradientActions = [];
+
+        public void Clear()
+        {
+            _gradientActions.Clear();
+            _registry.Clear();
+        }
 
         public void RegisterRange<T>(GameObject instance, Expression<Func<GameObject, T>> property, T min, T max)
             where T : IComparable

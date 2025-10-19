@@ -17,7 +17,7 @@ namespace GalagaFighter.Core2.Services
 
     public class PowerUpCreationService : IPowerUpCreationService
     {
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
         private float _ellapsedTime;
 
         private readonly List<Func<Vector2, Vector2, PowerUp>> _powerUpTypes = [ 

@@ -4,6 +4,7 @@ using GalagaFighter.Core2.Effects.Projectiles;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Players;
+using GalagaFighter.Core2.Services;
 using Raylib_cs;
 using System.Numerics;
 
@@ -18,12 +19,15 @@ namespace GalagaFighter.Core2.Services
         private IObjectService _objectService;
         private IPersistentValueHandler _persistentValueHandler;
         private IGameDataRegistry _gameDataRegistry;
+        private IInputService _inputService;
 
-        public InitialObjectBuilder(IObjectService objectService, IPersistentValueHandler persistentValueHandler, IGameDataRegistry gameDataRegistry)
+        public InitialObjectBuilder(IObjectService objectService, IPersistentValueHandler persistentValueHandler, 
+            IGameDataRegistry gameDataRegistry, IInputService inputService)
         {
             _objectService = objectService;
             _persistentValueHandler = persistentValueHandler;
             _gameDataRegistry = gameDataRegistry;
+            _inputService = inputService;
         }
 
         public void Build()
@@ -40,6 +44,37 @@ namespace GalagaFighter.Core2.Services
 
             _objectService.Add(player1);
             _objectService.Add(player2);
+
+            // Register input mappings for both players
+            RegisterInputMappings(player1, player2);
+        }
+
+        private void RegisterInputMappings(Player player1, Player player2)
+        {
+            // Player 1 keybindings: WASD for movement, K for shoot, J for defend, U for deploy turret
+            var player1Mappings = new KeyMappings(
+                KeyboardKey.W,    // Forward
+                KeyboardKey.S,    // Back
+                KeyboardKey.A,    // Left
+                KeyboardKey.D,    // Right
+                KeyboardKey.K,    // Shoot
+                KeyboardKey.J,    // Defend
+                KeyboardKey.U     // Deploy Turret
+            );
+
+            // Player 2 keybindings: Same keys for now (will be updated later)
+            var player2Mappings = new KeyMappings(
+                KeyboardKey.W,    // Forward (TODO: Update with different keys)
+                KeyboardKey.S,    // Back (TODO: Update with different keys)
+                KeyboardKey.A,    // Left (TODO: Update with different keys)
+                KeyboardKey.D,    // Right (TODO: Update with different keys)
+                KeyboardKey.K,    // Shoot (TODO: Update with different keys)
+                KeyboardKey.J,    // Defend (TODO: Update with different keys)
+                KeyboardKey.U     // Deploy Turret (TODO: Update with different keys)
+            );
+
+            _inputService.AddPlayer(player1.Id, player1Mappings);
+            _inputService.AddPlayer(player2.Id, player2Mappings);
         }
 
         private Player CreatePlayer(int x, float rotation, Vector2 min, Vector2 max)

@@ -42,6 +42,25 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IPlayerBounder, PlayerBounder>();
             services.AddSingleton<IGame, Game>();
 
+            // This will automatically find all registered services that implement IClearable
+            services.AddSingleton<IClearableServiceClearer>(provider =>
+            {
+                var clearableServices = new List<IClearable>();
+
+                var serviceDescriptors = services.Where(s =>
+                    s.Lifetime == ServiceLifetime.Singleton &&
+                    typeof(IClearable).IsAssignableFrom(s.ServiceType));
+
+                foreach (var descriptor in serviceDescriptors)
+                {
+                    var service = provider.GetRequiredService(descriptor.ServiceType);
+                    if (service is IClearable clearable)
+                        clearableServices.Add(clearable);
+                }
+
+                return new ClearableServiceClearer(clearableServices);
+            });
+
             _provider = services.BuildServiceProvider();
             return _provider;
         }
@@ -52,6 +71,16 @@ namespace GalagaFighter.Core2
                 _provider = Configure();
 
             return _provider.GetRequiredService<T>();
+        }
+    }
+
+    public static class ServiceCollectionExtensions
+    {
+        public static IServiceCollection AddClearableServices(this IServiceCollection services)
+        {
+            
+
+            return services;
         }
     }
 }

@@ -7,11 +7,12 @@ namespace GalagaFighter.Core2
 {
     public interface IGame
     {
-        void Run(GameState state);
+        void Run();
     }
 
     public class Game : IGame
     {
+        private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IObjectService _objectService;
         private readonly IInitialObjectBuilder _initialObjectBuilder;
         private readonly IInputService _inputService;
@@ -20,11 +21,13 @@ namespace GalagaFighter.Core2
         private readonly IPowerUpCreationService _powerUpCreationService;
         private readonly ICollisionService _collisionService;
         private readonly IGameObjectPositionService _gameObjectPositionService;
+        private readonly IClearableServiceClearer _clearableServiceClearer;
 
         public Game(IObjectService objectService, IInitialObjectBuilder initialObjectBuilder,
             IInputService inputService, IPersistentValueHandler persistentValueHandler,
             IGameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService,
-            ICollisionService collisionService, IGameObjectPositionService gameObjectPositionService)
+            ICollisionService collisionService, IGameObjectPositionService gameObjectPositionService,
+            IGameDataRegistry gameDataRegistry, IClearableServiceClearer clearableServiceClearer)
         {
             _objectService = objectService;
             _initialObjectBuilder = initialObjectBuilder;
@@ -34,10 +37,13 @@ namespace GalagaFighter.Core2
             _powerUpCreationService = powerUpCreationService;
             _collisionService = collisionService;
             _gameObjectPositionService = gameObjectPositionService;
+            _gameDataRegistry = gameDataRegistry;
+            _clearableServiceClearer = clearableServiceClearer;
         }
 
-        public void Run(GameState state)
+        public void Run()
         {
+            var state = _gameDataRegistry.Get<GameState>();
             CreateWindow(state);
 
             _initialObjectBuilder.Build();
@@ -57,7 +63,7 @@ namespace GalagaFighter.Core2
 
                 if(Raylib.IsKeyPressed(KeyboardKey.Space))
                 {
-                    _objectService.Clear();
+                    _clearableServiceClearer.Clear();
                     _initialObjectBuilder.Build();
                 }
             }

@@ -43,7 +43,8 @@ namespace GalagaFighter.Core2.Handlers.Players
                 return;
             }
 
-            if (!_inputService.Shoot.IsDown)
+            var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
+            if (!inputData.Shoot.IsDown)
                 return;
 
             Shoot(player, shootData, modifiers);

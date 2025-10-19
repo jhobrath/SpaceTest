@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Services
 {
-    public interface IGameDataRegistry
+    public interface IGameDataRegistry : IClearable
     {
         T Get<T>() where T : IGameData, new();
         TData Get<TData>(Player player) where TData : IGameObjectData<Player>, new();
         TData Get<TData>(Projectile projectile) where TData : IGameObjectData<Projectile>, new();
         TData Get<TData>(PowerUp powerUp) where TData : IGameObjectData<PowerUp>, new();
         bool Has<T>(GameObject gameObject) where T : new();
+        void Remove(Guid id);
         void Set<TData>(Player player, TData data) where TData : IGameObjectData<Player>, new();
         void Set<TData>(Projectile projectile, TData data) where TData : IGameObjectData<Projectile>, new();
         void Set<TData>(PowerUp powerUp, TData data) where TData : IGameObjectData<PowerUp>, new();
@@ -27,6 +28,11 @@ namespace GalagaFighter.Core2.Services
         private readonly Dictionary<Type, Dictionary<Guid, object>> _instanceRegistry = [];
 
         private readonly Guid _gameId = Guid.NewGuid();
+
+        public void Clear()
+        {
+            _instanceRegistry.Clear();
+        }
 
         public T Get<T>() where T : IGameData, new()
         {
@@ -90,5 +96,11 @@ namespace GalagaFighter.Core2.Services
         public void Set<TData>(Player player, TData data) where TData : IGameObjectData<Player>, new() => Set<TData, Player>(player, data);
         public void Set<TData>(Projectile projectile, TData data) where TData : IGameObjectData<Projectile>, new() => Set<TData, Projectile>(projectile, data);
         public void Set<TData>(PowerUp powerUp, TData data) where TData : IGameObjectData<PowerUp>, new() => Set<TData, PowerUp>(powerUp, data);
+
+        public void Remove(Guid id) 
+        {
+            foreach (var reg in _instanceRegistry)
+                reg.Value.Remove(id);
+        }
     }
 }

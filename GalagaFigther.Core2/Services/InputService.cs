@@ -1,62 +1,60 @@
-﻿using Raylib_cs;
+﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.Models;
+using GalagaFighter.Core2.Models.Players;
+using Raylib_cs;
 using System;
+using System.Collections.Generic;
 
 namespace GalagaFighter.Core2.Services
 {
-    public interface IInputService
+    public interface IInputService : IClearable
     {
+        void AddPlayer(Guid owner, IInputMappings mappings);
         void Update(float frameTime);
-        
-        // Player 1 Movement
-        ButtonState Forward { get; }
-        ButtonState Back { get; }
-        ButtonState Left { get; }
-        ButtonState Right { get; }
-        
-        // Player 1 Actions
-        ButtonState Shoot { get; }
-        ButtonState Defend { get; }
     }
 
     public class InputService : IInputService
     {
-        // Player 1 key mappings (WASD + K/J)
-        private const KeyboardKey ForwardKey = KeyboardKey.W;
-        private const KeyboardKey BackKey = KeyboardKey.S;
-        private const KeyboardKey LeftKey = KeyboardKey.A;
-        private const KeyboardKey RightKey = KeyboardKey.D;
-        private const KeyboardKey ShootKey = KeyboardKey.K;
-        private const KeyboardKey DefendKey = KeyboardKey.J;
+        private readonly IGameDataRegistry _gameDataRegistry;
+        private readonly IObjectService _objectService;
 
-        // Button state tracking
-        private readonly ButtonData _forward = new();
-        private readonly ButtonData _back = new();
-        private readonly ButtonData _left = new();
-        private readonly ButtonData _right = new();
-        private readonly ButtonData _shoot = new();
-        private readonly ButtonData _defend = new();
+        public InputService(IGameDataRegistry gameDataRegistry, IObjectService objectService)
+        {
+            _gameDataRegistry = gameDataRegistry;
+            _objectService = objectService;
+        }
 
+        private readonly Dictionary<Guid, IInputMappings> _players = new();
         private float _gameTime = 0f;
 
-        // Public properties for accessing button states
-        public ButtonState Forward => _forward.ToButtonState();
-        public ButtonState Back => _back.ToButtonState();
-        public ButtonState Left => _left.ToButtonState();
-        public ButtonState Right => _right.ToButtonState();
-        public ButtonState Shoot => _shoot.ToButtonState();
-        public ButtonState Defend => _defend.ToButtonState();
+        public void AddPlayer(Guid owner, IInputMappings mappings)
+        {
+            _players[owner] = mappings;
+        }
+
+        public void Clear()
+        {
+            _players.Clear();
+        }
 
         public void Update(float frameTime)
         {
             _gameTime += frameTime;
 
-            // Update all button states
-            _forward.Update(Raylib.IsKeyDown(ForwardKey), frameTime, _gameTime);
-            _back.Update(Raylib.IsKeyDown(BackKey), frameTime, _gameTime);
-            _left.Update(Raylib.IsKeyDown(LeftKey), frameTime, _gameTime);
-            _right.Update(Raylib.IsKeyDown(RightKey), frameTime, _gameTime);
-            _shoot.Update(Raylib.IsKeyDown(ShootKey), frameTime, _gameTime);
-            _defend.Update(Raylib.IsKeyDown(DefendKey), frameTime, _gameTime);
+            foreach (var playerMapping in _players)
+            {
+                var player = _objectService.Get<Player>(playerMapping.Key);
+                var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
+                var mappings = playerMapping.Value;
+                
+                inputData.Forward.Update(mappings.IsForwardDown(), frameTime, _gameTime);
+                inputData.Back.Update(mappings.IsBackDown(), frameTime, _gameTime);
+                inputData.Left.Update(mappings.IsLeftDown(), frameTime, _gameTime);
+                inputData.Right.Update(mappings.IsRightDown(), frameTime, _gameTime);
+                inputData.Shoot.Update(mappings.IsShootDown(), frameTime, _gameTime);
+                inputData.Defend.Update(mappings.IsDefendDown(), frameTime, _gameTime);
+                inputData.DeployTurret.Update(mappings.IsDeployTurretDown(), frameTime, _gameTime);
+            }
         }
     }
 
@@ -73,11 +71,59 @@ namespace GalagaFighter.Core2.Services
         }
     }
 
-    internal class ButtonData
+    public interface IInputMappings
     {
+        bool IsForwardDown();
+        bool IsBackDown();
+        bool IsLeftDown();
+        bool IsRightDown();
+        bool IsShootDown();
+        bool IsDefendDown();
+        bool IsDeployTurretDown();
+    }
+
+    public class KeyMappings : IInputMappings
+    {
+        public KeyboardKey Forward { get; set; } = KeyboardKey.W;
+        public KeyboardKey Back { get; set; } = KeyboardKey.S;
+        public KeyboardKey Left { get; set; } = KeyboardKey.A;
+        public KeyboardKey Right { get; set; } = KeyboardKey.D;
+        public KeyboardKey Shoot { get; set; } = KeyboardKey.K;
+        public KeyboardKey Defend { get; set; } = KeyboardKey.J;
+        public KeyboardKey DeployTurret { get; set; } = KeyboardKey.U;
+
+        public KeyMappings(KeyboardKey forward, KeyboardKey back, KeyboardKey left, KeyboardKey right, 
+            KeyboardKey shoot, KeyboardKey defend, KeyboardKey deployTurret)
+        {
+            Forward = forward;
+            Back = back;
+            Left = left;
+            Right = right;
+            Shoot = shoot;
+            Defend = defend;
+            DeployTurret = deployTurret;
+        }
+            
+        public bool IsForwardDown() => Raylib.IsKeyDown(Forward);
+        public bool IsBackDown() => Raylib.IsKeyDown(Back);
+        public bool IsLeftDown() => Raylib.IsKeyDown(Left);
+        public bool IsRightDown() => Raylib.IsKeyDown(Right);
+        public bool IsShootDown() => Raylib.IsKeyDown(Shoot);
+        public bool IsDefendDown() => Raylib.IsKeyDown(Defend);
+        public bool IsDeployTurretDown() => Raylib.IsKeyDown(DeployTurret);
+    }
+
+    public class ButtonData
+    {
+        public static implicit operator bool(ButtonData state)
+        {
+            return state.IsDown;
+        }
+
         public float HeldDuration { get; set; } = 0f;
         public bool WasReleased { get; set; } = false;
         public bool IsPressed { get; set; } = false;
+        public bool IsDown { get; set; } = false;
 
         public void Update(bool isDown, float frameTime, float currentTime)
         {
@@ -95,6 +141,7 @@ namespace GalagaFighter.Core2.Services
                 }
 
                 HeldDuration += frameTime;
+                IsDown = true;
                 WasReleased = false;
             }
             else
@@ -109,19 +156,9 @@ namespace GalagaFighter.Core2.Services
                 }
 
                 IsPressed = false;
+                IsDown = false;
                 HeldDuration = 0f;
             }
-        }
-
-        public ButtonState ToButtonState()
-        {
-            return new ButtonState
-            {
-                IsPressed = IsPressed,
-                IsDown = HeldDuration > 0f,
-                HeldDuration = HeldDuration,
-                WasReleased = WasReleased
-            };
         }
     }
 }

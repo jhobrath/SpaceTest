@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Handlers.Projectiles;
+using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Models.Turrets;
 using GalagaFighter.Core2.Services;
@@ -47,12 +48,11 @@ namespace GalagaFighter.Core2.Controllers
 
             turretData.ShotCountdown = _defaultCountdown;
 
-            var guns = _objectService.GetChildren<TurretGun>(turret);
-            
-            foreach(var gun in guns)
-                foreach (var offset in gun.GunOffsets)
-                    foreach(var projectile in gun.OnShoot(turret.Owner))
-                        _projectileShooter.Shoot(gun, projectile, offset.Position, offset.SpeedMultiplier);
+            foreach(var turretGun in turret.Guns)
+                foreach(var gun in turretGun.Guns)
+                    foreach (var barrel in gun)
+                        foreach(var projectile in gun.Shoot(turret.Owner))
+                            _projectileShooter.Shoot(turretGun, projectile, barrel);
         }
 
         public void Draw(Turret turret, float frameTime)

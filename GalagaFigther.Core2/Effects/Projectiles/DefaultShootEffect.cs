@@ -16,7 +16,15 @@ namespace GalagaFighter.Core2.Effects.Projectiles
     {
         protected override float Duration => 0f;
 
-        public override Vector2 GunOffset => new(30, -46);
+        public override List<Gun> LeftGuns =>
+        [
+            new Gun([new GunBarrel(new(0, -46),new(30,-46))], HandleShoot)
+        ];
+        
+        public override List<Gun> RightGuns =>
+        [
+            new Gun([new GunBarrel(new(0, 46),new(30,46))], HandleShoot)
+        ];
 
         private readonly StillImageSprite _sprite;
 
@@ -28,8 +36,8 @@ namespace GalagaFighter.Core2.Effects.Projectiles
         public override void Apply(PlayerModifiers modifiers)
         {
             modifiers.Decorations.Add(new SpriteDecoration(_sprite) { MaintainAlpha = true });
-            modifiers.Projectile.OnShoot[nameof(DefaultShootEffect)] = HandleShoot;
-            base.Apply(modifiers);
+            modifiers.LeftGuns.Add(nameof(DefaultShootEffect), LeftGuns);
+            modifiers.RightGuns.Add(nameof(DefaultShootEffect), RightGuns);
         }
 
         private List<GameObject> HandleShoot(Guid owner)

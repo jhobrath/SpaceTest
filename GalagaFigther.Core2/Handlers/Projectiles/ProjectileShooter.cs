@@ -1,19 +1,21 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Models;
+using GalagaFighter.Core2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using GalagaFighter.Core2.GameObjects.Projectiles;
-using GalagaFighter.Core2.Services;
 
 
 namespace GalagaFighter.Core2.Handlers.Projectiles
 {
     public interface IProjectileShooter
     {
-        void Shoot(GameObject gun, GameObject projectile, Vector2 gunTipOffset, Vector2? speedMultiplier = null);
+        void Shoot(GameObject gun, GameObject projectile, GunBarrel barrel);
     }
 
     public class ProjectileShooter : IProjectileShooter
@@ -25,28 +27,25 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             _objectService = objectService;
         }
 
-        public void Shoot(GameObject gun, GameObject projectile, Vector2 gunTipOffset, Vector2? speedMultiplier = null)
+        public void Shoot(GameObject objectShooting, GameObject projectile, GunBarrel barrel)
         {
-            var offsetRotationRadians = (gun.Rotation - 90) * MathF.PI / 180f;
-            var gunTip = new Vector2(
-                gun.Center.X + (gunTipOffset.X * MathF.Cos(offsetRotationRadians) - gunTipOffset.Y * MathF.Sin(offsetRotationRadians)),
-                gun.Center.Y + (gunTipOffset.X * MathF.Sin(offsetRotationRadians) + gunTipOffset.Y * MathF.Cos(offsetRotationRadians))
-            );
+            var barrelStart = GetRotatedOffset(objectShooting, barrel.Start);
+            var barrelEnd = GetRotatedOffset(objectShooting, barrel.End);
 
-            MoveInPlace(projectile, gunTip, gun.Rotation, speedMultiplier);
+            MoveInPlace(objectShooting, projectile, barrelStart, barrelEnd);
             _objectService.Add(projectile);
         }
 
-        private static void MoveInPlace(GameObject projectile, Vector2 spawnPoint, float parentRotation, Vector2? speedMultiplier = null)
+        private static void MoveInPlace(GameObject objectShooting, GameObject projectile, Vector2 barrelStart, Vector2 barrelEnd)
         {
-            speedMultiplier ??= new(1, 1);
+            var barrelVector = barrelEnd - barrelStart; 
+            var barrelRotationRadians = MathF.Atan2(-barrelVector.Y, barrelVector.X);
+
             var speedLength = projectile.Speed.Length();
+            var speedXPct = MathF.Cos(barrelRotationRadians);
+            var speedYPct = -MathF.Sin(barrelRotationRadians);
 
-            var gunRotationRadians = (90 - parentRotation) * MathF.PI / 180f;
-            var speedXPct = MathF.Cos(gunRotationRadians);
-            var speedYPct = -MathF.Sin(gunRotationRadians);
-
-            projectile.HurryTo(speedLength * speedXPct * speedMultiplier.Value.X, speedLength * speedYPct * speedMultiplier.Value.Y);
+            projectile.HurryTo(speedLength * speedXPct, speedLength * speedYPct);
 
             var theta = MathF.Atan2(projectile.Speed.Y, projectile.Speed.X);
             var rotation = theta * 180.0f / MathF.PI;
@@ -55,7 +54,16 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             var halfWidth = projectile.Width / 2f;
             var halfHeight = projectile.Height / 2f;
 
-            projectile.MoveTo(spawnPoint.X - halfWidth, spawnPoint.Y - halfHeight);
+            projectile.MoveTo(barrelEnd.X - halfWidth, barrelEnd.Y - halfHeight);
+        }
+
+        private Vector2 GetRotatedOffset(GameObject objectShooting, Vector2 offset)
+        {
+            var offsetRotationRadians = (objectShooting.Rotation - 90) * MathF.PI / 180f;
+            return new Vector2(
+                objectShooting.Center.X + (offset.X * MathF.Cos(offsetRotationRadians) - offset.Y * MathF.Sin(offsetRotationRadians)),
+                objectShooting.Center.Y + (offset.X * MathF.Sin(offsetRotationRadians) + offset.Y * MathF.Cos(offsetRotationRadians))
+            );
         }
     }
 }

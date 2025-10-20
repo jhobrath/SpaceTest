@@ -1,7 +1,7 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Effects.Projectiles;
-using GalagaFighter.Core2.Effects.Turret;
+using GalagaFighter.Core2.Effects.Turrets;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Players;

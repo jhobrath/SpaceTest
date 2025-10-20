@@ -55,20 +55,28 @@ namespace GalagaFighter.Core2.Handlers.Players
             turretData.DeployCountdown = _defaultDeployRate * modifiers.TurretDeployRate;
         }
 
-        private void DeployTurret(Player player, KeyValuePair<string, Func<Guid, Vector2, List<GameObject>>> onDeploy)
+        private void DeployTurret(Player player, KeyValuePair<string, Func<Guid, List<Turret>>> onDeploy)
         {
-            var turretObjects = onDeploy.Value(player.Id, player.Center);
+            var turrets = onDeploy.Value(player.Id);
 
-            foreach (var turretObject in turretObjects)
+            foreach (var turret in turrets)
             {
-                PositionTurret(player, turretObject);
-                _objectService.Add(turretObject);
+                PositionTurret(player, turret);
+                _objectService.Add(turret);
+
+                foreach (var gun in turret.Guns)
+                {
+                    var finalPlacement = turret.Center - gun.Rect.Size / 2;
+                    gun.MoveTo(finalPlacement.X, finalPlacement.Y);
+                    _objectService.Add(gun);
+                }
             }
         }
 
         private void PositionTurret(Player player, GameObject turretObject)
         {
-            turretObject.Move(-turretObject.Width / 2, -turretObject.Height / 2);
+            var finalPosition = player.Center - turretObject.Rect.Size / 2;
+            turretObject.MoveTo(finalPosition.X, finalPosition.Y);
         }
     }
 }

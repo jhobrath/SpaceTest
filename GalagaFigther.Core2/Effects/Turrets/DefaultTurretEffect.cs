@@ -8,7 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Core2.Effects.Turret
+namespace GalagaFighter.Core2.Effects.Turrets
 {
     public class DefaultTurretEffect : PlayerEffect
     {
@@ -19,12 +19,10 @@ namespace GalagaFighter.Core2.Effects.Turret
             modifiers.Turret.OnDeploy.Add(nameof(DefaultTurretEffect), HandleOnDeploy);
         }
 
-        private List<GameObject> HandleOnDeploy(Guid guid, Vector2 position)
+        private List<Turret> HandleOnDeploy(Guid guid)
         {
-            var turret = new DefaultTurret(guid, position);
-            var turretGun = new DefaultTurretGun(turret);
-
-            return [turret, turretGun];
+            var turret = new DefaultTurret(guid, Vector2.Zero);
+            return [turret];
         }
     }
 }

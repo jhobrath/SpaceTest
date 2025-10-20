@@ -20,14 +20,22 @@ namespace GalagaFighter.Core2.Models.Players
         public float Alpha { get; set; } = 1f;
 
         public ProjectileModifiers Projectile { get; set; } = new();
+        public TurretModifiers Turret { get; set; } = new();
         public Vector2 GunOffset { get; internal set; }
         public float FireRate { get; set; } = 1f;
+        public float TurretDeployRate { get; set; } = 1f;
     }
 
     public class ProjectileModifiers
     {
         public List<Decoration> Decorations { get; set; } = [];
 
-        public Dictionary<string, Func<Guid, Vector2, List<GameObject>>> OnShoot { get; set; } = [];
+        public Dictionary<string, Func<Guid, List<GameObject>>> OnShoot { get; set; } = [];
+    }
+
+    public class TurretModifiers
+    {
+        public List<Decoration> Decorations { get; set; } = [];
+        public Dictionary<string, Func<Guid, Vector2, List<GameObject>>> OnDeploy { get; set; } = [];
     }
 }

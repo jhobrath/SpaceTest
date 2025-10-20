@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Effects.Projectiles;
+using GalagaFighter.Core2.Effects.Turret;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Players;
@@ -94,6 +95,7 @@ namespace GalagaFighter.Core2.Services
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
+            effects.Add(new DefaultTurretEffect());
 
             return player;
         }

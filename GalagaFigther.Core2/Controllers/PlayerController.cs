@@ -24,10 +24,11 @@ namespace GalagaFighter.Core2.Controllers
         private readonly IPlayerDrawer _playerDrawer;
         private readonly IPlayerShooter _playerShooter;
         private readonly IPlayerBounder _playerBounder;
+        private readonly IPlayerTurretDeployer _playerTurretDeployer;
 
         public PlayerController(IPlayerAccelerator playerAccelerator, IPlayerRotator playerRotator,
             IPlayerAffector playerAffector, IPlayerDrawer playerDrawer, IPlayerShooter playerShooter, 
-            IPlayerBounder playerBounder)
+            IPlayerBounder playerBounder, IPlayerTurretDeployer playerTurretDeployer)
             : base()
         {
             _playerAccelerator = playerAccelerator;
@@ -36,6 +37,7 @@ namespace GalagaFighter.Core2.Controllers
             _playerDrawer = playerDrawer;
             _playerShooter = playerShooter;
             _playerBounder = playerBounder;
+            _playerTurretDeployer = playerTurretDeployer;
         }
 
         public void Update(Player player, float frameTime)
@@ -44,6 +46,7 @@ namespace GalagaFighter.Core2.Controllers
             _playerRotator.Rotate(player, frameTime);
             _playerAffector.Affect(player, frameTime);
             _playerShooter.Shoot(player, frameTime);
+            _playerTurretDeployer.Deploy(player, frameTime);
             _playerBounder.Bound(player);
         }
 

@@ -14,6 +14,7 @@ namespace GalagaFighter.Core2.GameObjects
     {
         //Primary State
         public Guid Id { get; set; }
+        public Guid Owner { get; set; }
         public Rectangle Rect { get; set; }
         public Vector2 Speed { get; set; }
         public Vector2 Acceleration { get; set; }
@@ -36,9 +37,10 @@ namespace GalagaFighter.Core2.GameObjects
         public Vector2 TopLeft => Rect.Position;
         public Vector2 Center => Rect.Position + Rect.Size / 2;
 
-        public GameObject(Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite)
+        public GameObject(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite)
         {
             Id = Guid.NewGuid();
+            Owner = owner;
             Rect = new(position, size);
             Speed = speed;
             Sprite = sprite;

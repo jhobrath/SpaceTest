@@ -32,9 +32,9 @@ namespace GalagaFighter.Core2.Effects.Projectiles
             base.Apply(modifiers);
         }
 
-        private List<GameObject> HandleShoot(Guid owner, Vector2 position)
+        private List<GameObject> HandleShoot(Guid owner)
         {
-            return [new DefaultProjectile(owner, position)];
+            return [new DefaultProjectile(owner, Vector2.Zero)];
         }
     }
 }

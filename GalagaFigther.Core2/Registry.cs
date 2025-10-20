@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Handlers.Collisions;
 using GalagaFighter.Core2.Handlers.Players;
+using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -40,6 +41,9 @@ namespace GalagaFighter.Core2
             services.AddSingleton<ICollisionService, CollisionService>();
             services.AddSingleton<IGameObjectPositionService, GameObjectPositionService>();
             services.AddSingleton<IPlayerBounder, PlayerBounder>();
+            services.AddSingleton<IPlayerTurretDeployer, PlayerTurretDeployer>();
+            services.AddSingleton<ITurretController, TurretController>();
+            services.AddSingleton<IProjectileShooter, ProjectileShooter>();
             services.AddSingleton<IGame, Game>();
 
             // This will automatically find all registered services that implement IClearable

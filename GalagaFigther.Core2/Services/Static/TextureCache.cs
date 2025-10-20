@@ -35,7 +35,7 @@ namespace GalagaFighter.Core2.Services.Static
             //Use sprites from GalagaFighter.Core project for now
             if(texture.Id == 0)
             {
-                var tempPath = "../../../../GalagaFighter.Core/bin/Debug/net8.0/" + path;
+                var tempPath = "../../../../GalagaFighter.Core/" + path;
                 texture = Raylib.LoadTexture(tempPath);
             }
 

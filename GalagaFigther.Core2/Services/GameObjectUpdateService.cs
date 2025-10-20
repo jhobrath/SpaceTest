@@ -23,14 +23,17 @@ namespace GalagaFighter.Core2.Services
         private readonly IPlayerController _playerController;
         private readonly IProjectileController _projectileController;
         private readonly IPowerUpController _powerUpController;
+        private readonly ITurretController _turretController;
 
         public GameObjectUpdateService(IObjectService objectService, IPlayerController playerController, 
-            IProjectileController projectileController, IPowerUpController powerUpController)
+            IProjectileController projectileController, IPowerUpController powerUpController,
+            ITurretController turretController)
         {
             _objectService = objectService;
             _playerController = playerController;
             _projectileController = projectileController;
             _powerUpController = powerUpController;
+            _turretController = turretController;
         }
 
         public void Update(float frameTime)
@@ -38,6 +41,7 @@ namespace GalagaFighter.Core2.Services
             UpdateType(_playerController, frameTime);
             UpdateType(_projectileController, frameTime);
             UpdateType(_powerUpController, frameTime);
+            UpdateType(_turretController, frameTime);
         }
 
         private void UpdateType<T>(IController<T> controller, float frameTime)
@@ -53,6 +57,7 @@ namespace GalagaFighter.Core2.Services
             DrawType(_playerController, frameTime);
             DrawType(_projectileController, frameTime);
             DrawType(_powerUpController, frameTime);
+            DrawType(_turretController, frameTime);
         }
 
         private void DrawType<T>(IController<T> controller, float frameTime)

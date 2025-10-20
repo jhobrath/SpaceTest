@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Turrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace GalagaFighter.Core2.Services
         void Add(GameObject gameObject);
         void Remove(GameObject gameObject);
         void CleanUp();
+        IEnumerable<GameObject> GetChildren(GameObject turret);
+        IEnumerable<T> GetChildren<T>(GameObject turret) where T : GameObject;
     }
 
     public class ObjectService : Dictionary<Guid, GameObject>, IObjectService, IDictionary<Guid, GameObject>
@@ -64,6 +67,17 @@ namespace GalagaFighter.Core2.Services
         public IEnumerable<T> GetAll<T>() where T : GameObject
         {
             return [.. Values.OfType<T>()];
+        }
+
+        public IEnumerable<GameObject> GetChildren(GameObject gameObject)
+        {
+            return [.. Values.Where(x => x.Owner == gameObject.Id)];
+        }
+
+        public IEnumerable<T> GetChildren<T>(GameObject gameObject) 
+            where T : GameObject
+        {
+            return [.. Values.Where(x => x.Owner == gameObject.Id).OfType<T>().Cast<T>()];
         }
 
         public void Remove(GameObject gameObject)

@@ -40,7 +40,13 @@ namespace GalagaFighter.Core2.Controllers
 
             turretData.Lifetime += frameTime;
             if(turretData.Lifetime > 20f)
+            { 
                 turret.IsActive = false;
+
+                var children = _objectService.GetChildren(turret);
+                foreach (var child in children)
+                    child.IsActive = false;
+            }
 
             turretData.ShotCountdown -= frameTime;
             if (turretData.ShotCountdown > 0)
@@ -49,10 +55,8 @@ namespace GalagaFighter.Core2.Controllers
             turretData.ShotCountdown = _defaultCountdown;
 
             foreach(var turretGun in turret.Guns)
-                foreach(var gun in turretGun.Guns)
-                    foreach (var barrel in gun)
-                        foreach(var projectile in gun.Shoot(turret.Owner))
-                            _projectileShooter.Shoot(turretGun, projectile, barrel);
+                foreach(var barrel in turretGun.Shoot(turretGun.Id))
+                    _projectileShooter.Shoot(turretGun, barrel.Value, barrel.Key);
         }
 
         public void Draw(Turret turret, float frameTime)

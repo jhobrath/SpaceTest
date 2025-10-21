@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="Components\" />
-    <Folder Include="GameObjects\Guns\" />
   </ItemGroup>
 
 </Project>

@@ -13,10 +13,12 @@ namespace GalagaFighter.Core2.Handlers.Players
     public class PlayerAffector : IPlayerAffector
     {
         private readonly IGameDataRegistry _gameDataRegistry;
+        private readonly IObjectService _objectService;
 
-        public PlayerAffector(IGameDataRegistry gameDataRegistry)
+        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService)
         {
             _gameDataRegistry = gameDataRegistry;
+            _objectService = objectService;
         }
 
         public void Affect(Player player, float frameTime)
@@ -38,6 +40,8 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             else if(effects.RequireRerolling)
                 RecalculateModifiers(player, effects);
+
+            effects.RequireRerolling = false;
         }
 
         private void RecalculateModifiers(Player player, PlayerEffects effects)
@@ -47,6 +51,8 @@ namespace GalagaFighter.Core2.Handlers.Players
             effects.RemoveAll(x => !x.IsActive);
             foreach (var effect in effects)
                 effect.Apply(modifiers);
+
+            UpdateGuns(player, modifiers);
 
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
             foreach (var deco in modifiers.Decorations)
@@ -58,6 +64,21 @@ namespace GalagaFighter.Core2.Handlers.Players
             modifiers.EffectCount = effects.Count;
 
             _gameDataRegistry.Set(player, modifiers);
+        }
+
+        private void UpdateGuns(Player player, PlayerModifiers modifiers)
+        {
+            modifiers.Guns.ForEach(x => x.IsActive = false);
+            modifiers.Guns.Clear();
+
+            foreach(var effect in modifiers.CreateGuns)
+            {
+                foreach(var gun in effect.Value(player))
+                {
+                    modifiers.Guns.Add(gun);
+                    _objectService.Add(gun);
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,12 @@ namespace GalagaFighter.Core2.Models.Players
 
         public ProjectileModifiers Projectile { get; set; } = new();
         public TurretModifiers Turret { get; set; } = new();
-        //public Vector2 GunOffset { get; internal set; }
+        
         public float FireRate { get; set; } = 1f;
         public float TurretDeployRate { get; set; } = 1f;
-        public Dictionary<string, List<Gun>> LeftGuns { get; set; } = [];
-        public Dictionary<string, List<Gun>> RightGuns { get; set; } = [];
+
+        public Dictionary<string, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
+        public List<Gun> Guns { get; set; } = [];
     }
 
     public class ProjectileModifiers

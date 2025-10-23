@@ -46,13 +46,15 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         private void RecalculateModifiers(Player player, PlayerEffects effects)
         {
+            ClearGuns(player);
+
             var modifiers = new PlayerModifiers();
             
             effects.RemoveAll(x => !x.IsActive);
             foreach (var effect in effects)
                 effect.Apply(modifiers);
 
-            UpdateGuns(player, modifiers);
+            SetGuns(player, modifiers);
 
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
             foreach (var deco in modifiers.Decorations)
@@ -66,11 +68,16 @@ namespace GalagaFighter.Core2.Handlers.Players
             _gameDataRegistry.Set(player, modifiers);
         }
 
-        private void UpdateGuns(Player player, PlayerModifiers modifiers)
+        private void ClearGuns(Player player)
         {
+            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+
             modifiers.Guns.ForEach(x => x.IsActive = false);
             modifiers.Guns.Clear();
+        }
 
+        private void SetGuns(Player player, PlayerModifiers modifiers)
+        {
             foreach(var effect in modifiers.CreateGuns)
             {
                 foreach(var gun in effect.Value(player))

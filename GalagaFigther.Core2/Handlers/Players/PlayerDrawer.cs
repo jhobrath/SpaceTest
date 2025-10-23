@@ -47,7 +47,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                     hasDrawnPlayer = true;
                 }
 
-                decoration.Draw(player);
+            //    decoration.Draw(player);
             }
 
             if (!hasDrawnPlayer)

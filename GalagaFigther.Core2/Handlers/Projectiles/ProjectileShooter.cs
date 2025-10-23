@@ -1,6 +1,6 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Projectiles;
-using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Services;
 using System;
 using System.Collections.Generic;

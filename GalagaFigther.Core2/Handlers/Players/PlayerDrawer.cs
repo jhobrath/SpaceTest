@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
@@ -21,10 +22,12 @@ namespace GalagaFighter.Core2.Handlers.Players
     public class PlayerDrawer : IPlayerDrawer
     {
         private readonly IGameDataRegistry _gameDataRegistry;
+        private readonly IObjectService _objectService;
 
-        public PlayerDrawer(IGameDataRegistry gameDataRegistry)
+        public PlayerDrawer(IGameDataRegistry gameDataRegistry, IObjectService objectService)
         {
             _gameDataRegistry = gameDataRegistry;
+            _objectService = objectService;
         }
 
         public void Draw(Player player, float frameTime)
@@ -49,6 +52,12 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             if (!hasDrawnPlayer)
                 player.Sprite.Draw(player.Rect, player.Rotation, player.Color);
+
+            var guns = _objectService.GetChildren<Gun>(player);
+            foreach(var gun in guns)
+            {
+                gun.Sprite.Draw(player.Rect, player.Rotation, player.Color);
+            }
         }
 
 

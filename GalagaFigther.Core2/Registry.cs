@@ -30,6 +30,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IPlayerAffector, PlayerAffector>();
             services.AddSingleton<IPlayerShooter, PlayerShooter>();
             services.AddSingleton<IPlayerController, PlayerController>();
+            services.AddSingleton<IGunController, GunController>();
             services.AddSingleton<IProjectileController, ProjectileController>();
             services.AddSingleton<IPowerUpController, PowerUpController>();
             services.AddSingleton<IGameObjectUpdateService, GameObjectUpdateService>();

@@ -1,6 +1,6 @@
-﻿using GalagaFighter.Core2.GameObjects.Projectiles;
+﻿using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.Helpers;
-using GalagaFighter.Core2.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +15,8 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
     {
         private static readonly StillImageSprite _sprite = new("Sprites/Turrets/Turret.png");
 
-        private readonly List<TurretGun> _guns;
-        public override List<TurretGun> Guns => _guns;
+        private readonly List<Gun> _guns;
+        public override List<Gun> Guns => _guns;
 
         public DefaultTurret(Guid owner, Vector2 position) 
             : base(owner, position, Vector2.One*80f, Vector2.Zero, _sprite)
@@ -25,26 +25,25 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
         }
     }
 
-    public class DefaultTurretGun : TurretGun
+    public class DefaultTurretGun : Gun
     {
         private static readonly StillImageSprite _sprite = new("Sprites/Turrets/turret_barrels.png");
+        public override List<GunBarrel> Barrels => _barrels;
 
-        public override List<Gun> Guns => [
-            new Gun([
-                new GunBarrel(new(0,0),new(40,0)),
-                new GunBarrel(new(0,0),new(-40,0))
-            ], HandleShoot)
+        public static List<GunBarrel> _barrels => [
+            new GunBarrel(new(0,0),new(40,0)),
+            new GunBarrel(new(0,0),new(-40,0))
         ];
 
         public DefaultTurretGun(DefaultTurret turret)
-            : base(turret.Id, turret.Rect.Position, turret.Rect.Size, Vector2.Zero, _sprite)
+            : base(turret, _sprite)
         {
             AngularVelocity = 180f;
         }
 
-        private List<GameObject> HandleShoot(Guid id)
+        public override Dictionary<GunBarrel, GameObject> Shoot(Guid id)
         {
-            return [new DefaultProjectile(id, Vector2.Zero)];
+            return _barrels.ToDictionary(x => x, x => (GameObject)new DefaultProjectile(id, Vector2.Zero));
         }
     }
 }

@@ -14,6 +14,12 @@ namespace GalagaFighter.Core2.Helpers
         {
         }
 
+        public virtual void Draw(GameObject gameObject)
+        {
+            var rect = new Rectangle(gameObject.WorldPosition, gameObject.Rect.Size);
+            Draw(rect, gameObject.WorldRotation, gameObject.Color);
+        }
+
         public virtual void Draw(Rectangle rect, float rotation = 0f, Color? color = null)
         {
             var source = _source ?? new Rectangle(0, 0, _texture.Width, _texture.Height);

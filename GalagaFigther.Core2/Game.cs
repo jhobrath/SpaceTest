@@ -80,8 +80,8 @@ namespace GalagaFighter.Core2
 
         private void UpdateGameObjects(float frameTime)
         {
-            _gameObjectPositionService.Update(frameTime);
             _gameObjectUpdateService.Update(frameTime);
+            _gameObjectPositionService.Update(frameTime);
         }
 
         private void UpdateServices(float frameTime)

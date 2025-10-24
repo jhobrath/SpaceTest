@@ -14,11 +14,13 @@ namespace GalagaFighter.Core2.Handlers.Players
     {
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IObjectService _objectService;
+        private readonly IGameObjectPositionService _positionService;
 
-        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService)
+        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService, IGameObjectPositionService positionService)
         {
             _gameDataRegistry = gameDataRegistry;
             _objectService = objectService;
+            _positionService = positionService;
         }
 
         public void Affect(Player player, float frameTime)
@@ -83,6 +85,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                 foreach(var gun in effect.Value(player))
                 {
                     modifiers.Guns.Add(gun);
+                    _positionService.RegisterParent(player, gun);
                     _objectService.Add(gun);
                 }
             }

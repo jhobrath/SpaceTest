@@ -11,11 +11,14 @@ namespace GalagaFighter.Core2.Services
 {
     public interface IGameObjectPositionService
     {
+        public void RegisterParent(GameObject gameObject, params GameObject[] child);
         public void Update(float frameTime);
     }
     public class GameObjectPositionService : IGameObjectPositionService
     {
         private readonly IObjectService _objectService;
+
+        private readonly Dictionary<GameObject, List<GameObject>> _transformHierarchy = [];
 
         public GameObjectPositionService(IObjectService objectService)
         {
@@ -30,7 +33,37 @@ namespace GalagaFighter.Core2.Services
                 Hurry(gameObject, frameTime);
                 Move(gameObject, frameTime);
                 Rotate(gameObject, frameTime);
+                
+                gameObject.WorldPosition = gameObject.Rect.Position;
+                gameObject.WorldRotation = gameObject.Rotation;
             }
+
+            var inactiveKeys = new List<GameObject>();
+            foreach (var parent in _transformHierarchy.Keys)
+            {
+                if (parent.IsActive == false)
+                { 
+                    inactiveKeys.Add(parent);
+                    continue;
+                }
+
+                var childInactiveKeys = new List<GameObject>();
+                foreach (var child in _transformHierarchy[parent])
+                {
+                    if (child.IsActive == false)
+                    {
+                        childInactiveKeys.Add(child);
+                        continue;
+                    }
+
+                    child.WorldPosition += parent.WorldPosition;
+                    child.WorldRotation += parent.WorldRotation;
+                }
+
+                childInactiveKeys.ForEach(x => _transformHierarchy[parent].Remove(x));
+            }
+
+            inactiveKeys.ForEach(x => _transformHierarchy.Remove(x));
         }
 
         private void Rotate(GameObject gameObject, float frameTime)
@@ -74,5 +107,12 @@ namespace GalagaFighter.Core2.Services
             gameObject.Move(gameObject.Speed.X * frameTime, gameObject.Speed.Y * frameTime);
         }
 
+        public void RegisterParent(GameObject gameObject, params GameObject[] children)
+        {
+            if(!_transformHierarchy.ContainsKey(gameObject))
+                _transformHierarchy.Add(gameObject, []);
+
+            _transformHierarchy[gameObject].AddRange(children);
+        }
     }
 }

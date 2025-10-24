@@ -29,7 +29,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             var bounds = _gameDataRegistry.Get<PlayerBoundsData>(player);
 
-            var playerPosition = MathExtensions.Clamp(player.Rect.Position,
+            var playerPosition = MathExtensions.Clamp(player.WorldPosition,
                 bounds.Min, bounds.Max - player.Rect.Size);
 
             player.MoveTo(playerPosition.X, playerPosition.Y);

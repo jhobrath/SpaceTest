@@ -30,12 +30,7 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(Gun gun, float frameTime)
         {
-            //var owner = _objectService.Get(gun.Owner);
-            //var worldLocation = owner.TopLeft + gun.TopLeft;
-            //var gunRect = new Rectangle((int)worldLocation.X, (int)worldLocation.Y,
-            //    (int)gun.Width, (int)gun.Height);
-            //
-            //gun.Sprite.Draw(gunRect, owner.Rotation + gun.Rotation, gun.Color);
+            gun.Sprite.Draw(gun);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(Projectile projectile, float frameTime)
         {
-            projectile.Sprite.Draw(projectile.Rect, projectile.Rotation, projectile.Color);
+            projectile.Sprite.Draw(projectile);
         }
 
         public void Update(Projectile projectile, float frameTime)

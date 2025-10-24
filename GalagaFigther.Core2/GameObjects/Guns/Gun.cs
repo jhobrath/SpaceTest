@@ -8,7 +8,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
     public abstract class Gun : GameObject 
     {
         public Gun(GameObject owner, SpriteBase sprite) 
-            : base(owner.Id, owner.Rect.Position, owner.Rect.Size, owner.Speed, sprite)
+            : base(owner.Id, Vector2.Zero, owner.Rect.Size, Vector2.Zero, sprite)
         {
         }
 

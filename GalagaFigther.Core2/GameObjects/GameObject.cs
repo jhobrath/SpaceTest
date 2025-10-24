@@ -15,16 +15,23 @@ namespace GalagaFighter.Core2.GameObjects
         //Primary State
         public Guid Id { get; set; }
         public Guid Owner { get; set; }
+
         public Rectangle Rect { get; set; }
         public Vector2 Speed { get; set; }
-        public Vector2 Acceleration { get; set; }
-        public virtual Vector2 Origin => TopLeft;
-        public SpriteBase Sprite { get; set; }
         public float Rotation { get; set; }
         public Color Color { get; set; } = Color.White;
-        public virtual Vector2 Drag => Vector2.Zero;
+        
+        public Vector2 Acceleration { get; set; }
         public float AngularVelocity { get; set; }
+        public virtual Vector2 Drag => Vector2.Zero;
+        
+        public virtual Vector2 Origin => TopLeft;
+        public SpriteBase Sprite { get; set; }
         public Vector2[]? Bounds { get; set;  }
+
+        //World Position
+        public Vector2 WorldPosition { get; set; }
+        public float WorldRotation { get; set; }
 
         //Destruction
         public bool IsActive { get; set; } = true;
@@ -34,8 +41,8 @@ namespace GalagaFighter.Core2.GameObjects
         public float Y { get { return Rect.Position.Y; } set { MoveTo(y: value); } }
         public float Width => Rect.Width;
         public float Height => Rect.Height;
-        public Vector2 TopLeft => Rect.Position;
-        public Vector2 Center => Rect.Position + Rect.Size / 2;
+        public Vector2 TopLeft => WorldPosition;
+        public Vector2 Center => WorldPosition + Rect.Size / 2;
 
         public GameObject(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite)
         {
@@ -45,6 +52,8 @@ namespace GalagaFighter.Core2.GameObjects
             Speed = speed;
             Sprite = sprite;
             Sprite = sprite;
+
+            WorldPosition = Rect.Position;
         }
 
         public void Move(float? x = null, float? y = null) => 

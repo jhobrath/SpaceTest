@@ -15,7 +15,7 @@ namespace GalagaFighter.Core2.Effects.Projectiles
 {
     public class DefaultShootEffect : ProjectileEffect
     {
-        //protected override float Duration => 0f;
+        protected override float Duration => 0f;
 
         public override void Apply(PlayerModifiers modifiers)
         {

@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Models;
@@ -61,13 +62,9 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(Turret turret, float frameTime)
         {
-            turret.Sprite.Draw(turret.Rect, turret.Rotation, turret.Color);
-
-            var children = _objectService.GetChildren(turret);
-            foreach(var child in children)
-            {
-                child.Sprite.Draw(child.Rect, child.Rotation, child.Color);
-            }
+            turret.Sprite.Draw(turret);
+            foreach(var child in _objectService.GetChildren<Gun>(turret))
+                child.Sprite.Draw(child);
         }
     }
 }

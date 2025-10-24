@@ -71,7 +71,7 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(PowerUp powerUp, float frameTime)
         {
-            powerUp.Sprite.Draw(powerUp.Rect, powerUp.Rotation, powerUp.Color);
+            powerUp.Sprite.Draw(powerUp);
         }
     }
 }

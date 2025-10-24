@@ -43,21 +43,15 @@ namespace GalagaFighter.Core2.Handlers.Players
             {
                 if (!hasDrawnPlayer && decoration.Depth >= 0)
                 {
-                    player.Sprite.Draw(player.Rect, player.Rotation, player.Color);
+                    player.Sprite.Draw(player);
                     hasDrawnPlayer = true;
                 }
 
-            //    decoration.Draw(player);
+                decoration.Draw(player);
             }
 
             if (!hasDrawnPlayer)
-                player.Sprite.Draw(player.Rect, player.Rotation, player.Color);
-
-            var guns = _objectService.GetChildren<Gun>(player);
-            foreach(var gun in guns)
-            {
-                gun.Sprite.Draw(player.Rect, player.Rotation, player.Color);
-            }
+                player.Sprite.Draw(player);
         }
 
 

@@ -19,14 +19,16 @@ namespace GalagaFighter.Core2.Handlers.Players
     public class PlayerTurretDeployer : IPlayerTurretDeployer
     {
         private readonly IGameDataRegistry _gameDataRegistry;
+        private readonly IGameObjectPositionService _positionService;
         private readonly IObjectService _objectService;
 
         private readonly float _defaultDeployRate = 20f;
 
-        public PlayerTurretDeployer(IGameDataRegistry gameDataRegistry, IObjectService objectService)
+        public PlayerTurretDeployer(IGameDataRegistry gameDataRegistry, IObjectService objectService, IGameObjectPositionService positionService)
         {
             _gameDataRegistry = gameDataRegistry;
             _objectService = objectService;
+            _positionService = positionService;
         }
 
         public void Deploy(Player player, float frameTime)
@@ -63,11 +65,10 @@ namespace GalagaFighter.Core2.Handlers.Players
             {
                 PositionTurret(player, turret);
                 _objectService.Add(turret);
-
+                
                 foreach (var gun in turret.Guns)
                 {
-                    var finalPlacement = turret.Center - gun.Rect.Size / 2;
-                    gun.MoveTo(finalPlacement.X, finalPlacement.Y);
+                    _positionService.RegisterParent(turret, gun);
                     _objectService.Add(gun);
                 }
             }

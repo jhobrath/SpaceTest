@@ -17,8 +17,8 @@ namespace GalagaFighter.Core2.Services
         void Add(GameObject gameObject);
         void Remove(GameObject gameObject);
         void CleanUp();
-        IEnumerable<GameObject> GetChildren(GameObject turret);
-        IEnumerable<T> GetChildren<T>(GameObject turret) where T : GameObject;
+        IEnumerable<GameObject> GetChildren(GameObject parent);
+        IEnumerable<T> GetChildren<T>(GameObject parent) where T : GameObject;
     }
 
     public class ObjectService : Dictionary<Guid, GameObject>, IObjectService, IDictionary<Guid, GameObject>

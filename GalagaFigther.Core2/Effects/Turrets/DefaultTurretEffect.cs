@@ -16,12 +16,12 @@ namespace GalagaFighter.Core2.Effects.Turrets
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.Turret.OnDeploy.Add(nameof(DefaultTurretEffect), HandleOnDeploy);
+            modifiers.CreateTurrets.Add(nameof(DefaultTurretEffect), HandleOnDeploy);
         }
 
-        private List<Turret> HandleOnDeploy(Guid guid)
+        private List<Turret> HandleOnDeploy(GameObject owner)
         {
-            var turret = new DefaultTurret(guid, Vector2.Zero);
+            var turret = new DefaultTurret(owner);
             return [turret];
         }
     }

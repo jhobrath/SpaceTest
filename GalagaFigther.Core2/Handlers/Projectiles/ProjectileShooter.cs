@@ -60,9 +60,9 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
         private Vector2 GetRotatedOffset(GameObject objectShooting, Vector2 offset)
         {
             var offsetRotationRadians = (objectShooting.Rotation - 90) * MathF.PI / 180f;
-            return new Vector2(
-                objectShooting.Center.X + (offset.X * MathF.Cos(offsetRotationRadians) - offset.Y * MathF.Sin(offsetRotationRadians)),
-                objectShooting.Center.Y + (offset.X * MathF.Sin(offsetRotationRadians) + offset.Y * MathF.Cos(offsetRotationRadians))
+            return objectShooting.Center + new Vector2(
+                (offset.X * MathF.Cos(offsetRotationRadians) - offset.Y * MathF.Sin(offsetRotationRadians)),
+                (offset.X * MathF.Sin(offsetRotationRadians) + offset.Y * MathF.Cos(offsetRotationRadians))
             );
         }
     }

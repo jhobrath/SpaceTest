@@ -18,10 +18,11 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
         private readonly List<Gun> _guns;
         public override List<Gun> Guns => _guns;
 
-        public DefaultTurret(Guid owner, Vector2 position) 
-            : base(owner, position, Vector2.One*80f, Vector2.Zero, _sprite)
+        public DefaultTurret(GameObject owner) 
+            : base(owner.Id, Vector2.Zero, Vector2.One*80f, Vector2.Zero, _sprite)
         {
             _guns = [new DefaultTurretGun(this)];
+            WorldPosition = owner.WorldPosition;
         }
     }
 

@@ -29,6 +29,9 @@ namespace GalagaFighter.Core2.Models.Players
 
         public Dictionary<string, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
         public List<Gun> Guns { get; set; } = [];
+
+        public Dictionary<string, Func<GameObject, List<Turret>>> CreateTurrets { get; set; } = [];
+        public List<Turret> Turrets { get; set; } = [];
     }
 
     public class ProjectileModifiers
@@ -41,6 +44,5 @@ namespace GalagaFighter.Core2.Models.Players
     public class TurretModifiers
     {
         public List<Decoration> Decorations { get; set; } = [];
-        public Dictionary<string, Func<Guid, List<Turret>>> OnDeploy { get; set; } = [];
     }
 }

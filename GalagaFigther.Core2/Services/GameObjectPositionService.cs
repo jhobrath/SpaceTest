@@ -113,6 +113,13 @@ namespace GalagaFighter.Core2.Services
                 _transformHierarchy.Add(gameObject, []);
 
             _transformHierarchy[gameObject].AddRange(children);
+            
+            // Update child WorldPosition so collisions work
+            foreach(var child in children)
+            {
+                child.WorldPosition = gameObject.WorldPosition + child.Rect.Position;
+                child.WorldRotation = gameObject.WorldRotation + child.Rotation;
+            }
         }
     }
 }

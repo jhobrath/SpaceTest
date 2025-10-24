@@ -57,8 +57,8 @@ namespace GalagaFighter.Core2
                 UpdateGameObjects(frameTime);
                 UpdateServices(frameTime);
                 HandleCollisions();
-                DrawGameObjects(frameTime);
                 DeactivateObjects(frameTime);
+                DrawGameObjects(frameTime);
 
                 if (Raylib.WindowShouldClose())
                     break;

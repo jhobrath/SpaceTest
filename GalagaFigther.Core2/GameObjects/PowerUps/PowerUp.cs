@@ -11,8 +11,6 @@ namespace GalagaFighter.Core2.GameObjects.PowerUps
 {
     public abstract class PowerUp : GameObject
     {
-        public Guid Owner { get; set; }
-
         private static Vector2 _defaultSize = new(87f, 41f);
 
         public PowerUp(Vector2 initialPosition, Vector2 initialSpeed, string texture)

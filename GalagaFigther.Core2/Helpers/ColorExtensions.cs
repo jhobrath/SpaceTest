@@ -44,6 +44,24 @@ namespace GalagaFighter.Core2.Helpers
         }
 
         /// <summary>
+        /// Linear interpolation between two colors
+        /// </summary>
+        /// <param name="a">Start color</param>
+        /// <param name="b">End color</param>
+        /// <param name="t">Interpolation factor (0-1)</param>
+        /// <returns>Interpolated color</returns>
+        public static Color Lerp(Color a, Color b, float t)
+        {
+            t = Math.Clamp(t, 0f, 1f);
+            return new Color(
+                (byte)(a.R + (b.R - a.R) * t),
+                (byte)(a.G + (b.G - a.G) * t),
+                (byte)(a.B + (b.B - a.B) * t),
+                (byte)(a.A + (b.A - a.A) * t)
+            );
+        }
+
+        /// <summary>
         /// Shifts the hue of a Raylib Color by the specified amount (in degrees)
         /// </summary>
         /// <param name="color">The original color</param>

@@ -56,14 +56,50 @@ namespace GalagaFighter.Core2.Services
                         continue;
                     }
 
-                    child.WorldPosition += parent.WorldPosition;
-                    child.WorldRotation += parent.WorldRotation;
+                    ApplyParentTransform(parent, child);
                 }
 
                 childInactiveKeys.ForEach(x => _transformHierarchy[parent].Remove(x));
             }
 
             inactiveKeys.ForEach(x => _transformHierarchy.Remove(x));
+        }
+
+        private void ApplyParentTransform(GameObject parent, GameObject child)
+        {
+            // Apply rotation: parent's world rotation + child's current rotation (which includes AngularVelocity effects)
+            child.WorldRotation = parent.WorldRotation + child.Rotation;
+
+            // The child's Rect.Position represents its local offset from the parent's top-left
+            Vector2 localOffset = child.Rect.Position;
+            
+            // If there's no offset, child follows parent position
+            if (localOffset == Vector2.Zero)
+            {
+                child.WorldPosition = parent.WorldPosition;
+                return;
+            }
+
+            // Convert local offset (from parent's top-left) to offset from parent's center
+            Vector2 parentHalfSize = new Vector2(parent.Width, parent.Height) / 2f;
+            Vector2 offsetFromParentCenter = localOffset - parentHalfSize;
+
+            // Rotate the offset around parent's center using parent's world rotation (not child's)
+            float parentRotationRadians = parent.WorldRotation * MathF.PI / 180f;
+            float cos = MathF.Cos(parentRotationRadians);
+            float sin = MathF.Sin(parentRotationRadians);
+            
+            Vector2 rotatedOffsetFromCenter = new Vector2(
+                offsetFromParentCenter.X * cos - offsetFromParentCenter.Y * sin,
+                offsetFromParentCenter.X * sin + offsetFromParentCenter.Y * cos
+            );
+
+            // Calculate final world position: parent center + rotated offset
+            Vector2 childCenter = parent.Center + rotatedOffsetFromCenter;
+            
+            // Convert back to child's top-left world position
+            Vector2 childHalfSize = new Vector2(child.Width, child.Height) / 2f;
+            child.WorldPosition = childCenter - childHalfSize;
         }
 
         private void Rotate(GameObject gameObject, float frameTime)
@@ -114,11 +150,10 @@ namespace GalagaFighter.Core2.Services
 
             _transformHierarchy[gameObject].AddRange(children);
             
-            // Update child WorldPosition so collisions work
+            // Initialize child transforms immediately
             foreach(var child in children)
             {
-                child.WorldPosition = gameObject.WorldPosition + child.Rect.Position;
-                child.WorldRotation = gameObject.WorldRotation + child.Rotation;
+                ApplyParentTransform(gameObject, child);
             }
         }
     }

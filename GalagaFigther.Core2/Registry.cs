@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Handlers.Collisions;
+using GalagaFighter.Core2.Handlers.ParticleEmitters;
 using GalagaFighter.Core2.Handlers.Players;
 using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Services;
@@ -33,6 +34,18 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGunController, GunController>();
             services.AddSingleton<IProjectileController, ProjectileController>();
             services.AddSingleton<IPowerUpController, PowerUpController>();
+            
+            // Particle emitter handlers
+            services.AddSingleton<IParticleDurationHandler, ParticleDurationHandler>();
+            services.AddSingleton<IParticlePositionCalculator, ParticlePositionCalculator>();
+            services.AddSingleton<IParticleVelocityCalculator, ParticleVelocityCalculator>();
+            services.AddSingleton<IParticleTextureSelector, ParticleTextureSelector>();
+            services.AddSingleton<IParticleCreationHandler, ParticleCreationHandler>();
+            services.AddSingleton<IParticleEmissionHandler, ParticleEmissionHandler>();
+            services.AddSingleton<IParticleUpdateHandler, ParticleUpdateHandler>();
+            services.AddSingleton<IParticleDrawHandler, ParticleDrawHandler>();
+            services.AddSingleton<IParticleEmitterController, ParticleEmitterController>();
+            
             services.AddSingleton<IGameObjectUpdateService, GameObjectUpdateService>();
             services.AddSingleton<IPersistentValueHandler, PersistentValueHandler>();
             services.AddSingleton<IInitialObjectBuilder, InitialObjectBuilder>();

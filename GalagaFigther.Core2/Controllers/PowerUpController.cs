@@ -29,7 +29,7 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Update(PowerUp powerUp, float frameTime)
         {
-            if(powerUp.Owner == Guid.Empty)
+            if(powerUp.Owner == Game.Id)
             { 
                 Deactivate(powerUp);
             }

@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 using System;
@@ -25,10 +26,12 @@ namespace GalagaFighter.Core2.Services
         private readonly IPowerUpController _powerUpController;
         private readonly ITurretController _turretController;
         private readonly IGunController _gunController;
+        private readonly IParticleEmitterController _particleEmitterController;
 
         public GameObjectUpdateService(IObjectService objectService, IPlayerController playerController,
             IProjectileController projectileController, IPowerUpController powerUpController,
-            ITurretController turretController, IGunController gunController)
+            ITurretController turretController, IGunController gunController,
+            IParticleEmitterController particleEmitterController)
         {
             _objectService = objectService;
             _playerController = playerController;
@@ -36,6 +39,7 @@ namespace GalagaFighter.Core2.Services
             _powerUpController = powerUpController;
             _turretController = turretController;
             _gunController = gunController;
+            _particleEmitterController = particleEmitterController;
         }
 
         public void Update(float frameTime)
@@ -45,6 +49,7 @@ namespace GalagaFighter.Core2.Services
             UpdateType(_powerUpController, frameTime);
             UpdateType(_turretController, frameTime);
             UpdateType(_gunController, frameTime);
+            UpdateType(_particleEmitterController, frameTime);
         }
 
         private void UpdateType<T>(IController<T> controller, float frameTime)
@@ -62,6 +67,7 @@ namespace GalagaFighter.Core2.Services
             DrawType(_powerUpController, frameTime);
             DrawType(_turretController, frameTime);
             DrawType(_gunController, frameTime);
+            DrawType(_particleEmitterController, frameTime);
         }
 
         private void DrawType<T>(IController<T> controller, float frameTime)
@@ -70,15 +76,18 @@ namespace GalagaFighter.Core2.Services
             var gameObjects = _objectService.GetAll<T>();
             foreach (var gameObject in gameObjects)
             {
+                if (!gameObject.IsActive)
+                    continue;
+
                 controller.Draw(gameObject, frameTime);
-
-                var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
-
-                for(var i = 0;i < vertices.Length;i++)
-                {
-                    var endIndex = i == vertices.Length - 1 ? 0 : i + 1;
-                    Raylib.DrawLine((int)vertices[i].X, (int)vertices[i].Y, (int)vertices[endIndex].X, (int)vertices[endIndex].Y, Color.Red);
-                }
+                //
+                //var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
+                //
+                //for(var i = 0;i < vertices.Length;i++)
+                //{
+                //    var endIndex = i == vertices.Length - 1 ? 0 : i + 1;
+                //    Raylib.DrawLine((int)vertices[i].X, (int)vertices[i].Y, (int)vertices[endIndex].X, (int)vertices[endIndex].Y, Color.Red);
+                //}
             }
         }
     }

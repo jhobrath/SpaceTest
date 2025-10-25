@@ -1,4 +1,4 @@
-﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Turrets;

@@ -23,7 +23,8 @@ namespace GalagaFighter.Core2
         private readonly IGameObjectPositionService _gameObjectPositionService;
         private readonly IClearableServiceClearer _clearableServiceClearer;
 
-        public static Guid Id => Guid.NewGuid();
+        private static Guid _id = Guid.NewGuid();
+        public static Guid Id => _id;
 
         public Game(IObjectService objectService, IInitialObjectBuilder initialObjectBuilder,
             IInputService inputService, IPersistentValueHandler persistentValueHandler,

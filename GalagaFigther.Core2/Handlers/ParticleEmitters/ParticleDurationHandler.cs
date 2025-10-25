@@ -1,0 +1,48 @@
+using GalagaFighter.Core2.Models.Particles;
+using GalagaFighter.Core2.Services;
+
+namespace GalagaFighter.Core2.Handlers.ParticleEmitters
+{
+    public interface IParticleDurationHandler
+    {
+        void UpdateDuration(ParticleEmitter emitter, float frameTime);
+    }
+
+    public class ParticleDurationHandler : IParticleDurationHandler
+    {
+        private readonly IGameDataRegistry _gameDataRegistry;
+
+        public ParticleDurationHandler(IGameDataRegistry gameDataRegistry)
+        {
+            _gameDataRegistry = gameDataRegistry;
+        }
+
+        public void UpdateDuration(ParticleEmitter emitter, float frameTime)
+        {
+            var config = _gameDataRegistry.Get<ParticleEffectConfig>(emitter);
+            var emissionState = _gameDataRegistry.Get<ParticleEmissionState>(emitter);
+            
+            if (config.Duration > 0f)
+            {
+                emissionState.DurationTimer += frameTime;
+                if (emissionState.DurationTimer >= config.Duration)
+                {
+                    if (config.Loop)
+                    {
+                        emissionState.DurationTimer = 0f;
+                    }
+                    else
+                    {
+                        emissionState.IsEmitting = false;
+                        
+                        // Check if all particles are done too
+                        if (emitter.Particles.Count == 0)
+                        {
+                            emitter.IsActive = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

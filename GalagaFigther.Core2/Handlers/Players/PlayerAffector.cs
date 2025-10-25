@@ -16,7 +16,8 @@ namespace GalagaFighter.Core2.Handlers.Players
         private readonly IObjectService _objectService;
         private readonly IGameObjectPositionService _positionService;
 
-        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService, IGameObjectPositionService positionService)
+        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService, 
+            IGameObjectPositionService positionService)
         {
             _gameDataRegistry = gameDataRegistry;
             _objectService = objectService;

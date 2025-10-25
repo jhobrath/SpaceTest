@@ -4,13 +4,12 @@ using GalagaFighter.Core2.Services;
 
 namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 {
-    public interface IParticleUpdateHandler
+    public interface IParticleEmissionShepherd
     {
-        void UpdateParticles(ParticleEmitter emitter, float frameTime);
-        void CleanupInactiveParticles(ParticleEmitter emitter);
+        void Herd(ParticleEmitter emitter, float frameTime);
     }
 
-    public class ParticleUpdateHandler : IParticleUpdateHandler
+    public class ParticleUpdateHandler : IParticleEmissionShepherd
     {
         private readonly IObjectService _objectService;
 
@@ -19,7 +18,7 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
             _objectService = objectService;
         }
 
-        public void UpdateParticles(ParticleEmitter emitter, float frameTime)
+        public void Herd(ParticleEmitter emitter, float frameTime)
         {
             for (int i = 0; i < emitter.Particles.Count; i++)
             {
@@ -28,20 +27,6 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
                 {
                     UpdateParticleLifetime(particle, frameTime);
                     UpdateParticleVisuals(particle);
-                }
-            }
-        }
-
-        public void CleanupInactiveParticles(ParticleEmitter emitter)
-        {
-            for (int i = emitter.Particles.Count - 1; i >= 0; i--)
-            {
-                var particle = emitter.Particles[i];
-                if (!particle.IsActive)
-                {
-                    // Remove from ObjectService so it's no longer processed by GameObjectPositionService
-                    _objectService.Remove(particle);
-                    emitter.Particles.RemoveAt(i);
                 }
             }
         }

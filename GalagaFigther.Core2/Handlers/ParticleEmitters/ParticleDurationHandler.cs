@@ -3,12 +3,12 @@ using GalagaFighter.Core2.Services;
 
 namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 {
-    public interface IParticleDurationHandler
+    public interface IParticleEmissionTimer
     {
-        void UpdateDuration(ParticleEmitter emitter, float frameTime);
+        void Tick(ParticleEmitter emitter, float frameTime);
     }
 
-    public class ParticleDurationHandler : IParticleDurationHandler
+    public class ParticleDurationHandler : IParticleEmissionTimer
     {
         private readonly IGameDataRegistry _gameDataRegistry;
 
@@ -17,7 +17,7 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
             _gameDataRegistry = gameDataRegistry;
         }
 
-        public void UpdateDuration(ParticleEmitter emitter, float frameTime)
+        public void Tick(ParticleEmitter emitter, float frameTime)
         {
             var config = _gameDataRegistry.Get<ParticleEffectConfig>(emitter);
             var emissionState = _gameDataRegistry.Get<ParticleEmissionState>(emitter);

@@ -35,15 +35,15 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IProjectileController, ProjectileController>();
             services.AddSingleton<IPowerUpController, PowerUpController>();
             
-            // Particle emitter handlers
-            services.AddSingleton<IParticleDurationHandler, ParticleDurationHandler>();
+            // Particle emitter handlers with action-based names
+            services.AddSingleton<IParticleEmissionTimer, ParticleDurationHandler>();
             services.AddSingleton<IParticlePositionCalculator, ParticlePositionCalculator>();
             services.AddSingleton<IParticleVelocityCalculator, ParticleVelocityCalculator>();
             services.AddSingleton<IParticleTextureSelector, ParticleTextureSelector>();
             services.AddSingleton<IParticleCreationHandler, ParticleCreationHandler>();
-            services.AddSingleton<IParticleEmissionHandler, ParticleEmissionHandler>();
-            services.AddSingleton<IParticleUpdateHandler, ParticleUpdateHandler>();
-            services.AddSingleton<IParticleDrawHandler, ParticleDrawHandler>();
+            services.AddSingleton<IParticleEmissionSpawner, ParticleEmissionHandler>();
+            services.AddSingleton<IParticleEmissionShepherd, ParticleUpdateHandler>();
+            services.AddSingleton<IParticleEmissionCleaner, ParticleDrawHandler>();
             services.AddSingleton<IParticleEmitterController, ParticleEmitterController>();
             
             services.AddSingleton<IGameObjectUpdateService, GameObjectUpdateService>();

@@ -10,41 +10,41 @@ namespace GalagaFighter.Core2.Controllers
 
     public class ParticleEmitterController : IParticleEmitterController
     {
-        private readonly IParticleDurationHandler _durationHandler;
-        private readonly IParticleEmissionHandler _emissionHandler;
-        private readonly IParticleUpdateHandler _updateHandler;
-        private readonly IParticleDrawHandler _drawHandler;
+        private readonly IParticleEmissionTimer _particleEmissionTimer;
+        private readonly IParticleEmissionSpawner _particleEmissionSpawner;
+        private readonly IParticleEmissionShepherd _particleEmissionShepherd;
+        private readonly IParticleEmissionCleaner _particleEmissionCleaner;
 
         public ParticleEmitterController(
-            IParticleDurationHandler durationHandler,
-            IParticleEmissionHandler emissionHandler,
-            IParticleUpdateHandler updateHandler,
-            IParticleDrawHandler drawHandler)
+            IParticleEmissionTimer particleEmissionTimer,
+            IParticleEmissionSpawner particleEmissionSpawner,
+            IParticleEmissionShepherd particleEmissionShepherd,
+            IParticleEmissionCleaner particleEmissionCleaner)
         {
-            _durationHandler = durationHandler;
-            _emissionHandler = emissionHandler;
-            _updateHandler = updateHandler;
-            _drawHandler = drawHandler;
+            _particleEmissionTimer = particleEmissionTimer;
+            _particleEmissionSpawner = particleEmissionSpawner;
+            _particleEmissionShepherd = particleEmissionShepherd;
+            _particleEmissionCleaner = particleEmissionCleaner;
         }
 
         public void Update(ParticleEmitter emitter, float frameTime)
         {
             if (!emitter.IsActive) return;
 
-            _durationHandler.UpdateDuration(emitter, frameTime);
-            _emissionHandler.HandleEmission(emitter, frameTime);
-            _updateHandler.UpdateParticles(emitter, frameTime);
-            _updateHandler.CleanupInactiveParticles(emitter);
+            _particleEmissionTimer.Tick(emitter, frameTime);
+            _particleEmissionSpawner.Spawn(emitter, frameTime);
+            _particleEmissionShepherd.Herd(emitter, frameTime);
+            _particleEmissionCleaner.Clean(emitter);
         }
 
         public void Draw(ParticleEmitter emitter, float frameTime)
         {
-            _drawHandler.DrawParticles(emitter);
+            _particleEmissionCleaner.Draw(emitter);
         }
 
         public void Burst(ParticleEmitter emitter, int particleCount)
         {
-            _emissionHandler.Burst(emitter, particleCount);
+            _particleEmissionSpawner.Burst(emitter, particleCount);
         }
     }
 }

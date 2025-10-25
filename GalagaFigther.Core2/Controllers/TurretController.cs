@@ -38,6 +38,7 @@ namespace GalagaFighter.Core2.Controllers
         public void Update(Turret turret, float frameTime)
         {
             var turretData = _gameDataRegistry.Get<TurretDeployData>(turret);
+            var player = _objectService.Get(turret.Owner);
 
             turretData.Lifetime += frameTime;
             if(turretData.Lifetime > 20f)
@@ -56,7 +57,7 @@ namespace GalagaFighter.Core2.Controllers
             turretData.ShotCountdown = _defaultCountdown;
 
             foreach(var turretGun in turret.Guns)
-                foreach(var barrel in turretGun.Shoot(turret.Owner))
+                foreach(var barrel in turretGun.Shoot(player))
                     _projectileShooter.Shoot(turretGun, barrel.Value, barrel.Key);
         }
 

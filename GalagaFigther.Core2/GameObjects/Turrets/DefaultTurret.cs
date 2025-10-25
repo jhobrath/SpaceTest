@@ -13,14 +13,13 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
 {
     public class DefaultTurret : Turret
     {
-        private static readonly StillImageSprite _sprite = new("Sprites/Turrets/Turret.png");
-
         private readonly List<Gun> _guns;
         public override List<Gun> Guns => _guns;
 
         public DefaultTurret(GameObject owner) 
-            : base(owner.Id, Vector2.Zero, Vector2.One*80f, Vector2.Zero, _sprite)
+            : base(owner.Id, Vector2.Zero, Vector2.One*80f, Vector2.Zero, new StillImageSprite("Sprites/Turrets/Turret.png"))
         {
+            Palette = owner.Palette;
             _guns = [new DefaultTurretGun(this)];
             WorldPosition = owner.WorldPosition;
         }
@@ -28,7 +27,6 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
 
     public class DefaultTurretGun : Gun
     {
-        private static readonly StillImageSprite _sprite = new("Sprites/Turrets/turret_barrels.png");
         public override List<GunBarrel> Barrels => _barrels;
 
         public static List<GunBarrel> _barrels => [
@@ -37,14 +35,15 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
         ];
 
         public DefaultTurretGun(DefaultTurret turret)
-            : base(turret, _sprite)
+            : base(turret, new StillImageSprite("Sprites/Turrets/turret_barrels.png"))
         {
+            Palette = turret.Palette;
             AngularVelocity = 180f;
         }
 
-        public override Dictionary<GunBarrel, GameObject> Shoot(Guid id)
+        public override Dictionary<GunBarrel, GameObject> Shoot(GameObject shooter)
         {
-            return _barrels.ToDictionary(x => x, x => (GameObject)new DefaultProjectile(id, Vector2.Zero));
+            return _barrels.ToDictionary(x => x, x => (GameObject)new DefaultProjectile(shooter.Id, Vector2.Zero) { Palette = shooter.Palette });
         }
     }
 }

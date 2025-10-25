@@ -19,17 +19,16 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         private int _gunIndex = 0;
 
         public override List<GunBarrel> Barrels => _barrels;
-        private readonly static StillImageSprite _sprite = new("Sprites/Ships/MainShipGuns.png");
 
         public DefaultGun(GameObject owner) 
-            : base(owner, _sprite)
+            : base(owner, new StillImageSprite("Sprites/Ships/MainShipGuns.png"))
         {
         }
 
-        public override Dictionary<GunBarrel, GameObject> Shoot(Guid owner)
+        public override Dictionary<GunBarrel, GameObject> Shoot(GameObject shooter)
         {
             _gunIndex = (_gunIndex + 1) % 2;
-            return new() { { _barrels[_gunIndex], new DefaultProjectile(owner, Vector2.Zero) } };
+            return new() { { _barrels[_gunIndex], new DefaultProjectile(shooter.Id, Vector2.Zero) { Palette = shooter.Palette } } };
         }
     }
 }

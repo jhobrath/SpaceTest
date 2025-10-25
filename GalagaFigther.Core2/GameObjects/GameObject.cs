@@ -29,6 +29,36 @@ namespace GalagaFighter.Core2.GameObjects
         public SpriteBase Sprite { get; set; }
         public Vector2[]? Bounds { get; set;  }
 
+        private Color _palette = Color.White; // Default to white (no change)
+
+        /// <summary>
+        /// The palette color for this game object (Raylib Color).
+        /// Setting this will automatically update the sprite's color using red-to-color palette swapping.
+        /// Set to Color.White to disable palette swapping.
+        /// </summary>
+        public Color Palette 
+        { 
+            get => _palette;
+            set 
+            {
+                if (_palette.Equals(value)) return; // No change needed
+                
+                _palette = value;
+                
+                // Automatically update the sprite's palette swap
+                // Only apply if not white (white = no palette swap)
+                if (value.Equals(Color.White))
+                {
+                    Sprite?.ClearPaletteSwap();
+                }
+                else
+                {
+                    // Default assumption: swap red to the new color (common for ships/objects)
+                    Sprite?.SetPaletteSwap(Color.Red, value);
+                }
+            }
+        }
+
         //World Position
         public Vector2 WorldPosition { get; set; }
         public float WorldRotation { get; set; }

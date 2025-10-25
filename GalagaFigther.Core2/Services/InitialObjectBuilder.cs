@@ -4,6 +4,7 @@ using GalagaFighter.Core2.Effects.Projectiles;
 using GalagaFighter.Core2.Effects.Turrets;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
@@ -43,8 +44,8 @@ namespace GalagaFighter.Core2.Services
 
         private void CreatePlayers(int screenWidth, int screenHeight)
         {
-           var player1 = CreatePlayer(0, 90, new(0,0), new(550f, screenHeight));
-            var player2 = CreatePlayer(screenWidth - 168, -90, new(screenWidth-550f, 0), new(screenWidth,screenHeight));
+           var player1 = CreatePlayer(0, 90, new(0,0), new(550f, screenHeight), ShipPalettes.AzureWing);
+            var player2 = CreatePlayer(screenWidth - 168, -90, new(screenWidth-550f, 0), new(screenWidth,screenHeight), ShipPalettes.VoidHunter);
 
             _objectService.Add(player1);
             _objectService.Add(player2);
@@ -78,16 +79,20 @@ namespace GalagaFighter.Core2.Services
             _inputService.AddPlayer(player2.Id, player2Mappings);
         }
 
-        private Player CreatePlayer(int x, float rotation, Vector2 min, Vector2 max)
+        private Player CreatePlayer(int x, float rotation, Vector2 min, Vector2 max, Color palette)
         {
             var playerHeight = 168f;
             var pos = new Vector2(x, (max.Y - playerHeight) / 2);
             var size = Vector2.One * 168;
             var speed = Vector2.Zero;
 
-            var player = new Player(pos, size, speed, new StillImageSprite("Sprites/Ships/MainShipBody.png"))
+            // Create sprite without palette swap initially
+            var shipSprite = new StillImageSprite("Sprites/Ships/MainShipBody.png");
+
+            var player = new Player(pos, size, speed, shipSprite)
             {
-                Rotation = rotation
+                Rotation = rotation,
+                Palette = palette // Set specific palette color
             };
 
             var bounds = _gameDataRegistry.Get<PlayerBoundsData>(player);

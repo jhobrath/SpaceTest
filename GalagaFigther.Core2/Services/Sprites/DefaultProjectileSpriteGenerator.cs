@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core2.Services.Static;
+﻿using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,12 @@ namespace GalagaFighter.Core2.Services.Sprites
             float scaleY = height / 5f;
             int bulletHeight = (int)(2 * scaleY);
             int tipRadius = (int)(1 * Math.Min(scaleX, scaleY));
-            Raylib.DrawRectangle(0, height / 2 - bulletHeight / 2, width, bulletHeight, color ?? Color.Yellow);
-            Raylib.DrawCircle(width - tipRadius, height / 2, tipRadius, Color.White);
+            
+            Color bodyColor = color ?? new Color(220, 20, 20, 255);
+            Color tipColor = bodyColor.AdjustLightness(5f);// new Color(255, 50, 50, 255);
+
+            Raylib.DrawRectangle(0, height / 2 - bulletHeight / 2, width, bulletHeight, bodyColor);
+            Raylib.DrawCircle(width - tipRadius, height / 2, tipRadius, tipColor);
         }
     }
 }

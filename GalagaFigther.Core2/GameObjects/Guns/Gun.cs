@@ -13,7 +13,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         }
 
         public virtual List<GunBarrel> Barrels { get; set; } = [];
-        public abstract Dictionary<GunBarrel, GameObject> Shoot(Guid guid);
+        public abstract Dictionary<GunBarrel, GameObject> Shoot(GameObject shooter);
     }
 
     public struct GunBarrel

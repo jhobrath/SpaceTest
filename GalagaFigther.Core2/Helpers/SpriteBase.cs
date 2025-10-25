@@ -1,4 +1,6 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.Models;
+using GalagaFighter.Core2.Services;
 using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 using System.Numerics;
@@ -7,8 +9,61 @@ namespace GalagaFighter.Core2.Helpers
 {
     public abstract class SpriteBase
     {
-        protected Texture2D _texture;
+        protected Lazy<Texture2D> _texture;
+        protected Func<Texture2D> _textureFactory;
         protected Rectangle? _source = null;
+        
+        private PaletteSwap? _paletteSwap;
+        
+        /// <summary>
+        /// Palette swap configuration for this sprite. Setting this will invalidate the lazy texture.
+        /// </summary>
+        public PaletteSwap? PaletteSwap 
+        { 
+            get => _paletteSwap;
+            set 
+            {
+                if (_paletteSwap?.Equals(value) == true) return;
+                
+                _paletteSwap = value;
+                InvalidateTexture();
+            }
+        }
+
+        /// <summary>
+        /// Gets the current texture, creating it lazily if needed
+        /// </summary>
+        protected Texture2D CurrentTexture => _texture.Value;
+
+        /// <summary>
+        /// Sets the palette swap using a simple from-to color approach
+        /// </summary>
+        public void SetPaletteSwap(Color fromColor, Color toColor)
+        {
+            PaletteSwap = Models.PaletteSwap.CreateSwap(fromColor, toColor);
+        }
+
+        /// <summary>
+        /// Clears the palette swap, reverting to the original texture
+        /// </summary>
+        public void ClearPaletteSwap()
+        {
+            PaletteSwap = null;
+        }
+
+        /// <summary>
+        /// Invalidates the current texture, forcing regeneration on next access
+        /// </summary>
+        protected void InvalidateTexture()
+        {
+            _texture = new Lazy<Texture2D>(_textureFactory);
+        }
+
+        protected void SetTextureFactory(Func<Texture2D> textureFactory)
+        {
+            _textureFactory = textureFactory;
+            InvalidateTexture();
+        }
 
         public virtual void Update(float frameTime)
         {
@@ -22,14 +77,14 @@ namespace GalagaFighter.Core2.Helpers
 
         public virtual void Draw(Rectangle rect, float rotation = 0f, Color? color = null)
         {
-            var source = _source ?? new Rectangle(0, 0, _texture.Width, _texture.Height);
+            var texture = CurrentTexture;
+            var source = _source ?? new Rectangle(0, 0, texture.Width, texture.Height);
             var dest = new Rectangle(rect.Position + rect.Size/2, rect.Size);
-            Raylib.DrawTexturePro(_texture, source, dest, dest.Position - rect.Position, rotation, color ?? Color.White);
+            Raylib.DrawTexturePro(texture, source, dest, dest.Position - rect.Position, rotation, color ?? Color.White);
         }
 
         public SpriteBase()
         {
-
         }
     }
 
@@ -37,25 +92,40 @@ namespace GalagaFighter.Core2.Helpers
     {
         public DrawnSprite(Texture2D texture)
         {
-            _texture = texture;
+            SetTextureFactory(() => texture);
+        }
+
+        public DrawnSprite(Func<Color?, Texture2D> colorAwareTextureFactory)
+        {
+            SetTextureFactory(() => colorAwareTextureFactory(PaletteSwap?.TargetColor));
         }
     }
 
     public class StillImageSprite : SpriteBase
     {
+        private readonly string _texturePath;
+
         public StillImageSprite(string texturePath)
         {
-            _texture = TextureCache.Get(texturePath);
+            _texturePath = texturePath;
+            SetTextureFactory(() => 
+            {
+                var originalTexture = TextureCache.Get(_texturePath);
+                return PaletteSwap == null 
+                    ? originalTexture 
+                    : PaletteSwapService.CreatePaletteSwappedTexture(originalTexture, PaletteSwap);
+            });
         }
     }
 
     public class AnimatedImageSprite : SpriteBase
     {
+        private readonly string _texturePath;
         private readonly int _frameCount;
         private readonly int _frameWidth = 0;
         private readonly int _frameHeight = 0;
         private readonly float _frameLength = 0;
-        private readonly int _framesPerRow;
+        private int _framesPerRow;
 
         protected int _frameIndex = 0;
         protected float _thisFrameLength = 0;
@@ -66,10 +136,19 @@ namespace GalagaFighter.Core2.Helpers
             _frameWidth = frameWidth;
             _frameHeight = frameHeight;
             _frameLength = frameLength;
+            _texturePath = texturePath;
 
-            _texture = TextureCache.Get(texturePath);
+            SetTextureFactory(() => 
+            {
+                var originalTexture = TextureCache.Get(_texturePath);
+                var texture = PaletteSwap == null 
+                    ? originalTexture 
+                    : PaletteSwapService.CreatePaletteSwappedTexture(originalTexture, PaletteSwap);
 
-            _framesPerRow = _texture.Width / _frameWidth;
+                _framesPerRow = texture.Width / _frameWidth;
+                return texture;
+            });
+
             _source = new(Vector2.Zero, new Vector2(_frameWidth, _frameHeight));
         }
 
@@ -87,10 +166,10 @@ namespace GalagaFighter.Core2.Helpers
 
         protected void SetSource()
         {
-            var row = _framesPerRow / _frameWidth;
-            var col = _framesPerRow % _frameWidth;
+            var row = _frameIndex / _framesPerRow;
+            var col = _frameIndex % _framesPerRow;
 
-            _source = new(row * _frameWidth, col * _frameHeight, _frameWidth, _frameHeight);
+            _source = new(col * _frameWidth, row * _frameHeight, _frameWidth, _frameHeight);
         }
     }
 
@@ -117,7 +196,6 @@ namespace GalagaFighter.Core2.Helpers
                 return;
             }
             
-            //_frameIndex must be zero here
             if (_hasStarted)
             {
                 _hasCompleted = true;

@@ -16,7 +16,8 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 
         private static SpriteBase GetSprite()
         {
-            return new DrawnSprite(DefaultProjectileSpriteGenerator.CreateProjectileSprite());
+            return new DrawnSprite((color) => 
+                DefaultProjectileSpriteGenerator.CreateProjectileSprite(color: color));
         }
     }
 }

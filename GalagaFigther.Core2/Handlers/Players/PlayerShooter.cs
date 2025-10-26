@@ -55,10 +55,8 @@ namespace GalagaFighter.Core2.Handlers.Players
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
 
             foreach (var gun in modifiers.Guns)
-                foreach (var barrel in gun.Shoot(player))
-                    _projectileShooter.Shoot(player, barrel.Value, barrel.Key);
+                gun.ShotDue = true;
 
-            shootData.LastShotLeft = !shootData.LastShotLeft;
             shootData.ShotCountdown = _defaultFireRate * modifiers.Stats.FireRate;
         }
     }

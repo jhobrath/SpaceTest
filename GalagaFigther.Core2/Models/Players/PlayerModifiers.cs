@@ -2,6 +2,7 @@ using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Turrets;
+using GalagaFighter.Core2.Models.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace GalagaFighter.Core2.Models.Players
 
         public Dictionary<PlayerEffect, Func<GameObject, List<Turret>>> CreateTurrets { get; set; } = [];
         public List<Turret> Turrets { get; set; } = [];
+
+        public Dictionary<PlayerEffect, Func<GameObject, List<ParticleEmitter>>> CreateParticleEmitters { get; set; } = [];
+        public List<ParticleEmitter> ParticleEmitters { get; set; } = [];
     }
 
     public class PlayerStats

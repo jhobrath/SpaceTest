@@ -9,13 +9,12 @@ namespace GalagaFighter.Core2.Models.Particles
 {
     public class ParticleEmitter : GameObject
     {
-        public Vector2 Offset { get; set; }
         public List<ParticleInstance> Particles { get; set; } = [];
+        public ParticleEffectConfig Config { get; set; }
 
-        public ParticleEmitter(Guid owner, Vector2 position, Vector2 size, Vector2 offset, SpriteBase sprite) 
-            : base(owner, position, size, Vector2.Zero, sprite)
+        public ParticleEmitter(Guid owner, Vector2 position, float size) 
+            : base(owner, position, Vector2.One*size, Vector2.Zero, new StillImageSprite("DoesntExist"))
         {
-            Offset = offset;
         }
     }
 }

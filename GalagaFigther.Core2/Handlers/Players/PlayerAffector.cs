@@ -50,6 +50,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         private void RecalculateModifiers(Player player, PlayerEffects effects)
         {
             ClearGuns(player);
+            ClearParticleEmitters(player);
 
             var modifiers = new PlayerModifiers();
             
@@ -58,6 +59,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                 effect.Apply(modifiers);
 
             SetGuns(player, modifiers);
+            SetParticleEmitters(player, modifiers);
 
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
             foreach (var deco in modifiers.Decorations.Values)
@@ -86,6 +88,27 @@ namespace GalagaFighter.Core2.Handlers.Players
                     modifiers.Guns.Add(gun);
                     _positionService.RegisterParent(player, gun);
                     _objectService.Add(gun);
+                }
+            }
+        }
+
+        private void ClearParticleEmitters(Player player)
+        {
+            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+
+            modifiers.ParticleEmitters.ForEach(x => x.IsActive = false);
+            modifiers.ParticleEmitters.Clear();
+        }
+
+        private void SetParticleEmitters(Player player, PlayerModifiers modifiers)
+        {
+            foreach(var effect in modifiers.CreateParticleEmitters.Values)
+            {
+                foreach(var emitter in effect.Invoke(player))
+                {
+                    modifiers.ParticleEmitters.Add(emitter);
+                    _positionService.RegisterParent(player, emitter);
+                    _objectService.Add(emitter);
                 }
             }
         }

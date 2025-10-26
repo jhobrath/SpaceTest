@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using Raylib_cs;
@@ -20,17 +21,33 @@ namespace GalagaFighter.Core2.Controllers
     {
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IObjectService _objectService;
+        private readonly IProjectileShooter _projectileShooter;
 
-        public GunController(IObjectService objectService, IGameDataRegistry gameDataRegistry)
+        public GunController(IObjectService objectService, IGameDataRegistry gameDataRegistry, 
+            IProjectileShooter projectileShooter)
         {
             _objectService = objectService;
             _gameDataRegistry = gameDataRegistry;
+            _projectileShooter = projectileShooter;
         }
 
         public void Update(Gun gun, float frameTime)
         {
             var player = _objectService.GetPlayer(gun);
             Rotate(gun, player);
+            Shoot(gun);
+        }
+
+        private void Shoot(Gun gun)
+        {
+            if (!gun.ShotDue)
+                return;
+
+            var player = _objectService.GetPlayer(gun);
+            foreach (var barrel in gun.Shoot(player))
+                _projectileShooter.Shoot(gun, barrel.Value, barrel.Key);
+
+            gun.ShotDue = false;
         }
 
         private void Rotate(Gun gun, Player player)

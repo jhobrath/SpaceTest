@@ -37,7 +37,6 @@ namespace GalagaFighter.Core2
             
             // Particle emitter handlers with action-based names
             services.AddSingleton<IParticleEmissionTimer, ParticleDurationHandler>();
-            services.AddSingleton<IParticlePositionCalculator, ParticlePositionCalculator>();
             services.AddSingleton<IParticleVelocityCalculator, ParticleVelocityCalculator>();
             services.AddSingleton<IParticleTextureSelector, ParticleTextureSelector>();
             services.AddSingleton<IParticleCreationHandler, ParticleCreationHandler>();

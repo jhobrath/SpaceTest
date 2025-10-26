@@ -56,9 +56,8 @@ namespace GalagaFighter.Core2.Controllers
 
             turretData.ShotCountdown = _defaultCountdown;
 
-            foreach(var turretGun in turret.Guns)
-                foreach(var barrel in turretGun.Shoot(player))
-                    _projectileShooter.Shoot(turretGun, barrel.Value, barrel.Key);
+            foreach (var turretGun in turret.Guns)
+                turretGun.ShotDue = true;
         }
 
         public void Draw(Turret turret, float frameTime)

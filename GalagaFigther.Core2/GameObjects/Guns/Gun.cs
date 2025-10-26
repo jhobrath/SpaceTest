@@ -17,6 +17,8 @@ namespace GalagaFighter.Core2.GameObjects.Guns
 
         public float? MinRotation = null;
         public float? MaxRotation = null;
+
+        public bool ShotDue { get; set; }
     }
 
     public struct GunBarrel
@@ -28,5 +30,8 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         }
         public Vector2 Start { get; set; }
         public Vector2 End { get; set; }
+        public float Recoil { get; set; } = 0f;
+
+        public bool Shoot { get; set; }
     }
 }

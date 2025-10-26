@@ -19,15 +19,14 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 
         public void Tick(ParticleEmitter emitter, float frameTime)
         {
-            var config = _gameDataRegistry.Get<ParticleEffectConfig>(emitter);
             var emissionState = _gameDataRegistry.Get<ParticleEmissionState>(emitter);
             
-            if (config.Duration > 0f)
+            if (emitter.Config.Duration > 0f)
             {
                 emissionState.DurationTimer += frameTime;
-                if (emissionState.DurationTimer >= config.Duration)
+                if (emissionState.DurationTimer >= emitter.Config.Duration)
                 {
-                    if (config.Loop)
+                    if (emitter.Config.Loop)
                     {
                         emissionState.DurationTimer = 0f;
                     }

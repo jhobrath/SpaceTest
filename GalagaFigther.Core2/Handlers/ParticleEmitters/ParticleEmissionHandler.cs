@@ -25,10 +25,9 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
             var emissionState = _gameDataRegistry.Get<ParticleEmissionState>(emitter);
             if (!emissionState.IsEmitting) return;
 
-            var config = _gameDataRegistry.Get<ParticleEffectConfig>(emitter);
             emissionState.EmissionTimer += frameTime;
             
-            float emissionInterval = 1f / config.BaseEmissionRate;
+            float emissionInterval = 1f / emitter.Config.BaseEmissionRate;
             
             while (emissionState.EmissionTimer >= emissionInterval)
             {

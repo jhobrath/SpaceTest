@@ -21,8 +21,7 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 
         public string SelectTexture(ParticleEmitter emitter)
         {
-            var config = _gameDataRegistry.Get<ParticleEffectConfig>(emitter);
-            return config.BaseTextures[_random.Next(config.BaseTextures.Length)];
+            return emitter.Config.BaseTextures[_random.Next(emitter.Config.BaseTextures.Length)];
         }
     }
 }

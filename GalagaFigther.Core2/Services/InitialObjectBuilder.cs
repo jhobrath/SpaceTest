@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Effects.Projectiles;
+using GalagaFighter.Core2.Effects.Statuses;
 using GalagaFighter.Core2.Effects.Turrets;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Helpers;
@@ -100,22 +101,22 @@ namespace GalagaFighter.Core2.Services
             bounds.Min = min;
             bounds.Max = max;
 
+            var playerEffects = _gameDataRegistry.Get<PlayerRotationData>(player);
+            playerEffects.InitialRotation = rotation;
+
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
+            effects.Add(new FrozenEffect());
             effects.Add(new IceTurretEffect());
 
             // Create engine trail emitter
             var engineConfig = ParticleEffectTemplates.Get("EngineTrail");
             var engineTrail = new ParticleEmitter(
                 owner: player.Id,
-                position: new Vector2(80, 140),
-                size: Vector2.One,
-                offset: Vector2.Zero,
-                sprite: new StillImageSprite("Sprites/Particles/default.png")
-            );
-            
-            // Store config in GameDataRegistry following the established pattern
-            _gameDataRegistry.Set(engineTrail, engineConfig);
+                position: new Vector2(82, 145),
+                size: 1
+            )
+            { Config = engineConfig };
             
             _objectService.Add(engineTrail);
             _gameObjectPositionService.RegisterParent(player, engineTrail);

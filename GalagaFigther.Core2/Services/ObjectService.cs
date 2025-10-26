@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace GalagaFighter.Core2.Services
         void CleanUp();
         IEnumerable<GameObject> GetChildren(GameObject parent);
         IEnumerable<T> GetChildren<T>(GameObject parent) where T : GameObject;
+        Player GetPlayer(GameObject gun);
     }
 
     public class ObjectService : Dictionary<Guid, GameObject>, IObjectService, IDictionary<Guid, GameObject>
@@ -78,6 +80,21 @@ namespace GalagaFighter.Core2.Services
             where T : GameObject
         {
             return [.. Values.Where(x => x.Owner == gameObject.Id).OfType<T>().Cast<T>()];
+        }
+
+        public Player GetPlayer(GameObject gameObject)
+        {
+            var players = new List<Guid>([Game.Player1Id, Game.Player2Id]);
+            while (true)
+            {
+                if (players.Contains(gameObject.Id))
+                    return (Player)gameObject;
+
+                if (gameObject.Owner == Game.Id)
+                    throw new ArgumentException(null, nameof(gameObject));
+
+                gameObject = this[gameObject.Owner];
+            }
         }
 
         public void Remove(GameObject gameObject)

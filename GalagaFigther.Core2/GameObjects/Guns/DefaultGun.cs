@@ -28,7 +28,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         public override Dictionary<GunBarrel, GameObject> Shoot(GameObject shooter)
         {
             _gunIndex = (_gunIndex + 1) % 2;
-            return new() { { _barrels[_gunIndex], new DefaultProjectile(shooter.Id, Vector2.Zero) { Palette = shooter.Palette } } };
+            return new() { { _barrels[_gunIndex], new DefaultProjectile(shooter.Id) { Palette = shooter.Palette } } };
         }
     }
 }

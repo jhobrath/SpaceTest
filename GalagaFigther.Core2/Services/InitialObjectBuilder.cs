@@ -44,8 +44,8 @@ namespace GalagaFighter.Core2.Services
 
         private void CreatePlayers(int screenWidth, int screenHeight)
         {
-           var player1 = CreatePlayer(0, 90, new(0,0), new(550f, screenHeight), ShipPalettes.AzureWing);
-            var player2 = CreatePlayer(screenWidth - 168, -90, new(screenWidth-550f, 0), new(screenWidth,screenHeight), ShipPalettes.VoidHunter);
+           var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(0,0), new(550f, screenHeight), ShipPalettes.AzureWing);
+            var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f, 0), new(screenWidth,screenHeight), ShipPalettes.VoidHunter);
 
             _objectService.Add(player1);
             _objectService.Add(player2);
@@ -79,7 +79,7 @@ namespace GalagaFighter.Core2.Services
             _inputService.AddPlayer(player2.Id, player2Mappings);
         }
 
-        private Player CreatePlayer(int x, float rotation, Vector2 min, Vector2 max, Color palette)
+        private Player CreatePlayer(Guid playerId, int x, float rotation, Vector2 min, Vector2 max, Color palette)
         {
             var playerHeight = 168f;
             var pos = new Vector2(x, (max.Y - playerHeight) / 2);
@@ -91,6 +91,7 @@ namespace GalagaFighter.Core2.Services
 
             var player = new Player(pos, size, speed, shipSprite)
             {
+                Id = playerId,
                 Rotation = rotation,
                 Palette = palette // Set specific palette color
             };
@@ -101,7 +102,7 @@ namespace GalagaFighter.Core2.Services
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
-            effects.Add(new DefaultTurretEffect());
+            effects.Add(new IceTurretEffect());
 
             // Create engine trail emitter
             var engineConfig = ParticleEffectTemplates.Get("EngineTrail");

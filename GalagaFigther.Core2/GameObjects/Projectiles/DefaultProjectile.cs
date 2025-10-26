@@ -9,8 +9,8 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         private static Vector2 _baseSpeed => new(0f, 2000f);
         private static Vector2 _baseSize => new(30f, 10f);
 
-        public DefaultProjectile(Guid owner, Vector2 position)
-            : base(owner, position, _baseSize, _baseSpeed, GetSprite())
+        public DefaultProjectile(Guid owner)
+            : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
         }
 

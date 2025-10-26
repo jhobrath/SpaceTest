@@ -26,6 +26,13 @@ namespace GalagaFighter.Core2
         private static Guid _id = Guid.NewGuid();
         public static Guid Id => _id;
 
+        private static Guid _player1Id = Guid.NewGuid();
+        private static Guid _player2Id = Guid.NewGuid();
+        public static Guid Player1Id => _player1Id;
+        public static Guid Player2Id => _player2Id;
+
+
+
         public Game(IObjectService objectService, IInitialObjectBuilder initialObjectBuilder,
             IInputService inputService, IPersistentValueHandler persistentValueHandler,
             IGameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService,

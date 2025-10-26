@@ -26,7 +26,9 @@ namespace GalagaFighter.Core2.Models.Players
         public TurretModifiers Turret { get; set; } = new();
       
         //Child objects
-        public Dictionary<PlayerEffect, Decoration> Decorations { get; set; } = [];
+        public Dictionary<PlayerEffect, Func<GameObject, List<Decoration>>> CreateDecorations { get; set; } = [];
+        public List<Decoration> Decorations { get; set; } = [];
+
         public Dictionary<PlayerEffect, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
         public List<Gun> Guns { get; set; } = [];
 

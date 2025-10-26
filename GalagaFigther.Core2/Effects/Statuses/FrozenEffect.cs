@@ -11,14 +11,13 @@ namespace GalagaFighter.Core2.Effects.Statuses
 {
     public class FrozenEffect : PlayerEffect
     {
-        private SpriteDecoration _frozenDecoration;
+        private readonly SpriteDecoration _frozenDecoration;
 
         public FrozenEffect()
         {
             _frozenDecoration = new SpriteDecoration(
-                new StillImageSprite("Sprites/Ships/MainShipBody_Frozen.png"), 
-                Vector2.Zero, 
-                false);
+                new StillImageSprite("Sprites/Ships/MainShipBody_Frozen.png"),
+                Vector2.Zero);
         }
 
         public override void Apply(PlayerModifiers modifiers)
@@ -26,10 +25,10 @@ namespace GalagaFighter.Core2.Effects.Statuses
             modifiers.Display.BlueAlpha *= 1.25f; 
             modifiers.Stats.SpeedMultiplier *= 0.5f; 
             modifiers.Stats.FireRate *= 1.25f;
-            modifiers.Decorations[this] = _frozenDecoration;
             
             // Add particle emitter factory function
             modifiers.CreateParticleEmitters[this] = CreateIceParticles;
+            modifiers.CreateDecorations[this] = g => [_frozenDecoration];
         }
 
         private List<ParticleEmitter> CreateIceParticles(GameObject owner)

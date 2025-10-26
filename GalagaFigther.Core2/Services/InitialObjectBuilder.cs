@@ -133,7 +133,10 @@ namespace GalagaFighter.Core2.Services
             _gameObjectPositionService.RegisterParent(player, smokeTrail);
 
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
-            _persistentValueHandler.Register(() => engineTrail.Enabled = smokeTrail.Enabled = true, () => engineTrail.Enabled = smokeTrail.Enabled = false, () => inputData.Left || inputData.Right || inputData.Forward);
+            _persistentValueHandler.Register(
+                () => engineTrail.Enabled = smokeTrail.Enabled = true, 
+                () => engineTrail.Enabled = smokeTrail.Enabled = false, 
+                () => inputData.Left || inputData.Right || inputData.Forward);
 
             return player;
         }

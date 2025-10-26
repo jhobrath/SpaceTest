@@ -51,6 +51,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             ClearGuns(player);
             ClearParticleEmitters(player);
+            ClearDecorations(player);
 
             var modifiers = new PlayerModifiers();
             
@@ -60,9 +61,10 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             SetGuns(player, modifiers);
             SetParticleEmitters(player, modifiers);
+            SetDecorations(player, modifiers);
 
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
-            foreach (var deco in modifiers.Decorations.Values)
+            foreach (var deco in modifiers.Decorations)
                 if (!deco.MaintainRotation)
                     deco.InitialRotation = rotationData.InitialRotation;
 
@@ -111,6 +113,17 @@ namespace GalagaFighter.Core2.Handlers.Players
                     _objectService.Add(emitter);
                 }
             }
+        }
+
+        private void ClearDecorations(Player player)
+        {
+        }
+
+        private void SetDecorations(Player player, PlayerModifiers modifiers)
+        {
+            foreach (var effect in modifiers.CreateDecorations.Values)
+                foreach (var decoration in effect.Invoke(player))
+                    modifiers.Decorations.Add(decoration);
         }
     }
 }

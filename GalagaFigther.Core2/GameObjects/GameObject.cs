@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ namespace GalagaFighter.Core2.GameObjects
         public Vector2[]? Bounds { get; set;  }
 
         private Color _palette = Color.White; // Default to white (no change)
+
+        private List<SpriteDecoration> Decorations { get; set; } = [];
 
         /// <summary>
         /// The palette color for this game object (Raylib Color).

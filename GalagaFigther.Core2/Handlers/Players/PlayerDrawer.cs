@@ -33,14 +33,18 @@ namespace GalagaFighter.Core2.Handlers.Players
         public void Draw(Player player, float frameTime)
         {
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+            var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
 
-            var decorations = modifiers.Decorations.Values.OrderBy(x => x.Depth);
+            var decorations = modifiers.Decorations.OrderBy(x => x.Depth);
             var hasDrawnPlayer = false;
 
             HandleColor(player, modifiers);
 
             foreach(var decoration in decorations)
             {
+                if (decoration.Key == "Move" && player.Acceleration.Length() > 0f)
+                    continue;
+
                 if (!hasDrawnPlayer && decoration.Depth >= 0)
                 {
                     player.Sprite.Draw(player);

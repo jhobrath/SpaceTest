@@ -15,11 +15,13 @@ namespace GalagaFighter.Core2.Effects.Projectiles
 {
     public class DefaultShootEffect : ProjectileEffect
     {
+        private readonly SpriteDecoration _moveDecoration = new SpriteDecoration(new StillImageSprite("Sprites/Ships/MainShip_Move.png")) { Key = "Move", MaintainRotation = true };
         protected override float Duration => 0f;
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.CreateGuns.Add(this, g => [new DefaultGun(g)]);
+            modifiers.CreateDecorations[this] = g => [_moveDecoration];
+            modifiers.CreateGuns[this] = g => [new DefaultGun(g)];
         }
     }
 }

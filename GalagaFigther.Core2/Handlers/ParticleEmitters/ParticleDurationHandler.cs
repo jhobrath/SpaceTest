@@ -20,28 +20,18 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
         public void Tick(ParticleEmitter emitter, float frameTime)
         {
             var emissionState = _gameDataRegistry.Get<ParticleEmissionState>(emitter);
-            
-            if (emitter.Config.Duration > 0f)
-            {
-                emissionState.DurationTimer += frameTime;
-                if (emissionState.DurationTimer >= emitter.Config.Duration)
-                {
-                    if (emitter.Config.Loop)
-                    {
-                        emissionState.DurationTimer = 0f;
-                    }
-                    else
-                    {
-                        emissionState.IsEmitting = false;
-                        
-                        // Check if all particles are done too
-                        if (emitter.Particles.Count == 0)
-                        {
-                            emitter.IsActive = false;
-                        }
-                    }
-                }
-            }
+
+            if (emitter.Config.Duration <= 0f)
+                return;
+
+            emissionState.DurationTimer += frameTime;
+            if (emissionState.DurationTimer < emitter.Config.Duration)
+                return;
+
+            if (emitter.Config.Loop)
+                emissionState.DurationTimer = 0f;
+            else
+                emissionState.IsEmitting = false;
         }
     }
 }

@@ -8,24 +8,33 @@ namespace GalagaFighter.Core2.Models.Particles
 {
     public class ParticleInstance : GameObject
     {
-        public float MaxLifetime { get; private set; }
         public float CurrentLifetime { get; set; }
-        public float StartSize { get; private set; }
-        public float EndSize { get; private set; }
-        public Color StartColor { get; private set; }
-        public Color EndColor { get; private set; }
 
-        public ParticleInstance(Guid owner, Vector2 position, Vector2 size, Vector2 speed, 
-            SpriteBase sprite, float lifetime, float startSize, float endSize, 
-            Color startColor, Color endColor) 
-            : base(owner, position, size, speed, sprite)
+        public ParticleEffectConfig Config { get; set; }
+
+        private static Random _random = new Random();
+
+        public Color StartColor { get; set; }
+        public Color EndColor { get; set; }
+
+        public ParticleInstance(Guid owner, Vector2 position, Vector2 speed, 
+            SpriteBase sprite, ParticleEffectConfig config) 
+            : base(owner, position, Vector2.One*config.StartSize, speed, sprite)
         {
-            MaxLifetime = lifetime;
-            CurrentLifetime = lifetime;
-            StartSize = startSize;
-            EndSize = endSize;
-            StartColor = startColor;
-            EndColor = endColor;
+            Config = config;
+            CurrentLifetime = config.Lifetime;
+
+            StartColor = RecalculateColor(config.StartColor);
+            EndColor = RecalculateColor(config.EndColor);
+        }
+
+        private Color RecalculateColor(Color color)
+        {
+            return new Color(
+                (float)(Math.Clamp(color.R + (Config.ColorVariation * (1 - 2 * _random.NextDouble())), 0, 255)/255),
+                (float)(Math.Clamp(color.G + (Config.ColorVariation * (1 - 2 * _random.NextDouble())), 0, 255)/255),
+                (float)(Math.Clamp(color.B + (Config.ColorVariation * (1 - 2 * _random.NextDouble())), 0, 255)/255),
+                (float)color.A);
         }
     }
 }

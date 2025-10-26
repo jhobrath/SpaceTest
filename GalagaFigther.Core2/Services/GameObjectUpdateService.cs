@@ -27,11 +27,12 @@ namespace GalagaFighter.Core2.Services
         private readonly ITurretController _turretController;
         private readonly IGunController _gunController;
         private readonly IParticleEmitterController _particleEmitterController;
+        private readonly IParticleController _particleController;
 
         public GameObjectUpdateService(IObjectService objectService, IPlayerController playerController,
             IProjectileController projectileController, IPowerUpController powerUpController,
             ITurretController turretController, IGunController gunController,
-            IParticleEmitterController particleEmitterController)
+            IParticleEmitterController particleEmitterController, IParticleController particleController)
         {
             _objectService = objectService;
             _playerController = playerController;
@@ -40,6 +41,7 @@ namespace GalagaFighter.Core2.Services
             _turretController = turretController;
             _gunController = gunController;
             _particleEmitterController = particleEmitterController;
+            _particleController = particleController;
         }
 
         public void Update(float frameTime)
@@ -50,6 +52,7 @@ namespace GalagaFighter.Core2.Services
             UpdateType(_turretController, frameTime);
             UpdateType(_gunController, frameTime);
             UpdateType(_particleEmitterController, frameTime);
+            UpdateType(_particleController, frameTime);
         }
 
         private void UpdateType<T>(IController<T> controller, float frameTime)
@@ -68,6 +71,7 @@ namespace GalagaFighter.Core2.Services
             DrawType(_turretController, frameTime);
             DrawType(_gunController, frameTime);
             DrawType(_particleEmitterController, frameTime);
+            DrawType(_particleController, frameTime);
         }
 
         private void DrawType<T>(IController<T> controller, float frameTime)
@@ -83,7 +87,7 @@ namespace GalagaFighter.Core2.Services
 
                 controller.Draw(gameObject, frameTime);
 
-                DrawHitboxes(gameObject);
+                //DrawHitboxes(gameObject);
             }
         }
 

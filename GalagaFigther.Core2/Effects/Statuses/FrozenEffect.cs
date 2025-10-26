@@ -12,7 +12,6 @@ namespace GalagaFighter.Core2.Effects.Statuses
     public class FrozenEffect : PlayerEffect
     {
         private SpriteDecoration _frozenDecoration;
-        private ParticleEmitter _emitter;
 
         public FrozenEffect()
         {
@@ -36,9 +35,11 @@ namespace GalagaFighter.Core2.Effects.Statuses
         private List<ParticleEmitter> CreateIceParticles(GameObject owner)
         {
             var iceConfig = ParticleEffectTemplates.Get("IceTrail");
-            var emitter1 = new ParticleEmitter(owner.Id, new(12,129), 30f) { Config = iceConfig };
-            var emitter2 = new ParticleEmitter(owner.Id, new(168-12, 129), 30f) { Config = iceConfig };
-            return [emitter1,emitter2];
+            var emitter = new ParticleEmitter(owner.Id, new(84, 84), 30f) { Config = iceConfig };
+            return [emitter];
+            //var emitter1 = new ParticleEmitter(owner.Id, new(12,129), 30f) { Config = iceConfig };
+            //var emitter2 = new ParticleEmitter(owner.Id, new(168-12, 129), 30f) { Config = iceConfig };
+            //return [emitter1,emitter2];
         }
     }
 }

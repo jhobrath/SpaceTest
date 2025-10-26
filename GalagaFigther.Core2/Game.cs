@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Services;
+using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 
 namespace GalagaFighter.Core2
@@ -74,8 +75,11 @@ namespace GalagaFighter.Core2
                 if(Raylib.IsKeyPressed(KeyboardKey.Space))
                 {
                     _clearableServiceClearer.Clear();
+                    ParticleEffectTemplates.Reinitialize();
                     _initialObjectBuilder.Build();
                 }
+
+                DebugWriter.Write(_objectService.Count());
             }
 
             CloseWindow();

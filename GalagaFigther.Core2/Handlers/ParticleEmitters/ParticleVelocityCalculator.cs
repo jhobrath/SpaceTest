@@ -13,7 +13,8 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
     public class ParticleVelocityCalculator : IParticleVelocityCalculator
     {
         private readonly IGameDataRegistry _gameDataRegistry;
-        private readonly Random _random = new();
+
+        private static readonly Random _random = new Random();
 
         public ParticleVelocityCalculator(IGameDataRegistry gameDataRegistry)
         {
@@ -22,19 +23,30 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 
         public Vector2 CalculateVelocity(ParticleEmitter emitter)
         {
-            var config = _gameDataRegistry.Get<ParticleEffectConfig>(emitter);
-            float speed = config.BaseSpeed;
-            float angle = (float)(_random.NextDouble() * Math.PI * 2);
+            //var config = _gameDataRegistry.Get<ParticleEffectConfig>(emitter);
             
-            if (config.FollowRotation)
-            {
-                angle += emitter.WorldRotation * MathF.PI / 180f;
-            }
+            // Start with the base speed vector
+            Vector2 velocity = emitter.Config.Speed;
+
+
+
+            var xVariation = emitter.Config.SpeedVariation.X - (float)_random.NextDouble() * emitter.Config.SpeedVariation.X * 2f;
+            var yVariation = emitter.Config.SpeedVariation.Y - (float)_random.NextDouble() * emitter.Config.SpeedVariation.Y * 2f;
+            velocity = velocity + new Vector2(xVariation, yVariation);
+
+
+
+            // Apply emitter rotation
+            float emitterAngle = emitter.WorldRotation * MathF.PI / 180f;
+            float cos = (float)Math.Cos(emitterAngle);
+            float sin = (float)Math.Sin(emitterAngle);
             
-            return new Vector2(
-                (float)Math.Cos(angle) * speed,
-                (float)Math.Sin(angle) * speed
+            velocity = new Vector2(
+                velocity.X * cos - velocity.Y * sin,
+                velocity.X * sin + velocity.Y * cos
             );
+            
+            return velocity;
         }
     }
 }

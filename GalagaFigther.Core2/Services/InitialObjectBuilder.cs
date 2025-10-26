@@ -113,13 +113,27 @@ namespace GalagaFighter.Core2.Services
             var engineConfig = ParticleEffectTemplates.Get("EngineTrail");
             var engineTrail = new ParticleEmitter(
                 owner: player.Id,
-                position: new Vector2(82, 145),
+                position: new Vector2(82, 155),
                 size: 1
             )
             { Config = engineConfig };
-            
+
+            // Create engine trail emitter
+            var smokeConfig = ParticleEffectTemplates.Get("SmokeTrail");
+            var smokeTrail = new ParticleEmitter(
+                owner: player.Id,
+                position: new Vector2(82, 155),
+                size: 1
+            )
+            { Config = smokeConfig };
+
             _objectService.Add(engineTrail);
+            _objectService.Add(smokeTrail);
             _gameObjectPositionService.RegisterParent(player, engineTrail);
+            _gameObjectPositionService.RegisterParent(player, smokeTrail);
+
+            var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
+            _persistentValueHandler.Register(() => engineTrail.Enabled = smokeTrail.Enabled = true, () => engineTrail.Enabled = smokeTrail.Enabled = false, () => inputData.Left || inputData.Right || inputData.Forward);
 
             return player;
         }

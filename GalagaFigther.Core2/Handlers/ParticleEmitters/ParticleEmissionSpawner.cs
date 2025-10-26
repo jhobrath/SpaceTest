@@ -9,12 +9,12 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
         void Burst(ParticleEmitter emitter, int particleCount);
     }
 
-    public class ParticleEmissionHandler : IParticleEmissionSpawner
+    public class ParticleEmissionSpawner : IParticleEmissionSpawner
     {
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IParticleCreationHandler _particleCreationHandler;
 
-        public ParticleEmissionHandler(IGameDataRegistry gameDataRegistry, IParticleCreationHandler particleCreationHandler)
+        public ParticleEmissionSpawner(IGameDataRegistry gameDataRegistry, IParticleCreationHandler particleCreationHandler)
         {
             _gameDataRegistry = gameDataRegistry;
             _particleCreationHandler = particleCreationHandler;
@@ -27,7 +27,7 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 
             emissionState.EmissionTimer += frameTime;
             
-            float emissionInterval = 1f / emitter.Config.BaseEmissionRate;
+            float emissionInterval = 1f / emitter.Config.EmissionRate;
             
             while (emissionState.EmissionTimer >= emissionInterval)
             {
@@ -46,8 +46,7 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 
         private void EmitParticle(ParticleEmitter emitter)
         {
-            var particle = _particleCreationHandler.CreateParticle(emitter);
-            emitter.Particles.Add(particle);
+            _particleCreationHandler.CreateParticle(emitter);
         }
     }
 }

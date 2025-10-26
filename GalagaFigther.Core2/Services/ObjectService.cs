@@ -21,6 +21,7 @@ namespace GalagaFighter.Core2.Services
         IEnumerable<GameObject> GetChildren(GameObject parent);
         IEnumerable<T> GetChildren<T>(GameObject parent) where T : GameObject;
         Player GetPlayer(GameObject gun);
+        int Count();
     }
 
     public class ObjectService : Dictionary<Guid, GameObject>, IObjectService, IDictionary<Guid, GameObject>
@@ -100,6 +101,11 @@ namespace GalagaFighter.Core2.Services
         public void Remove(GameObject gameObject)
         {
             Remove(gameObject.Id);
+        }
+
+        public int Count()
+        {
+            return Keys.Count();
         }
     }
 }

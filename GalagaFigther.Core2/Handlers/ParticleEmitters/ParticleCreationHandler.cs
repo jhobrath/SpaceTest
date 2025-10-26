@@ -9,7 +9,7 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 {
     public interface IParticleCreationHandler
     {
-        ParticleInstance CreateParticle(ParticleEmitter emitter);
+        void CreateParticle(ParticleEmitter emitter);
     }
 
     public class ParticleCreationHandler : IParticleCreationHandler
@@ -18,6 +18,8 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
         private readonly IObjectService _objectService;
         private readonly IParticleVelocityCalculator _velocityCalculator;
         private readonly IParticleTextureSelector _textureSelector;
+
+        private static Random _random = new Random();
 
         public ParticleCreationHandler(
             IGameDataRegistry gameDataRegistry,
@@ -31,33 +33,34 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
             _textureSelector = textureSelector;
         }
 
-        public ParticleInstance CreateParticle(ParticleEmitter emitter)
+        public void CreateParticle(ParticleEmitter emitter)
         {
+            if (!emitter.Enabled)
+                return;
+
             var velocity = _velocityCalculator.CalculateVelocity(emitter);
-            float lifetime = emitter.Config.BaseLifetime;
-            float startSize = emitter.Config.BaseSize;
+            float lifetime = emitter.Config.Lifetime;
+            float startSize = emitter.Config.StartSize;
             float endSize = startSize * 0.5f;
             
             string textureName = _textureSelector.SelectTexture(emitter);
             var sprite = new StillImageSprite($"Sprites/Particles/{textureName}.png");
-            
+
+            var emissionOffset = new Vector2(
+                emitter.Config.EmissionRadius * (1f - 2f * (float)_random.NextDouble()),
+                emitter.Config.EmissionRadius * (1f - 2f * (float)_random.NextDouble())
+            );
+
             var particle = new ParticleInstance(
                 emitter.Id,
-                emitter.WorldPosition,
-                new Vector2(startSize, startSize),
+                emitter.WorldPosition + emissionOffset,
                 velocity,
                 sprite,
-                lifetime,
-                startSize,
-                endSize,
-                Color.White,
-                new Color(255, 255, 255, 0)
+                emitter.Config
             );
 
             // Add particle to ObjectService so GameObjectPositionService can handle its physics
             _objectService.Add(particle);
-            
-            return particle;
         }
     }
 }

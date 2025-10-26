@@ -5,7 +5,6 @@ namespace GalagaFighter.Core2.Controllers
 {
     public interface IParticleEmitterController : IController<ParticleEmitter>
     {
-        void Burst(ParticleEmitter emitter, int particleCount);
     }
 
     public class ParticleEmitterController : IParticleEmitterController
@@ -13,18 +12,15 @@ namespace GalagaFighter.Core2.Controllers
         private readonly IParticleEmissionTimer _particleEmissionTimer;
         private readonly IParticleEmissionSpawner _particleEmissionSpawner;
         private readonly IParticleEmissionShepherd _particleEmissionShepherd;
-        private readonly IParticleEmissionCleaner _particleEmissionCleaner;
 
         public ParticleEmitterController(
             IParticleEmissionTimer particleEmissionTimer,
             IParticleEmissionSpawner particleEmissionSpawner,
-            IParticleEmissionShepherd particleEmissionShepherd,
-            IParticleEmissionCleaner particleEmissionCleaner)
+            IParticleEmissionShepherd particleEmissionShepherd)
         {
             _particleEmissionTimer = particleEmissionTimer;
             _particleEmissionSpawner = particleEmissionSpawner;
             _particleEmissionShepherd = particleEmissionShepherd;
-            _particleEmissionCleaner = particleEmissionCleaner;
         }
 
         public void Update(ParticleEmitter emitter, float frameTime)
@@ -34,17 +30,10 @@ namespace GalagaFighter.Core2.Controllers
             _particleEmissionTimer.Tick(emitter, frameTime);
             _particleEmissionSpawner.Spawn(emitter, frameTime);
             _particleEmissionShepherd.Herd(emitter, frameTime);
-            _particleEmissionCleaner.Clean(emitter);
         }
 
         public void Draw(ParticleEmitter emitter, float frameTime)
         {
-            _particleEmissionCleaner.Draw(emitter);
-        }
-
-        public void Burst(ParticleEmitter emitter, int particleCount)
-        {
-            _particleEmissionSpawner.Burst(emitter, particleCount);
         }
     }
 }

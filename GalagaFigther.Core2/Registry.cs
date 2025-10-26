@@ -40,9 +40,9 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IParticleVelocityCalculator, ParticleVelocityCalculator>();
             services.AddSingleton<IParticleTextureSelector, ParticleTextureSelector>();
             services.AddSingleton<IParticleCreationHandler, ParticleCreationHandler>();
-            services.AddSingleton<IParticleEmissionSpawner, ParticleEmissionHandler>();
+            services.AddSingleton<IParticleEmissionSpawner, ParticleEmissionSpawner>();
             services.AddSingleton<IParticleEmissionShepherd, ParticleUpdateHandler>();
-            services.AddSingleton<IParticleEmissionCleaner, ParticleDrawHandler>();
+            services.AddSingleton<IParticleController, ParticleController>();
             services.AddSingleton<IParticleEmitterController, ParticleEmitterController>();
             
             services.AddSingleton<IGameObjectUpdateService, GameObjectUpdateService>();

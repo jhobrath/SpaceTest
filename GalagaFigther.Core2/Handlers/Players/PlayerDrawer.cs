@@ -60,17 +60,17 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             player.Color = Color.White;
 
-            if (modifiers.RedAlpha < 1f)
-                player.Color = player.Color.ApplyRed(modifiers.RedAlpha);
+            if (modifiers.Display.RedAlpha < 1f)
+                player.Color = player.Color.ApplyRed(modifiers.Display.RedAlpha);
             
-            if (modifiers.GreenAlpha < 1f)
-                player.Color = player.Color.ApplyGreen(modifiers.GreenAlpha);
+            if (modifiers.Display.GreenAlpha < 1f)
+                player.Color = player.Color.ApplyGreen(modifiers.Display.GreenAlpha);
             
-            if (modifiers.BlueAlpha < 1f)
-                player.Color = player.Color.ApplyBlue(modifiers.BlueAlpha);
+            if (modifiers.Display.BlueAlpha < 1f)
+                player.Color = player.Color.ApplyBlue(modifiers.Display.BlueAlpha);
 
-            if (modifiers.Alpha > 0f)
-                player.Color = player.Color.ApplyAlpha(modifiers.Alpha);
+            if (modifiers.Display.Alpha > 0f)
+                player.Color = player.Color.ApplyAlpha(modifiers.Display.Alpha);
         }
     }
 }

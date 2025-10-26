@@ -10,6 +10,6 @@ namespace GalagaFighter.Core2.Models.Turrets
     public class TurretDeployData : IGameObjectData<Turret>
     {
         public float Lifetime { get; set; }
-        public float ShotCountdown { get; set; }
+        public float ShotCountdown { get; set; } = .05f;
     }
 }

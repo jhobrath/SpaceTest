@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core2.Helpers;
+﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         {
             Owner = owner;
         }
+
+        public virtual List<PlayerEffect> CreateEffects(Player player) => [];
     }
 }

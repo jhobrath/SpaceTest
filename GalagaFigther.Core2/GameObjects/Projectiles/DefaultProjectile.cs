@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core2.Helpers;
+﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Services.Sprites;
 using System.Numerics;
 
@@ -19,5 +20,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             return new DrawnSprite((color) => 
                 DefaultProjectileSpriteGenerator.CreateProjectileSprite(color: color));
         }
+
+        public override List<PlayerEffect> CreateEffects(Player player) => [];
     }
 }

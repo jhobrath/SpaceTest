@@ -1,5 +1,4 @@
-﻿using GalagaFighter.Core2.GameObjects;
-using GalagaFighter.Core2.Models.Players;
+﻿using GalagaFighter.Core2.Models.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Effects.Statuses
 {
-    public class FireRateEffect : PlayerEffect
+    public class FrozenEffect : PlayerEffect
     {
-        protected override float Duration => 1000f;
-
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.Stats.FireRate *= .85f;
+            modifiers.Display.BlueAlpha *= .3f;
+            modifiers.Stats.SpeedMultiplier *= .5f;
         }
     }
 }

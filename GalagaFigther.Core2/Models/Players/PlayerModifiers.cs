@@ -13,31 +13,45 @@ namespace GalagaFighter.Core2.Models.Players
 {
     public class PlayerModifiers : IGameObjectData<Player>
     {
+        // System/Framework properties
         public int EffectCount { get; set; }
         public List<Decoration> Decorations { get; set; } = [];
 
+        // Player-specific modifier groups
+        public PlayerStats Stats { get; set; } = new();
+        public PlayerDisplay Display { get; set; } = new();
+
+        // Properties that get cloned to created objects
+        public ProjectileModifiers Projectile { get; set; } = new();
+        public TurretModifiers Turret { get; set; } = new();
+      
+        //Child objects
+        public Dictionary<string, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
+        public List<Gun> Guns { get; set; } = [];
+        public Dictionary<string, Func<GameObject, List<Turret>>> CreateTurrets { get; set; } = [];
+        public List<Turret> Turrets { get; set; } = [];
+    }
+
+    public class PlayerStats
+    {
+        // Player gameplay statistics (movement, combat, etc.)
+        public float FireRate { get; set; } = 1f;
+        public float TurretDeployRate { get; set; } = 1f;
+        public float SpeedMultiplier { get; set; } = 1f;
+    }
+
+    public class PlayerDisplay
+    {
+        // Player visual appearance modifiers
         public float RedAlpha { get; set; } = 1f;
         public float BlueAlpha { get; set; } = 1f;
         public float GreenAlpha { get; set; } = 1f;
         public float Alpha { get; set; } = 1f;
-
-        public ProjectileModifiers Projectile { get; set; } = new();
-        public TurretModifiers Turret { get; set; } = new();
-        
-        public float FireRate { get; set; } = 1f;
-        public float TurretDeployRate { get; set; } = 1f;
-
-        public Dictionary<string, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
-        public List<Gun> Guns { get; set; } = [];
-
-        public Dictionary<string, Func<GameObject, List<Turret>>> CreateTurrets { get; set; } = [];
-        public List<Turret> Turrets { get; set; } = [];
     }
 
     public class ProjectileModifiers
     {
         public List<Decoration> Decorations { get; set; } = [];
-
         public Dictionary<string, Func<Guid, List<GameObject>>> OnShoot { get; set; } = [];
     }
 

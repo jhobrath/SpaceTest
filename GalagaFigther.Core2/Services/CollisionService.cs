@@ -22,18 +22,22 @@ namespace GalagaFighter.Core2.Services
         private readonly IObjectService _objectService;
         private readonly IProjectilePowerUpCollisionHandler _projectilePowerUpCollisionHandler;
         private readonly IPlayerPowerUpCollisionHandler _playerPowerUpCollisionHandler;
+        private readonly IPlayerProjectileCollisionHandler _playerProjectileCollisionHandler;
 
-        public CollisionService(IObjectService objectService, IProjectilePowerUpCollisionHandler projectilePowerUpCollisionHandler, IPlayerPowerUpCollisionHandler playerPowerUpCollisionHandler)
+        public CollisionService(IObjectService objectService, IProjectilePowerUpCollisionHandler projectilePowerUpCollisionHandler, 
+            IPlayerPowerUpCollisionHandler playerPowerUpCollisionHandler, IPlayerProjectileCollisionHandler playerProjectileCollisionHandler)
         {
             _objectService = objectService;
             _projectilePowerUpCollisionHandler = projectilePowerUpCollisionHandler;
             _playerPowerUpCollisionHandler = playerPowerUpCollisionHandler;
+            _playerProjectileCollisionHandler = playerProjectileCollisionHandler;
         }
 
         public void Update()
         {
             CheckCollisions<Projectile, PowerUp>(_projectilePowerUpCollisionHandler.Handle);
             CheckCollisions<Player, PowerUp>(_playerPowerUpCollisionHandler.Handle);
+            CheckCollisions<Player, Projectile>(_playerProjectileCollisionHandler.Handle);
         }
 
         private void CheckCollisions<Type1, Type2>(Action<Type1, Type2> handle)

@@ -55,7 +55,7 @@ namespace GalagaFighter.Core2.Handlers.Players
             foreach (var createTurret in modifiers.CreateTurrets)
                 DeployTurret(player, createTurret);
 
-            turretData.DeployCountdown = _defaultDeployRate * modifiers.TurretDeployRate;
+            turretData.DeployCountdown = _defaultDeployRate * modifiers.Stats.TurretDeployRate;
         }
 
         private void DeployTurret(Player player, KeyValuePair<string, Func<GameObject, List<Turret>>> onDeploy)

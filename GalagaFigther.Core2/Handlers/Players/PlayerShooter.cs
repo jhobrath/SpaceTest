@@ -59,7 +59,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                     _projectileShooter.Shoot(player, barrel.Value, barrel.Key);
 
             shootData.LastShotLeft = !shootData.LastShotLeft;
-            shootData.ShotCountdown = _defaultFireRate * modifiers.FireRate;
+            shootData.ShotCountdown = _defaultFireRate * modifiers.Stats.FireRate;
         }
     }
 }

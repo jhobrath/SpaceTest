@@ -125,7 +125,7 @@ namespace GalagaFighter.Core2.Helpers
         private readonly int _frameWidth = 0;
         private readonly int _frameHeight = 0;
         private readonly float _frameLength = 0;
-        private int _framesPerRow;
+        private int _framesPerRow = 1;
 
         protected int _frameIndex = 0;
         protected float _thisFrameLength = 0;

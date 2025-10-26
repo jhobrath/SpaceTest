@@ -42,9 +42,9 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Update(Player player, float frameTime)
         {
+            _playerAffector.Affect(player, frameTime);
             _playerAccelerator.Accelerate(player, frameTime);
             _playerRotator.Rotate(player, frameTime);
-            _playerAffector.Affect(player, frameTime);
             _playerShooter.Shoot(player, frameTime);
             _playerTurretDeployer.Deploy(player, frameTime);
             _playerBounder.Bound(player);

@@ -79,15 +79,22 @@ namespace GalagaFighter.Core2.Services
                 if (!gameObject.IsActive)
                     continue;
 
+                gameObject.Sprite.Update(frameTime);
+
                 controller.Draw(gameObject, frameTime);
-                //
-                //var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
-                //
-                //for(var i = 0;i < vertices.Length;i++)
-                //{
-                //    var endIndex = i == vertices.Length - 1 ? 0 : i + 1;
-                //    Raylib.DrawLine((int)vertices[i].X, (int)vertices[i].Y, (int)vertices[endIndex].X, (int)vertices[endIndex].Y, Color.Red);
-                //}
+
+                DrawHitboxes(gameObject);
+            }
+        }
+
+        private static void DrawHitboxes<T>(T gameObject) where T : GameObject
+        {
+            var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
+
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                var endIndex = i == vertices.Length - 1 ? 0 : i + 1;
+                Raylib.DrawLine((int)vertices[i].X, (int)vertices[i].Y, (int)vertices[endIndex].X, (int)vertices[endIndex].Y, Color.Red);
             }
         }
     }

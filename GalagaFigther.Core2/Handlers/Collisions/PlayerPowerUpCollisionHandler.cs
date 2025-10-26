@@ -34,7 +34,6 @@ namespace GalagaFighter.Core2.Handlers.Collisions
             var playerEffects = _gameDataRegistry.Get<PlayerEffects>(player);
             var powerUpEffects = powerUp.CreateEffects(player);
             playerEffects.AddRange(powerUpEffects);
-            playerEffects.RequireRerolling = true;
             powerUp.IsActive = false;
         }
     }

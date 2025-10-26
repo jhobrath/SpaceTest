@@ -60,17 +60,22 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             player.Color = Color.White;
 
-            if (modifiers.Display.RedAlpha < 1f)
-                player.Color = player.Color.ApplyRed(modifiers.Display.RedAlpha);
-            
-            if (modifiers.Display.GreenAlpha < 1f)
-                player.Color = player.Color.ApplyGreen(modifiers.Display.GreenAlpha);
-            
-            if (modifiers.Display.BlueAlpha < 1f)
-                player.Color = player.Color.ApplyBlue(modifiers.Display.BlueAlpha);
+            HandleColorChannel(modifiers.Display.RedAlpha, alpha => player.Color = player.Color.ApplyRed(alpha), amount => player.Color = player.Color.Darken(amount));
+            HandleColorChannel(modifiers.Display.GreenAlpha, alpha => player.Color = player.Color.ApplyGreen(alpha), amount => player.Color = player.Color.Darken(amount));
+            HandleColorChannel(modifiers.Display.BlueAlpha, alpha => player.Color = player.Color.ApplyBlue(alpha), amount => player.Color = player.Color.Darken(amount));
 
-            if (modifiers.Display.Alpha > 0f)
+            if (modifiers.Display.Alpha != 1f)
                 player.Color = player.Color.ApplyAlpha(modifiers.Display.Alpha);
+        }
+
+        private void HandleColorChannel(float channelValue, Action<float> applyTint, Action<float> applyDarken)
+        {
+            if (channelValue == 1f) return;
+
+            if (channelValue > 1f)
+                applyTint(channelValue - 1f);
+            else
+                applyDarken(1f - channelValue);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
 
-            var decorations = modifiers.Decorations.OrderBy(x => x.Depth);
+            var decorations = modifiers.Decorations.Values.OrderBy(x => x.Depth);
             var hasDrawnPlayer = false;
 
             HandleColor(player, modifiers);

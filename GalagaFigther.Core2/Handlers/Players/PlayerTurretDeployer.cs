@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core2.GameObjects;
+﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
@@ -52,15 +53,15 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         private void Deploy(Player player, PlayerTurretData turretData, PlayerModifiers modifiers)
         {
-            foreach (var createTurret in modifiers.CreateTurrets)
+            foreach (var createTurret in modifiers.CreateTurrets.Values)
                 DeployTurret(player, createTurret);
 
             turretData.DeployCountdown = _defaultDeployRate * modifiers.Stats.TurretDeployRate;
         }
 
-        private void DeployTurret(Player player, KeyValuePair<string, Func<GameObject, List<Turret>>> onDeploy)
+        private void DeployTurret(Player player, Func<GameObject, List<Turret>> onDeploy)
         {
-            var turrets = onDeploy.Value(player);
+            var turrets = onDeploy.Invoke(player);
 
             foreach (var turret in turrets)
             {

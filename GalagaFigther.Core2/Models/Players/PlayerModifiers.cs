@@ -15,7 +15,6 @@ namespace GalagaFighter.Core2.Models.Players
     {
         // System/Framework properties
         public int EffectCount { get; set; }
-        public List<Decoration> Decorations { get; set; } = [];
 
         // Player-specific modifier groups
         public PlayerStats Stats { get; set; } = new();
@@ -26,9 +25,11 @@ namespace GalagaFighter.Core2.Models.Players
         public TurretModifiers Turret { get; set; } = new();
       
         //Child objects
-        public Dictionary<string, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
+        public Dictionary<PlayerEffect, Decoration> Decorations { get; set; } = [];
+        public Dictionary<PlayerEffect, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
         public List<Gun> Guns { get; set; } = [];
-        public Dictionary<string, Func<GameObject, List<Turret>>> CreateTurrets { get; set; } = [];
+
+        public Dictionary<PlayerEffect, Func<GameObject, List<Turret>>> CreateTurrets { get; set; } = [];
         public List<Turret> Turrets { get; set; } = [];
     }
 

@@ -60,11 +60,9 @@ namespace GalagaFighter.Core2.Handlers.Players
             SetGuns(player, modifiers);
 
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
-            foreach (var deco in modifiers.Decorations)
-            {
+            foreach (var deco in modifiers.Decorations.Values)
                 if (!deco.MaintainRotation)
                     deco.InitialRotation = rotationData.InitialRotation;
-            }
 
             modifiers.EffectCount = effects.Count;
 

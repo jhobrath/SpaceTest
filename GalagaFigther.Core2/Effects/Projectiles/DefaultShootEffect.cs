@@ -19,7 +19,7 @@ namespace GalagaFighter.Core2.Effects.Projectiles
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.CreateGuns.Add(nameof(DefaultShootEffect), g => [new DefaultGun(g)]);
+            modifiers.CreateGuns.Add(this, g => [new DefaultGun(g)]);
         }
     }
 }

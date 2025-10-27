@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.PowerUps;
 using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.GameObjects.Turrets;
@@ -20,6 +21,7 @@ namespace GalagaFighter.Core2.Services
         TData Get<TData>(PowerUp powerUp) where TData : IGameObjectData<PowerUp>, new();
         TData Get<TData>(Turret turret) where TData : IGameObjectData<Turret>, new();
         TData Get<TData>(ParticleEmitter emitter) where TData : IGameObjectData<ParticleEmitter>, new();
+        TData Get<TData>(Gun gun) where TData : IGameObjectData<Gun>, new();
         bool Has<T>(GameObject gameObject) where T : new();
         void Remove(Guid id);
         void Set<TData>(Player player, TData data) where TData : IGameObjectData<Player>, new();
@@ -27,6 +29,7 @@ namespace GalagaFighter.Core2.Services
         void Set<TData>(PowerUp powerUp, TData data) where TData : IGameObjectData<PowerUp>, new();
         void Set<TData>(Turret turret, TData data) where TData : IGameObjectData<Turret>, new();
         void Set<TData>(ParticleEmitter emitter, TData data) where TData : IGameObjectData<ParticleEmitter>, new();
+        void Set<TData>(Gun gun, TData data) where TData : IGameObjectData<Gun>, new();
     }
 
     public class GameDataRegistry : IGameDataRegistry
@@ -100,17 +103,20 @@ namespace GalagaFighter.Core2.Services
         public TData Get<TData>(PowerUp powerUp) where TData : IGameObjectData<PowerUp>,new() => Get<TData, PowerUp>(powerUp);
         public TData Get<TData>(Turret turret) where TData : IGameObjectData<Turret>,new() => Get<TData, Turret>(turret);
         public TData Get<TData>(ParticleEmitter emitter) where TData : IGameObjectData<ParticleEmitter>,new() => Get<TData, ParticleEmitter>(emitter);
+        public TData Get<TData>(Gun gun) where TData : IGameObjectData<Gun>,new() => Get<TData, Gun>(gun);
 
         public void Set<TData>(Player player, TData data) where TData : IGameObjectData<Player>, new() => Set<TData, Player>(player, data);
         public void Set<TData>(Projectile projectile, TData data) where TData : IGameObjectData<Projectile>, new() => Set<TData, Projectile>(projectile, data);
         public void Set<TData>(PowerUp powerUp, TData data) where TData : IGameObjectData<PowerUp>, new() => Set<TData, PowerUp>(powerUp, data);
         public void Set<TData>(Turret turret, TData data) where TData : IGameObjectData<Turret>, new() => Set<TData, Turret>(turret, data);
         public void Set<TData>(ParticleEmitter emitter, TData data) where TData : IGameObjectData<ParticleEmitter>, new() => Set<TData, ParticleEmitter>(emitter, data);
+        public void Set<TData>(Gun gun, TData data) where TData : IGameObjectData<Gun>, new() => Set<TData, Gun>(gun, data);
 
         public void Remove(Guid id) 
         {
             foreach (var reg in _instanceRegistry)
                 reg.Value.Remove(id);
         }
+
     }
 }

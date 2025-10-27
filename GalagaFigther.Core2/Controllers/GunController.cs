@@ -1,12 +1,14 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.Handlers.Projectiles;
+using GalagaFighter.Core2.Models.Guns;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +38,7 @@ namespace GalagaFighter.Core2.Controllers
             var player = _objectService.GetPlayer(gun);
             Rotate(gun, player);
             Shoot(gun);
+            Recoil(gun, frameTime);
         }
 
         private void Shoot(Gun gun)
@@ -47,7 +50,38 @@ namespace GalagaFighter.Core2.Controllers
             foreach (var barrel in gun.Shoot(player))
                 _projectileShooter.Shoot(gun, barrel.Value, barrel.Key);
 
+            if (gun.Barrels.Count == 1)
+                SetRecoil(gun);
+
             gun.ShotDue = false;
+        }
+
+        private void Recoil(Gun gun, float frameTime)
+        {
+            var recoilData = _gameDataRegistry.Get<GunRecoilData>(gun);
+            if (recoilData.RecoilPeriod == 0f)
+                return;
+
+            recoilData.RecoilLifetime += frameTime;
+
+            var pct = (recoilData.RecoilPeriod - recoilData.RecoilLifetime) / recoilData.RecoilPeriod;
+            var angle = ((90 - gun.Rotation) * MathF.PI / 180f);
+            var coords = new Vector2(-MathF.Cos(angle) * recoilData.RecoilDistance * pct, MathF.Sin(angle) * recoilData.RecoilDistance * pct);
+            gun.MoveTo(gun.Width/2 + coords.X, gun.Height/2 + coords.Y);
+
+            if(pct <= 0)
+            {
+                gun.MoveTo(0f, 0f);
+                recoilData.RecoilPeriod = 0f;
+            }
+        }
+
+        private void SetRecoil(Gun gun)
+        {
+            var recoilData = _gameDataRegistry.Get<GunRecoilData>(gun);
+            recoilData.RecoilLifetime = 0f;
+            recoilData.RecoilPeriod = .5f;
+            recoilData.RecoilDistance = 10f;
         }
 
         private void Rotate(Gun gun, Player player)

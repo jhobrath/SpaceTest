@@ -15,7 +15,7 @@ namespace GalagaFighter.Core2.Handlers.Collisions
 {
     public interface IPlayerPowerUpCollisionHandler
     {
-        void Handle(Player player, PowerUp powerUp);
+        void Handle(Player player, PowerUp powerUp, Vector2 point);
     }
     public class PlayerPowerUpCollisionHandler : IPlayerPowerUpCollisionHandler
     {
@@ -26,7 +26,7 @@ namespace GalagaFighter.Core2.Handlers.Collisions
             _gameDataRegistry = gameDataRegistry;
         }
 
-        public void Handle(Player player, PowerUp powerUp)
+        public void Handle(Player player, PowerUp powerUp, Vector2 point)
         {
             if (Vector2.Distance(player.Center, powerUp.Center) > 20)
                 return;

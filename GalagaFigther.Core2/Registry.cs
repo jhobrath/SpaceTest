@@ -57,6 +57,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IPlayerTurretDeployer, PlayerTurretDeployer>();
             services.AddSingleton<ITurretController, TurretController>();
             services.AddSingleton<IProjectileShooter, ProjectileShooter>();
+            services.AddSingleton<ICollisionController, CollisionController>();
             services.AddSingleton<IPlayerProjectileCollisionHandler, PlayerProjectileCollisionHandler>();
             services.AddSingleton<IGame, Game>();
 

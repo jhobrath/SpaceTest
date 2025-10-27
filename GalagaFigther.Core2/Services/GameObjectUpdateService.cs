@@ -28,11 +28,13 @@ namespace GalagaFighter.Core2.Services
         private readonly IGunController _gunController;
         private readonly IParticleEmitterController _particleEmitterController;
         private readonly IParticleController _particleController;
+        private readonly ICollisionController _collisionController;
 
         public GameObjectUpdateService(IObjectService objectService, IPlayerController playerController,
             IProjectileController projectileController, IPowerUpController powerUpController,
             ITurretController turretController, IGunController gunController,
-            IParticleEmitterController particleEmitterController, IParticleController particleController)
+            IParticleEmitterController particleEmitterController, IParticleController particleController,
+            ICollisionController collisionController)
         {
             _objectService = objectService;
             _playerController = playerController;
@@ -42,6 +44,7 @@ namespace GalagaFighter.Core2.Services
             _gunController = gunController;
             _particleEmitterController = particleEmitterController;
             _particleController = particleController;
+            _collisionController = collisionController;
         }
 
         public void Update(float frameTime)
@@ -53,6 +56,7 @@ namespace GalagaFighter.Core2.Services
             UpdateType(_gunController, frameTime);
             UpdateType(_particleEmitterController, frameTime);
             UpdateType(_particleController, frameTime);
+            UpdateType(_collisionController, frameTime);
         }
 
         private void UpdateType<T>(IController<T> controller, float frameTime)
@@ -72,6 +76,7 @@ namespace GalagaFighter.Core2.Services
             DrawType(_gunController, frameTime);
             DrawType(_particleEmitterController, frameTime);
             DrawType(_particleController, frameTime);
+            DrawType(_collisionController, frameTime);
         }
 
         private void DrawType<T>(IController<T> controller, float frameTime)

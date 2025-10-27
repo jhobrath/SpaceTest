@@ -40,24 +40,27 @@ namespace GalagaFighter.Core2.Services
             CheckCollisions<Player, Projectile>(_playerProjectileCollisionHandler.Handle);
         }
 
-        private void CheckCollisions<Type1, Type2>(Action<Type1, Type2> handle)
+        private void CheckCollisions<Type1, Type2>(Action<Type1, Type2, Vector2> handle)
             where Type1: GameObject
             where Type2: GameObject
         {
             var type1s = _objectService.GetAll<Type1>();
             var type2s = _objectService.GetAll<Type2>();
 
-            foreach(var type1 in type1s)
-                foreach(var type2 in type2s)
-                    if(CheckCollision(type1, type2))
-                        handle(type1, type2);
+            foreach (var type1 in type1s)
+                foreach (var type2 in type2s)
+                {
+                    var outcome = CheckCollision(type1, type2);
+                    if (outcome.HasValue)
+                        handle(type1, type2, outcome.Value);
+                }
         }
 
-        private bool CheckCollision(GameObject type1, GameObject type2)
+        private Vector2? CheckCollision(GameObject type1, GameObject type2)
         {
             var projectileVertices = PolygonVerticesCompiler.GetVertices(type1);
             var powerUpVertices = PolygonVerticesCompiler.GetVertices(type2);
-            bool collides = PolygonCollisionDetector.Detect(projectileVertices, powerUpVertices);
+            var collides = PolygonCollisionDetector.Detect(projectileVertices, powerUpVertices);
 
             return collides;
         }

@@ -136,7 +136,7 @@ namespace GalagaFighter.Core2.Services
             _persistentValueHandler.Register(
                 () => engineTrail.Enabled = smokeTrail.Enabled = true, 
                 () => engineTrail.Enabled = smokeTrail.Enabled = false, 
-                () => inputData.Left || inputData.Right || inputData.Forward);
+                () => player.Acceleration.Length() > 1);
 
             return player;
         }

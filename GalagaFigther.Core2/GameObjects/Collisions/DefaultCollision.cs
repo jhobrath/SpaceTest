@@ -14,7 +14,8 @@ namespace GalagaFighter.Core2.GameObjects.Collisions
         public DefaultCollision(Vector2 position, float size) 
             : base(Game.Id, position - Vector2.One*size*.5f, Vector2.One*size, Vector2.Zero, new NonRepeatingAnimatedImageSprite("Sprites/Collisions/burst.png", 8, 104, 104, .06f))
         {
-            Color = Color.White.ShiftHueForTexture(40f);
+            Palette = Color.LightGray;
+            Color = Color.ApplyAlpha(.75f);
         }
     }
 }

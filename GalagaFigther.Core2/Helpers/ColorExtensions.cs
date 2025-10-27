@@ -5,6 +5,28 @@ namespace GalagaFighter.Core2.Helpers
 {
     public static class ColorExtensions
     {
+
+        public static Color Saturate(this Color color, float saturation)
+        {
+            // Convert image editing saturation (0-200, where 100 = no change) to multiplier
+            // 0 = completely desaturated (grayscale)
+            // 100 = no change (original saturation)
+            // 200 = maximum saturation (extremely vivid)
+            float saturationFactor = saturation / 100f;
+            
+            // Convert RGB to HSV
+            RgbToHsv(color.R, color.G, color.B, out float h, out float s, out float v);
+
+            // Adjust saturation and clamp to valid range
+            s = Math.Clamp(s * saturationFactor, 0f, 1f);
+
+            // Convert back to RGB
+            HsvToRgb(h, s, v, out byte r, out byte g, out byte b);
+
+            return new Color(r, g, b, color.A); // Preserve alpha
+        }
+
+
         public static Color ApplyBlue(this Color color, float blueAlpha)
         {
             var newColor = new Color(
@@ -273,6 +295,38 @@ namespace GalagaFighter.Core2.Helpers
             HsvToRgb(h, s, v, out byte r, out byte g, out byte b);
 
             return new Color(r, g, b, color.A);
+        }
+
+        /// <summary>
+        /// Adjusts saturation for texture rendering (handles grayscale colors properly)
+        /// </summary>
+        /// <param name="color">Base color (if grayscale, will use red as starting hue)</param>
+        /// <param name="saturation">Saturation level (0-200, where 100 = no change)</param>
+        /// <returns>Color with adjusted saturation for texture rendering</returns>
+        public static Color SaturateForTexture(this Color color, float saturation)
+        {
+            // Convert image editing saturation (0-200, where 100 = no change) to 0-1 scale
+            float targetSaturation = Math.Clamp(saturation / 100f, 0f, 2f);
+            
+            // Convert RGB to HSV
+            RgbToHsv(color.R, color.G, color.B, out float h, out float s, out float v);
+
+            // If the color is grayscale (white/gray/black), start with red hue
+            if (s < 0.01f) // Very low saturation means grayscale
+            {
+                h = 0f; // Start with red hue
+                s = Math.Clamp(targetSaturation, 0f, 1f); // Set target saturation directly
+            }
+            else
+            {
+                // For colored pixels, multiply existing saturation by the factor
+                s = Math.Clamp(s * targetSaturation, 0f, 1f);
+            }
+
+            // Convert back to RGB
+            HsvToRgb(h, s, v, out byte r, out byte g, out byte b);
+
+            return new Color(r, g, b, color.A); // Preserve alpha
         }
     }
 }

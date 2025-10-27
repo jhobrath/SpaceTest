@@ -14,7 +14,7 @@ namespace GalagaFighter.Core2.Handlers.Collisions
 {
     public interface IPlayerProjectileCollisionHandler
     {
-        void Handle(Player player, Projectile projectile, Vector2 point);
+        void Handle(Player player, Projectile projectile);
     }
 
     public class PlayerProjectileCollisionHandler : IPlayerProjectileCollisionHandler
@@ -28,7 +28,7 @@ namespace GalagaFighter.Core2.Handlers.Collisions
             _objectService = objectService;
         }
 
-        public void Handle(Player player, Projectile projectile, Vector2 point)
+        public void Handle(Player player, Projectile projectile)
         {
             if (player.Id == projectile.Owner)
                 return;

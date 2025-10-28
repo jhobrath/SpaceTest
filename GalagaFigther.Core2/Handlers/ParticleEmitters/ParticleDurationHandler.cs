@@ -29,9 +29,14 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
                 return;
 
             if (emitter.Config.Loop)
+            { 
                 emissionState.DurationTimer = 0f;
+            }
             else
+            { 
                 emissionState.IsEmitting = false;
+                emitter.IsActive = false;
+            }
         }
     }
 }

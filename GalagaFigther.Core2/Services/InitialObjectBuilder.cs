@@ -106,7 +106,7 @@ namespace GalagaFighter.Core2.Services
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
-            effects.Add(new FrozenEffect());
+            //effects.Add(new FrozenEffect());
             effects.Add(new IceTurretEffect());
 
             // Create engine trail emitter

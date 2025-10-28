@@ -1,7 +1,9 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.Handlers.Projectiles;
+using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Guns;
+using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using Raylib_cs;
@@ -48,12 +50,37 @@ namespace GalagaFighter.Core2.Controllers
 
             var player = _objectService.GetPlayer(gun);
             foreach (var barrel in gun.Shoot(player))
+            { 
                 _projectileShooter.Shoot(gun, barrel.Value, barrel.Key);
+                Poof(gun, barrel.Key);
+            }
 
             if (gun.Barrels.Count == 1)
                 SetRecoil(gun);
 
             gun.ShotDue = false;
+        }
+
+        private void Poof(Gun gun, GunBarrel barrel)
+        {
+            var config = ParticleEffectTemplates.Get("SmokeTrail");
+            config.Loop = false;
+            config.Duration = .15f;
+            config.Lifetime = .125f;
+            config.Speed = new(0f, 0f);
+            config.SpeedVariation = new(400f,400f);
+            config.StartSize = 10f;
+            config.EmissionRate = 200f;
+            config.EndSize = 20f;
+            config.StartColor = Color.Blue;//.ApplyAlpha(.5f);
+            config.EndColor = Color.SkyBlue.ApplyAlpha(0);
+            var barrelEnd = GetRotatedOffset(gun, barrel.End);
+            var emitter = new ParticleEmitter(Game.Id, barrelEnd - new Vector2(5f,5f), 20f)
+            {
+                Config = config
+            };
+
+            _objectService.Add(emitter);
         }
 
         private void Recoil(Gun gun, float frameTime)
@@ -106,6 +133,15 @@ namespace GalagaFighter.Core2.Controllers
         public void Draw(Gun gun, float frameTime)
         {
             gun.Sprite.Draw(gun);
+        }
+
+        private Vector2 GetRotatedOffset(GameObject objectShooting, Vector2 offset)
+        {
+            var offsetRotationRadians = (objectShooting.WorldRotation - 90) * MathF.PI / 180f;
+            return objectShooting.Center + new Vector2(
+                (offset.X * MathF.Cos(offsetRotationRadians) - offset.Y * MathF.Sin(offsetRotationRadians)),
+                (offset.X * MathF.Sin(offsetRotationRadians) + offset.Y * MathF.Cos(offsetRotationRadians))
+            );
         }
     }
 }

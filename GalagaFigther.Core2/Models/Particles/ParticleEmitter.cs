@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core2.Models.Particles
 {
-    public class ParticleEmitter : GameObject
+    public class ParticleEmitter : CollectibleGameObject
     {
         public ParticleEffectConfig Config { get; set; }
 

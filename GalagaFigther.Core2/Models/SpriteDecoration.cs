@@ -5,8 +5,10 @@ using System.Numerics;
 
 namespace GalagaFighter.Core2.Models
 {
-    public abstract class Decoration
+    public abstract class Decoration : ICollectible
     {
+        public Guid CollectedFrom { get; set; }
+
         public string? Key { get; set; }
         public Vector2 Offset { get; set; }
         public bool MaintainRotation { get; set; } = true;
@@ -14,10 +16,10 @@ namespace GalagaFighter.Core2.Models
         public float InitialRotation { get; set; } = 0f;
         public bool MaintainAlpha { get; set; } = true;
         public int Depth { get; set; } = 0;
+        public bool IsActive { get; set; } = true;
 
         public abstract void Update(GameObject gameObject, float frameTime);
         public abstract void Draw(GameObject gameObject);
-
     }
 
     public class SpriteDecoration : Decoration

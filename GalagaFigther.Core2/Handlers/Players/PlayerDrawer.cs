@@ -40,7 +40,9 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             HandleColor(player, modifiers);
 
-            foreach(var decoration in decorations)
+            var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
+
+            foreach (var decoration in decorations)
             {
                 if (decoration.Key == "Move" && player.Acceleration.Length() < 1f)
                     continue;

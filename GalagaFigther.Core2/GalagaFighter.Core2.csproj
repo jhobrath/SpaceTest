@@ -9,12 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
-    <PackageReference Include="Raylib-cs" Version="7.0.1" />
+    <Compile Remove="Components\**" />
+    <EmbeddedResource Remove="Components\**" />
+    <None Remove="Components\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+    <PackageReference Include="Raylib-cs" Version="7.0.1" />
   </ItemGroup>
 
 </Project>

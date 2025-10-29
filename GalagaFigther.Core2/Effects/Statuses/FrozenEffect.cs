@@ -17,7 +17,8 @@ namespace GalagaFighter.Core2.Effects.Statuses
         {
             _frozenDecoration = new SpriteDecoration(
                 new StillImageSprite("Sprites/Ships/MainShipBody_Frozen.png"),
-                Vector2.Zero);
+                Vector2.Zero)
+            { CollectedFrom = Id };
         }
 
         public override void Apply(PlayerModifiers modifiers)
@@ -27,14 +28,15 @@ namespace GalagaFighter.Core2.Effects.Statuses
             modifiers.Stats.FireRate *= 1.25f;
             
             // Add particle emitter factory function
-            modifiers.CreateParticleEmitters[this] = CreateIceParticles;
-            modifiers.CreateDecorations[this] = g => [_frozenDecoration];
+            modifiers.ParticleEmitters.Create[this] = CreateIceParticles;
+            modifiers.Decorations.Create[this] = g => [_frozenDecoration];
         }
 
         private List<ParticleEmitter> CreateIceParticles(GameObject owner)
         {
             var iceConfig = ParticleEffectTemplates.Get("IceTrail");
             var emitter = new ParticleEmitter(owner.Id, new(84, 84), 30f) { Config = iceConfig };
+            emitter.CollectedFrom = Id;
             return [emitter];
             //var emitter1 = new ParticleEmitter(owner.Id, new(12,129), 30f) { Config = iceConfig };
             //var emitter2 = new ParticleEmitter(owner.Id, new(168-12, 129), 30f) { Config = iceConfig };

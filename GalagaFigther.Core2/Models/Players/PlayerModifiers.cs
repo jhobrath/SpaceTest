@@ -2,8 +2,10 @@ using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Turrets;
+using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Particles;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -14,9 +16,6 @@ namespace GalagaFighter.Core2.Models.Players
 {
     public class PlayerModifiers : IGameObjectData<Player>
     {
-        // System/Framework properties
-        public int EffectCount { get; set; }
-
         // Player-specific modifier groups
         public PlayerStats Stats { get; set; } = new();
         public PlayerDisplay Display { get; set; } = new();
@@ -24,19 +23,12 @@ namespace GalagaFighter.Core2.Models.Players
         // Properties that get cloned to created objects
         public ProjectileModifiers Projectile { get; set; } = new();
         public TurretModifiers Turret { get; set; } = new();
-      
+
         //Child objects
-        public Dictionary<PlayerEffect, Func<GameObject, List<Decoration>>> CreateDecorations { get; set; } = [];
-        public List<Decoration> Decorations { get; set; } = [];
-
-        public Dictionary<PlayerEffect, Func<GameObject, List<Gun>>> CreateGuns { get; set; } = [];
-        public List<Gun> Guns { get; set; } = [];
-
-        public Dictionary<PlayerEffect, Func<GameObject, List<Turret>>> CreateTurrets { get; set; } = [];
-        public List<Turret> Turrets { get; set; } = [];
-
-        public Dictionary<PlayerEffect, Func<GameObject, List<ParticleEmitter>>> CreateParticleEmitters { get; set; } = [];
-        public List<ParticleEmitter> ParticleEmitters { get; set; } = [];
+        public PlayerModifiersChildren<Decoration> Decorations { get; set; } = [];
+        public PlayerModifiersChildren<Gun> Guns { get; set; } = [];
+        public PlayerModifiersChildren<Turret> Turrets { get; set; } = [];
+        public PlayerModifiersChildren<ParticleEmitter> ParticleEmitters { get; set; } = [];
     }
 
     public class PlayerStats
@@ -66,4 +58,17 @@ namespace GalagaFighter.Core2.Models.Players
     {
         public List<Decoration> Decorations { get; set; } = [];
     }
+}
+
+public class PlayerModifiersChildren<T> : List<T> where T : class, ICollectible
+{
+    public PlayerModifiersChildren()
+    {
+    }
+
+    public PlayerModifiersChildren(IEnumerable<T> collection) : base(collection)
+    {
+    }
+
+    public Dictionary<PlayerEffect, Func<GameObject, List<T>>> Create { get; set; } = [];
 }

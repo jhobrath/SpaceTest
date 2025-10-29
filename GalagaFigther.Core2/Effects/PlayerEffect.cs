@@ -10,6 +10,8 @@ namespace GalagaFighter.Core2.Effects
 {
     public abstract class PlayerEffect
     {
+        public Guid Id { get; private set; } = Guid.NewGuid();
+
         protected virtual float Duration { get; } = 5f;
         public bool IsActive = true;
 

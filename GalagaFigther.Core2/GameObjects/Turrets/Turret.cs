@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.GameObjects.Turrets
 {
-    public abstract class Turret : GameObject
+    public abstract class Turret : CollectibleGameObject
     {
         public abstract List<Gun> Guns { get; }
 

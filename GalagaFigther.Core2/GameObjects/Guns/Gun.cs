@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace GalagaFighter.Core2.GameObjects.Guns
 {
-    public abstract class Gun : GameObject 
+    public abstract class Gun : CollectibleGameObject 
     {
         public Gun(GameObject owner, SpriteBase sprite) 
             : base(owner.Id, Vector2.Zero, owner.Rect.Size, Vector2.Zero, sprite)

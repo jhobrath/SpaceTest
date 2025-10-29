@@ -53,7 +53,7 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         private void Deploy(Player player, PlayerTurretData turretData, PlayerModifiers modifiers)
         {
-            foreach (var createTurret in modifiers.CreateTurrets.Values)
+            foreach (var createTurret in modifiers.Turrets.Create.Values)
                 DeployTurret(player, createTurret);
 
             turretData.DeployCountdown = _defaultDeployRate * modifiers.Stats.TurretDeployRate;

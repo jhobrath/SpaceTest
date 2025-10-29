@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 
@@ -13,15 +15,10 @@ namespace GalagaFighter.Core2.Handlers.Players
     public class PlayerAffector : IPlayerAffector
     {
         private readonly IGameDataRegistry _gameDataRegistry;
-        private readonly IObjectService _objectService;
-        private readonly IGameObjectPositionService _positionService;
 
-        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService, 
-            IGameObjectPositionService positionService)
+        public PlayerAffector(IGameDataRegistry gameDataRegistry)
         {
             _gameDataRegistry = gameDataRegistry;
-            _objectService = objectService;
-            _positionService = positionService;
         }
 
         public void Affect(Player player, float frameTime)
@@ -49,81 +46,70 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         private void RecalculateModifiers(Player player, PlayerEffects effects)
         {
-            ClearGuns(player);
-            ClearParticleEmitters(player);
-            ClearDecorations(player);
+            var oldModifiers = DetermineRemainingCollectibles(player, effects);
+            var newModifiers = new PlayerModifiers();
 
-            var modifiers = new PlayerModifiers();
-            
             effects.RemoveAll(x => !x.IsActive);
             foreach (var effect in effects)
-                effect.Apply(modifiers);
+                effect.Apply(newModifiers);
 
-            SetGuns(player, modifiers);
-            SetParticleEmitters(player, modifiers);
-            SetDecorations(player, modifiers);
+            ApplyDecorationInitialRotation(player, newModifiers.Decorations);
+            ApplyPriorCollectibles(oldModifiers, newModifiers, effects);
 
+            _gameDataRegistry.Set(player, newModifiers);
+        }
+
+        private void ApplyDecorationInitialRotation(Player player, List<Decoration> decorations)
+        {
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
-            foreach (var deco in modifiers.Decorations)
-                if (!deco.MaintainRotation)
-                    deco.InitialRotation = rotationData.InitialRotation;
-
-            modifiers.EffectCount = effects.Count;
-
-            _gameDataRegistry.Set(player, modifiers);
+            foreach (var decoration in decorations)
+                if (!decoration.MaintainRotation)
+                    decoration.InitialRotation = rotationData.InitialRotation;
         }
 
-        private void ClearGuns(Player player)
+        private void ApplyPriorCollectibles(PlayerModifiers oldModifiers, PlayerModifiers newModifiers, PlayerEffects effects)
         {
-            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
-
-            modifiers.Guns.ForEach(x => x.IsActive = false);
-            modifiers.Guns.Clear();
+            ApplyPriorCollectibles(oldModifiers.Guns, newModifiers.Guns, effects);
+            ApplyPriorCollectibles(oldModifiers.Decorations, newModifiers.Decorations, effects);
+            ApplyPriorCollectibles(oldModifiers.Turrets, newModifiers.Turrets, effects);
+            ApplyPriorCollectibles(oldModifiers.ParticleEmitters, newModifiers.ParticleEmitters, effects);
         }
 
-        private void SetGuns(Player player, PlayerModifiers modifiers)
+        private void ApplyPriorCollectibles<T>(PlayerModifiersChildren<T> oldCollectibles, PlayerModifiersChildren<T> newCollectibles, PlayerEffects playerEffects) 
+            where T : class, ICollectible
         {
-            foreach(var effect in modifiers.CreateGuns)
+            foreach(var collectible in oldCollectibles)
             {
-                foreach(var gun in effect.Value(player))
-                {
-                    modifiers.Guns.Add(gun);
-                    _positionService.RegisterParent(player, gun);
-                    _objectService.Add(gun);
-                }
+                if (playerEffects.All(x => x.Id != collectible.CollectedFrom))
+                    continue;
+
+                newCollectibles.Add(collectible);
             }
         }
 
-        private void ClearParticleEmitters(Player player)
+        private PlayerModifiers DetermineRemainingCollectibles(Player player, PlayerEffects effects)
         {
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
 
-            modifiers.ParticleEmitters.ForEach(x => x.IsActive = false);
-            modifiers.ParticleEmitters.Clear();
+            ClearOrphanedCollectibles(effects, modifiers.Guns);
+            ClearOrphanedCollectibles(effects, modifiers.Decorations);
+            ClearOrphanedCollectibles(effects, modifiers.Turrets);
+            ClearOrphanedCollectibles(effects, modifiers.ParticleEmitters);
+
+            return modifiers;
         }
 
-        private void SetParticleEmitters(Player player, PlayerModifiers modifiers)
+        private void ClearOrphanedCollectibles<T>(PlayerEffects effects, PlayerModifiersChildren<T> children)
+            where T : class, ICollectible
         {
-            foreach(var effect in modifiers.CreateParticleEmitters.Values)
+            for(var i = children.Count - 1;i>=0;i--)
             {
-                foreach(var emitter in effect.Invoke(player))
-                {
-                    modifiers.ParticleEmitters.Add(emitter);
-                    _positionService.RegisterParent(player, emitter);
-                    _objectService.Add(emitter);
-                }
+                if (effects.Any(e => e.Id == children[i].CollectedFrom))
+                    continue;
+
+                children[i].IsActive = false;
+                children.RemoveAt(i);
             }
-        }
-
-        private void ClearDecorations(Player player)
-        {
-        }
-
-        private void SetDecorations(Player player, PlayerModifiers modifiers)
-        {
-            foreach (var effect in modifiers.CreateDecorations.Values)
-                foreach (var decoration in effect.Invoke(player))
-                    modifiers.Decorations.Add(decoration);
         }
     }
 }

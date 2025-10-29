@@ -14,6 +14,13 @@ namespace GalagaFighter.Core2.Models.Players
         public bool RequireRerolling { get;set; }
         private readonly List<PlayerEffect> _effects = [];
 
+        public PlayerEffects() { }
+
+        public PlayerEffects(IEnumerable<PlayerEffect> effects) : this()
+        {
+            _effects.AddRange(effects);
+        }
+
         private T WithReroll<T>(Func<T> action)
         {
             try { 

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalagaFighter.CharacterScre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalagaFighter.Core2", "GalagaFigther.Core2\GalagaFighter.Core2.csproj", "{4EC2EF37-D09F-414A-8BC6-BDD6C21189B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalagaFighter.Core2.Tests", "GalagaFighter.Core2.Tests\GalagaFighter.Core2.Tests.csproj", "{014BFD86-687B-4AD9-8D2E-CCFE5CAF79C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4EC2EF37-D09F-414A-8BC6-BDD6C21189B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EC2EF37-D09F-414A-8BC6-BDD6C21189B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EC2EF37-D09F-414A-8BC6-BDD6C21189B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{014BFD86-687B-4AD9-8D2E-CCFE5CAF79C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{014BFD86-687B-4AD9-8D2E-CCFE5CAF79C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{014BFD86-687B-4AD9-8D2E-CCFE5CAF79C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{014BFD86-687B-4AD9-8D2E-CCFE5CAF79C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

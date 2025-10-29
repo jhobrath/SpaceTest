@@ -20,8 +20,17 @@ namespace GalagaFighter.Core2.Effects.Projectiles
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.CreateDecorations[this] = g => [_moveDecoration];
-            modifiers.CreateGuns[this] = g => [new DefaultGun(g)];
+            modifiers.Decorations.Create[this] = g => [_moveDecoration];
+            modifiers.Guns.Create[this] = HandleGuns;
+        }
+
+        private List<Gun> HandleGuns(GameObject gameObject)
+        {
+            var gun = new DefaultGun(gameObject)
+            {
+                CollectedFrom = Id
+            };
+            return [gun];
         }
     }
 }

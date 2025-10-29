@@ -19,7 +19,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         private readonly IObjectService _objectService;
         private readonly IGameObjectPositionService _gameObjectPositionService;
 
-        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService, 
+        public PlayerAffector(IGameDataRegistry gameDataRegistry, IObjectService objectService,
             IGameObjectPositionService gameObjectPositionService)
         {
             _gameDataRegistry = gameDataRegistry;
@@ -32,7 +32,7 @@ namespace GalagaFighter.Core2.Handlers.Players
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             RecalculateEffectsIfNecessary(player, effects);
 
-            foreach(var effect in effects)
+            foreach (var effect in effects)
                 effect.Update(frameTime);
         }
 
@@ -44,7 +44,7 @@ namespace GalagaFighter.Core2.Handlers.Players
             else if (effects.Any(x => !x.IsActive))
                 RecalculateModifiers(player, effects);
 
-            else if(effects.RequireRerolling)
+            else if (effects.RequireRerolling)
                 RecalculateModifiers(player, effects);
 
             effects.RequireRerolling = false;
@@ -72,7 +72,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         private void CreateGuns(Player player, PlayerModifiers newModifiers, PlayerEffects effects)
         {
             var effectIds = effects.Select(x => x.Id).ToList();
-            foreach(var gunToCreate in newModifiers.Guns.Create)
+            foreach (var gunToCreate in newModifiers.Guns.Create)
             {
                 //Only add the gun if this effect is new
                 if (newModifiers.Guns.Any(x => effectIds.Contains(x.CollectedFrom)))
@@ -140,10 +140,10 @@ namespace GalagaFighter.Core2.Handlers.Players
             ApplyPriorCollectibles(oldModifiers.ParticleEmitters, newModifiers.ParticleEmitters, effects);
         }
 
-        private void ApplyPriorCollectibles<T>(PlayerModifiersChildren<T> oldCollectibles, PlayerModifiersChildren<T> newCollectibles, PlayerEffects playerEffects) 
+        private void ApplyPriorCollectibles<T>(PlayerModifiersChildren<T> oldCollectibles, PlayerModifiersChildren<T> newCollectibles, PlayerEffects playerEffects)
             where T : class, ICollectible
         {
-            foreach(var collectible in oldCollectibles)
+            foreach (var collectible in oldCollectibles)
             {
                 if (playerEffects.All(x => x.Id != collectible.CollectedFrom))
                 {
@@ -170,7 +170,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         private void ClearOrphanedCollectibles<T>(PlayerEffects effects, PlayerModifiersChildren<T> children)
             where T : class, ICollectible
         {
-            for(var i = children.Count - 1;i>=0;i--)
+            for (var i = children.Count - 1; i >= 0; i--)
             {
                 if (effects.Any(e => e.Id == children[i].CollectedFrom))
                     continue;

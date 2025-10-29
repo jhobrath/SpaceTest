@@ -4,6 +4,7 @@ using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.Handlers.Players;
 using GalagaFighter.Core2.Models.Players;
+using GalagaFighter.Core2.Services;
 using Moq;
 using Xunit;
 
@@ -16,9 +17,14 @@ namespace GalagaFighter.Core2.Tests.Handlers.Players
 
         private PlayerModifiers? _assignedModifiers = null;
 
+        private readonly Mock<IObjectService> _objectService = new Mock<IObjectService>();
+        private readonly Mock<IGameObjectPositionService> _gameObjectPositionService = new Mock<IGameObjectPositionService>();
+        private readonly List<GameObject> _addedGameObjects = [];
+        private readonly Dictionary<GameObject, List<GameObject>> _registeredParents = [];
+
         public PlayerAffectorTestFixture()
         {
-            _affector = new PlayerAffector(_gameDataRegistry.Object);
+            _affector = new PlayerAffector(_gameDataRegistry.Object, _objectService.Object, _gameObjectPositionService.Object);
             _player = CreatePlayer();
 
             SetupDefaultData<PlayerModifiers>();
@@ -26,6 +32,17 @@ namespace GalagaFighter.Core2.Tests.Handlers.Players
 
             _gameDataRegistry.Setup(x => x.Set(_player, It.IsAny<PlayerModifiers>()))
                 .Callback<Player, PlayerModifiers>((p, m) => _assignedModifiers = m);
+
+            _objectService.Setup(x => x.Add(It.IsAny<GameObject>()))
+                .Callback<GameObject>(g => _addedGameObjects.Add(g));
+
+            _gameObjectPositionService.Setup(x => x.RegisterParent(It.IsAny<GameObject>(), It.IsAny<GameObject[]>()))
+                .Callback<GameObject, GameObject[]>((p,c) => {
+                     if (!_registeredParents.ContainsKey(p))
+                         _registeredParents[p] = [];
+
+                     _registeredParents[p].AddRange(c);
+                 });
         }
 
         [Fact]
@@ -111,6 +128,31 @@ namespace GalagaFighter.Core2.Tests.Handlers.Players
             Assert.NotNull(_assignedModifiers);
             Assert.Equal(1, _assignedModifiers!.Guns.Count);
             Assert.Equal(existingGun, _assignedModifiers!.Guns[0]);
+            Assert.Equal(0, _addedGameObjects.Count);
+            Assert.Equal(0, _registeredParents.Count);
+        }
+
+        [Fact]
+        public void WhenRerolling_AndCollectibleIsNew_ThenCollectibleInstanceAdded()
+        {
+            var newGun = CreateDefaultGun(_player);
+            var testEffect = new TestEffect((t, m) => m.Guns.Create[t] = p => [newGun]);
+            
+            Given<PlayerModifiers>(_player, new() { Guns = [] });
+            Given<PlayerEffects>(_player, new([testEffect])
+            {
+                RequireRerolling = true
+            });
+
+            _affector.Affect(_player, 0);
+
+            Assert.NotNull(_assignedModifiers);
+            Assert.Equal(1, _assignedModifiers!.Guns.Count);
+            Assert.Equal(newGun, _assignedModifiers!.Guns[0]);
+            Assert.Equal(1, _addedGameObjects.Count);
+            Assert.Equal(newGun, _addedGameObjects[0]);
+            Assert.Equal(1, _registeredParents.Count);
+            Assert.Equal(newGun, _registeredParents[_player][0]);
         }
 
         private class TestEffect : PlayerEffect

@@ -44,6 +44,10 @@ namespace GalagaFighter.Core2.Models.Players
         public void RemoveAt(int index) => WithReroll(() => _effects.RemoveAt(index));
         IEnumerator IEnumerable.GetEnumerator() => _effects.GetEnumerator();
         public void RemoveAll(Predicate<PlayerEffect> value) => WithReroll(() => _effects.RemoveAll(value));
-        public void AddRange(List<PlayerEffect> powerUpEffects) => WithReroll(() => _effects.AddRange(powerUpEffects));
+        public void AddRange(List<PlayerEffect> powerUpEffects)
+        {
+            if (powerUpEffects.Any())
+                WithReroll(() => _effects.AddRange(powerUpEffects));
+        }
     }
 }

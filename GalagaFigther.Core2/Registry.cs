@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Handlers.Collisions;
+using GalagaFighter.Core2.Handlers.Guns;
 using GalagaFighter.Core2.Handlers.ParticleEmitters;
 using GalagaFighter.Core2.Handlers.Players;
 using GalagaFighter.Core2.Handlers.Projectiles;
@@ -60,6 +61,10 @@ namespace GalagaFighter.Core2
             services.AddSingleton<ICollisionController, CollisionController>();
             services.AddSingleton<IPlayerProjectileCollisionHandler, PlayerProjectileCollisionHandler>();
             services.AddSingleton<IGame, Game>();
+
+            services.AddSingleton<IGunRecoiler, GunRecoiler>();
+            services.AddSingleton<IGunRotator, GunRotator>();
+            services.AddSingleton<IGunShooter, GunShooter>();
 
             // This will automatically find all registered services that implement IClearable
             services.AddSingleton<IClearableServiceClearer>(provider =>

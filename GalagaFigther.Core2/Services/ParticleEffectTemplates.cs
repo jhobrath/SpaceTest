@@ -8,7 +8,7 @@ namespace GalagaFighter.Core2.Services
 {
     public static class ParticleEffectTemplates
     {
-        private static readonly Dictionary<string, ParticleEffectConfig> _templates = [];
+        private static readonly Dictionary<string, Func<ParticleEffectConfig>> _templates = [];
 
         static ParticleEffectTemplates()
         {
@@ -17,7 +17,7 @@ namespace GalagaFighter.Core2.Services
 
         public static ParticleEffectConfig Get(string name)
         {
-            return _templates.TryGetValue(name, out var template) ? template : new ParticleEffectConfig(name);
+            return _templates.TryGetValue(name, out var template) ? template() : new ParticleEffectConfig(name);
         }
 
         internal static void Reinitialize()
@@ -27,7 +27,7 @@ namespace GalagaFighter.Core2.Services
 
         private static void InitializeTemplates()
         {
-            _templates["EngineTrail"] = new ParticleEffectConfig("EngineTrail")
+            _templates["EngineTrail"] = () => new ParticleEffectConfig("EngineTrail")
             {
                 EmissionRate = 30f,
                 StartSize = 8f,
@@ -46,7 +46,7 @@ namespace GalagaFighter.Core2.Services
                 ColorVariation = 50f
             };
 
-            _templates["SmokeTrail"] = new ParticleEffectConfig("SmokeTrail")
+            _templates["SmokeTrail"] = () => new ParticleEffectConfig("SmokeTrail")
             {
                 EmissionRate = 15f,
                 StartSize = 8f,
@@ -64,7 +64,7 @@ namespace GalagaFighter.Core2.Services
                 EmissionRadius = 10f
             };
 
-            _templates["IceTrail"] = new ParticleEffectConfig("IceTrail")
+            _templates["IceTrail"] = () => new ParticleEffectConfig("IceTrail")
             {
                 EmissionRadius = 50f,
                 EmissionRate = 10f,
@@ -81,6 +81,24 @@ namespace GalagaFighter.Core2.Services
                 StartColor = Color.White.ApplyAlpha(.5f),
                 EndColor = Color.Blue.ApplyAlpha(0),
                 ColorVariation = 5f
+            };
+
+            _templates["SmokeTrail1"] = () => new ParticleEffectConfig("SmokeTrail1")
+            {
+                EmissionRate = 15f,
+                StartSize = 8f,
+                EndSize = 10f,
+                Speed = new Vector2(0f, 200f),
+                SpeedVariation = new(80f, 25f),
+                Lifetime = 1.5f,
+                Drag = 2f,
+                Textures = ["smoke_1", "smoke_2", "smoke_3", "smoke_4", "smoke_5"],
+                Loop = true,
+                Duration = -1f,
+                StartColor = Color.Gray,
+                EndColor = Color.Gray.ApplyAlpha(0),
+                SizeVariation = 50f,
+                EmissionRadius = 10f
             };
         }
     }

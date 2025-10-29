@@ -1,7 +1,10 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Services;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +24,12 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
     public class ProjectileShooter : IProjectileShooter
     {
         private readonly IObjectService _objectService;
+        private readonly IGameObjectPositionService _gameObjectPositionService;
 
-        public ProjectileShooter(IObjectService objectService)
+        public ProjectileShooter(IObjectService objectService, IGameObjectPositionService gameObjectPositionService)
         {
             _objectService = objectService;
+            _gameObjectPositionService = gameObjectPositionService;
         }
 
         public void Shoot(GameObject objectShooting, GameObject projectile, GunBarrel barrel)
@@ -34,6 +39,28 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
 
             MoveInPlace(objectShooting, projectile, barrelStart, barrelEnd);
             _objectService.Add(projectile);
+
+            Poof(objectShooting, barrelEnd);
+        }
+
+        private void Poof(GameObject objectShooting, Vector2 position)
+        {
+            var config = ParticleEffectTemplates.Get("SmokeTrail1");
+            config.Loop = false;
+            config.Duration = .15f;
+            config.Lifetime = .25f;
+            config.Speed = new(0f, -400f);
+            config.SpeedVariation = new(200f, 100f);
+            config.StartSize = 10f;
+            config.EmissionRate = 50f;
+            config.EndSize = 20f;
+            config.StartColor = Color.Orange;
+            config.EndColor = Color.Black.ApplyAlpha(0);
+            config.Textures = ["dot_1", "dot_2", "dot_3"];
+
+            var emitter = new ParticleEmitter(Game.Id, position - config.StartSize*Vector2.One/2, 10) { Config = config, Rotation = objectShooting.WorldRotation };
+
+            _objectService.Add(emitter);
         }
 
         private static void MoveInPlace(GameObject objectShooting, GameObject projectile, Vector2 barrelStart, Vector2 barrelEnd)

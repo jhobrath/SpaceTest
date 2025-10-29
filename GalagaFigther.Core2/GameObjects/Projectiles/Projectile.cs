@@ -9,12 +9,6 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
-    public enum ProjectileDirection
-    {
-        Left, 
-        Right 
-    };
-
     public abstract class Projectile : GameObject
     {
         public Projectile(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite)

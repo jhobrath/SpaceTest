@@ -1,6 +1,7 @@
 using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Particles;
@@ -51,7 +52,6 @@ namespace GalagaFighter.Core2.Models.Players
     public class ProjectileModifiers
     {
         public List<Decoration> Decorations { get; set; } = [];
-        public Dictionary<string, Func<Guid, List<GameObject>>> OnShoot { get; set; } = [];
     }
 
     public class TurretModifiers

@@ -32,9 +32,6 @@ namespace GalagaFighter.Core2.GameObjects.Guns
             _gunIndex = (_gunIndex + 1) % 2;
             _shotCount++;
             
-            // Debug output to see what's happening
-            DebugWriter.Write($"Shot #{_shotCount}: Gun {_gunIndex} (ShotDue: {ShotDue})");
-            
             return new() 
             { 
                 { 

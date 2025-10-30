@@ -25,7 +25,7 @@ namespace GalagaFighter.Core2.Effects.Statuses
         {
             modifiers.Display.BlueAlpha *= 1.25f; 
             modifiers.Stats.SpeedMultiplier *= 0.5f; 
-            modifiers.Stats.FireRate *= 1.25f;
+            modifiers.Stats.FireRateMultiplier *= 1.25f;
             
             // Add particle emitter factory function
             modifiers.ParticleEmitters.Create[this] = CreateIceParticles;

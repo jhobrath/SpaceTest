@@ -35,9 +35,13 @@ namespace GalagaFighter.Core2.Models.Players
     public class PlayerStats
     {
         // Player gameplay statistics (movement, combat, etc.)
-        public float FireRate { get; set; } = 1f;
         public float TurretDeployRate { get; set; } = 1f;
+
+        public float FireRateMultiplier { get; set; } = 1f;
         public float SpeedMultiplier { get; set; } = 1f;
+        public float HealthMultiplier { get; set; } = 1f;
+        public float DamageMultiplier { get; set; } = 1f;
+        public float ShieldMultiplier { get; set; } = 1f;
     }
 
     public class PlayerDisplay

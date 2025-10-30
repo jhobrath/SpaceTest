@@ -57,7 +57,7 @@ namespace GalagaFighter.Core2.Handlers.Players
             foreach (var gun in modifiers.Guns)
                 gun.ShotDue = true;
 
-            shootData.ShotCountdown = _defaultFireRate * modifiers.Stats.FireRate;
+            shootData.ShotCountdown = _defaultFireRate * modifiers.Stats.FireRateMultiplier;
         }
     }
 }

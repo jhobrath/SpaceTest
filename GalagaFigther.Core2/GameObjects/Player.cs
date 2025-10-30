@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;

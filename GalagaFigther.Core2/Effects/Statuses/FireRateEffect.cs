@@ -14,7 +14,7 @@ namespace GalagaFighter.Core2.Effects.Statuses
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.Stats.FireRate *= .85f;
+            modifiers.Stats.FireRateMultiplier *= .85f;
         }
     }
 }

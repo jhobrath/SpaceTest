@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.Controllers;
 using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Effects.Defensives;
 using GalagaFighter.Core2.Effects.Projectiles;
 using GalagaFighter.Core2.Effects.Statuses;
 using GalagaFighter.Core2.Effects.Turrets;
@@ -106,7 +107,7 @@ namespace GalagaFighter.Core2.Services
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
-            //effects.Add(new FrozenEffect());
+            //effects.Add(new RepulseEffect());
             effects.Add(new IceTurretEffect());
 
             // Create engine trail emitter

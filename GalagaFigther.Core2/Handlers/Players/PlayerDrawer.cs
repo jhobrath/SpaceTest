@@ -52,7 +52,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                     player.Sprite.Draw(player);
                     hasDrawnPlayer = true;
                 }
-
+                decoration.Update(player, frameTime);
                 decoration.Draw(player);
             }
 

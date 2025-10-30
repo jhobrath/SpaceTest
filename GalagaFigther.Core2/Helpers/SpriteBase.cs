@@ -77,6 +77,13 @@ namespace GalagaFighter.Core2.Helpers
 
         public virtual void Draw(Rectangle rect, float rotation = 0f, Color? color = null)
         {
+            if(this is AnimatedDrawnSprite)
+            {
+                var s = "";
+
+                //Raylib.DrawTexture(CurrentTexture, 200, 20, Color.White);
+            }
+
             var texture = CurrentTexture;
             var source = _source ?? new Rectangle(0, 0, texture.Width, texture.Height);
             var dest = new Rectangle(rect.Position + rect.Size/2, rect.Size);
@@ -98,6 +105,42 @@ namespace GalagaFighter.Core2.Helpers
         public DrawnSprite(Func<Color?, Texture2D> colorAwareTextureFactory)
         {
             SetTextureFactory(() => colorAwareTextureFactory(PaletteSwap?.TargetColor));
+        }
+    }
+
+    public class AnimatedDrawnSprite : SpriteBase
+    {
+        private readonly Func<float, float, int, Texture2D> _drawFunction;
+        private readonly Vector2 _size;
+        private readonly int _frameCount;
+        private readonly float _frameLength = 0;
+
+        protected int _frameIndex = 0;
+        protected float _thisFrameLength = 0;
+
+        public AnimatedDrawnSprite(Vector2 size, int frameCount, float frameLength, Func<float, float, int, Texture2D> drawFunction)
+        {
+            _drawFunction = drawFunction;
+            _size = size;
+            _frameCount = frameCount;
+            _frameLength = frameLength;
+
+            _texture = new Lazy<Texture2D>(() => _drawFunction(_size.X, _size.Y, _frameIndex));
+            _source = new Rectangle(0, 0, _size);
+        }
+
+        public override void Update(float frameTime)
+        {
+            _thisFrameLength += frameTime;
+            if (_thisFrameLength < _frameLength)
+                return;
+
+            _frameIndex = (_frameIndex + 1) % _frameCount;
+            _thisFrameLength = _thisFrameLength - _frameLength;
+
+            var texture = _drawFunction(_size.X, _size.Y, _frameIndex);
+            _texture = new Lazy<Texture2D>(() => texture);
+            _source = new Rectangle(0, 0, _size);
         }
     }
 
@@ -207,6 +250,13 @@ namespace GalagaFighter.Core2.Helpers
         public bool IsComplete()
         {
             return _hasCompleted;
+        }
+    }
+
+    public class SpriteCanvas
+    {
+        public SpriteCanvas()
+        {
         }
     }
 }

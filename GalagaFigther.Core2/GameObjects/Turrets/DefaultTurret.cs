@@ -41,9 +41,9 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
             AngularVelocity = 180f;
         }
 
-        public override Dictionary<GunBarrel, GameObject> Shoot(GameObject shooter)
+        public override Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter)
         {
-            return _barrels.ToDictionary(x => x, x => (GameObject)new DefaultProjectile(shooter.Id) { Palette = shooter.Palette });
+            return _barrels.ToDictionary(x => x, x => (Projectile)new DefaultProjectile(shooter.Id) { Palette = shooter.Palette });
         }
     }
 }

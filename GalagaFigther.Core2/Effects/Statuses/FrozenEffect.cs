@@ -34,7 +34,7 @@ namespace GalagaFighter.Core2.Effects.Statuses
 
         private List<ParticleEmitter> CreateIceParticles(GameObject owner)
         {
-            var iceConfig = ParticleEffectTemplates.Get("IceTrail");
+            var iceConfig = ParticleEffectTemplates.Get("SnowAura");
             var emitter = new ParticleEmitter(owner.Id, new(84, 84), 30f) { Config = iceConfig };
             emitter.CollectedFrom = Id;
             return [emitter];

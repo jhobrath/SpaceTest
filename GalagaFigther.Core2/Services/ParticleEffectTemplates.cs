@@ -64,7 +64,7 @@ namespace GalagaFighter.Core2.Services
                 EmissionRadius = 10f
             };
 
-            _templates["IceTrail"] = () => new ParticleEffectConfig("IceTrail")
+            _templates["SnowAura"] = () => new ParticleEffectConfig("SnowAura")
             {
                 EmissionRadius = 50f,
                 EmissionRate = 10f,
@@ -76,6 +76,25 @@ namespace GalagaFighter.Core2.Services
                 Lifetime = 1.0f,
                 Drag = 1.5f,
                 Textures = ["star_4", "star_5"],
+                Loop = true,
+                Duration = -1f,
+                StartColor = Color.White.ApplyAlpha(.5f),
+                EndColor = Color.Blue.ApplyAlpha(0),
+                ColorVariation = 5f
+            };
+
+            _templates["SnowTrail"] = () => new ParticleEffectConfig("SnowTrail")
+            {
+                EmissionRadius = 20f,
+                EmissionRate = 50f,
+                StartSize = 6f,
+                EndSize = 15f,
+                Speed = new Vector2(0f, 0f),
+                SpeedVariation = new(50f, 50f),
+                SizeVariation = 20f,
+                Lifetime = .25f,
+                Drag = 1.5f,
+                Textures = ["dot_2", "dot_1", "star_4", "star_5"],
                 Loop = true,
                 Duration = -1f,
                 StartColor = Color.White.ApplyAlpha(.5f),

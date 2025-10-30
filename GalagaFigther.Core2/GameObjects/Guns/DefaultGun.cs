@@ -27,7 +27,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         {
         }
 
-        public override Dictionary<GunBarrel, GameObject> Shoot(GameObject shooter)
+        public override Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter)
         {
             _gunIndex = (_gunIndex + 1) % 2;
             _shotCount++;

@@ -18,7 +18,7 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
 {
     public interface IProjectileShooter
     {
-        void Shoot(GameObject gun, GameObject projectile, GunBarrel barrel);
+        void Shoot(GameObject gun, Projectile projectile, GunBarrel barrel);
     }
 
     public class ProjectileShooter : IProjectileShooter
@@ -32,7 +32,7 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             _gameObjectPositionService = gameObjectPositionService;
         }
 
-        public void Shoot(GameObject objectShooting, GameObject projectile, GunBarrel barrel)
+        public void Shoot(GameObject objectShooting, Projectile projectile, GunBarrel barrel)
         {
             var barrelStart = GetRotatedOffset(objectShooting, barrel.Start);
             var barrelEnd = GetRotatedOffset(objectShooting, barrel.End);
@@ -41,6 +41,17 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             _objectService.Add(projectile);
 
             Poof(objectShooting, barrelEnd);
+            AddEmitters(projectile);
+        }
+
+        private void AddEmitters(Projectile projectile)
+        {
+            foreach(var config in projectile.EmitterConfigurations)
+            {
+                var emitter = new ParticleEmitter(Game.Id, new(projectile.Width/2, projectile.Height/2), 5f) { Config = config };
+                _objectService.Add(emitter);
+                _gameObjectPositionService.RegisterParent(projectile, emitter);
+            }
         }
 
         private void Poof(GameObject objectShooting, Vector2 position)

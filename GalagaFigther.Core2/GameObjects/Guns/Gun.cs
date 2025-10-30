@@ -13,7 +13,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         }
 
         public virtual List<GunBarrel> Barrels { get; set; } = [];
-        public abstract Dictionary<GunBarrel, GameObject> Shoot(GameObject shooter);
+        public abstract Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter);
 
         public float? MinRotation = null;
         public float? MaxRotation = null;

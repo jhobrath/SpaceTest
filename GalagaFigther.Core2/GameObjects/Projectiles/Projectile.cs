@@ -17,6 +17,8 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             Owner = owner;
         }
 
+        public abstract float Damage { get; }
+
         public virtual List<PlayerEffect> CreateEffects(Player player) => [];
     }
 }

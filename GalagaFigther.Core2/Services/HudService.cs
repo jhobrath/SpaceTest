@@ -1,10 +1,9 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Models.Players;
+using GalagaFighter.Core2.Services.Static;
+using Raylib_cs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace GalagaFighter.Core2.Services
 {
@@ -38,7 +37,7 @@ namespace GalagaFighter.Core2.Services
         private void RenderBaseStats(Player player1, Player player2)
         {
             RenderPlayerBaseStats(player1, 50, false);
-            RenderPlayerBaseStats(player1, 50, true);
+            RenderPlayerBaseStats(player2, 50, true);
         }
 
         private void RenderPlayerBaseStats(Player player, int yStart, bool isRightJustified)
@@ -51,22 +50,97 @@ namespace GalagaFighter.Core2.Services
             var damage = baseStats.Damage * modifiers.Stats.DamageMultiplier;
             var fireRate = baseStats.FireRate * modifiers.Stats.FireRateMultiplier;
 
-            //Render them on one line, evenly space beneath the health bar
+            // Render Shield and Damage as a percentage (e.g. 120%)
+            string shieldPct = ((shield / baseStats.Shield) * 100).ToString("0") + "%";
+            string damagePct = ((damage / baseStats.Damage) * 100).ToString("0") + "%";
+
+            // Prepare stat icons and values
+            string[] statIconNames = { "Shield", "Damage", "Speed", "FireRate" };
+            string[] statValues = {
+                shieldPct,
+                damagePct,
+                speedValue.ToString("0.##"),
+                fireRate.ToString("0.##s")
+            };
+
+            int statCount = statIconNames.Length;
+            var gameState = _gameDataRegistry.Get<GalagaFighter.Core2.Models.Game.GameState>();
+            var scale = gameState.UniformScale.X; // Assume X and Y are the same
+            int barWidth = 500;
+            int margin = (int)(30 * scale);
+            int fontSize = (int)(20 * scale);
+            int iconSize = (int)(fontSize * 1.5f); // Boost icon size to 1.5x the line height
+            int spacing = (int)(barWidth * scale / statCount);
+            int y = yStart + (int)(22 * scale); // Move icons down a bit to avoid overlap
+
+            for (int i = 0; i < statCount; i++)
+            {
+                int x;
+                if (!isRightJustified)
+                    x = margin + i * spacing;
+                else
+                    x = (int)(gameState.ScreenSize.X - margin - barWidth * scale + i * spacing);
+
+                // Center icon vertically with text
+                int iconYOffset = (iconSize > fontSize) ? -(iconSize - fontSize) / 2 : 0;
+
+                // Draw icon scaled to boosted size
+                string iconPath = $"Sprites/Icons/{statIconNames[i]}.png";
+                Texture2D icon = TextureCache.Get(iconPath);
+                Rectangle src = new Rectangle(0, 0, icon.Width, icon.Height);
+                Rectangle dest = new Rectangle(x, y + iconYOffset, iconSize, iconSize);
+                Vector2 origin = Vector2.Zero;
+                Raylib.DrawTexturePro(icon, src, dest, origin, 0f, Color.White);
+
+                // Draw value next to icon, vertically centered
+                Raylib.DrawText(statValues[i], x + iconSize + 4, y, fontSize, Color.White);
+            }
         }
 
         private void RenderHealthBars(Player player1, Player player2)
         {
             RenderHealthBar(player1, 0, false);
-            RenderHealthBar(player1, 0, true);
+            RenderHealthBar(player2, 0, true);
         }
 
         private void RenderHealthBar(Player player, int yStart, bool isRightJustified)
         {
-            //Render player.Health as a health bar. If player.Health is over 100,
-            //  render a translucent darker red over the bar for
-            //  the base 100. As health decreases, the darker bar should
-            //  get smaller and then when health is < 100, the red
-            //  behind it starts disappearing
+            var gameState = _gameDataRegistry.Get<GalagaFighter.Core2.Models.Game.GameState>();
+            var scale = gameState.UniformScale.X;
+            int barWidth = 500;
+            int barHeight = 30;
+            int margin = (int)(30 * scale);
+            int x = isRightJustified
+                ? (int)(gameState.ScreenSize.X - margin - barWidth * scale)
+                : margin;
+            int y = yStart + margin;
+
+            // Player health is not a property on Player, so we must get it from PlayerBaseStats and PlayerModifiers
+            var baseStats = _gameDataRegistry.Get<PlayerBaseStats>(player);
+            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+            float maxHealth = baseStats.Health * modifiers.Stats.HealthMultiplier;
+            float currentHealth = player.Health;
+            float overHealth = MathF.Max(0, currentHealth - maxHealth);
+            float baseHealth = MathF.Min(currentHealth, maxHealth);
+
+            // Draw background bar (gray)
+            Raylib.DrawRectangle(x, y, (int)(barWidth * scale), barHeight, new Color(80, 80, 80, 255));
+
+            // Draw overhealth (darker red, translucent) - not possible, always 0
+            // Draw base health (red)
+            if (baseHealth > 0)
+            {
+                int healthWidth = (int)((baseHealth / maxHealth) * barWidth * scale);
+                Raylib.DrawRectangle(x, y, healthWidth, barHeight, new Color(200, 40, 40, 255));
+            }
+
+            // Draw border
+            Raylib.DrawRectangleLines(x, y, (int)(barWidth * scale), barHeight, new Color(255,255,255,255));
+
+            // Draw health text
+            int fontSize = (int)(20 * scale);
+            string healthText = $"HP: {currentHealth:0}";
+            Raylib.DrawText(healthText, x + 8, y + 4, fontSize, new Color(255,255,255,255));
         }
     }
 }

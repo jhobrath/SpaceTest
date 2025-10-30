@@ -65,6 +65,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGunRecoiler, GunRecoiler>();
             services.AddSingleton<IGunRotator, GunRotator>();
             services.AddSingleton<IGunShooter, GunShooter>();
+            services.AddSingleton<IHudService, HudService>();
 
             // This will automatically find all registered services that implement IClearable
             services.AddSingleton<IClearableServiceClearer>(provider =>

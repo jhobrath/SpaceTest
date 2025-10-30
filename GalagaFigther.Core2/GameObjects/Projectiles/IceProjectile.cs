@@ -12,8 +12,12 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
     public class IceProjectile : Projectile
     {
+
+
         private static Vector2 _baseSpeed => new(2020f, 0f);
         private static Vector2 _baseSize => new(95f, 42f);
+
+        public override float Damage => 0f;
 
         private static Vector2[] _bounds = new Vector2[]
         {

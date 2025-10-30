@@ -29,18 +29,19 @@ namespace GalagaFighter.Core2.Handlers.Players
             var accelY = 0f;
 
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
+            var baseStats = _gameDataRegistry.Get<PlayerBaseStats>(player);
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
                     
             if (inputData.Left && !inputData.Right)
-                accelX = -500f/.2f;
+                accelX = -baseStats.Speed/ .2f;
             if (inputData.Right && !inputData.Left)
-                accelX = 500f/.2f;
+                accelX = baseStats.Speed / .2f;
 
             if (inputData.Forward.IsDown && !inputData.Back.IsDown)
-                accelY = -300f/.18f;
+                accelY = -(baseStats.Speed *300f/500f)/ .18f;
 
             if (inputData.Back.IsDown && !inputData.Forward.IsDown)
-                accelY = 300f/.18f;
+                accelY = (baseStats.Speed * 300f/500f)/.18f;
 
             player.AccelTo(accelX, accelY);
 

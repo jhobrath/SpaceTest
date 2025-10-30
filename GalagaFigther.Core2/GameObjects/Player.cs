@@ -11,6 +11,8 @@ namespace GalagaFighter.Core2.GameObjects
 {
     public class Player : GameObject
     {
+        public float Health { get; set; } = 100f;
+
         public override Vector2 Drag => Vector2.One*6;
 
         private readonly Vector2[] _bounds = new Vector2[]{

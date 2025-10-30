@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core2.Helpers;
+﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Players;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace GalagaFighter.Core2.GameObjects
     public class Player : GameObject
     {
         public float Health { get; set; } = 100f;
+
+        public PlayerEffect DefensiveAugment { get; set; }
 
         public override Vector2 Drag => Vector2.One*6;
 

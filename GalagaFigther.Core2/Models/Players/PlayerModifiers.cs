@@ -21,6 +21,10 @@ namespace GalagaFighter.Core2.Models.Players
         public PlayerStats Stats { get; set; } = new();
         public PlayerDisplay Display { get; set; } = new();
 
+        public float TurretDeployRate { get; set; } = 1f;
+        public float Polarity { get; set; } = 0f; //Additive, Positive = Magnetic, Negative = Repulsive
+
+
         // Properties that get cloned to created objects
         public ProjectileModifiers Projectile { get; set; } = new();
         public TurretModifiers Turret { get; set; } = new();
@@ -34,9 +38,6 @@ namespace GalagaFighter.Core2.Models.Players
 
     public class PlayerStats
     {
-        // Player gameplay statistics (movement, combat, etc.)
-        public float TurretDeployRate { get; set; } = 1f;
-
         public float FireRateMultiplier { get; set; } = 1f;
         public float SpeedMultiplier { get; set; } = 1f;
         public float HealthMultiplier { get; set; } = 1f;

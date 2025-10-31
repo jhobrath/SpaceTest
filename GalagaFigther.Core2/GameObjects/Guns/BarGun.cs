@@ -13,7 +13,8 @@ namespace GalagaFighter.Core2.GameObjects.Guns
     public class BarGun : Gun
     {
         private List<GunBarrel> _barrels => [
-            new GunBarrel(new(0, 0),new(56,0)),
+            // Rotated -90 degrees: (x, y) becomes (y, -x)
+            new GunBarrel(new(0, 0), new(0, -56)),
         ];
 
         public override List<GunBarrel> Barrels => _barrels;

@@ -13,8 +13,8 @@ namespace GalagaFighter.Core2.GameObjects.Guns
     public class HomingGun : Gun
     {
         private List<GunBarrel> _barrels => [
-            new GunBarrel(new(0, 0),new(0,-46)),
-            new GunBarrel(new(0, 0),new(0,46))
+            new GunBarrel(new(0, 0), new(-46, 0)),
+            new GunBarrel(new(0, 0), new(46, 0))
         ];
 
         private int _gunIndex = 0;

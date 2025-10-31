@@ -40,11 +40,8 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             MoveInPlace(objectShooting, projectile, barrelStart, barrelEnd);
             Poof(objectShooting, barrelEnd);
             AddEmitters(projectile);
-            
-            _objectService.Add(projectile);
 
-            if(projectile.IsTransformChild)
-                _gameObjectPositionService.RegisterParent(objectShooting, projectile);
+            _objectService.Add(projectile);
         }
 
         private void AddEmitters(Projectile projectile)
@@ -79,7 +76,7 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
 
         private static void MoveInPlace(GameObject objectShooting, Projectile projectile, Vector2 barrelStart, Vector2 barrelEnd)
         {
-            var barrelVector = barrelEnd - barrelStart; 
+            var barrelVector = barrelEnd - barrelStart;
             var barrelRotationRadians = MathF.Atan2(-barrelVector.Y, barrelVector.X);
 
             var speedLength = projectile.Speed.Length();

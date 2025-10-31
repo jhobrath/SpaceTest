@@ -24,8 +24,6 @@ namespace GalagaFighter.Core2.Handlers.Players
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IProjectileShooter _projectileShooter;
 
-        private const float _defaultFireRate = .15f;
-
         public PlayerShooter(IGameDataRegistry gameDataRegistry,IProjectileShooter projectileShooter)
         {
             _gameDataRegistry = gameDataRegistry;
@@ -34,30 +32,21 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         public void Shoot(Player player, float frameTime)
         {
-            var shootData = _gameDataRegistry.Get<PlayerShootData>(player);
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
-
-            if (shootData.ShotCountdown > 0)
-            {
-                shootData.ShotCountdown -= frameTime;
-                return;
-            }
 
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
             if (!inputData.Shoot.IsDown)
                 return;
 
-            SpawnProjectiles(player, shootData, modifiers);
+            SpawnProjectiles(player, modifiers);
         }
 
-        private void SpawnProjectiles(Player player, PlayerShootData shootData, PlayerModifiers modifiers)
+        private void SpawnProjectiles(Player player, PlayerModifiers modifiers)
         {
             var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
 
             foreach (var gun in modifiers.Guns)
-                gun.ShotDue = true;
-
-            shootData.ShotCountdown = _defaultFireRate * modifiers.Stats.FireRateMultiplier;
+                gun.ShotRequested = true;
         }
     }
 }

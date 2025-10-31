@@ -75,10 +75,12 @@ namespace GalagaFighter.Core2.Handlers.Players
             foreach (var gunToCreate in newModifiers.Guns.Create)
             {
                 //Only add the gun if this effect is new
-                if (newModifiers.Guns.Any(x => effectIds.Contains(x.CollectedFrom)))
-                    continue;
+                //if (newModifiers.Guns.Any(x => effectIds.Contains(x.CollectedFrom)))
+                //    continue;
 
-                var guns = gunToCreate.Value(player);
+                var guns = gunToCreate.Value(player, newModifiers);
+                guns.RemoveAll(g => newModifiers.Guns.Any(x => x.GetType() == g.GetType()));
+
                 foreach (var gun in guns)
                 {
                     newModifiers.Guns.Add(gun);
@@ -97,7 +99,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                 if (newModifiers.ParticleEmitters.Any(x => effectIds.Contains(x.CollectedFrom)))
                     continue;
 
-                var emitters = emitterToCreate.Value(player);
+                var emitters = emitterToCreate.Value(player, newModifiers);
                 foreach (var emitter in emitters)
                 {
                     newModifiers.ParticleEmitters.Add(emitter);
@@ -116,7 +118,7 @@ namespace GalagaFighter.Core2.Handlers.Players
                 if (newModifiers.Decorations.Any(x => effectIds.Contains(x.CollectedFrom)))
                     continue;
 
-                var decorations = decorationToCreate.Value(player);
+                var decorations = decorationToCreate.Value(player, newModifiers);
                 foreach (var decoration in decorations)
                 {
                     newModifiers.Decorations.Add(decoration);

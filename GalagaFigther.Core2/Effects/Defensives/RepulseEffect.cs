@@ -32,7 +32,7 @@ namespace GalagaFighter.Core2.Effects.Defensives
         public override void Apply(PlayerModifiers modifiers)
         {
             modifiers.Polarity -= 1f;
-            modifiers.Decorations.Create[this] = p => [_sprite];
+            modifiers.Decorations.Create[this] = (p,m) => [_sprite];
         }
     }
 }

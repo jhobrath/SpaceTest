@@ -114,7 +114,7 @@ namespace GalagaFighter.Core2.Tests.Handlers.Players
         public void WhenRerolling_AndCollectibleRemains_ThenCollectibleInstancePersists_AndNoGunsAreAdded()
         {
             var existingGun = CreateDefaultGun(_player);
-            var testEffect = new TestEffect((t,m) => m.Guns.Create[t] = p => [existingGun]);
+            var testEffect = new TestEffect((t,m) => m.Guns.Create[t] = (p, m) => [existingGun]);
             var guns = GetCollectibles<Gun>(testEffect, [existingGun]);
 
             Given<PlayerModifiers>(_player, new() { Guns = guns });
@@ -136,7 +136,7 @@ namespace GalagaFighter.Core2.Tests.Handlers.Players
         public void WhenRerolling_AndCollectibleIsNew_ThenCollectibleInstanceAdded()
         {
             var newGun = CreateDefaultGun(_player);
-            var testEffect = new TestEffect((t, m) => m.Guns.Create[t] = p => [newGun]);
+            var testEffect = new TestEffect((t, m) => m.Guns.Create[t] = (p,m) => [newGun]);
             
             Given<PlayerModifiers>(_player, new() { Guns = [] });
             Given<PlayerEffects>(_player, new([testEffect])

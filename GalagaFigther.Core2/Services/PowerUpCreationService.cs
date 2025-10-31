@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core2.GameObjects.PowerUps;
+﻿using GalagaFighter.Core2.Effects.Projectiles;
+using GalagaFighter.Core2.GameObjects.PowerUps;
 using GalagaFighter.Core2.Models.Game;
 using Raylib_cs;
 using System;
@@ -21,7 +22,8 @@ namespace GalagaFighter.Core2.Services
         private float _ellapsedTime;
 
         private readonly List<Func<Vector2, Vector2, PowerUp>> _powerUpTypes = [ 
-            (p, s) => new FireRatePowerUp(p, s)
+            (p, s) => new FireRatePowerUp(p, s),
+            (p, s) => new AddWeaponPowerUp(p, s)
         ];
 
         private readonly IGameDataRegistry _gameDataRegistry;
@@ -36,7 +38,7 @@ namespace GalagaFighter.Core2.Services
         public void Update(float frameTime)
         {
             _ellapsedTime += frameTime;
-
+            return;
             var chanceOfDropPerSecond = (_ellapsedTime)/5;
             var chanceOfDrop = chanceOfDropPerSecond * frameTime;
 

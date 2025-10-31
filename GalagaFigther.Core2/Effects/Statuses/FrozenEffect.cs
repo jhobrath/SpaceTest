@@ -29,10 +29,10 @@ namespace GalagaFighter.Core2.Effects.Statuses
             
             // Add particle emitter factory function
             modifiers.ParticleEmitters.Create[this] = CreateIceParticles;
-            modifiers.Decorations.Create[this] = g => [_frozenDecoration];
+            modifiers.Decorations.Create[this] = (g, m) => [_frozenDecoration];
         }
 
-        private List<ParticleEmitter> CreateIceParticles(GameObject owner)
+        private List<ParticleEmitter> CreateIceParticles(GameObject owner, PlayerModifiers modifiers)
         {
             var iceConfig = ParticleEffectTemplates.Get("SnowAura");
             var emitter = new ParticleEmitter(owner.Id, new(84, 84), 30f) { Config = iceConfig };

@@ -5,6 +5,7 @@ using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Particles;
+using GalagaFighter.Core2.Models.Players;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace GalagaFighter.Core2.Models.Players
 
         public float TurretDeployRate { get; set; } = 1f;
         public float Polarity { get; set; } = 0f; //Additive, Positive = Magnetic, Negative = Repulsive
+        public float HomingFactor { get; set; } = 0f;
 
 
         // Properties that get cloned to created objects
@@ -34,6 +36,7 @@ namespace GalagaFighter.Core2.Models.Players
         public PlayerModifiersChildren<Gun> Guns { get; set; } = [];
         public PlayerModifiersChildren<Turret> Turrets { get; set; } = [];
         public PlayerModifiersChildren<ParticleEmitter> ParticleEmitters { get; set; } = [];
+        public int WeaponCount { get; set; }
     }
 
     public class PlayerStats
@@ -75,5 +78,5 @@ public class PlayerModifiersChildren<T> : List<T> where T : class, ICollectible
     {
     }
 
-    public Dictionary<PlayerEffect, Func<GameObject, List<T>>> Create { get; set; } = [];
+    public Dictionary<PlayerEffect, Func<GameObject, PlayerModifiers, List<T>>> Create { get; set; } = [];
 }

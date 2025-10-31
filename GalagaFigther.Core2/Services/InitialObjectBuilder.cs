@@ -102,13 +102,17 @@ namespace GalagaFighter.Core2.Services
             bounds.Min = min;
             bounds.Max = max;
 
-            var playerEffects = _gameDataRegistry.Get<PlayerRotationData>(player);
-            playerEffects.InitialRotation = rotation;
+            var playerRotation = _gameDataRegistry.Get<PlayerRotationData>(player);
+            playerRotation.InitialRotation = rotation;
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
-            //effects.Add(new RepulseEffect());
-            effects.Add(new IceTurretEffect());
+            effects.Add(new DefaultTurretEffect());
+            effects.Add(new AddWeaponEffect());
+            effects.Add(new AddWeaponEffect());
+            effects.Add(new AddWeaponEffect());
+            effects.Add(new AddWeaponEffect());
+            effects.RequireRerolling = true;
 
             // Create engine trail emitter
             var engineConfig = ParticleEffectTemplates.Get("EngineTrail");

@@ -11,9 +11,9 @@ namespace GalagaFighter.Core2.Services.Sprites
 {
     public static class RepulseShieldSpriteGenerator
     {
-        public static Texture2D CreateAnimatedMagnetShieldSprite(float drawWidth, float drawHeight, int frame)
+        public static Texture2D CreateAnimatedMagnetShieldSprite(float drawWidth, float drawHeight, Color color, int frame)
         {
-            var key = $"RepulseShield_{drawWidth}_{drawHeight}_{frame}";
+            var key = $"RepulseShield_{drawWidth}_{drawHeight}_{frame}_{color.R}_{color.G}_{color.B}";
              if (TextureCache.ContainsKey(key))
                  return TextureCache.Get(key);
 
@@ -62,7 +62,7 @@ namespace GalagaFighter.Core2.Services.Sprites
                     int y = redY + t;
                     if (y >= 0 && y < drawHeight)
                     {
-                        Raylib.DrawPixel((int)px, y, new Color((int)220f, (int)40f, (int)40f, (int)edgeAlpha));
+                        Raylib.DrawPixel((int)px, y, new Color(color.R, color.G, color.B, (int)edgeAlpha));
                     }
                 }
                 // Blue line (outer)
@@ -76,6 +76,7 @@ namespace GalagaFighter.Core2.Services.Sprites
                     }
                 }
                 // Middle gradient (muted dark red)
+                var darkerColor = color.AdjustLightness(.5f);
                 int midStart = redY + 4;
                 int midEnd = blueY;
                 if (midEnd < midStart) { var tmp = midStart; midStart = midEnd; midEnd = tmp; }
@@ -83,7 +84,7 @@ namespace GalagaFighter.Core2.Services.Sprites
                 {
                     if (y >= 0 && y < drawHeight)
                     {
-                        Raylib.DrawPixel((int)px, y, new Color((int)120, (int)30, (int)60, (int)(byte)(200 * edgeFade)));
+                        Raylib.DrawPixel((int)px, y, new Color(darkerColor.R, darkerColor.G, darkerColor.B, (200 * edgeFade)));
                     }
                 }
             }

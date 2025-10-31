@@ -10,35 +10,33 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.GameObjects.Guns
 {
-    public class DefaultGun : Gun
+    public class HomingGun : Gun
     {
         private List<GunBarrel> _barrels => [
-            new GunBarrel(new(0, -46),new(30,-46)),
-            new GunBarrel(new(0, 46),new(30,46))
+            new GunBarrel(new(0, 0),new(0,-46)),
+            new GunBarrel(new(0, 0),new(0,46))
         ];
 
         private int _gunIndex = 0;
-        private readonly int _offset;
+        private int _shotCount = 0;
 
         public override List<GunBarrel> Barrels => _barrels;
-        public override float FireRate => .3f;
+        public override float FireRate => 1.5f;
 
-        public DefaultGun(GameObject owner, int offset) 
-            : base(owner, new StillImageSprite("Sprites/Ships/MainShipGuns.png"))
+        public HomingGun(GameObject owner) 
+            : base(owner, new StillImageSprite("Sprites/Ships/SidewinderGuns.png"))
         {
-            _offset = offset;
         }
 
         public override Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter)
         {
-            _gunIndex = (_gunIndex + 1 + _offset) % 2;
-            
+            _gunIndex = (_gunIndex + 1) % 2;
             return new() 
             { 
                 { 
                     _barrels[_gunIndex], 
-                    new DefaultProjectile(shooter.Id) { Palette = shooter.Palette } 
-                } 
+                    new HomingProjectile(shooter.Id) { Palette = shooter.Palette } 
+                }
             };
         }
     }

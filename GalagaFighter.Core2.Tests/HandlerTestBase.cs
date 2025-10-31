@@ -74,7 +74,7 @@ namespace GalagaFighter.Core2.Tests
 
         protected DefaultGun CreateDefaultGun(GameObject owner)
         {
-            return new DefaultGun(owner);
+            return new DefaultGun(owner, 0);
         }
 
         protected PlayerModifiersChildren<T> GetCollectibles<T>(PlayerEffect effect, List<T> list)
@@ -83,7 +83,7 @@ namespace GalagaFighter.Core2.Tests
             list.ForEach(i => i.CollectedFrom = effect.Id);
             var collectibles = new PlayerModifiersChildren<T>(list)
             {
-                Create = new() { { effect, p => list } }
+                Create = new() { { effect, (p,m) => list } }
             };
 
             return collectibles;

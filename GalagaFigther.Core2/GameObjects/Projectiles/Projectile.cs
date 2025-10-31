@@ -12,6 +12,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
     public abstract class Projectile : GameObject
     {
+        public float Lifetime { get; set; } = -1f;
         public virtual List<ParticleEffectConfig> EmitterConfigurations => [];
 
         public Projectile(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite)
@@ -21,6 +22,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         }
 
         public abstract float Damage { get; }
+        public virtual float Homing { get; } = 0f;
 
         public virtual List<PlayerEffect> CreateEffects(Player player) => [];
     }

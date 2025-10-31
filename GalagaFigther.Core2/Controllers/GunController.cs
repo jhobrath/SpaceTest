@@ -45,6 +45,8 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Update(Gun gun, float frameTime)
         {
+            gun.CountDown += frameTime;
+
             var player = _objectService.GetPlayer(gun);
             _gunRotator.Rotate(gun, player);
             _gunShooter.Shoot(gun);

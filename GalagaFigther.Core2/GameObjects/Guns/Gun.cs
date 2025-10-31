@@ -10,6 +10,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         public Gun(GameObject owner, SpriteBase sprite) 
             : base(owner.Id, Vector2.Zero, owner.Rect.Size, Vector2.Zero, sprite)
         {
+            CountDown = FireRate;
         }
 
         public virtual List<GunBarrel> Barrels { get; set; } = [];
@@ -17,8 +18,9 @@ namespace GalagaFighter.Core2.GameObjects.Guns
 
         public float? MinRotation = null;
         public float? MaxRotation = null;
-
-        public virtual bool ShotDue { get; set; }
+        public float? CountDown { get; set; }
+        public virtual float FireRate => .15f;
+        public virtual bool ShotRequested { get; set; }
     }
 
     public struct GunBarrel

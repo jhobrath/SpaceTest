@@ -19,7 +19,7 @@ namespace GalagaFighter.Core2.Effects.Turrets
             modifiers.Turrets.Create.Add(this, HandleOnDeploy);
         }
 
-        private List<Turret> HandleOnDeploy(GameObject owner)
+        private List<Turret> HandleOnDeploy(GameObject owner, PlayerModifiers modifiers)
         {
             var turret = new DefaultTurret(owner);
             turret.CollectedFrom = Id;

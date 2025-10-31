@@ -4,6 +4,7 @@ using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Guns;
 using GalagaFighter.Core2.Models.Particles;
+using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using Raylib_cs;
 using System;
@@ -38,16 +39,22 @@ namespace GalagaFighter.Core2.Handlers.Guns
 
         public void Shoot(Gun gun)
         {
-            if (!gun.ShotDue)
+            if (!gun.ShotRequested)
                 return;
-            
 
             var player = _objectService.GetPlayer(gun);
+            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+
+            if (gun.CountDown < gun.FireRate * modifiers.Stats.FireRateMultiplier)
+                return;
+
+            gun.CountDown = 0f;
+            gun.ShotRequested = false;
+
             foreach (var barrel in gun.Shoot(player))
                 _projectileShooter.Shoot(gun, barrel.Value, barrel.Key);
-
-            gun.ShotDue = false;
             
+
             if (gun.Barrels.Count == 1)
                 SetRecoil(gun);
         }

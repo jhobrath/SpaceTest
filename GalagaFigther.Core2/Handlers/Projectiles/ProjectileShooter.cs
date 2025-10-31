@@ -62,9 +62,9 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             config.Lifetime = .25f;
             config.Speed = new(0f, -400f);
             config.SpeedVariation = new(200f, 100f);
-            config.StartSize = 10f;
+            config.StartSize = 3f;
             config.EmissionRate = 50f;
-            config.EndSize = 20f;
+            config.EndSize = 5f;
             config.StartColor = Color.Orange;
             config.EndColor = Color.Black.ApplyAlpha(0);
             config.Textures = ["dot_1", "dot_2", "dot_3"];

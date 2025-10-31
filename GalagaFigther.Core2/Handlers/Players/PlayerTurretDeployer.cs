@@ -54,14 +54,14 @@ namespace GalagaFighter.Core2.Handlers.Players
         private void Deploy(Player player, PlayerTurretData turretData, PlayerModifiers modifiers)
         {
             foreach (var createTurret in modifiers.Turrets.Create.Values)
-                DeployTurret(player, createTurret);
+                DeployTurret(player, modifiers, createTurret);
 
             turretData.DeployCountdown = _defaultDeployRate * modifiers.TurretDeployRate;
         }
 
-        private void DeployTurret(Player player, Func<GameObject, List<Turret>> onDeploy)
+        private void DeployTurret(Player player, PlayerModifiers modifiers, Func<GameObject, PlayerModifiers, List<Turret>> onDeploy)
         {
-            var turrets = onDeploy.Invoke(player);
+            var turrets = onDeploy.Invoke(player, modifiers);
 
             foreach (var turret in turrets)
             {

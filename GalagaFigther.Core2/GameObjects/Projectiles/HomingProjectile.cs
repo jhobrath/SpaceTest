@@ -5,14 +5,15 @@ using System.Numerics;
 
 namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
-    public class DefaultProjectile : Projectile
+    public class HomingProjectile : Projectile
     {
         private static Vector2 _baseSpeed => new(0f, 1750f);
         private static Vector2 _baseSize => new(30f, 10f);
 
         public override float Damage => 1;
+        public override float Homing => 1;
 
-        public DefaultProjectile(Guid owner)
+        public HomingProjectile(Guid owner)
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
         }

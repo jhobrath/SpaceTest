@@ -54,7 +54,7 @@ namespace GalagaFighter.Core2.Helpers
         /// <summary>
         /// Invalidates the current texture, forcing regeneration on next access
         /// </summary>
-        protected void InvalidateTexture()
+        protected virtual void InvalidateTexture()
         {
             _texture = new Lazy<Texture2D>(_textureFactory);
         }
@@ -110,7 +110,7 @@ namespace GalagaFighter.Core2.Helpers
 
     public class AnimatedDrawnSprite : SpriteBase
     {
-        private readonly Func<float, float, int, Texture2D> _drawFunction;
+        private readonly Func<float, float, Color, int, Texture2D> _drawFunction;
         private readonly Vector2 _size;
         private readonly int _frameCount;
         private readonly float _frameLength = 0;
@@ -118,15 +118,19 @@ namespace GalagaFighter.Core2.Helpers
         protected int _frameIndex = 0;
         protected float _thisFrameLength = 0;
 
-        public AnimatedDrawnSprite(Vector2 size, int frameCount, float frameLength, Func<float, float, int, Texture2D> drawFunction)
+        public AnimatedDrawnSprite(Vector2 size, int frameCount, float frameLength, Func<float, float, Color, int, Texture2D> drawFunction)
         {
             _drawFunction = drawFunction;
             _size = size;
             _frameCount = frameCount;
             _frameLength = frameLength;
 
-            _texture = new Lazy<Texture2D>(() => _drawFunction(_size.X, _size.Y, _frameIndex));
+            _texture = new Lazy<Texture2D>(() => _drawFunction(_size.X, _size.Y, PaletteSwap?.TargetColor ?? Color.Red, _frameIndex));
             _source = new Rectangle(0, 0, _size);
+
+            SetTextureFactory(() => 
+                _drawFunction(_size.X, _size.Y, PaletteSwap?.TargetColor ?? Color.Red, _frameIndex)
+            );
         }
 
         public override void Update(float frameTime)
@@ -138,7 +142,7 @@ namespace GalagaFighter.Core2.Helpers
             _frameIndex = (_frameIndex + 1) % _frameCount;
             _thisFrameLength = _thisFrameLength - _frameLength;
 
-            var texture = _drawFunction(_size.X, _size.Y, _frameIndex);
+            var texture = _drawFunction(_size.X, _size.Y, PaletteSwap?.TargetColor ?? Color.Red, _frameIndex);
             _texture = new Lazy<Texture2D>(() => texture);
             _source = new Rectangle(0, 0, _size);
         }

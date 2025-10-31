@@ -29,6 +29,8 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
     {
         public override List<GunBarrel> Barrels => _barrels;
 
+        public override float FireRate => .25f;
+
         public static List<GunBarrel> _barrels => [
             new GunBarrel(new(0,0),new(40,0)) { Recoil = 25f }
         ];

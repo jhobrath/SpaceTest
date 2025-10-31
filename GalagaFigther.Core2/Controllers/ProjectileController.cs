@@ -1,9 +1,12 @@
-﻿using GalagaFighter.Core2.GameObjects.Projectiles;
+﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.Models.Game;
+using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,21 +20,52 @@ namespace GalagaFighter.Core2.Controllers
     public class ProjectileController : IProjectileController 
     {
         private readonly IGameDataRegistry _gameDataRegistry;
+        private readonly IObjectService _objectService;
 
-        public ProjectileController(IGameDataRegistry gameDataRegistry)
+        public ProjectileController(IGameDataRegistry gameDataRegistry, IObjectService objectService)
         {
             _gameDataRegistry = gameDataRegistry;
+            _objectService = objectService;
         }
 
         public void Draw(Projectile projectile, float frameTime)
         {
+            if(projectile is ShotGunShellProjectile && projectile.Owner == Game.Player2Id)
+            {
+                var s = "";
+            }
+
+
             projectile.Sprite.Draw(projectile);
+            //Raylib_cs.Raylib.DrawRectangleLines((int)projectile.WorldPosition.X, (int)projectile.WorldPosition.Y,
+            //    (int)projectile.Width, (int)projectile.Height, Raylib_cs.Color.Red);
         }
 
         public void Update(Projectile projectile, float frameTime)
         {
             Rotate(projectile);
-            Deactivate(projectile);
+            Home(projectile, frameTime);
+            Deactivate(projectile, frameTime);
+        }
+
+        private void Home(Projectile projectile, float frameTime)
+        {
+            if (projectile.Homing == 0)
+                return;
+
+            var player = _objectService.Get<Player>(projectile.Owner);
+            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+            var opponent = _objectService.GetOpponent(player);
+
+            var finalHomingFactor = (projectile.Homing + modifiers.HomingFactor) * frameTime*3.0f;
+
+            var currentSpeed = projectile.Speed.Length();
+            var normalizedSpeed = Vector2.Normalize(projectile.Speed);
+            var homingSpeed = Vector2.Normalize(-(projectile.WorldPosition - opponent.WorldPosition));
+
+            var finalNormalizedSpeed = Vector2.Normalize(homingSpeed * finalHomingFactor + normalizedSpeed * (1-finalHomingFactor));
+            var finalSpeed = finalNormalizedSpeed * currentSpeed;
+            projectile.HurryTo(finalSpeed.X, finalSpeed.Y);
         }
 
         private void Rotate(Projectile projectile)
@@ -41,11 +75,22 @@ namespace GalagaFighter.Core2.Controllers
             projectile.Rotation = rotation;
         }
 
-        private void Deactivate(Projectile projectile)
+        private void Deactivate(Projectile projectile, float frameTime)
         {
             var screenData = _gameDataRegistry.Get<GameState>();
-            if (projectile.X < -projectile.Width || projectile.X > screenData.ScreenSize.X)
+            if (projectile.X < -50 || projectile.X > screenData.ScreenSize.X + 50)
                 projectile.IsActive = false;
+            if (projectile.Y < -50 || projectile.Y > screenData.ScreenSize.Y + 50)
+                projectile.IsActive = false;
+
+            if(projectile.Lifetime != -1f)
+            {
+                projectile.Lifetime -= frameTime;
+                if(projectile.Lifetime < 0f)
+                {
+                    projectile.IsActive = false;
+                }    
+            }
         }
     }
 }

@@ -48,7 +48,7 @@ namespace GalagaFighter.Core2.Effects.Projectiles
                     CollectedFrom = Id
                 });
 
-            if (modifiers.WeaponCount >= 3)
+            if (modifiers.WeaponCount >= 4)
                 guns.Add(new ShotGun(gameObject)
                 {
                     CollectedFrom = Id

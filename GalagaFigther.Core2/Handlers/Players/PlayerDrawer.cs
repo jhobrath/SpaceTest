@@ -4,6 +4,7 @@ using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
+using GalagaFighter.Core2.Services.Sprites;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,7 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             if (!hasDrawnPlayer)
                 player.Sprite.Draw(player);
+
         }
 
 

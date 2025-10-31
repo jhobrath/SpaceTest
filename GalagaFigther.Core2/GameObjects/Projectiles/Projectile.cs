@@ -21,6 +21,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             Owner = owner;
         }
 
+        public virtual bool IsTransformChild => false;
         public abstract float Damage { get; }
         public virtual float Homing { get; } = 0f;
 

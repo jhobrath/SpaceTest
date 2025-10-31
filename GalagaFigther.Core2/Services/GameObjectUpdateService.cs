@@ -98,6 +98,9 @@ namespace GalagaFighter.Core2.Services
 
         private static void DrawHitboxes<T>(T gameObject) where T : GameObject
         {
+            if (!(gameObject is ShotGunShellProjectile))
+                return;
+
             var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
 
             for (var i = 0; i < vertices.Length; i++)

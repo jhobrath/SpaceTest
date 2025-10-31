@@ -51,6 +51,8 @@ namespace GalagaFighter.Core2.Controllers
             _gunRotator.Rotate(gun, player);
             _gunShooter.Shoot(gun);
             _gunRecoiler.Recoil(gun, frameTime);
+
+            gun.ShotRequested = false;
         }
 
         public void Draw(Gun gun, float frameTime)

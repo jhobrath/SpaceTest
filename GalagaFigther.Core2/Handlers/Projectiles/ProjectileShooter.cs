@@ -38,17 +38,20 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             var barrelEnd = GetRotatedOffset(objectShooting, barrel.End);
 
             MoveInPlace(objectShooting, projectile, barrelStart, barrelEnd);
-            _objectService.Add(projectile);
-
             Poof(objectShooting, barrelEnd);
             AddEmitters(projectile);
+            
+            _objectService.Add(projectile);
+
+            if(projectile.IsTransformChild)
+                _gameObjectPositionService.RegisterParent(objectShooting, projectile);
         }
 
         private void AddEmitters(Projectile projectile)
         {
             foreach(var config in projectile.EmitterConfigurations)
             {
-                var emitter = new ParticleEmitter(Game.Id, new(projectile.Width/2, projectile.Height/2), 5f) { Config = config };
+                var emitter = new ParticleEmitter(projectile.Id, new(projectile.Width/2, projectile.Height/2), 5f) { Config = config };
                 _objectService.Add(emitter);
                 _gameObjectPositionService.RegisterParent(projectile, emitter);
             }
@@ -74,7 +77,7 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             _objectService.Add(emitter);
         }
 
-        private static void MoveInPlace(GameObject objectShooting, GameObject projectile, Vector2 barrelStart, Vector2 barrelEnd)
+        private static void MoveInPlace(GameObject objectShooting, Projectile projectile, Vector2 barrelStart, Vector2 barrelEnd)
         {
             var barrelVector = barrelEnd - barrelStart; 
             var barrelRotationRadians = MathF.Atan2(-barrelVector.Y, barrelVector.X);
@@ -92,7 +95,11 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             var halfWidth = projectile.Width / 2f;
             var halfHeight = projectile.Height / 2f;
 
-            projectile.MoveTo(barrelEnd.X - halfWidth, barrelEnd.Y - halfHeight);
+            var finalPosition = new Vector2(barrelEnd.X - halfWidth, barrelEnd.Y - halfHeight);
+            if (projectile.IsTransformChild)
+                finalPosition -= objectShooting.WorldPosition;
+
+            projectile.MoveTo(finalPosition.X, finalPosition.Y);
         }
 
         private Vector2 GetRotatedOffset(GameObject objectShooting, Vector2 offset)

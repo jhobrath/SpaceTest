@@ -29,6 +29,10 @@ namespace GalagaFighter.Core2.Models.Particles
         public Vector2 SpeedVariation { get; set; }
         public float ColorVariation { get; set; }
 
+        // New property: if true, emit particles distributed throughout parent's bounds
+        public bool EmitWithinParentBounds { get; set; } = false;
+        public float LifetimeVariation { get; internal set; }
+
         public ParticleEffectConfig()
         {
             Name = "Default";

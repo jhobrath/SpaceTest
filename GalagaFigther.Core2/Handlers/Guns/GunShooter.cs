@@ -52,8 +52,9 @@ namespace GalagaFighter.Core2.Handlers.Guns
             gun.ShotRequested = false;
 
             foreach (var barrel in gun.Shoot(player))
+            {
                 _projectileShooter.Shoot(gun, barrel.Value, barrel.Key);
-            
+            }
 
             if (gun.Barrels.Count == 1)
                 SetRecoil(gun);

@@ -263,4 +263,40 @@ namespace GalagaFighter.Core2.Helpers
         {
         }
     }
+
+    public class NonRepeatingAnimatedDrawnSprite : AnimatedDrawnSprite
+    {
+        private readonly int _frameCount;
+
+        private bool _hasStarted = false;
+        private bool _hasCompleted = true;
+
+        public NonRepeatingAnimatedDrawnSprite(Vector2 size, int frameCount, float frameLength, Func<float, float, Color, int, Texture2D> drawFunction)
+            : base(size, frameCount, frameLength, drawFunction)
+        {
+            _frameCount = frameCount;
+        }
+
+        public override void Update(float frameTime)
+        {
+            base.Update(frameTime);
+
+            if (_frameIndex > 0)
+            {
+                _hasStarted = true;
+                return;
+            }
+
+            if (_hasStarted)
+            {
+                _hasCompleted = true;
+                _frameIndex = _frameCount - 1;
+            }
+        }
+
+        public bool IsComplete()
+        {
+            return _hasCompleted;
+        }
+    }
 }

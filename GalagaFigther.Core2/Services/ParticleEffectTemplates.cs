@@ -119,6 +119,26 @@ namespace GalagaFighter.Core2.Services
                 SizeVariation = 50f,
                 EmissionRadius = 10f
             };
+
+
+            _templates["SmokePoof"] = () => new ParticleEffectConfig("SmokePoof")
+            {
+                EmissionRate = 300f,
+                StartSize = 5f,
+                EndSize = 15f,
+                Speed = new Vector2(200f, 0f),
+                SpeedVariation = new(20, 20),
+                Lifetime = .25f,
+                LifetimeVariation = .5f,
+                Drag = 2f,
+                Textures = ["smoke_1", "smoke_2", "smoke_2", "smoke_2", "smoke_2"],
+                Loop = false,
+                Duration = .15f,
+                StartColor = Color.Gray,
+                EndColor = Color.Gray.ApplyAlpha(0),
+                SizeVariation = 50f,
+                EmissionRadius = 10f
+            };
         }
     }
 }

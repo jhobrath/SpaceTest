@@ -3,6 +3,7 @@ using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
+using GalagaFighter.Core2.Services.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,9 +79,9 @@ namespace GalagaFighter.Core2.Controllers
         private void Deactivate(Projectile projectile, float frameTime)
         {
             var screenData = _gameDataRegistry.Get<GameState>();
-            if (projectile.X < -50 || projectile.X > screenData.ScreenSize.X + 50)
+            if (projectile.WorldPosition.X < -50 || projectile.WorldPosition.X > screenData.ScreenSize.X + 50)
                 projectile.IsActive = false;
-            if (projectile.Y < -50 || projectile.Y > screenData.ScreenSize.Y + 50)
+            if (projectile.WorldPosition.Y < -50 || projectile.WorldPosition.Y > screenData.ScreenSize.Y + 50)
                 projectile.IsActive = false;
 
             if(projectile.Lifetime != -1f)

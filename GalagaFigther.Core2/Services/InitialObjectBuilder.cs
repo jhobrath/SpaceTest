@@ -46,8 +46,8 @@ namespace GalagaFighter.Core2.Services
 
         private void CreatePlayers(int screenWidth, int screenHeight)
         {
-           var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(0,0), new(550f, screenHeight), ShipPalettes.AzureWing);
-            var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f, 0), new(screenWidth,screenHeight), ShipPalettes.VoidHunter);
+           var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(95,95), new(550f+95, screenHeight+95), ShipPalettes.AzureWing);
+            var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f-95, 95), new(screenWidth+ 95,screenHeight+95), ShipPalettes.VoidHunter);
 
             _objectService.Add(player1);
             _objectService.Add(player2);

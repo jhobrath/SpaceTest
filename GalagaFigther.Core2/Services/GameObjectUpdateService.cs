@@ -92,7 +92,7 @@ namespace GalagaFighter.Core2.Services
 
                 controller.Draw(gameObject, frameTime);
 
-                DrawHitboxes(gameObject);
+                //DrawHitboxes(gameObject);
             }
         }
 

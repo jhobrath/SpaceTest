@@ -15,7 +15,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         private static Vector2 _baseSpeed => new(0f, 1000f);
         private static Vector2 _baseSize => new(30f, 7f);
 
-        public override float Damage => .5f;
+        public override float Damage => 3f;
 
         public BarProjectile(Guid owner)
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())

@@ -28,9 +28,9 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 
             var screenData = _gameDataRegistry.Get<GameState>();
 
-            if (emitter.WorldPosition.X < 0 || emitter.WorldPosition.X > screenData.ScreenSize.X)
+            if (emitter.WorldPosition.X < -50 || emitter.WorldPosition.X > screenData.ScreenSize.X + 50)
                 emitter.IsActive = false;
-            else if (emitter.WorldPosition.Y < 0 || emitter.WorldPosition.Y > screenData.ScreenSize.Y)
+            else if (emitter.WorldPosition.Y < -50 || emitter.WorldPosition.Y > screenData.ScreenSize.Y + 50)
                 emitter.IsActive = false;
             //for (int i = 0; i < emitter.Particles.Count; i++)
             //{

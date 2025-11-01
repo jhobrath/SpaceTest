@@ -15,7 +15,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
     public class ShotGunShellProjectile : Projectile
     {
         private static Vector2 _baseSpeed => new(.0000001f, 0f);
-        private static Vector2 _baseSize => new(600f, 100f);
+        private static Vector2 _baseSize => new(850f, 120f);
 
         public override float Damage => 10f;
         public override bool IsTransformChild => true;

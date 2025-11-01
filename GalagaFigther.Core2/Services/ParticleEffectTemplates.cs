@@ -126,7 +126,7 @@ namespace GalagaFighter.Core2.Services
                 EmissionRate = 300f,
                 StartSize = 5f,
                 EndSize = 15f,
-                Speed = new Vector2(200f, 0f),
+                Speed = new Vector2(0f, -200f),
                 SpeedVariation = new(20, 20),
                 Lifetime = .25f,
                 LifetimeVariation = .5f,

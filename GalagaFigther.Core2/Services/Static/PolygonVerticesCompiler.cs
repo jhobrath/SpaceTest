@@ -9,7 +9,7 @@ namespace GalagaFighter.Core2.Services.Static
         {
             var bounds = gameObject.Bounds ?? [new(0, 0), new(1, 0), new(1, 1), new(0, 1)];
             var vertices = bounds.Select(x => new Vector2(x.X * gameObject.Width, x.Y * gameObject.Height)).ToArray();
-            vertices = vertices.Select(x => x + gameObject.WorldPosition).ToArray();
+            vertices = vertices.Select(x => x + gameObject.WorldPosition - gameObject.Rect.Size/2).ToArray();
             var rotated = ApplyRotation(vertices, gameObject.Center, gameObject.Rotation);
             return rotated;
         }

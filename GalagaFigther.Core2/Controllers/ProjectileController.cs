@@ -31,15 +31,7 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(Projectile projectile, float frameTime)
         {
-            if(projectile is ShotGunShellProjectile && projectile.Owner == Game.Player2Id)
-            {
-                var s = "";
-            }
-
-
             projectile.Sprite.Draw(projectile);
-            //Raylib_cs.Raylib.DrawRectangleLines((int)projectile.WorldPosition.X, (int)projectile.WorldPosition.Y,
-            //    (int)projectile.Width, (int)projectile.Height, Raylib_cs.Color.Red);
         }
 
         public void Update(Projectile projectile, float frameTime)

@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Services;
 using GalagaFighter.Core2.Services.Static;
@@ -71,23 +72,17 @@ namespace GalagaFighter.Core2.Helpers
 
         public virtual void Draw(GameObject gameObject)
         {
-            var rect = new Rectangle(gameObject.WorldPosition, gameObject.Rect.Size);
+            var center = gameObject.WorldPosition; // (0,0)
+            var size = gameObject.Rect.Size;
+            var rect = new Rectangle(center, size); // (0,0), (168,168)
             Draw(rect, gameObject.WorldRotation, gameObject.Color);
         }
 
         public virtual void Draw(Rectangle rect, float rotation = 0f, Color? color = null)
         {
-            if(this is AnimatedDrawnSprite)
-            {
-                var s = "";
-
-                //Raylib.DrawTexture(CurrentTexture, 200, 20, Color.White);
-            }
-
             var texture = CurrentTexture;
             var source = _source ?? new Rectangle(0, 0, texture.Width, texture.Height);
-            var dest = new Rectangle(rect.Position + rect.Size/2, rect.Size);
-            Raylib.DrawTexturePro(texture, source, dest, dest.Position - rect.Position, rotation, color ?? Color.White);
+            Raylib.DrawTexturePro(texture, source, rect, rect.Size / 2, rotation, color ?? Color.White);
         }
 
         public SpriteBase()

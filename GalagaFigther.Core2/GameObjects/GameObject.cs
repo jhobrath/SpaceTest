@@ -75,7 +75,7 @@ namespace GalagaFighter.Core2.GameObjects
         public float Width => Rect.Width;
         public float Height => Rect.Height;
         public Vector2 TopLeft => WorldPosition;
-        public Vector2 Center => WorldPosition + Rect.Size / 2;
+        public Vector2 Center => WorldPosition;// + Rect.Size / 2;
 
         public GameObject(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite)
         {

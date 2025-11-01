@@ -98,8 +98,8 @@ namespace GalagaFighter.Core2.Services
 
         private static void DrawHitboxes<T>(T gameObject) where T : GameObject
         {
-            if (!(gameObject is ShotGunShellProjectile))
-                return;
+            Raylib.DrawRectangleLines((int)gameObject.WorldPosition.X - (int)gameObject.Rect.Width/2, (int)gameObject.WorldPosition.Y - (int)gameObject.Rect.Height / 2, (int)gameObject.Rect.Size.X, (int)gameObject.Rect.Size.Y, Color.Red);
+            return;
 
             var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
 

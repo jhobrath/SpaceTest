@@ -14,13 +14,20 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
     public class IceProjectile : Projectile
     {
-        public override List<ParticleEffectConfig> EmitterConfigurations => [_emitterConfig];
+        public override List<ParticleEffectConfig> EmitterConfigurations => GetEmitter();
+
+        private List<ParticleEffectConfig> GetEmitter()
+        {
+            var emitter = ParticleEffectTemplates.Get("SnowTrail");
+            emitter.Duration = .8f;
+            emitter.Loop = false;
+            return [emitter];
+        }
 
         private static Vector2 _baseSpeed => new(1420f, 0f);
         private static Vector2 _baseSize => new(95f, 42f);
         public override float Damage => 0f;
 
-        private readonly ParticleEffectConfig _emitterConfig = ParticleEffectTemplates.Get("SnowTrail");
 
         private static Vector2[] _bounds = new Vector2[]
         {

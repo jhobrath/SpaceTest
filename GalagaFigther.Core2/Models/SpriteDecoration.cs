@@ -44,8 +44,10 @@ namespace GalagaFighter.Core2.Models
             // Use the center of the gameObject as the anchor
             Vector2 gameObjectCenter = gameObject.Center;
 
+            var rotationDegrees = -(gameObject.WorldRotation - 90f);
+
             // Rotate the offset by the parent's rotation
-            float rotationRadians = (MaintainRotation ? gameObject.WorldRotation : 0) * (float)Math.PI / 180f;
+            float rotationRadians = (MaintainRotation ? rotationDegrees : 0) * (float)Math.PI / 180f;
             Vector2 rotatedOffset = new Vector2(
                 Offset.X * (float)Math.Cos(rotationRadians) - Offset.Y * (float)Math.Sin(rotationRadians),
                 Offset.X * (float)Math.Sin(rotationRadians) + Offset.Y * (float)Math.Cos(rotationRadians)
@@ -65,7 +67,10 @@ namespace GalagaFighter.Core2.Models
             if (!MaintainColor && MaintainAlpha)
                 color = new Color(1f, 1f, 1f, gameObject.Color.A/255f);
 
-            Sprite.Draw(rect, InitialRotation + rotation, color);
+            var center = rect.Position + rect.Size/2; // (0,0)
+            var size = rect.Size;
+            var finalRect = new Rectangle(center, size); // (0,0), (168,168)
+            Sprite.Draw(finalRect, InitialRotation + rotation, color);
         }
     }
 }

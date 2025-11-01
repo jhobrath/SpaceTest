@@ -1,4 +1,5 @@
 using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Services;
 
@@ -12,14 +13,25 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
     public class ParticleUpdateHandler : IParticleEmissionShepherd
     {
         private readonly IObjectService _objectService;
+        private readonly IGameDataRegistry _gameDataRegistry;
 
-        public ParticleUpdateHandler(IObjectService objectService)
+        public ParticleUpdateHandler(IObjectService objectService, IGameDataRegistry gameDataRegistry)
         {
             _objectService = objectService;
+            _gameDataRegistry = gameDataRegistry;
         }
 
         public void Herd(ParticleEmitter emitter, float frameTime)
         {
+            //if (emitter.Owner == Game.Id)
+            //    return;
+
+            var screenData = _gameDataRegistry.Get<GameState>();
+
+            if (emitter.WorldPosition.X < 0 || emitter.WorldPosition.X > screenData.ScreenSize.X)
+                emitter.IsActive = false;
+            else if (emitter.WorldPosition.Y < 0 || emitter.WorldPosition.Y > screenData.ScreenSize.Y)
+                emitter.IsActive = false;
             //for (int i = 0; i < emitter.Particles.Count; i++)
             //{
             //    var particle = emitter.Particles[i];

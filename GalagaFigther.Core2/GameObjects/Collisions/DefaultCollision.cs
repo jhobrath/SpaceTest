@@ -11,8 +11,10 @@ namespace GalagaFighter.Core2.GameObjects.Collisions
 {
     public class DefaultCollision : Collision
     {
+        public override float Duration => .06f * 8f;
+
         public DefaultCollision(Vector2 position, float size) 
-            : base(Game.Id, position - Vector2.One*size*.5f, Vector2.One*size, Vector2.Zero, new NonRepeatingAnimatedImageSprite("Sprites/Collisions/burst.png", 8, 104, 104, .06f))
+            : base(Game.Id, position, Vector2.One*size, Vector2.Zero, new NonRepeatingAnimatedImageSprite("Sprites/Collisions/burst.png", 8, 104, 104, .06f))
         {
             Palette = Color.LightGray;
             Color = Color.ApplyAlpha(.75f);

@@ -43,8 +43,16 @@ namespace GalagaFighter.Core2.Services
         {
             var toRemove = new List<Guid>();
             foreach (var item in this)
+            {
                 if (!item.Value.IsActive)
+                {
                     toRemove.Add(item.Key);
+
+                    var children = GetChildren(item.Value);
+                    foreach (var child in children)
+                        toRemove.Add(item.Key);
+                }
+            }
 
             foreach (var key in toRemove)
             {

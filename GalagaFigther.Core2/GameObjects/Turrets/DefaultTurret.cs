@@ -30,8 +30,8 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
         public override List<GunBarrel> Barrels => _barrels;
 
         public static List<GunBarrel> _barrels => [
-            new GunBarrel(new(0,0),new(40,0)),
-            new GunBarrel(new(0,0),new(-40,0))
+            new GunBarrel(new(0,0),new(0,-40)),
+            new GunBarrel(new(0,0),new(0,40))
         ];
 
         public DefaultTurretGun(DefaultTurret turret)

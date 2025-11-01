@@ -37,6 +37,8 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             var barrelStart = GetRotatedOffset(objectShooting, barrel.Start);
             var barrelEnd = GetRotatedOffset(objectShooting, barrel.End);
 
+            Raylib.DrawCircleV(barrelEnd, 5, Color.Green);
+
             MoveInPlace(objectShooting, projectile, barrelStart, barrelEnd);
             Poof(objectShooting, barrelEnd);
             AddEmitters(projectile);
@@ -48,7 +50,7 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
         {
             foreach(var config in projectile.EmitterConfigurations)
             {
-                var emitter = new ParticleEmitter(projectile.Id, new(projectile.Width/2, projectile.Height/2), 5f) { Config = config };
+                var emitter = new ParticleEmitter(projectile.Id, new(0, 0), 5f) { Config = config };
                 _objectService.Add(emitter);
                 _gameObjectPositionService.RegisterParent(projectile, emitter);
             }
@@ -89,10 +91,7 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             var rotation = theta * 180.0f / MathF.PI;
             projectile.Rotation = rotation;
 
-            var halfWidth = projectile.Width / 2f;
-            var halfHeight = projectile.Height / 2f;
-
-            var finalPosition = new Vector2(barrelEnd.X - halfWidth, barrelEnd.Y - halfHeight);
+            var finalPosition = new Vector2(barrelEnd.X, barrelEnd.Y);
             if (projectile.IsTransformChild)
                 finalPosition -= objectShooting.WorldPosition;
 

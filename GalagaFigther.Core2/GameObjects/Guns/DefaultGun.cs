@@ -13,8 +13,8 @@ namespace GalagaFighter.Core2.GameObjects.Guns
     public class DefaultGun : Gun
     {
         private List<GunBarrel> _barrels => [
-            new GunBarrel(new(-46, 0), new(-46, -30)),
-            new GunBarrel(new(46, 0), new(46, -30))
+            new GunBarrel(new(-48, 0), new(-48, -34)),
+            new GunBarrel(new(43, 0), new(43, -34))
         ];
 
         private int _gunIndex = 0;

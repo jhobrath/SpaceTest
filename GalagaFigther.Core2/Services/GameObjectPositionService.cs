@@ -1,5 +1,8 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Models.Game;
+using GalagaFighter.Core2.Models.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,14 +36,25 @@ namespace GalagaFighter.Core2.Services
                 Hurry(gameObject, frameTime);
                 Move(gameObject, frameTime);
                 Rotate(gameObject, frameTime);
-                
-                gameObject.WorldPosition = gameObject.Rect.Position;
+
+                if(gameObject is Player && gameObject.Id == Game.Player1Id)
+                {
+                    var s = "";
+                }
+
+                gameObject.WorldPosition = gameObject.Rect.Position;// + gameObject.Rect.Size / 2f;
                 gameObject.WorldRotation = gameObject.Rotation;
             }
 
             var inactiveKeys = new List<GameObject>();
             foreach (var parent in _transformHierarchy.Keys)
             {
+
+                if (parent is Player && parent.Id == Game.Player1Id)
+                {
+                    var s = "";
+                }
+
                 if (parent.IsActive == false)
                 { 
                     inactiveKeys.Add(parent);
@@ -67,39 +81,27 @@ namespace GalagaFighter.Core2.Services
 
         private void ApplyParentTransform(GameObject parent, GameObject child)
         {
-            // Apply rotation: parent's world rotation + child's current rotation (which includes AngularVelocity effects)
+            // Apply rotation: parent's world rotation + child's current rotation
             child.WorldRotation = parent.WorldRotation + child.Rotation;
 
-            // The child's Rect.Position represents its local offset from the parent's top-left
+
+
+            // The child's Rect.Position is a local offset from the parent's center, representing the child's center
             Vector2 localOffset = child.Rect.Position;
-            
-            // If there's no offset, child follows parent position
-            if (localOffset == Vector2.Zero)
-            {
-                child.WorldPosition = parent.WorldPosition;
-                return;
-            }
 
-            // Convert local offset (from parent's top-left) to offset from parent's center
-            Vector2 parentHalfSize = new Vector2(parent.Width, parent.Height) / 2f;
-            Vector2 offsetFromParentCenter = localOffset - parentHalfSize;
-
-            // Rotate the offset around parent's center using parent's world rotation (not child's)
-            float parentRotationRadians = parent.WorldRotation * MathF.PI / 180f;
+            // Raylib rotates clockwise and 0 degrees is up, so convert to math coordinates (0 = right, CCW) and negate for CW
+            float raylibRotationDegrees = parent.WorldRotation;
+            float parentRotationRadians = raylibRotationDegrees * MathF.PI / 180f;
             float cos = MathF.Cos(parentRotationRadians);
             float sin = MathF.Sin(parentRotationRadians);
-            
-            Vector2 rotatedOffsetFromCenter = new Vector2(
-                offsetFromParentCenter.X * cos - offsetFromParentCenter.Y * sin,
-                offsetFromParentCenter.X * sin + offsetFromParentCenter.Y * cos
+
+            Vector2 rotatedOffset = new Vector2(
+                localOffset.X * cos - localOffset.Y * sin,
+                localOffset.X * sin + localOffset.Y * cos
             );
 
-            // Calculate final world position: parent center + rotated offset
-            Vector2 childCenter = parent.Center + rotatedOffsetFromCenter;
-            
-            // Convert back to child's top-left world position
-            Vector2 childHalfSize = new Vector2(child.Width, child.Height) / 2f;
-            child.WorldPosition = childCenter - childHalfSize;
+            // World position = parent center + rotated offset (child's center is anchored to parent's center)
+            child.WorldPosition = parent.Center + rotatedOffset;
         }
 
         private void Rotate(GameObject gameObject, float frameTime)

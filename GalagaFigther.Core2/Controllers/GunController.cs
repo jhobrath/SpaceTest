@@ -50,7 +50,7 @@ namespace GalagaFighter.Core2.Controllers
             var player = _objectService.GetPlayer(gun);
             _gunRotator.Rotate(gun, player);
             _gunShooter.Shoot(gun);
-            _gunRecoiler.Recoil(gun, frameTime);
+            //_gunRecoiler.Recoil(gun, frameTime);
 
             gun.ShotRequested = false;
         }

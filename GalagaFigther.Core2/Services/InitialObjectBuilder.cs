@@ -84,7 +84,7 @@ namespace GalagaFighter.Core2.Services
         private Player CreatePlayer(Guid playerId, int x, float rotation, Vector2 min, Vector2 max, Color palette)
         {
             var playerHeight = 168f;
-            var pos = new Vector2(x, (max.Y - playerHeight) / 2);
+            var pos = new Vector2(x, 0);
             var size = Vector2.One * 168;
             var speed = Vector2.Zero;
 
@@ -118,7 +118,7 @@ namespace GalagaFighter.Core2.Services
             var engineConfig = ParticleEffectTemplates.Get("EngineTrail");
             var engineTrail = new ParticleEmitter(
                 owner: player.Id,
-                position: new Vector2(82, 155),
+                position: new Vector2(0, 76),
                 size: 1
             )
             { Config = engineConfig };
@@ -127,7 +127,7 @@ namespace GalagaFighter.Core2.Services
             var smokeConfig = ParticleEffectTemplates.Get("SmokeTrail");
             var smokeTrail = new ParticleEmitter(
                 owner: player.Id,
-                position: new Vector2(82, 155),
+                position: new Vector2(0, 76),
                 size: 1
             )
             { Config = smokeConfig };

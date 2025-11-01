@@ -45,8 +45,10 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             foreach (var decoration in decorations)
             {
-                if (decoration.Key == "Move" && player.Acceleration.Length() < 1f)
-                    continue;
+                if (decoration.Key == "Move" && player.Id == Game.Player1Id)// && player.Acceleration.Length() < 1f)
+                {
+                    var s = "";
+                }
 
                 if (!hasDrawnPlayer && decoration.Depth >= 0)
                 {

@@ -31,7 +31,17 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(Projectile projectile, float frameTime)
         {
-            projectile.Sprite.Draw(projectile);
+            //This is necessary because projectile sprites are drawn for a ship with 90 degree rotation.
+            //TODO: Remake projectile images so they are vertical by default
+            if(projectile.IsTransformChild)
+            {
+                projectile.Sprite.Draw(projectile, projectile.WorldRotation - 90f);
+            }
+            else
+            {
+                projectile.Sprite.Draw(projectile);
+            }
+
         }
 
         public void Update(Projectile projectile, float frameTime)

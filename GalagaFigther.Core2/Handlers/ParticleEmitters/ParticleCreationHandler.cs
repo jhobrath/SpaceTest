@@ -2,6 +2,7 @@ using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Services;
+using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 using System;
 using System.Linq;
@@ -57,14 +58,8 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
                 var parent = _objectService.GetAll<GameObject>().FirstOrDefault(g => g.Id == emitter.Owner);
                 if (parent != null && parent.Bounds != null && parent.Bounds.Length == 3)
                 {
-                    // Get world-space bounds (triangle or quad)
-                    var bounds = parent.Bounds;
-                    // Transform bounds by parent's WorldPosition and WorldRotation
-                    var center = parent.WorldPosition + parent.Rect.Size / 2f;
-                    float radians = parent.WorldRotation * (float)Math.PI / 180f;
-                    Vector2[] worldBounds = bounds.Select(b => RotatePoint(parent.Rect.Position + new Vector2(b.X * parent.Rect.Width, b.Y * parent.Rect.Height), center, radians)).ToArray();
-                    // Pick random point in polygon (triangle or quad)
-                    emissionPosition = RandomPointInPolygon(worldBounds, _random);
+                    var vertices = PolygonVerticesCompiler.GetVertices(parent);
+                    emissionPosition = RandomPointInPolygon(vertices, _random);
                 }
                 else
                 {

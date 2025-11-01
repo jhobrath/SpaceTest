@@ -37,9 +37,16 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             var barrelStart = GetRotatedOffset(objectShooting, barrel.Start);
             var barrelEnd = GetRotatedOffset(objectShooting, barrel.End);
 
-            Raylib.DrawCircleV(barrelEnd, 5, Color.Green);
+            if (projectile.IsTransformChild)
+            { 
+                projectile.MoveTo(barrel.End.X, barrel.End.Y);
+                _gameObjectPositionService.RegisterParent(objectShooting, projectile);
+            }
+            else
+            { 
+                MoveInPlace(objectShooting, projectile, barrelStart, barrelEnd);
+            }
 
-            MoveInPlace(objectShooting, projectile, barrelStart, barrelEnd);
             Poof(objectShooting, barrelEnd);
             AddEmitters(projectile);
 
@@ -87,13 +94,19 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
 
             projectile.HurryTo(speedLength * speedXPct, speedLength * speedYPct);
 
-            var theta = MathF.Atan2(projectile.Speed.Y, projectile.Speed.X);
-            var rotation = theta * 180.0f / MathF.PI;
-            projectile.Rotation = rotation;
+            if(!projectile.IsTransformChild)
+            { 
+                var theta = MathF.Atan2(projectile.Speed.Y, projectile.Speed.X);
+                var rotation = theta * 180.0f / MathF.PI;
+                projectile.Rotation = rotation;
+            }
 
             var finalPosition = new Vector2(barrelEnd.X, barrelEnd.Y);
             if (projectile.IsTransformChild)
+            {
+                //projectile.Rotation -= 90;
                 finalPosition -= objectShooting.WorldPosition;
+            }
 
             projectile.MoveTo(finalPosition.X, finalPosition.Y);
         }

@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.GameObjects.Projectiles;
 using System.Numerics;
 
 namespace GalagaFighter.Core2.Services.Static
@@ -7,10 +8,19 @@ namespace GalagaFighter.Core2.Services.Static
     {
         public static Vector2[] GetVertices(GameObject gameObject)
         {
+            if(gameObject is GameObjects.Projectiles.ShotGunShellProjectile && gameObject.Owner == Game.Player2Id)
+            {
+                var s = "";
+            }
+
             var bounds = gameObject.Bounds ?? [new(0, 0), new(1, 0), new(1, 1), new(0, 1)];
             var vertices = bounds.Select(x => new Vector2(x.X * gameObject.Width, x.Y * gameObject.Height)).ToArray();
             vertices = vertices.Select(x => x + gameObject.WorldPosition - gameObject.Rect.Size/2).ToArray();
-            var rotated = ApplyRotation(vertices, gameObject.Center, gameObject.Rotation);
+
+            var rotated = (gameObject is Projectile projectile && projectile.IsTransformChild)
+                ? ApplyRotation(vertices, gameObject.Center, gameObject.WorldRotation - 90f)
+                : ApplyRotation(vertices, gameObject.Center, gameObject.WorldRotation);
+
             return rotated;
         }
 

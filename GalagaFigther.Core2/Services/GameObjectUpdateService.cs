@@ -92,14 +92,14 @@ namespace GalagaFighter.Core2.Services
 
                 controller.Draw(gameObject, frameTime);
 
-                //DrawHitboxes(gameObject);
+                DrawHitboxes(gameObject);
             }
         }
 
         private static void DrawHitboxes<T>(T gameObject) where T : GameObject
         {
-            Raylib.DrawRectangleLines((int)gameObject.WorldPosition.X - (int)gameObject.Rect.Width/2, (int)gameObject.WorldPosition.Y - (int)gameObject.Rect.Height / 2, (int)gameObject.Rect.Size.X, (int)gameObject.Rect.Size.Y, Color.Red);
-            return;
+            //if(!(gameObject is ShotGunShellProjectile shell))
+            //    return;
 
             var vertices = PolygonVerticesCompiler.GetVertices(gameObject);
 

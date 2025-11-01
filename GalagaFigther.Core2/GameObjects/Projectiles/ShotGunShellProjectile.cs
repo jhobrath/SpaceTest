@@ -18,7 +18,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         private static Vector2 _baseSize => new(600f, 100f);
 
         public override float Damage => 10f;
-        public override bool IsTransformChild => false;
+        public override bool IsTransformChild => true;
         public override List<ParticleEffectConfig> EmitterConfigurations => [_emitterConfig];
 
         private readonly ParticleEffectConfig _emitterConfig = ParticleEffectTemplates.Get("SmokePoof");

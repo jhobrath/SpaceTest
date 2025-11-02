@@ -12,7 +12,7 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
 {
     public interface IParticleCreationHandler
     {
-        void CreateParticle(ParticleEmitter emitter);
+        void CreateParticle(ParticleEmitter emitter, Vector2 worldVelocity);
     }
 
     public class ParticleCreationHandler : IParticleCreationHandler
@@ -36,12 +36,13 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
             _textureSelector = textureSelector;
         }
 
-        public void CreateParticle(ParticleEmitter emitter)
+        public void CreateParticle(ParticleEmitter emitter, Vector2 worldVelocity)
         {
             if (!emitter.Enabled)
                 return;
 
-            var velocity = _velocityCalculator.CalculateVelocity(emitter);
+            var velocity = _velocityCalculator.CalculateVelocity(emitter) + worldVelocity;
+
             float baseLifetime = emitter.Config.Lifetime;
             float variation = emitter.Config.LifetimeVariation;
             float actualLifetime = Math.Max(.05f, baseLifetime + ((float)_random.NextDouble() - 0.5f) * variation * 2f);
@@ -74,6 +75,11 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
                     emitter.Config.EmissionRadius * (1f - 2f * (float)_random.NextDouble())
                 );
                 emissionPosition = emitter.WorldPosition + emissionOffset;
+            }
+
+            if(Math.Abs(velocity.X) < 10f && Math.Abs(velocity.Y) > 1000f)
+            {
+                var s = "";
             }
 
             var particle = new ParticleInstance(

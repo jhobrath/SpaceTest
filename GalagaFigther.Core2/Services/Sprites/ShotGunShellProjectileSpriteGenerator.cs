@@ -3,6 +3,7 @@ using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,14 +19,22 @@ namespace GalagaFighter.Core2.Services.Sprites
             if (drawWidth <= 0) drawWidth = 600;
             if (drawHeight <= 0) drawHeight = 100;
             int frameCount = 7;
-            frame = Math.Clamp(frame, 0, frameCount - 1);
             var c = color;
+            frame = Math.Clamp(frame, 0, frameCount - 1);
             var key = $"ShotGunShell_{drawWidth}_{drawHeight}_{c.R}_{c.G}_{c.B}_{frame}";
-            if (TextureCache.ContainsKey(key))
-                return TextureCache.Get(key);
+           // if (TextureCache.ContainsKey(key))
+           //     return TextureCache.Get(key);
+
+            var colorSum = c.R + c.B + c.G;
+            if (colorSum < 800)
+            {
+                var offset = 800f / colorSum;
+                c = new Color((byte)(Math.Clamp(color.R * offset, 0, 255)), (byte)(Math.Clamp(color.G * offset, 0, 255)), (byte)(Math.Clamp(color.B * offset, 0, 255)), (byte)color.A);
+            }
+
 
             // Opacity by frame (now 7 frames)
-            float[] opacities = { 0.65f, 0.85f, 1.0f, 1.0f, 0.65f, 0.5f, 0.4f };
+            float[] opacities = { 0.65f, 0.85f, 1.0f, 1.0f, 0.8f, 0.6f, 0.4f };
             float opacity = opacities[Math.Clamp(frame, 0, opacities.Length - 1)];
 
             // Animated triangle base position (still expands, then stays full)
@@ -34,7 +43,7 @@ namespace GalagaFighter.Core2.Services.Sprites
             float baseX = drawWidth * basePercent;
 
             // As frame increases, minX moves further right for thinning
-            float[] minXFracs = { 0.0f, 0.15f, 0.3f, 0.4f, 0.5f, 0.6f, 0.65f };
+            float[] minXFracs = { 0.0f, 0.3f, 0.55f, 0.75f, 0.9f, 0.95f, 0.97f };
             float minXFrac = minXFracs[Math.Clamp(frame, 0, minXFracs.Length - 1)];
             float minX = baseX * minXFrac;
 
@@ -62,6 +71,19 @@ namespace GalagaFighter.Core2.Services.Sprites
             int placed = 0;
             int maxTries = pelletCount * 5;
             int tries = 0;
+            // For rounded corners on last frames
+            bool roundCorners = true;// frame >= 5;
+            float cornerRadius = 50f;
+            float cornerDiag = cornerRadius * 1.41421356f; // 20 * sqrt(2)
+            float rightEdgeX = baseX;
+            float topY = py - baseYSpread;
+            float bottomY = py + baseYSpread;
+            var topRight = new Vector2(baseX, drawHeight);
+            var bottomRight = new Vector2(baseX, 0f);
+
+            var inwardsTopRight = new Vector2(baseX - cornerRadius, drawHeight - cornerRadius);
+            var inwardsBottomRight = new Vector2(baseX - cornerRadius, cornerRadius);
+            // Points 20*sqrt(2) inwards from corners (corrected for Raylib: y increases downward)
             while (placed < pelletCount && tries < maxTries)
             {
                 tries++;
@@ -74,13 +96,37 @@ namespace GalagaFighter.Core2.Services.Sprites
                 // Add random offset for extra naturalness
                 x += (float)(rand.NextDouble() - 0.5) * jitterAmount * 0.7f;
                 y += (float)(rand.NextDouble() - 0.5) * jitterAmount * 0.7f;
-                if (x < minX) continue; // skip if too far left for this frame
+
+                if (x < minX)
+                {
+                    var dist = Math.Clamp(minX - x, 0, 150);
+                    var chance = (150 - dist) / 150f;
+                    if (rand.NextDouble() > chance)
+                        continue; // skip if too far left for this frame
+                }
+
+                // Rounded corner logic for last two frames
+                if (roundCorners)
+                {
+                    var distTopRight = Vector2.Distance(new(x, y), topRight);
+                    var distBottomRight = Vector2.Distance(new(x, y), bottomRight);
+                    var distInwardsTopRight = Vector2.Distance(new(x, y), inwardsTopRight);
+                    var distInwardsBottomRight = Vector2.Distance(new(x, y), inwardsBottomRight);
+
+                    if (distTopRight < cornerRadius && distInwardsTopRight > cornerRadius)
+                        continue;
+
+                    if (distBottomRight < cornerRadius && distInwardsBottomRight > cornerRadius)
+                        continue;
+                }
+
                 float pelletSize = (frame == 0)
                     ? (float)(minRadius + (maxRadius - minRadius) * rand.NextDouble() * 0.5)
                     : (float)(minRadius + (maxRadius - minRadius) * rand.NextDouble());
                 pelletSize = Math.Min(pelletSize, maxRadius);
                 float pelletAlpha = opacity;
                 Color pelletColor = new Color((byte)c.R, (byte)c.G, (byte)c.B, (byte)(255 * pelletAlpha));
+
                 Raylib.DrawCircle((int)x, (int)y, pelletSize, pelletColor);
                 placed++;
             }

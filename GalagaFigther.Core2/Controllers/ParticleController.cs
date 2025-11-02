@@ -3,6 +3,7 @@ using GalagaFighter.Core2.Models.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,18 @@ namespace GalagaFighter.Core2.Controllers
         {
             UpdateColor(particle, frameTime);
             UpdateLifetime(particle, frameTime);
+            Drag(particle, frameTime);
+        }
+
+        private void Drag(ParticleInstance particle, float frameTime)
+        {
+            if (particle.Config.Drag == 0f)
+                return;
+
+            var speed = particle.Speed.Length();
+            var normalized = Vector2.Normalize(particle.Speed);
+            var newSpeed = speed - (particle.Config.Drag * frameTime);
+            particle.HurryTo(normalized.X * newSpeed, normalized.Y * newSpeed);
         }
 
         private void UpdateColor(ParticleInstance particle, float frameTime)

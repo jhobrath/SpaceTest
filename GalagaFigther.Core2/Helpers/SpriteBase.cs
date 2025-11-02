@@ -137,6 +137,11 @@ namespace GalagaFighter.Core2.Helpers
             _frameIndex = (_frameIndex + 1) % _frameCount;
             _thisFrameLength = _thisFrameLength - _frameLength;
 
+            ResetTextureAndSource();
+        }
+
+        protected void ResetTextureAndSource()
+        {
             var texture = _drawFunction(_size.X, _size.Y, PaletteSwap?.TargetColor ?? Color.Red, _frameIndex);
             _texture = new Lazy<Texture2D>(() => texture);
             _source = new Rectangle(0, 0, _size);
@@ -264,7 +269,7 @@ namespace GalagaFighter.Core2.Helpers
         private readonly int _frameCount;
 
         private bool _hasStarted = false;
-        private bool _hasCompleted = true;
+        private bool _hasCompleted = false;
 
         public NonRepeatingAnimatedDrawnSprite(Vector2 size, int frameCount, float frameLength, Func<float, float, Color, int, Texture2D> drawFunction)
             : base(size, frameCount, frameLength, drawFunction)
@@ -284,8 +289,11 @@ namespace GalagaFighter.Core2.Helpers
 
             if (_hasStarted)
             {
-                _hasCompleted = true;
+
                 _frameIndex = _frameCount - 1;
+
+                ResetTextureAndSource();
+                _hasCompleted = true;
             }
         }
 

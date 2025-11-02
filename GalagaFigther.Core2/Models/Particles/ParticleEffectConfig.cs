@@ -31,7 +31,8 @@ namespace GalagaFighter.Core2.Models.Particles
 
         // New property: if true, emit particles distributed throughout parent's bounds
         public bool EmitWithinParentBounds { get; set; } = false;
-        public float LifetimeVariation { get; internal set; }
+        public float LifetimeVariation { get; set; }
+        public bool HasVerticalInertia { get;  set; }
 
         public ParticleEffectConfig()
         {

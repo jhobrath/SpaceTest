@@ -25,6 +25,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         public abstract float Damage { get; }
         public virtual float Homing { get; } = 0f;
         public virtual float Veer { get; } = 0f;
+        public virtual bool Destroys { get; } = false;
 
         public virtual List<PlayerEffect> CreateEffects(Player player) => [];
     }

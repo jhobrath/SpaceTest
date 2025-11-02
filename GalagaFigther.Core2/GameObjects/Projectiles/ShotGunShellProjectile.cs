@@ -9,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Raylib_cs;
 
 namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
@@ -20,26 +21,45 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         public override float Damage => 10f;
         public override bool IsTransformChild => true;
         public override List<ParticleEffectConfig> EmitterConfigurations => [_emitterConfig];
+        public override bool Destroys => true;
 
         private readonly ParticleEffectConfig _emitterConfig = ParticleEffectTemplates.Get("SmokePoof");
 
         public ShotGunShellProjectile(Guid owner)
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
-            Lifetime = .3f;
+            Lifetime = .4f;
             Bounds = [
                 new(0f,.5f),
                 new(1f,0f),
                 new(1f,1f)
             ];
+
+
             _emitterConfig.EmitWithinParentBounds = true;
             _emitterConfig.StartColor = Palette;
             _emitterConfig.EndColor = Palette.ApplyAlpha(.15f);
+            _emitterConfig.StartColor = Color.Orange;
+            _emitterConfig.EndColor = Color.Orange.AdjustLightness(.5f);
+            _emitterConfig.StartSize = 5f;
+            _emitterConfig.EndSize = 1f;
+            _emitterConfig.Textures = ["dot_1", "dot_2", "star_3", "star_4"];
+            _emitterConfig.EmissionRate = 1000f;
+            _emitterConfig.SizeVariation = 0f;
+            _emitterConfig.Lifetime = .5f;
+            _emitterConfig.LifetimeVariation = .1f;
+            _emitterConfig.Speed = new(0, -1000);
+            _emitterConfig.SpeedVariation = new(0, 0);
+            _emitterConfig.Drag = 1700f;
+            _emitterConfig.HasVerticalInertia = true;
+
+            Color = Color.White.ApplyAlpha(.5f);//.AdjustLightness(1.5f);
+
         }
 
         private static SpriteBase GetSprite()
         {
-            return new NonRepeatingAnimatedDrawnSprite(new(600f,100f), 7, .31f/7f, ShotGunShellProjectileSpriteGenerator.CreateAnimatedShotGunShellProjectile);
+            return new NonRepeatingAnimatedDrawnSprite(new(600f,100f), 7, .4f/7, ShotGunShellProjectileSpriteGenerator.CreateAnimatedShotGunShellProjectile);
         }
 
         public override List<PlayerEffect> CreateEffects(Player player) => [];

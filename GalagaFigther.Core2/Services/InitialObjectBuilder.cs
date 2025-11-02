@@ -107,7 +107,7 @@ namespace GalagaFighter.Core2.Services
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
-            effects.Add(new IceTurretEffect());
+            effects.Add(new NinjaTurretEffect());
             effects.Add(new AddWeaponEffect());
             effects.Add(new AddWeaponEffect());
             effects.Add(new AddWeaponEffect());

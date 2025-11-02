@@ -2,6 +2,7 @@
 using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Models.Players;
+using GalagaFighter.Core2.Models.Projectiles;
 using GalagaFighter.Core2.Services;
 using GalagaFighter.Core2.Services.Static;
 using System;
@@ -31,6 +32,7 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(Projectile projectile, float frameTime)
         {
+            projectile.Sprite.Update(frameTime);
             //This is necessary because projectile sprites are drawn for a ship with 90 degree rotation.
             //TODO: Remake projectile images so they are vertical by default
             if(projectile.IsTransformChild)
@@ -48,6 +50,7 @@ namespace GalagaFighter.Core2.Controllers
         {
             Rotate(projectile);
             Home(projectile, frameTime);
+            Veer(projectile, frameTime);
             Deactivate(projectile, frameTime);
         }
 
@@ -94,6 +97,36 @@ namespace GalagaFighter.Core2.Controllers
                     projectile.IsActive = false;
                 }    
             }
+        }
+
+        private void Veer(Projectile projectile, float frameTime)
+        {
+            if (projectile.Veer == 0f)
+                return;
+
+            var veerState = _gameDataRegistry.Get<GalagaFighter.Core2.Models.Projectiles.ProjectileVeerState>(projectile);
+            if (!veerState.Initialized)
+            {
+                veerState.OriginalSpeed = projectile.Speed;
+                // Pick a random float in [-Veer, +Veer] for unique curve per projectile
+                var random = new Random(Guid.NewGuid().GetHashCode());
+                float curveStrength = (float)(random.NextDouble() * 2.0 - 1.0) * projectile.Veer;
+                veerState.CurrentVeer = new System.Numerics.Vector2(curveStrength, 0);
+                veerState.Initialized = true;
+            }
+
+            float speedMag = projectile.Speed.Length();
+            if (speedMag == 0f) return;
+            float curveStrengthUsed = veerState.CurrentVeer.X;
+            float angle = (curveStrengthUsed / speedMag) * frameTime; // radians
+            float cos = MathF.Cos(angle);
+            float sin = MathF.Sin(angle);
+            var v = projectile.Speed;
+            var rotated = new System.Numerics.Vector2(
+                v.X * cos - v.Y * sin,
+                v.X * sin + v.Y * cos
+            );
+            projectile.HurryTo(rotated.X, rotated.Y);
         }
     }
 }

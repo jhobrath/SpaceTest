@@ -6,6 +6,7 @@ using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Models.Turrets;
 using GalagaFighter.Core2.Services;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace GalagaFighter.Core2.Controllers
         private readonly IObjectService _objectService;
         private readonly IProjectileShooter _projectileShooter;
 
-        private const float _defaultCountdown = .41f;
+        private const float _defaultCountdown = .05f;
 
         public TurretController(IGameDataRegistry gameDataRegistry, IObjectService objectService, 
             IProjectileShooter projectileInitialPositionCalculator)
@@ -53,7 +54,7 @@ namespace GalagaFighter.Core2.Controllers
             turretData.ShotCountdown -= frameTime;
             if (turretData.ShotCountdown > 0)
                 return;
-
+            
             turretData.ShotCountdown = _defaultCountdown;
 
             foreach (var turretGun in turret.Guns)
@@ -62,9 +63,28 @@ namespace GalagaFighter.Core2.Controllers
 
         public void Draw(Turret turret, float frameTime)
         {
+            var hasDrawnGun = false;
+
+            foreach (var decoration in turret.Decorations.OrderBy(x => x.Depth))
+            {
+                if (decoration.Depth > 0 && !hasDrawnGun)
+                {
+                    DrawTurret(turret);
+                    hasDrawnGun = true;
+                }
+
+                decoration.Update(turret, frameTime);
+                decoration.Sprite.Update(frameTime);
+                decoration.Sprite.Draw(new(turret.WorldPosition, turret.Rect.Size), turret.WorldRotation + decoration.Rotation, Color.White);
+            }
+
+            if (!hasDrawnGun)
+                DrawTurret(turret);
+        }
+
+        private void DrawTurret(Turret turret)
+        {
             turret.Sprite.Draw(turret);
-            foreach(var child in _objectService.GetChildren<Gun>(turret))
-                child.Sprite.Draw(child);
         }
     }
 }

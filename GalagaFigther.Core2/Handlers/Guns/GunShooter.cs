@@ -1,11 +1,13 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Guns;
 using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
+using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
 using System;
 using System.Collections.Generic;
@@ -65,7 +67,7 @@ namespace GalagaFighter.Core2.Handlers.Guns
             var recoilData = _gameDataRegistry.Get<GunRecoilData>(gun);
             recoilData.RecoilLifetime = 0f;
             recoilData.RecoilPeriod = .5f;
-            recoilData.RecoilDistance = 10f;
+            recoilData.RecoilDistance = gun.Barrels[0].Recoil;
         }
 
         private Vector2 GetRotatedOffset(GameObject objectShooting, Vector2 offset)

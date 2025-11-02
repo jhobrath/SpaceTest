@@ -26,6 +26,8 @@ namespace GalagaFighter.Core2.Models
     public class SpriteDecoration : Decoration
     {
         public SpriteBase Sprite { get; set; }
+        public float Rotation { get; set; }
+        public float AngularVelocity { get; set; }
 
         public SpriteDecoration(SpriteBase sprite, Vector2? offset = null, Vector2? size = null)
         {
@@ -37,6 +39,8 @@ namespace GalagaFighter.Core2.Models
         public override void Update(GameObject gameObject, float frameTime)
         {
             Sprite.Update(frameTime);
+
+            Rotation += AngularVelocity * frameTime;
         }
 
         public override void Draw(GameObject gameObject)
@@ -70,7 +74,7 @@ namespace GalagaFighter.Core2.Models
             var center = rect.Position + rect.Size/2; // (0,0)
             var size = rect.Size;
             var finalRect = new Rectangle(center, size); // (0,0), (168,168)
-            Sprite.Draw(finalRect, InitialRotation + rotation, color);
+            Sprite.Draw(finalRect, InitialRotation + rotation + Rotation, color);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace GalagaFighter.Core2.GameObjects
 
         private Color _palette = Color.White; // Default to white (no change)
 
-        private List<SpriteDecoration> Decorations { get; set; } = [];
+        public List<SpriteDecoration> Decorations { get; set; } = [];
 
         /// <summary>
         /// The palette color for this game object (Raylib Color).

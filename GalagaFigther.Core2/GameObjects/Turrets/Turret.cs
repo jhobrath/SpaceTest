@@ -13,6 +13,8 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
     {
         public abstract List<Gun> Guns { get; }
 
+        public float RotationHoming { get; set; }
+
         public Turret(Guid owner, Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite) 
             : base(owner, position, size, speed, sprite)
         {

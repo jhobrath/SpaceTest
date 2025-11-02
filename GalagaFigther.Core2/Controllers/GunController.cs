@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Handlers.Guns;
 using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Helpers;
@@ -58,6 +59,27 @@ namespace GalagaFighter.Core2.Controllers
         }
 
         public void Draw(Gun gun, float frameTime)
+        {
+            var hasDrawnGun = false;
+                    
+            foreach(var decoration in gun.Decorations.OrderBy(x => x.Depth))
+            {
+                if(decoration.Depth > 0 && !hasDrawnGun)
+                {
+                    DrawGun(gun);
+                    hasDrawnGun = true;
+                }
+
+                decoration.Update(gun, frameTime);
+                decoration.Sprite.Update(frameTime);
+                decoration.Sprite.Draw(new(gun.WorldPosition, gun.Rect.Size), gun.WorldRotation + decoration.Rotation, Color.White);
+            }
+
+            if (!hasDrawnGun)
+                DrawGun(gun);
+        }
+
+        private void DrawGun(Gun gun)
         {
             gun.Sprite.Draw(gun);
         }

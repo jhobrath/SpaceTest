@@ -110,8 +110,8 @@ namespace GalagaFighter.Core2.Services
             effects.Add(new NinjaTurretEffect());
             effects.Add(new AddWeaponEffect());
             effects.Add(new AddWeaponEffect());
-            effects.Add(new AddWeaponEffect());
-            effects.Add(new AddWeaponEffect());
+            //effects.Add(new AddWeaponEffect());
+            //effects.Add(new AddWeaponEffect());
             effects.RequireRerolling = true;
 
             // Create engine trail emitter

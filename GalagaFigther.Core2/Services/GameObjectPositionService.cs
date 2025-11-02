@@ -1,5 +1,6 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Models.Particles;
@@ -114,8 +115,10 @@ namespace GalagaFighter.Core2.Services
 
         private static void Hurry(GameObject gameObject, float frameTime)
         {
-            //if (gameObject.Acceleration == Vector2.Zero)
-            //    return;
+            if (gameObject is BarProjectile)
+            {
+                var s = "";
+            }
 
             var speedDeltaX = gameObject.Acceleration.X * frameTime;
             var speedDeltaY = gameObject.Acceleration.Y * frameTime;
@@ -125,9 +128,8 @@ namespace GalagaFighter.Core2.Services
             var isAcceleratingY = Math.Abs(gameObject.Acceleration.Y) > 0.1f;
 
             // Lower resistance when accelerating, higher when coasting
-            var airResistanceCoefficientX = isAcceleratingX ? 1f : gameObject.Drag.X;
-            var airResistanceCoefficientY = isAcceleratingY ? 1f : gameObject.Drag.Y;
-
+            var airResistanceCoefficientX = isAcceleratingX ? (gameObject.Drag.X != 0 ? 1f : 0) : gameObject.Drag.X;
+            var airResistanceCoefficientY = isAcceleratingY ? (gameObject.Drag.Y != 0 ? 1f : 0) : gameObject.Drag.Y;
             var airResistanceX = -airResistanceCoefficientX * gameObject.Speed.X * frameTime;
             var airResistanceY = -airResistanceCoefficientY * gameObject.Speed.Y * frameTime;
 

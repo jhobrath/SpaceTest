@@ -18,21 +18,23 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         ];
 
         private int _gunIndex = 0;
-        private readonly int _offset;
+        public bool ShootBoth { get; set; }
 
         public override List<GunBarrel> Barrels => _barrels;
-        public override float FireRate => .3f;
+        public override float FireRate => ShootBoth ? .6f : .3f;
 
-        public DefaultGun(GameObject owner, int offset) 
+        public DefaultGun(GameObject owner, bool shootBoth) 
             : base(owner, new StillImageSprite("Sprites/Ships/MainShipGuns.png"))
         {
-            _offset = offset;
+            ShootBoth = shootBoth;
         }
 
         public override Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter)
         {
-            _gunIndex = (_gunIndex + 1 + _offset) % 2;
-            
+            if(ShootBoth)
+                return _barrels.ToDictionary(x => x, x => (Projectile)new DefaultProjectile(shooter.Id) { Palette = shooter.Palette });
+
+            _gunIndex = (_gunIndex + 1) % 2;
             return new() 
             { 
                 { 

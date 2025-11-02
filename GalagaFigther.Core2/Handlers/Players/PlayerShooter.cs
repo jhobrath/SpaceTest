@@ -34,6 +34,9 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
 
+            if (player.Id == Game.Player2Id)
+                return;
+
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
             if (!inputData.Shoot.IsDown)
                 return;

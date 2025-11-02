@@ -135,6 +135,12 @@ namespace GalagaFighter.Core2.Services
                 Raylib.DrawRectangle(x, y, healthWidth, barHeight, new Color(200, 40, 40, 255));
             }
 
+            if(overHealth > 0)
+            {
+                int healthWidth = (int)((overHealth / maxHealth) * barWidth * scale);
+                Raylib.DrawRectangle(x, y, healthWidth, barHeight, new Color(100, 20, 20, 200));
+            }
+
             // Draw border
             Raylib.DrawRectangleLines(x, y, (int)(barWidth * scale), barHeight, new Color(255,255,255,255));
 

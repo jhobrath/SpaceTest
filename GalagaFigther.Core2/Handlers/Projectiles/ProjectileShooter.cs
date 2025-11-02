@@ -91,10 +91,15 @@ namespace GalagaFighter.Core2.Handlers.Projectiles
             var speedLength = projectile.Speed.Length();
             var speedXPct = MathF.Cos(barrelRotationRadians);
             var speedYPct = -MathF.Sin(barrelRotationRadians);
-
             projectile.HurryTo(speedLength * speedXPct, speedLength * speedYPct);
 
-            if(!projectile.IsTransformChild)
+            var accelLength = projectile.Acceleration.Length();
+            var accelXPct = MathF.Cos(barrelRotationRadians);
+            var accelYPct = -MathF.Sin(barrelRotationRadians);
+            projectile.AccelTo(accelLength * accelXPct, accelLength * accelYPct);
+
+
+            if (!projectile.IsTransformChild)
             { 
                 var theta = MathF.Atan2(projectile.Speed.Y, projectile.Speed.X);
                 var rotation = theta * 180.0f / MathF.PI;

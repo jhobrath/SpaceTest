@@ -22,8 +22,8 @@ namespace GalagaFighter.Core2.Services.Sprites
             var c = color;
             frame = Math.Clamp(frame, 0, frameCount - 1);
             var key = $"ShotGunShell_{drawWidth}_{drawHeight}_{c.R}_{c.G}_{c.B}_{frame}";
-           // if (TextureCache.ContainsKey(key))
-           //     return TextureCache.Get(key);
+           if (TextureCache.ContainsKey(key))
+               return TextureCache.Get(key);
 
             var colorSum = c.R + c.B + c.G;
             if (colorSum < 800)

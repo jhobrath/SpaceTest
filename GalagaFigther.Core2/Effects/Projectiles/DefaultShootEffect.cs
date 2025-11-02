@@ -26,10 +26,11 @@ namespace GalagaFighter.Core2.Effects.Projectiles
 
         private List<Gun> HandleGuns(GameObject gameObject, PlayerModifiers modifiers)
         {
-            var guns = new List<Gun> {new DefaultGun(gameObject, 0)
+            var guns = new List<Gun>();
+            guns.Add(new DefaultGun(gameObject, false)
             {
                 CollectedFrom = Id
-            } };
+            }); 
 
             if (modifiers.WeaponCount >= 1)
                 guns.Add(new BarGun(gameObject)
@@ -43,10 +44,10 @@ namespace GalagaFighter.Core2.Effects.Projectiles
                 });
 
             if (modifiers.WeaponCount >= 3)
-                guns.Add(new DefaultGun(gameObject, 1)
-                {
-                    CollectedFrom = Id
-                });
+            {
+                var defaultGun = (DefaultGun)modifiers.Guns.Single(x => x is DefaultGun);
+                defaultGun.ShootBoth = true;
+            }
 
             if (modifiers.WeaponCount >= 4)
                 guns.Add(new ShotGun(gameObject)

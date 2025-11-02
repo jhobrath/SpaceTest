@@ -15,6 +15,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         public BarProjectile(Guid owner)
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
+            Acceleration = new(500f,0);
         }
 
         private static SpriteBase GetSprite()

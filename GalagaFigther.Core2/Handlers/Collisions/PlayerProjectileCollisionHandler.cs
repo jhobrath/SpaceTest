@@ -3,6 +3,7 @@ using GalagaFighter.Core2.GameObjects.Collisions;
 using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,14 @@ namespace GalagaFighter.Core2.Handlers.Collisions
             UpdateEffects(player, projectile);
             CreateCollision(projectile);
             DeactivateProjectile(projectile);
+            AddDamageRenderEffect(player);
+        }
+
+        private void AddDamageRenderEffect(Player player)
+        {
+            var renderEffects = _gameDataRegistry.Get<PlayerRenderEffects>(player);
+            renderEffects.Add(new PlayerRenderEffect(RenderEffectActions.Flash(Color.Red), .25f, 1));
+            renderEffects.Add(new PlayerRenderEffect(RenderEffectActions.Heartbeat, .125f, -.0625f));
         }
 
         private void DeactivateProjectile(Projectile projectile)

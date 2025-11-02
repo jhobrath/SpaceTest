@@ -14,7 +14,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
     public class NinjaProjectile : Projectile
     {
-        public static readonly Vector2 _baseSpeed = new(2080f, 40f);
+        public static readonly Vector2 _baseSpeed = new(1480f, 40f);
         public static readonly Vector2 _baseSize = new(38.8f, 27.77f);
 
         public override float Damage => 1f;

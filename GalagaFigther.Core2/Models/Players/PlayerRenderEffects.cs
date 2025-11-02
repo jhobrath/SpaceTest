@@ -146,9 +146,9 @@ namespace GalagaFighter.Core2.Models.Players
         public static Action<RenderDetails, float, float> Heartbeat => (d, p, i) =>
         {
             // Each heartbeat cycle: beat (0.0-0.15), beat (0.15-0.3), pause (0.3-1.0)
-            float cycleProgress = (p * i) % 1f; // Get position within current cycle
+            float cycleProgress = (p * Math.Abs(i)) % 1f; // Get position within current cycle
             
-            float scale = 1f;
+            float scale = 1;
             
             if (cycleProgress < 0.15f) // First beat
             {
@@ -161,10 +161,15 @@ namespace GalagaFighter.Core2.Models.Players
                 scale = 1f + (float)Math.Sin(beatProgress * Math.PI) * 0.2f; // Pulse up to 1.2x
             }
             // else: pause at normal size (scale = 1f)
-            
+
+            var newWidth = d.Width * scale;
+            var widthDiff = newWidth - d.Width;
+            var newHeight = d.Height * scale;
+            var heightDiff = newHeight - d.Height;
+
             // Apply scale to width and height
-            d.Width *= scale;
-            d.Height *= scale;
+            d.Width += (i < 0 ? -1 : 1) * widthDiff;
+            d.Height += (i < 0 ? -1 : 1) * heightDiff;
         };
     }
 

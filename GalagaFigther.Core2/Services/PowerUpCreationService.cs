@@ -1,5 +1,7 @@
 ﻿using GalagaFighter.Core2.Effects.Projectiles;
+using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.PowerUps;
+using GalagaFighter.Core2.Handlers.Players;
 using GalagaFighter.Core2.Models.Game;
 using Raylib_cs;
 using System;
@@ -23,7 +25,11 @@ namespace GalagaFighter.Core2.Services
 
         private readonly List<Func<Vector2, Vector2, PowerUp>> _powerUpTypes = [ 
             (p, s) => new FireRatePowerUp(p, s),
-            (p, s) => new AddWeaponPowerUp(p, s)
+            (p, s) => new HealthPowerUp(p, s),
+            (p, s) => new SpeedPowerUp(p, s),
+            (p, s) => new DamagePowerUp(p, s),
+            (p, s) => new ShieldPowerUp(p, s),
+            (p, s) => new AddWeaponPowerUp(p, s),
         ];
 
         private readonly IGameDataRegistry _gameDataRegistry;
@@ -38,7 +44,7 @@ namespace GalagaFighter.Core2.Services
         public void Update(float frameTime)
         {
             _ellapsedTime += frameTime;
-            return;
+
             var chanceOfDropPerSecond = (_ellapsedTime)/5;
             var chanceOfDrop = chanceOfDropPerSecond * frameTime;
 
@@ -60,7 +66,15 @@ namespace GalagaFighter.Core2.Services
             var gameState = _gameDataRegistry.Get<GameState>();
 
             var isAbove = _random.NextDouble() < .5;
-            var posX = 400f + (float)_random.NextDouble() * (gameState.ScreenSize.X - 800f);
+
+
+            var player1 = _objectService.Get<Player>(Game.Player1Id);
+            var player2  = _objectService.Get<Player>(Game.Player2Id);
+
+
+            var x = Math.Clamp((player1.Health - player2.Health) * 4, -400, 400);
+
+            var posX = gameState.ScreenSize.X/2  + x;
             var posY = isAbove ? -50f : gameState.ScreenSize.Y;
 
             var speedX = 0f;

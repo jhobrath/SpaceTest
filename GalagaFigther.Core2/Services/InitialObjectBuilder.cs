@@ -143,6 +143,12 @@ namespace GalagaFighter.Core2.Services
                 () => engineTrail.Enabled = smokeTrail.Enabled = false, 
                 () => player.Acceleration.Length() > 1);
 
+            var renderEffects = _gameDataRegistry.Get<PlayerRenderEffects>(player);
+            if(playerId == Game.Player1Id)
+                renderEffects.Add(new PlayerRenderEffect(RenderEffectActions.Heartbeat, 5f, 2f));
+            else
+                renderEffects.Add(new PlayerRenderEffect(RenderEffectActions.Confusion, 3, 2));
+
             return player;
         }
     }

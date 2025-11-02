@@ -34,7 +34,7 @@ namespace GalagaFighter.Core2.Handlers.Guns
             var pct = (recoilData.RecoilPeriod - recoilData.RecoilLifetime) / recoilData.RecoilPeriod;
             var angle = ((90 - gun.Rotation) * MathF.PI / 180f);
             var coords = new Vector2(-MathF.Cos(angle) * recoilData.RecoilDistance * pct, MathF.Sin(angle) * recoilData.RecoilDistance * pct);
-            gun.MoveTo(gun.Width / 2 + coords.X, gun.Height / 2 + coords.Y);
+            gun.MoveTo(coords.X, coords.Y);
 
             if (pct <= 0)
             {

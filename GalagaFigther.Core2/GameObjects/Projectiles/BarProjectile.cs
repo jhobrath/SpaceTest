@@ -1,12 +1,7 @@
 ﻿using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Services.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.GameObjects.Projectiles
 {

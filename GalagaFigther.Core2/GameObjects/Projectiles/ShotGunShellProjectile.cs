@@ -34,6 +34,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             ];
             _emitterConfig.EmitWithinParentBounds = true;
             _emitterConfig.StartColor = Palette;
+            _emitterConfig.EndColor = Palette.ApplyAlpha(.15f);
         }
 
         private static SpriteBase GetSprite()

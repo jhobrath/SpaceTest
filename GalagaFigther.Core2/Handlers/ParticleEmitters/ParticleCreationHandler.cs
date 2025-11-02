@@ -84,7 +84,8 @@ namespace GalagaFighter.Core2.Handlers.ParticleEmitters
                 emitter.Config
             )
             {
-                CurrentLifetime = actualLifetime
+                CurrentLifetime = actualLifetime,
+                Rotation = (float)_random.NextDouble() * 360f
             };
 
             // Add particle to ObjectService so GameObjectPositionService can handle its physics

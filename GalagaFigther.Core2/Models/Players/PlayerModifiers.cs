@@ -37,6 +37,8 @@ namespace GalagaFighter.Core2.Models.Players
         public PlayerModifiersChildren<Turret> Turrets { get; set; } = [];
         public PlayerModifiersChildren<ParticleEmitter> ParticleEmitters { get; set; } = [];
         public int WeaponCount { get; set; }
+
+        public List<Action<Player>> PlayerActions { get; set; } = [];
     }
 
     public class PlayerStats

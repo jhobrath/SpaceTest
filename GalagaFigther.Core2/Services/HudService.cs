@@ -45,13 +45,14 @@ namespace GalagaFighter.Core2.Services
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
             var baseStats = _gameDataRegistry.Get<PlayerBaseStats>(player);
 
-            var speedValue = baseStats.Speed * modifiers.Stats.SpeedMultiplier;
+            var speedValue = (baseStats.Speed * modifiers.Stats.SpeedMultiplier) ;
             var shield = baseStats.Shield * modifiers.Stats.ShieldMultiplier;
             var damage = baseStats.Damage * modifiers.Stats.DamageMultiplier;
-            var fireRate = baseStats.FireRate * modifiers.Stats.FireRateMultiplier;
+            var fireRate = .15f/(baseStats.FireRate * modifiers.Stats.FireRateMultiplier) * 100;
 
             // Render Shield and Damage as a percentage (e.g. 120%)
             string shieldPct = ((shield / baseStats.Shield) * 100).ToString("0") + "%";
+            string speedPct = ((speedValue / baseStats.Speed) * 100).ToString("0") + "%";
             string damagePct = ((damage / baseStats.Damage) * 100).ToString("0") + "%";
 
             // Prepare stat icons and values
@@ -59,8 +60,8 @@ namespace GalagaFighter.Core2.Services
             string[] statValues = {
                 shieldPct,
                 damagePct,
-                speedValue.ToString("0.##"),
-                fireRate.ToString("0.##s")
+                speedPct,
+                fireRate.ToString("0") + "%"
             };
 
             int statCount = statIconNames.Length;
@@ -139,7 +140,7 @@ namespace GalagaFighter.Core2.Services
 
             // Draw health text
             int fontSize = (int)(20 * scale);
-            string healthText = $"HP: {currentHealth:0}";
+            string healthText = $"HP: {currentHealth:0.0}";
             Raylib.DrawText(healthText, x + 8, y + 4, fontSize, new Color(255,255,255,255));
         }
     }

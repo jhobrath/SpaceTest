@@ -66,6 +66,9 @@ namespace GalagaFighter.Core2.Handlers.Players
             CreateParticleEmitters(player, newModifiers, effects);
             CreateDecorations(player, newModifiers, effects);
 
+            newModifiers.PlayerActions.ForEach(x => x(player));
+            newModifiers.PlayerActions.Clear();
+
             _gameDataRegistry.Set(player, newModifiers);
         }
 

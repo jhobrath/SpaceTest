@@ -24,6 +24,8 @@ namespace GalagaFighter.Core2.Controllers
 
     public class GunController : IGunController
     {
+        public Type Type => typeof(Gun);
+        
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IObjectService _objectService;
         private readonly IProjectileShooter _projectileShooter;
@@ -50,7 +52,7 @@ namespace GalagaFighter.Core2.Controllers
             var player = _objectService.GetPlayer(gun);
             _gunRotator.Rotate(gun, player);
             _gunShooter.Shoot(gun);
-            //_gunRecoiler.Recoil(gun, frameTime);
+            _gunRecoiler.Recoil(gun, frameTime);
 
             gun.ShotRequested = false;
         }

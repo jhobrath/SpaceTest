@@ -50,19 +50,47 @@ namespace GalagaFighter.Core2.Handlers.Players
 
                 if (!hasDrawnPlayer && decoration.Depth >= 0)
                 {
-                    player.Sprite.Draw(player);
+                    DrawPlayer(player, frameTime);
                     hasDrawnPlayer = true;
                 }
+
                 decoration.Update(player, frameTime);
                 decoration.Draw(player);
             }
 
             if (!hasDrawnPlayer)
-                player.Sprite.Draw(player);
+                DrawPlayer(player, frameTime);
 
         }
 
+        private void DrawPlayer(Player player, float frameTime)
+        {
+            var existingEffects = _gameDataRegistry.Get<PlayerRenderEffects>(player);
+            if (existingEffects.Count == 0)
+            { 
+                player.Sprite.Draw(player);
+                return;
+            }
+            var renderDetails = new RenderDetails
+            {
+                X = player.WorldPosition.X,
+                Y = player.WorldPosition.Y,
+                Width = player.Width,
+                Height = player.Height,
+                Red = player.Color.R,
+                Green = player.Color.G,
+                Blue = player.Color.B,
+                Alpha = player.Color.A,
+                Rotation = player.WorldRotation
+            };
 
+            foreach (var effect in existingEffects)
+                effect.Apply(renderDetails, frameTime);
+
+            existingEffects.RemoveAll(x => !x.IsActive);
+
+            player.Sprite.Draw(new Rectangle(renderDetails.X, renderDetails.Y, renderDetails.Width, renderDetails.Height), renderDetails.Rotation, new Color((byte)renderDetails.Red, (byte)renderDetails.Green, (byte)renderDetails.Blue, (byte)renderDetails.Alpha));
+        }
 
         private void HandleColor(Player player, PlayerModifiers modifiers)
         {

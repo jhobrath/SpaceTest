@@ -47,14 +47,14 @@ namespace GalagaFighter.Core2.Controllers
                 collectionData.IsCollecting = true;
                 collectionData.SinceHit = 0f;
                 collectionData.OriginalSize = powerUp.Rect.Size;
-                powerUp.AngularVelocity = 1000f;
+                powerUp.AngularVelocity = 1000f * (powerUp.Owner == Game.Player1Id ? -1 : 1);
             }
 
             collectionData.SinceHit += frameTime;
-            
+
             var player = _objectService.Get(powerUp.Owner);
             var newDist = (player.Center - powerUp.Center) * 1f / MathF.Pow(1 - collectionData.SinceHit, 1);
-            var newScale = (1 - collectionData.SinceHit) * collectionData.OriginalSize * 1.5f;
+            var newScale = (1 - collectionData.SinceHit) * collectionData.OriginalSize * 2f;
             newScale = MathExtensions.Min(collectionData.OriginalSize, newScale);
 
             powerUp.ScaleTo(newScale.X, newScale.Y);

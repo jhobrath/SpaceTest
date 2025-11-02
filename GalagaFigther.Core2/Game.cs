@@ -64,7 +64,7 @@ namespace GalagaFighter.Core2
             while(true)
             {
                 var frameTime = Raylib.GetFrameTime();
-                
+
                 UpdateGameObjects(frameTime);
                 UpdateServices(frameTime);
                 HandleCollisions();

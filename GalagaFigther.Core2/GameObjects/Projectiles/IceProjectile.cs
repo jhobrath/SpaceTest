@@ -26,8 +26,6 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 
         private static Vector2 _baseSpeed => new(1420f, 0f);
         private static Vector2 _baseSize => new(95f, 42f);
-        public override float Damage => 0f;
-
 
         private static Vector2[] _bounds = new Vector2[]
         {
@@ -40,7 +38,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
             Bounds = _bounds;
-
+            Damage = 0;
         }
 
         private static SpriteBase GetSprite()

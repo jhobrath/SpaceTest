@@ -31,8 +31,42 @@ namespace GalagaFighter.Core2.Handlers.Players
 
             var playerPosition = MathExtensions.Clamp(player.WorldPosition,
                 bounds.Min, bounds.Max - player.Rect.Size);
+            
+            player.MoveTo(y: playerPosition.Y);
 
-            player.MoveTo(playerPosition.X, playerPosition.Y);
+            var maxOverstep = 500;
+            if (player.Id == Game.Player1Id)
+            {
+                if (player.X < bounds.Min.X)
+                { 
+                    player.MoveTo(x: bounds.Min.X);
+                    return;
+                }
+
+                var playerOverstep = player.WorldPosition.X - bounds.Max.X;
+                if (playerOverstep < 0)
+                    return;
+
+                var baseStats = _gameDataRegistry.Get<PlayerBaseStats>(player);
+                var overstepPct = playerOverstep / maxOverstep;
+                player.Hurry(x: -200f * overstepPct);
+            }
+            else
+            {
+                if (player.X > bounds.Max.X)
+                {
+                    player.MoveTo(x: bounds.Max.X);
+                    return;
+                }
+
+                var playerOverstep = bounds.Min.X - player.WorldPosition.X;
+                if (playerOverstep < 0)
+                    return;
+
+                var baseStats = _gameDataRegistry.Get<PlayerBaseStats>(player);
+                var overstepPct = playerOverstep / maxOverstep;
+                player.Hurry(x: 200f * overstepPct);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Collisions;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using Raylib_cs;
@@ -34,11 +35,13 @@ namespace GalagaFighter.Core2.Handlers.Collisions
             if (player.Id == projectile.Owner)
                 return;
 
+            if (!projectile.Collidable)
+                return;
+
             UpdateHealth(player, projectile);
             UpdateEffects(player, projectile);
             CreateCollision(projectile);
             DeactivateProjectile(projectile);
-            AddDamageRenderEffect(player);
         }
 
         private void AddDamageRenderEffect(Player player)
@@ -50,7 +53,13 @@ namespace GalagaFighter.Core2.Handlers.Collisions
 
         private void DeactivateProjectile(Projectile projectile)
         {
-            projectile.IsActive = false;
+            if (projectile.DestroyOnHit)
+                projectile.IsActive = false;
+            else
+                projectile.Collidable = false;
+            
+            var emitters = _objectService.GetChildren<ParticleEmitter>(projectile).ToList();
+            emitters.ForEach(x => x.IsActive = false);
         }
 
         private void CreateCollision(Projectile projectile)

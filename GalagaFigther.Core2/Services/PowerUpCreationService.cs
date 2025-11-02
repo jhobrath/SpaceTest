@@ -24,11 +24,11 @@ namespace GalagaFighter.Core2.Services
         private float _ellapsedTime;
 
         private readonly List<Func<Vector2, Vector2, PowerUp>> _powerUpTypes = [ 
-            (p, s) => new FireRatePowerUp(p, s),
-            (p, s) => new HealthPowerUp(p, s),
-            (p, s) => new SpeedPowerUp(p, s),
-            (p, s) => new DamagePowerUp(p, s),
-            (p, s) => new ShieldPowerUp(p, s),
+            //(p, s) => new FireRatePowerUp(p, s),
+            //(p, s) => new HealthPowerUp(p, s),
+            //(p, s) => new SpeedPowerUp(p, s),
+            //(p, s) => new DamagePowerUp(p, s),
+            //(p, s) => new ShieldPowerUp(p, s),
             (p, s) => new AddWeaponPowerUp(p, s),
         ];
 

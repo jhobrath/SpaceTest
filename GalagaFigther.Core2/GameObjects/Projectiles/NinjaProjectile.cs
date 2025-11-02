@@ -17,13 +17,12 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         public static readonly Vector2 _baseSpeed = new(1480f, 40f);
         public static readonly Vector2 _baseSize = new(38.8f, 27.77f);
 
-        public override float Damage => 1f;
-        public override float Veer => 1000f;
-
         public NinjaProjectile(Guid owner) 
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
             AngularVelocity = 1000f;
+            Damage = 1f;
+            Veer = 1000f;
         }
 
         private static SpriteBase GetSprite()

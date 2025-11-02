@@ -10,12 +10,11 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         private static Vector2 _baseSpeed => new(0f, 1750f);
         private static Vector2 _baseSize => new(30f, 10f);
 
-        public override float Damage => 1;
-        public override float Homing => 1;
-
         public HomingProjectile(Guid owner)
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
+            Damage = 1;
+            Homing = 1;
         }
 
         private static SpriteBase GetSprite()

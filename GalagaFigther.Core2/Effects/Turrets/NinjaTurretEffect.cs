@@ -21,7 +21,7 @@ namespace GalagaFighter.Core2.Effects.Turrets
 
         private List<Turret> HandleOnDeploy(GameObject owner, PlayerModifiers modifiers)
         {
-            var turret = new NinjaTurret(owner);
+            var turret = new NinjaTurret(owner) {  Palette = owner.Palette };
             turret.CollectedFrom = Id;
             return [turret];
         }

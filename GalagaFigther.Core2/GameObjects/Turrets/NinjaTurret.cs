@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Raylib_cs;
 
 namespace GalagaFighter.Core2.GameObjects.Turrets
 {
@@ -24,7 +25,7 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
             _guns = [new NinjaTurretGun(this)];
             WorldPosition = owner.WorldPosition;
 
-            var deco = new SpriteDecoration(new StillImageSprite("Sprites/Turrets/NinjaTurret_spinner.png"))
+            var deco = new SpriteDecoration(new StillImageSprite("Sprites/Turrets/NinjaTurret_spinner.png") { PaletteSwap = PaletteSwap.CreateSwap(Color.Red,Palette) })
             {
                 AngularVelocity = 400f,
                 Depth = 2

@@ -18,10 +18,10 @@ namespace GalagaFighter.Core2.Handlers.Collisions
             if (projectile1.Owner == projectile2.Owner)
                 return;
 
-            if (projectile2.Destroys && !projectile1.Destroys)
+            if (projectile2.DestroyProjectiles && !projectile1.DestroyProjectiles)
                 projectile1.IsActive = false;
 
-            if(projectile1.Destroys && !projectile2.Destroys)
+            if(projectile1.DestroyProjectiles && !projectile2.DestroyProjectiles)
                 projectile2.IsActive = false;
         }
     }

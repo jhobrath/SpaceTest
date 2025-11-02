@@ -21,11 +21,13 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             Owner = owner;
         }
 
-        public virtual bool IsTransformChild => false;
-        public abstract float Damage { get; }
-        public virtual float Homing { get; } = 0f;
-        public virtual float Veer { get; } = 0f;
-        public virtual bool Destroys { get; } = false;
+        public bool IsTransformChild { get; set; } = false;
+        public float Damage { get; set; } = 0f;
+        public float Homing { get; set; } = 0f;
+        public float Veer { get; set; } = 0f;
+        public bool DestroyProjectiles { get; set;  } = false;
+        public bool DestroyOnHit { get; set; } = false;
+        public bool Collidable { get; set; } = true;
 
         public virtual List<PlayerEffect> CreateEffects(Player player) => [];
     }

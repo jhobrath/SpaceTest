@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.Models.Game;
+using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Models.Projectiles;
 using GalagaFighter.Core2.Services;
@@ -96,6 +97,12 @@ namespace GalagaFighter.Core2.Controllers
                 {
                     projectile.IsActive = false;
                 }    
+            }
+
+            if(!projectile.IsActive && projectile is ShotGunShellProjectile)
+            {
+                var childEmitters = _objectService.GetChildren<ParticleEmitter>(projectile).ToList();
+                childEmitters.ForEach(x => x.IsActive = false);
             }
         }
 

@@ -36,7 +36,8 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGunController, GunController>();
             services.AddSingleton<IProjectileController, ProjectileController>();
             services.AddSingleton<IPowerUpController, PowerUpController>();
-            
+            services.AddSingleton<IRopeAttachmentController, RopeAttachmentController>();
+
             // Particle emitter handlers with action-based names
             services.AddSingleton<IParticleEmissionTimer, ParticleDurationHandler>();
             services.AddSingleton<IParticleVelocityCalculator, ParticleVelocityCalculator>();

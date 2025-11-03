@@ -5,6 +5,7 @@ using GalagaFighter.Core2.Effects.Projectiles;
 using GalagaFighter.Core2.Effects.Statuses;
 using GalagaFighter.Core2.Effects.Turrets;
 using GalagaFighter.Core2.GameObjects;
+using GalagaFighter.Core2.Handlers.Rope;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Particles;
@@ -49,10 +50,28 @@ namespace GalagaFighter.Core2.Services
            var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(95,95), new(550f+95, screenHeight+95), ShipPalettes.AzureWing);
             var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f-95, 95), new(screenWidth- 95,screenHeight+95), ShipPalettes.VoidHunter);
 
+            AddTether(player1, player2);
+
+
             _objectService.Add(player1);
             _objectService.Add(player2);
 
             RegisterInputMappings(player1, player2);
+        }
+
+        private void AddTether(GameObject start, GameObject end)
+        {
+            //Rope attached to nose of ship
+            var ropeAttachment = new RopeAttachment(start.Id, new(0, -50));
+            var ropeAttachment2 = new RopeAttachment(end.Id, new(0, -50));
+
+            var rope = new Rope(ropeAttachment, 1000, ropeAttachment2);
+            ropeAttachment.Rope = rope;
+            _objectService.Add(ropeAttachment);
+            _objectService.Add(ropeAttachment2);
+
+            _gameObjectPositionService.RegisterParent(start, ropeAttachment);
+            _gameObjectPositionService.RegisterParent(end, ropeAttachment2);
         }
 
         private void RegisterInputMappings(Player player1, Player player2)
@@ -84,7 +103,7 @@ namespace GalagaFighter.Core2.Services
         private Player CreatePlayer(Guid playerId, int x, float rotation, Vector2 min, Vector2 max, Color palette)
         {
             var playerHeight = 168f;
-            var pos = new Vector2(x, 0);
+            var pos = new Vector2(x, 450);
             var size = Vector2.One * 168;
             var speed = Vector2.Zero;
 
@@ -142,6 +161,7 @@ namespace GalagaFighter.Core2.Services
                 () => engineTrail.Enabled = smokeTrail.Enabled = true, 
                 () => engineTrail.Enabled = smokeTrail.Enabled = false, 
                 () => player.Acceleration.Length() > 1);
+
 
             return player;
         }

@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.Effects.Projectiles;
+using GalagaFighter.Core2.Effects.Turrets;
 using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.PowerUps;
 using GalagaFighter.Core2.Handlers.Players;
@@ -24,12 +25,15 @@ namespace GalagaFighter.Core2.Services
         private float _ellapsedTime;
 
         private readonly List<Func<Vector2, Vector2, PowerUp>> _powerUpTypes = [ 
-            //(p, s) => new FireRatePowerUp(p, s),
-            //(p, s) => new HealthPowerUp(p, s),
-            //(p, s) => new SpeedPowerUp(p, s),
-            //(p, s) => new DamagePowerUp(p, s),
-            //(p, s) => new ShieldPowerUp(p, s),
+            (p, s) => new FireRatePowerUp(p, s),
+            (p, s) => new HealthPowerUp(p, s),
+            (p, s) => new SpeedPowerUp(p, s),
+            (p, s) => new DamagePowerUp(p, s),
+            (p, s) => new ShieldPowerUp(p, s),
             (p, s) => new AddWeaponPowerUp(p, s),
+            (p, s) => new DefaultTurretPowerUp(p, s),
+            (p, s) => new IceTurretPowerUp(p, s),
+            (p, s) => new NinjaTurretPowerUp(p, s)
         ];
 
         private readonly IGameDataRegistry _gameDataRegistry;

@@ -43,15 +43,16 @@ namespace GalagaFighter.Core2.Services
             var screenWidth = Raylib.GetScreenWidth();
             var screenHeight = Raylib.GetScreenHeight();
             CreatePlayers(screenWidth, screenHeight);
+
+            _gameObjectPositionService.Update(Raylib.GetFrameTime());
         }
 
         private void CreatePlayers(int screenWidth, int screenHeight)
         {
-           var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(95,95), new(550f+95, screenHeight+95), ShipPalettes.AzureWing);
+            var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(95,95), new(550f+95, screenHeight+95), ShipPalettes.AzureWing);
             var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f-95, 95), new(screenWidth- 95,screenHeight+95), ShipPalettes.VoidHunter);
 
             AddTether(player1, player2);
-
 
             _objectService.Add(player1);
             _objectService.Add(player2);
@@ -65,7 +66,7 @@ namespace GalagaFighter.Core2.Services
             var ropeAttachment = new RopeAttachment(start.Id, new(0, -50));
             var ropeAttachment2 = new RopeAttachment(end.Id, new(0, -50));
 
-            var rope = new Rope(ropeAttachment, 1000, ropeAttachment2);
+            var rope = new Rope(ropeAttachment, 700, ropeAttachment2);
             ropeAttachment.Rope = rope;
             _objectService.Add(ropeAttachment);
             _objectService.Add(ropeAttachment2);
@@ -87,13 +88,13 @@ namespace GalagaFighter.Core2.Services
             );
 
             var player2Mappings = new KeyMappings(
-                KeyboardKey.W,    // Forward (TODO: Update with different keys)
-                KeyboardKey.S,    // Back (TODO: Update with different keys)
-                KeyboardKey.A,    // Left (TODO: Update with different keys)
-                KeyboardKey.D,    // Right (TODO: Update with different keys)
-                KeyboardKey.K,    // Shoot (TODO: Update with different keys)
-                KeyboardKey.J,    // Defend (TODO: Update with different keys)
-                KeyboardKey.U     // Deploy Turret (TODO: Update with different keys)
+                KeyboardKey.Kp8,    // Forward (TODO: Update with different keys)
+                KeyboardKey.Kp5,    // Back (TODO: Update with different keys)
+                KeyboardKey.Kp4,    // Left (TODO: Update with different keys)
+                KeyboardKey.Kp6,    // Right (TODO: Update with different keys)
+                KeyboardKey.Kp0,    // Shoot (TODO: Update with different keys)
+                KeyboardKey.KpEnter,    // Defend (TODO: Update with different keys)
+                KeyboardKey.KpDecimal     // Deploy Turret (TODO: Update with different keys)
             );
 
             _inputService.AddPlayer(player1.Id, player1Mappings);

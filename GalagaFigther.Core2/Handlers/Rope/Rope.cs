@@ -13,6 +13,8 @@ namespace GalagaFighter.Core2.Handlers.Rope
     {
         public Rope? Rope { get; set; } = null;
 
+        public float ReelSpeed { get; set; } = 0f;
+
         public RopeAttachment(Guid owner, Vector2 position) 
             : base(owner, position, new(0,0), new(0,0), new StillImageSprite(""))
         {
@@ -27,15 +29,29 @@ namespace GalagaFighter.Core2.Handlers.Rope
         public RopeAttachment? End { get; set; }
         public float SegmentLength { get; set; }
         public List<RopePoint> Points { get; set; } = [];
+        public float Tension => GetTension();
+        public float Length => _length;
 
-        public Rope(RopeAttachment start, float desiredLength, RopeAttachment? end = null)
+
+        private float _length;
+
+        private float GetTension()
+        {
+            if (End == null)
+                return 0f;
+
+            return Math.Max(0, Vector2.Distance(Start.WorldPosition, End.WorldPosition) - _length);
+        }
+
+        public Rope(RopeAttachment start, float length, RopeAttachment? end = null)
         {
             Start = start;
             End = end;
 
-            var pointCount = Convert.ToInt32(desiredLength / 10f);
+            var pointCount = Convert.ToInt32(length / 10f);
 
-            SegmentLength = desiredLength/pointCount;
+            _length = length;
+            SegmentLength = length/pointCount;
             Points = Enumerable.Range(0, pointCount).Select(x => new RopePoint()).ToList();
         }
     }

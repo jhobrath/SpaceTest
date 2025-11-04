@@ -51,9 +51,9 @@ namespace GalagaFighter.Core2.Handlers.Players
                 player.HurryTo(Math.Min(player.Speed.X, modifiers.Stats.SpeedMultiplier * -200f));
 
             if (accelY > 0)
-                player.HurryTo(y: Math.Max(player.Speed.Y, modifiers.Stats.SpeedMultiplier * 700f));
+                player.HurryTo(y: Math.Max(player.Speed.Y, modifiers.Stats.SpeedMultiplier * 400f));
             else if (accelY < 0)
-                player.HurryTo(y: Math.Min(player.Speed.Y, modifiers.Stats.SpeedMultiplier * -700f));
+                player.HurryTo(y: Math.Min(player.Speed.Y, modifiers.Stats.SpeedMultiplier * -400f));
 
         }
     }

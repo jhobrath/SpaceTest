@@ -42,6 +42,7 @@ namespace GalagaFighter.Core2.Handlers.Collisions
             UpdateEffects(player, projectile);
             CreateCollision(projectile);
             DeactivateProjectile(projectile);
+            AddDamageRenderEffect(player);
         }
 
         private void AddDamageRenderEffect(Player player)

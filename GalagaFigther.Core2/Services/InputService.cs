@@ -113,6 +113,37 @@ namespace GalagaFighter.Core2.Services
         public bool IsDeployTurretDown() => Raylib.IsKeyDown(DeployTurret);
     }
 
+    public class GamepadMappings : IInputMappings
+    {
+        public GamepadButton Forward { get; set; } = GamepadButton.LeftFaceUp;
+        public GamepadButton Back { get; set; } = GamepadButton.LeftFaceDown;
+        public GamepadButton Left { get; set; } = GamepadButton.LeftFaceLeft;
+        public GamepadButton Right { get; set; } = GamepadButton.LeftFaceRight;
+        public GamepadButton Shoot { get; set; } = GamepadButton.RightTrigger1;
+        public GamepadButton Defend { get; set; } = GamepadButton.LeftTrigger1;
+        public GamepadButton DeployTurret { get; set; } = GamepadButton.RightFaceUp;
+
+        public GamepadMappings(GamepadButton forward, GamepadButton back, GamepadButton left, GamepadButton right,
+            GamepadButton shoot, GamepadButton defend, GamepadButton deployTurret)
+        {
+            Forward = forward;
+            Back = back;
+            Left = left;
+            Right = right;
+            Shoot = shoot;
+            Defend = defend;
+            DeployTurret = deployTurret;
+        }
+
+        public bool IsForwardDown() => Raylib.IsGamepadButtonDown(0, Forward);
+        public bool IsBackDown() => Raylib.IsGamepadButtonDown(0, Back);
+        public bool IsLeftDown() => Raylib.IsGamepadButtonDown(0, Left);
+        public bool IsRightDown() => Raylib.IsGamepadButtonDown(0, Right);
+        public bool IsShootDown() => Raylib.IsGamepadButtonDown(0, Shoot);
+        public bool IsDefendDown() => Raylib.IsGamepadButtonDown(0, Defend);
+        public bool IsDeployTurretDown() => Raylib.IsGamepadButtonDown(0, DeployTurret);
+    }
+
     public class ButtonData
     {
         public static implicit operator bool(ButtonData state)

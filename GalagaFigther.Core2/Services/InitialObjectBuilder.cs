@@ -52,7 +52,7 @@ namespace GalagaFighter.Core2.Services
             var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(95,95), new(550f+95, screenHeight+95), ShipPalettes.AzureWing);
             var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f-95, 95), new(screenWidth- 95,screenHeight+95), ShipPalettes.VoidHunter);
 
-            AddTether(player1, player2);
+            //AddTether(player1, player2);
 
             _objectService.Add(player1);
             _objectService.Add(player2);
@@ -87,14 +87,14 @@ namespace GalagaFighter.Core2.Services
                 KeyboardKey.U     // Deploy Turret
             );
 
-            var player2Mappings = new KeyMappings(
-                KeyboardKey.Kp8,    // Forward (TODO: Update with different keys)
-                KeyboardKey.Kp5,    // Back (TODO: Update with different keys)
-                KeyboardKey.Kp4,    // Left (TODO: Update with different keys)
-                KeyboardKey.Kp6,    // Right (TODO: Update with different keys)
-                KeyboardKey.Kp0,    // Shoot (TODO: Update with different keys)
-                KeyboardKey.KpEnter,    // Defend (TODO: Update with different keys)
-                KeyboardKey.KpDecimal     // Deploy Turret (TODO: Update with different keys)
+            var player2Mappings = new GamepadMappings(
+                GamepadButton.LeftFaceUp,
+                GamepadButton.LeftFaceDown,
+                GamepadButton.LeftFaceLeft,    // Left (TODO: Update with different keys)
+                GamepadButton.LeftFaceRight,   // Right (TODO: Update with different keys)
+                GamepadButton.RightTrigger2,   // Shoot (TODO: Update with different keys)
+                GamepadButton.LeftTrigger2,    // Defend (TODO: Update with different keys)
+                GamepadButton.RightFaceUp      // Deploy Turret (TODO: Update with different keys)
             );
 
             _inputService.AddPlayer(player1.Id, player1Mappings);

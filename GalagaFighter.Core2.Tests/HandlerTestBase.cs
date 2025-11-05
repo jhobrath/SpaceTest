@@ -74,7 +74,7 @@ namespace GalagaFighter.Core2.Tests
 
         protected DefaultGun CreateDefaultGun(GameObject owner)
         {
-            return new DefaultGun(owner, 0);
+            return new DefaultGun(owner, false);
         }
 
         protected PlayerModifiersChildren<T> GetCollectibles<T>(PlayerEffect effect, List<T> list)

@@ -36,7 +36,6 @@ namespace GalagaFighter.Core2.Handlers.Players
         public void Deploy(Player player, float frameTime)
         {
             var turretData = _gameDataRegistry.Get<PlayerTurretData>(player);
-            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
 
             if (turretData.DeployCountdown > 0)
             {
@@ -48,31 +47,26 @@ namespace GalagaFighter.Core2.Handlers.Players
             if (!inputData.DeployTurret.IsDown)
                 return;
 
-            Deploy(player, turretData, modifiers);
+            Deploy(player, turretData);
         }
 
-        private void Deploy(Player player, PlayerTurretData turretData, PlayerModifiers modifiers)
+        private void Deploy(Player player, PlayerTurretData turretData)
         {
-            foreach (var createTurret in modifiers.Turrets.Create.Values)
-                DeployTurret(player, modifiers, createTurret);
+            foreach (var turret in player.Turrets)
+                DeployTurret(player, turret);
 
-            turretData.DeployCountdown = _defaultDeployRate * modifiers.TurretDeployRate;
+            turretData.DeployCountdown = _defaultDeployRate;
         }
 
-        private void DeployTurret(Player player, PlayerModifiers modifiers, Func<GameObject, PlayerModifiers, List<Turret>> onDeploy)
+        private void DeployTurret(Player player, Turret turret)
         {
-            var turrets = onDeploy.Invoke(player, modifiers);
+            PositionTurret(player, turret);
+            _objectService.Add(turret);
 
-            foreach (var turret in turrets)
+            foreach (var gun in turret.Guns)
             {
-                PositionTurret(player, turret);
-                _objectService.Add(turret);
-                
-                foreach (var gun in turret.Guns)
-                {
-                    _positionService.RegisterParent(turret, gun);
-                    _objectService.Add(gun);
-                }
+                _positionService.RegisterParent(turret, gun);
+                _objectService.Add(gun);
             }
         }
 

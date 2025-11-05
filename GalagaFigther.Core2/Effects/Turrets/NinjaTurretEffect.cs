@@ -4,7 +4,6 @@ using GalagaFighter.Core2.Models.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,14 +15,10 @@ namespace GalagaFighter.Core2.Effects.Turrets
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.Turrets.Create.Add(this, HandleOnDeploy);
-        }
-
-        private List<Turret> HandleOnDeploy(GameObject owner, PlayerModifiers modifiers)
-        {
-            var turret = new NinjaTurret(owner) {  Palette = owner.Palette };
-            turret.CollectedFrom = Id;
-            return [turret];
+            modifiers.PlayerActions.Add(player =>
+            {
+                player.Turrets.Add(new NinjaTurret(player) { Palette = player.Palette });
+            });
         }
     }
 }

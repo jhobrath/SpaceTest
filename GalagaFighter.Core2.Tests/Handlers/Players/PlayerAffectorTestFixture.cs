@@ -110,51 +110,6 @@ namespace GalagaFighter.Core2.Tests.Handlers.Players
             Assert.Equal(10, _assignedModifiers!.Stats.SpeedMultiplier);
         }
 
-        [Fact]
-        public void WhenRerolling_AndCollectibleRemains_ThenCollectibleInstancePersists_AndNoGunsAreAdded()
-        {
-            var existingGun = CreateDefaultGun(_player);
-            var testEffect = new TestEffect((t,m) => m.Guns.Create[t] = (p, m) => [existingGun]);
-            var guns = GetCollectibles<Gun>(testEffect, [existingGun]);
-
-            Given<PlayerModifiers>(_player, new() { Guns = guns });
-            Given<PlayerEffects>(_player, new([testEffect])
-            {
-                RequireRerolling = true
-            });
-
-            _affector.Affect(_player, 0);
-
-            Assert.NotNull(_assignedModifiers);
-            Assert.Equal(1, _assignedModifiers!.Guns.Count);
-            Assert.Equal(existingGun, _assignedModifiers!.Guns[0]);
-            Assert.Equal(0, _addedGameObjects.Count);
-            Assert.Equal(0, _registeredParents.Count);
-        }
-
-        [Fact]
-        public void WhenRerolling_AndCollectibleIsNew_ThenCollectibleInstanceAdded()
-        {
-            var newGun = CreateDefaultGun(_player);
-            var testEffect = new TestEffect((t, m) => m.Guns.Create[t] = (p,m) => [newGun]);
-            
-            Given<PlayerModifiers>(_player, new() { Guns = [] });
-            Given<PlayerEffects>(_player, new([testEffect])
-            {
-                RequireRerolling = true
-            });
-
-            _affector.Affect(_player, 0);
-
-            Assert.NotNull(_assignedModifiers);
-            Assert.Equal(1, _assignedModifiers!.Guns.Count);
-            Assert.Equal(newGun, _assignedModifiers!.Guns[0]);
-            Assert.Equal(1, _addedGameObjects.Count);
-            Assert.Equal(newGun, _addedGameObjects[0]);
-            Assert.Equal(1, _registeredParents.Count);
-            Assert.Equal(newGun, _registeredParents[_player][0]);
-        }
-
         private class TestEffect : PlayerEffect
         {
             private readonly Action<TestEffect, PlayerModifiers> _apply;

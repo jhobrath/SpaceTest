@@ -1,8 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Guns;
-using GalagaFighter.Core2.GameObjects.Projectiles;
-using GalagaFighter.Core2.Helpers;
-using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Players;
 using System;
 using System.Collections.Generic;
@@ -13,49 +10,18 @@ using System.Threading.Tasks;
 
 namespace GalagaFighter.Core2.Effects.Projectiles
 {
-    public class DefaultShootEffect : ProjectileEffect
+    public class DefaultShootEffect : PlayerEffect
     {
-        private readonly SpriteDecoration _moveDecoration = new SpriteDecoration(new StillImageSprite("Sprites/Ships/MainShip_Move.png")) { Key = "Move", MaintainRotation = true };
         protected override float Duration => 0f;
 
         public override void Apply(PlayerModifiers modifiers)
         {
-            modifiers.Decorations.Create[this] = (g, m) => [_moveDecoration];
-            modifiers.Guns.Create[this] = HandleGuns;
-        }
-
-        private List<Gun> HandleGuns(GameObject gameObject, PlayerModifiers modifiers)
-        {
-            var guns = new List<Gun>();
-            guns.Add(new DefaultGun(gameObject, false)
+            modifiers.PlayerActions.Add(player =>
             {
-                CollectedFrom = Id
-            }); 
-
-            if (modifiers.WeaponCount >= 1)
-                guns.Add(new BarGun(gameObject)
-                {
-                    CollectedFrom = Id
-                });
-
-            if(modifiers.WeaponCount >= 2)
-                guns.Add(new HomingGun(gameObject) {
-                    CollectedFrom = Id
-                });
-
-            if (modifiers.WeaponCount >= 3)
-            {
-                var defaultGun = (DefaultGun)modifiers.Guns.Single(x => x is DefaultGun);
-                defaultGun.ShootBoth = true;
-            }
-
-            if (modifiers.WeaponCount >= 4)
-                guns.Add(new ShotGun(gameObject)
-                {
-                    CollectedFrom = Id
-                });
-
-            return guns;
+                // Ensure at least one DefaultGun exists
+                if (!player.Guns.Any(g => g is DefaultGun))
+                    player.Guns.Add(new DefaultGun(player, false));
+            });
         }
     }
 }

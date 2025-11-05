@@ -1,6 +1,8 @@
 ﻿using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Players;
+using GalagaFighter.Core2.GameObjects.Guns;
+using GalagaFighter.Core2.GameObjects.Turrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,11 @@ namespace GalagaFighter.Core2.GameObjects
         };
 
         public List<PlayerRenderEffect> RenderEffects { get; set; } = [];
+
+        // New: Base state for guns and turrets
+        public int WeaponCount { get; set; } = 1;
+        public List<Gun> Guns { get; set; } = new();
+        public List<Turret> Turrets { get; set; } = new();
 
         public Player(Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite) 
             : base(Game.Id, position, size, speed, sprite)

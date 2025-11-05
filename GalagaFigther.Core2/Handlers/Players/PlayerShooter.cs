@@ -1,15 +1,11 @@
 ﻿using GalagaFighter.Core2.GameObjects;
-using GalagaFighter.Core2.GameObjects.Projectiles;
-using GalagaFighter.Core2.Handlers.Projectiles;
-using GalagaFighter.Core2.Models;
+using GalagaFighter.Core2.GameObjects.Guns;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
-using GalagaFighter.Core2.Services.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,33 +15,27 @@ namespace GalagaFighter.Core2.Handlers.Players
     {
         void Shoot(Player player, float frameTime);
     }
+
     public class PlayerShooter : IPlayerShooter
     {
         private readonly IGameDataRegistry _gameDataRegistry;
-        private readonly IProjectileShooter _projectileShooter;
+        private readonly IObjectService _objectService;
+        private readonly IGameObjectPositionService _positionService;
 
-        public PlayerShooter(IGameDataRegistry gameDataRegistry,IProjectileShooter projectileShooter)
+        public PlayerShooter(IGameDataRegistry gameDataRegistry, IObjectService objectService, IGameObjectPositionService positionService)
         {
             _gameDataRegistry = gameDataRegistry;
-            _projectileShooter = projectileShooter;
+            _objectService = objectService;
+            _positionService = positionService;
         }
 
         public void Shoot(Player player, float frameTime)
         {
-            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
-
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
-            if (!inputData.Shoot.IsDown)
+            if (inputData?.Shoot == null || !inputData.Shoot.IsDown)
                 return;
 
-            SpawnProjectiles(player, modifiers);
-        }
-
-        private void SpawnProjectiles(Player player, PlayerModifiers modifiers)
-        {
-            var rotationData = _gameDataRegistry.Get<PlayerRotationData>(player);
-
-            foreach (var gun in modifiers.Guns)
+            foreach (var gun in player.Guns)
                 gun.ShotRequested = true;
         }
     }

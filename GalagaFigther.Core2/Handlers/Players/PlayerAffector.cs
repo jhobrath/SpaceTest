@@ -59,38 +59,27 @@ namespace GalagaFighter.Core2.Handlers.Players
             foreach (var effect in effects)
                 effect.Apply(newModifiers);
 
+            effects.RemoveAll(x => x.DeactivateAfterApply);
+
             ApplyDecorationInitialRotation(player, newModifiers.Decorations);
             PersistPriorCollectibles(oldModifiers, newModifiers, effects);
 
-            CreateGuns(player, newModifiers, effects);
             CreateParticleEmitters(player, newModifiers, effects);
             CreateDecorations(player, newModifiers, effects);
 
             newModifiers.PlayerActions.ForEach(x => x(player));
             newModifiers.PlayerActions.Clear();
 
-            _gameDataRegistry.Set(player, newModifiers);
-        }
-
-        private void CreateGuns(Player player, PlayerModifiers newModifiers, PlayerEffects effects)
-        {
-            var effectIds = effects.Select(x => x.Id).ToList();
-            foreach (var gunToCreate in newModifiers.Guns.Create)
-            {
-                //Only add the gun if this effect is new
-                //if (newModifiers.Guns.Any(x => effectIds.Contains(x.CollectedFrom)))
-                //    continue;
-
-                var guns = gunToCreate.Value(player, newModifiers);
-                guns.RemoveAll(g => newModifiers.Guns.Any(x => x.GetType() == g.GetType()));
-
-                foreach (var gun in guns)
-                {
-                    newModifiers.Guns.Add(gun);
+            foreach (var gun in player.Guns)
+            { 
+                if(!_objectService.ContainsKey(gun.Id))
+                { 
                     _objectService.Add(gun);
                     _gameObjectPositionService.RegisterParent(player, gun);
                 }
             }
+
+            _gameDataRegistry.Set(player, newModifiers);
         }
 
         private void CreateParticleEmitters(Player player, PlayerModifiers newModifiers, PlayerEffects effects)
@@ -139,9 +128,7 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         private void PersistPriorCollectibles(PlayerModifiers oldModifiers, PlayerModifiers newModifiers, PlayerEffects effects)
         {
-            ApplyPriorCollectibles(oldModifiers.Guns, newModifiers.Guns, effects);
             ApplyPriorCollectibles(oldModifiers.Decorations, newModifiers.Decorations, effects);
-            ApplyPriorCollectibles(oldModifiers.Turrets, newModifiers.Turrets, effects);
             ApplyPriorCollectibles(oldModifiers.ParticleEmitters, newModifiers.ParticleEmitters, effects);
         }
 
@@ -164,9 +151,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         {
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
 
-            ClearOrphanedCollectibles(effects, modifiers.Guns);
             ClearOrphanedCollectibles(effects, modifiers.Decorations);
-            ClearOrphanedCollectibles(effects, modifiers.Turrets);
             ClearOrphanedCollectibles(effects, modifiers.ParticleEmitters);
 
             return modifiers;

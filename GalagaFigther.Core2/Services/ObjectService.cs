@@ -23,6 +23,7 @@ namespace GalagaFighter.Core2.Services
         Player GetPlayer(GameObject gun);
         int Count();
         Player GetOpponent(Player player);
+        bool ContainsKey(Guid id);
     }
 
     public class ObjectService : Dictionary<Guid, GameObject>, IObjectService, IDictionary<Guid, GameObject>

@@ -24,7 +24,7 @@ namespace GalagaFighter.Core2.Handlers.Players
         private readonly IGameObjectPositionService _positionService;
         private readonly IObjectService _objectService;
 
-        private readonly float _defaultDeployRate = 20f;
+        private readonly float _defaultDeployRate = 1f;
 
         public PlayerTurretDeployer(IGameDataRegistry gameDataRegistry, IObjectService objectService, IGameObjectPositionService positionService)
         {
@@ -47,14 +47,21 @@ namespace GalagaFighter.Core2.Handlers.Players
             if (!inputData.DeployTurret.IsDown)
                 return;
 
+            if (!player.Turrets.Any())
+                return;
+
             Deploy(player, turretData);
         }
 
         private void Deploy(Player player, PlayerTurretData turretData)
         {
-            foreach (var turret in player.Turrets)
-                DeployTurret(player, turret);
+            var turret = player.Turrets[player.TurretIndex];
+            player.Turrets.RemoveAt(player.TurretIndex);
 
+            if (player.TurretIndex > player.Turrets.Count)
+                player.TurretIndex = Math.Max(0, player.Turrets.Count - 1);
+            
+            DeployTurret(player, turret);
             turretData.DeployCountdown = _defaultDeployRate;
         }
 

@@ -29,6 +29,7 @@ namespace GalagaFighter.Core2.GameObjects
         public int WeaponCount { get; set; } = 1;
         public List<Gun> Guns { get; set; } = new();
         public List<Turret> Turrets { get; set; } = new();
+        public int TurretIndex { get; set; }
 
         public Player(Vector2 position, Vector2 size, Vector2 speed, SpriteBase sprite) 
             : base(Game.Id, position, size, speed, sprite)

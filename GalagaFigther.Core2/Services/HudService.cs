@@ -30,6 +30,8 @@ namespace GalagaFighter.Core2.Services
 
             RenderHealthBars(player1, player2); // Put this in the top-left corner and top right corner respectively
             RenderBaseStats(player1, player2); //Put Shield, Damage, Speed, FireRate (show firerate as 1/Firerate)
+            RenderTurretIcons(player1, false);
+            RenderTurretIcons(player2, true);
         }
 
 
@@ -148,6 +150,55 @@ namespace GalagaFighter.Core2.Services
             int fontSize = (int)(20 * scale);
             string healthText = $"HP: {currentHealth:0.0}";
             Raylib.DrawText(healthText, x + 8, y + 4, fontSize, new Color(255,255,255,255));
+        }
+
+        private void RenderTurretIcons(Player player, bool isRightJustified)
+        {
+            if (player?.Turrets == null || player.Turrets.Count == 0)
+                return;
+
+            var gameState = _gameDataRegistry.Get<GalagaFighter.Core2.Models.Game.GameState>();
+            var scale = gameState.UniformScale.X;
+            int iconSize = (int)(48 * scale);
+            int margin = (int)(30 * scale);
+            int spacing = (int)(iconSize * 1.1f);
+            int count = player.Turrets.Count;
+            int y = (int)(gameState.ScreenSize.Y - margin - iconSize); // Place at bottom of screen
+
+            for (int i = 0; i < count; i++)
+            {
+                int turretIdx = isRightJustified ? (count - 1 - i) : i;
+                int x = isRightJustified
+                    ? (int)(gameState.ScreenSize.X - margin - (i + 1) * spacing)
+                    : margin + i * spacing;
+
+                // Draw gray background
+                Raylib.DrawRectangle(x, y, iconSize, iconSize, new Color(80, 80, 80, 200));
+
+                // Draw turret sprite to fill the icon rectangle
+                var turret = player.Turrets[turretIdx];
+                if (turret.Sprite is not null)
+                {
+                    Rectangle dest = new Rectangle(x + (int)iconSize/2, y + (int)iconSize/2, iconSize, iconSize);
+                    turret.Sprite.Draw(dest);
+                }
+
+                foreach(var gun in turret.Guns)
+                {
+                    Rectangle dest = new Rectangle(x + (int)iconSize / 2, y + (int)iconSize / 2, iconSize, iconSize);
+                    gun.Sprite.Draw(dest);
+                }
+
+                // Draw blue rounded border if selected
+                if (turretIdx == player.TurretIndex)
+                {
+                    int borderThickness = (int)(4 * scale);
+                    Raylib.DrawRectangleRoundedLines(
+                        new Rectangle(x, y, iconSize, iconSize),
+                        0.3f, 8,  Color.Blue
+                    );
+                }
+            }
         }
     }
 }

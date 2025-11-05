@@ -12,6 +12,7 @@ namespace GalagaFighter.Core2.Effects.Turrets
     public class NinjaTurretEffect : PlayerEffect
     {
         protected override float Duration => 0f;
+        public override bool DeactivateAfterApply => true;
 
         public override void Apply(PlayerModifiers modifiers)
         {

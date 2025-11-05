@@ -49,13 +49,13 @@ namespace GalagaFighter.Core2.Services
         {
             _ellapsedTime += frameTime;
 
-            var chanceOfDropPerSecond = (_ellapsedTime)/5;
+            var chanceOfDropPerSecond = (_ellapsedTime);///5;
             var chanceOfDrop = chanceOfDropPerSecond * frameTime;
 
             if (_random.NextDouble() < chanceOfDrop)
             {
                 var existingPowerUps = _objectService.GetAll<PowerUp>();
-                if (existingPowerUps.Count() >= 2)
+                if (existingPowerUps.Count() >= 12)
                     return;
 
                 var powerUp = CreatePowerUp();

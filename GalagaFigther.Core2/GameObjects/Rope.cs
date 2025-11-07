@@ -1,5 +1,4 @@
-﻿using GalagaFighter.Core2.GameObjects;
-using GalagaFighter.Core2.Helpers;
+﻿using GalagaFighter.Core2.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalagaFighter.Core2.Handlers.Rope
+namespace GalagaFighter.Core2.GameObjects
 {
     public class RopeAttachment : GameObject
     {

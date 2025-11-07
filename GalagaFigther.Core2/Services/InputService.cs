@@ -47,8 +47,8 @@ namespace GalagaFighter.Core2.Services
                 var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
                 var mappings = playerMapping.Value;
                 
-                inputData.Forward.Update(mappings.IsForwardDown(), frameTime, _gameTime);
-                inputData.Back.Update(mappings.IsBackDown(), frameTime, _gameTime);
+                inputData.Up.Update(mappings.IsUpDown(), frameTime, _gameTime);
+                inputData.Down.Update(mappings.IsDownDown(), frameTime, _gameTime);
                 inputData.Left.Update(mappings.IsLeftDown(), frameTime, _gameTime);
                 inputData.Right.Update(mappings.IsRightDown(), frameTime, _gameTime);
                 inputData.Shoot.Update(mappings.IsShootDown(), frameTime, _gameTime);
@@ -73,8 +73,8 @@ namespace GalagaFighter.Core2.Services
 
     public interface IInputMappings
     {
-        bool IsForwardDown();
-        bool IsBackDown();
+        bool IsUpDown();
+        bool IsDownDown();
         bool IsLeftDown();
         bool IsRightDown();
         bool IsShootDown();
@@ -84,19 +84,19 @@ namespace GalagaFighter.Core2.Services
 
     public class KeyMappings : IInputMappings
     {
-        public KeyboardKey Forward { get; set; } = KeyboardKey.W;
-        public KeyboardKey Back { get; set; } = KeyboardKey.S;
+        public KeyboardKey Up { get; set; } = KeyboardKey.W;
+        public KeyboardKey Down { get; set; } = KeyboardKey.S;
         public KeyboardKey Left { get; set; } = KeyboardKey.A;
         public KeyboardKey Right { get; set; } = KeyboardKey.D;
         public KeyboardKey Shoot { get; set; } = KeyboardKey.K;
         public KeyboardKey Defend { get; set; } = KeyboardKey.J;
         public KeyboardKey DeployTurret { get; set; } = KeyboardKey.U;
 
-        public KeyMappings(KeyboardKey forward, KeyboardKey back, KeyboardKey left, KeyboardKey right, 
+        public KeyMappings(KeyboardKey up, KeyboardKey down, KeyboardKey left, KeyboardKey right, 
             KeyboardKey shoot, KeyboardKey defend, KeyboardKey deployTurret)
         {
-            Forward = forward;
-            Back = back;
+            Up = up;
+            Down = down;
             Left = left;
             Right = right;
             Shoot = shoot;
@@ -104,8 +104,8 @@ namespace GalagaFighter.Core2.Services
             DeployTurret = deployTurret;
         }
             
-        public bool IsForwardDown() => Raylib.IsKeyDown(Forward);
-        public bool IsBackDown() => Raylib.IsKeyDown(Back);
+        public bool IsUpDown() => Raylib.IsKeyDown(Up);
+        public bool IsDownDown() => Raylib.IsKeyDown(Down);
         public bool IsLeftDown() => Raylib.IsKeyDown(Left);
         public bool IsRightDown() => Raylib.IsKeyDown(Right);
         public bool IsShootDown() => Raylib.IsKeyDown(Shoot);
@@ -115,19 +115,19 @@ namespace GalagaFighter.Core2.Services
 
     public class GamepadMappings : IInputMappings
     {
-        public GamepadButton Forward { get; set; } = GamepadButton.LeftFaceUp;
-        public GamepadButton Back { get; set; } = GamepadButton.LeftFaceDown;
+        public GamepadButton Up { get; set; } = GamepadButton.LeftFaceUp;
+        public GamepadButton Down { get; set; } = GamepadButton.LeftFaceDown;
         public GamepadButton Left { get; set; } = GamepadButton.LeftFaceLeft;
         public GamepadButton Right { get; set; } = GamepadButton.LeftFaceRight;
         public GamepadButton Shoot { get; set; } = GamepadButton.RightTrigger1;
         public GamepadButton Defend { get; set; } = GamepadButton.LeftTrigger1;
         public GamepadButton DeployTurret { get; set; } = GamepadButton.RightFaceUp;
 
-        public GamepadMappings(GamepadButton forward, GamepadButton back, GamepadButton left, GamepadButton right,
+        public GamepadMappings(GamepadButton up, GamepadButton down, GamepadButton left, GamepadButton right,
             GamepadButton shoot, GamepadButton defend, GamepadButton deployTurret)
         {
-            Forward = forward;
-            Back = back;
+            Up = up;
+            Down = down;
             Left = left;
             Right = right;
             Shoot = shoot;
@@ -135,8 +135,8 @@ namespace GalagaFighter.Core2.Services
             DeployTurret = deployTurret;
         }
 
-        public bool IsForwardDown() => Raylib.IsGamepadButtonDown(0, Forward);
-        public bool IsBackDown() => Raylib.IsGamepadButtonDown(0, Back);
+        public bool IsUpDown() => Raylib.IsGamepadButtonDown(0, Up);
+        public bool IsDownDown() => Raylib.IsGamepadButtonDown(0, Down);
         public bool IsLeftDown() => Raylib.IsGamepadButtonDown(0, Left);
         public bool IsRightDown() => Raylib.IsGamepadButtonDown(0, Right);
         public bool IsShootDown() => Raylib.IsGamepadButtonDown(0, Shoot);

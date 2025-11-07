@@ -37,10 +37,10 @@ namespace GalagaFighter.Core2.Handlers.Players
             if (inputData.Right && !inputData.Left)
                 accelX = baseStats.Speed / .2f;
 
-            if (inputData.Forward.IsDown && !inputData.Back.IsDown)
+            if (inputData.Up.IsDown && !inputData.Down.IsDown)
                 accelY = -(baseStats.Speed *300f/500f)/ .18f;
 
-            if (inputData.Back.IsDown && !inputData.Forward.IsDown)
+            if (inputData.Down.IsDown && !inputData.Up.IsDown)
                 accelY = (baseStats.Speed * 300f/500f)/.18f;
 
             player.AccelTo(accelX, accelY);

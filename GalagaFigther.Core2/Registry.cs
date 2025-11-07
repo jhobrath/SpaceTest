@@ -37,6 +37,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IProjectileController, ProjectileController>();
             services.AddSingleton<IPowerUpController, PowerUpController>();
             services.AddSingleton<IRopeAttachmentController, RopeAttachmentController>();
+            services.AddSingleton<ISpringAttachmentController, SpringAttachmentController>();
 
             // Particle emitter handlers with action-based names
             services.AddSingleton<IParticleEmissionTimer, ParticleDurationHandler>();
@@ -63,6 +64,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<ICollisionController, CollisionController>();
             services.AddSingleton<IPlayerProjectileCollisionHandler, PlayerProjectileCollisionHandler>();
             services.AddSingleton<IProjectileProjectileCollisionHandler, ProjectileProjectileCollisionHandler>();
+            services.AddSingleton<ISpringEdgeCollisionHandler, SpringEdgeCollisionHandler>();
             services.AddSingleton<IGame, Game>();
 
             services.AddSingleton<IGunRecoiler, GunRecoiler>();

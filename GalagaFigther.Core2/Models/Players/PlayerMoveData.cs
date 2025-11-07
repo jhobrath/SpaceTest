@@ -12,5 +12,9 @@ namespace GalagaFighter.Core2.Models.Players
     {
         public Vector2 Min { get; set; }
         public Vector2 Max { get; set; }
+        public Vector2 MaxSpeed { get; set; }
+
+        public Vector2 LastLegalPosition { get; set; }
+        public Vector2 LastLegalWorldPosition { get; set; }
     }
 }

@@ -24,16 +24,18 @@ namespace GalagaFighter.Core2.Services
         private readonly IPlayerPowerUpCollisionHandler _playerPowerUpCollisionHandler;
         private readonly IPlayerProjectileCollisionHandler _playerProjectileCollisionHandler;
         private readonly IProjectileProjectileCollisionHandler _projectileProjectileCollisionHandler;
+        private readonly ISpringEdgeCollisionHandler _springEdgeCollisionHandler;
 
         public CollisionService(IObjectService objectService, IProjectilePowerUpCollisionHandler projectilePowerUpCollisionHandler,
-            IPlayerPowerUpCollisionHandler playerPowerUpCollisionHandler, IPlayerProjectileCollisionHandler playerProjectileCollisionHandler, 
-            IProjectileProjectileCollisionHandler projectileProjectileCollisionHandler)
+            IPlayerPowerUpCollisionHandler playerPowerUpCollisionHandler, IPlayerProjectileCollisionHandler playerProjectileCollisionHandler,
+            IProjectileProjectileCollisionHandler projectileProjectileCollisionHandler, ISpringEdgeCollisionHandler springEdgeCollisionHandler)
         {
             _objectService = objectService;
             _projectilePowerUpCollisionHandler = projectilePowerUpCollisionHandler;
             _playerPowerUpCollisionHandler = playerPowerUpCollisionHandler;
             _playerProjectileCollisionHandler = playerProjectileCollisionHandler;
             _projectileProjectileCollisionHandler = projectileProjectileCollisionHandler;
+            _springEdgeCollisionHandler = springEdgeCollisionHandler;
         }
 
         public void Update()
@@ -42,6 +44,20 @@ namespace GalagaFighter.Core2.Services
             CheckCollisions<Player, PowerUp>(_playerPowerUpCollisionHandler.Handle);
             CheckCollisions<Player, Projectile>(_playerProjectileCollisionHandler.Handle);
             CheckCollisions<Projectile, Projectile>(_projectileProjectileCollisionHandler.Handle);
+
+            var springs = _objectService.GetAll<SpringAttachment>().Select(x => x.Spring).Distinct();
+            foreach (var spring in springs)
+            {
+                if (spring == null) continue;
+
+                _springEdgeCollisionHandler.Handle(spring);
+            }
+        }
+
+        private void CheckEdge<T>(Action<SpringAttachment> handle)
+            where T : GameObject
+        {
+            
         }
 
         private void CheckCollisions<Type1, Type2>(Action<Type1, Type2> handle)

@@ -1,4 +1,4 @@
-﻿using GalagaFighter.Core2.Handlers.Rope;
+﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.Services;
 using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;

@@ -5,7 +5,6 @@ using GalagaFighter.Core2.Effects.Projectiles;
 using GalagaFighter.Core2.Effects.Statuses;
 using GalagaFighter.Core2.Effects.Turrets;
 using GalagaFighter.Core2.GameObjects;
-using GalagaFighter.Core2.Handlers.Rope;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models;
 using GalagaFighter.Core2.Models.Particles;
@@ -49,15 +48,36 @@ namespace GalagaFighter.Core2.Services
 
         private void CreatePlayers(int screenWidth, int screenHeight)
         {
-            var player1 = CreatePlayer(Game.Player1Id, 0, 90, new(95,95), new(550f+95, screenHeight+95), ShipPalettes.AzureWing);
+            var player1 = CreatePlayer(Game.Player1Id, 100, 90, new(95,95), new(550f+95, screenHeight+95), ShipPalettes.AzureWing);
             var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f-95, 95), new(screenWidth- 95,screenHeight+95), ShipPalettes.VoidHunter);
 
             //AddTether(player1, player2);
+            AddSpring(player1);
 
             _objectService.Add(player1);
             _objectService.Add(player2);
 
             RegisterInputMappings(player1, player2);
+        }
+
+        private void AddSpring(GameObject start)
+        {
+            // Rope attached to nose of ship
+            var springAttachmentBack = new SpringAttachment(start.Id, new(0, 50));
+            var springAttachmentLeft = new SpringAttachment(start.Id, new(-50, 0));
+            var springAttachmentRight = new SpringAttachment(start.Id, new(50, 00));
+
+            foreach(var attachment in new List<SpringAttachment>([springAttachmentLeft, springAttachmentBack, springAttachmentRight]))
+            {
+                var spring = new Spring(attachment, 100, 500f, 0.05f); // Visual stiffness for easier compression
+                var initialPos = attachment.WorldPosition;
+                foreach (var pt in spring.Points)
+                    pt.CurrentPosition = pt.OldPosition = initialPos;
+
+                attachment.Spring = spring;
+                _objectService.Add(attachment);
+                _gameObjectPositionService.RegisterParent(start, attachment);
+            }
         }
 
         private void AddTether(GameObject start, GameObject end)
@@ -121,6 +141,8 @@ namespace GalagaFighter.Core2.Services
             var bounds = _gameDataRegistry.Get<PlayerBoundsData>(player);
             bounds.Min = min;
             bounds.Max = max;
+
+            bounds.MaxSpeed = new(3000,3000);
 
             var playerRotation = _gameDataRegistry.Get<PlayerRotationData>(player);
             playerRotation.InitialRotation = rotation;

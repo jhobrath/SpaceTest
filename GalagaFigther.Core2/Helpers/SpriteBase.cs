@@ -227,6 +227,8 @@ namespace GalagaFighter.Core2.Helpers
         private bool _hasStarted = false;
         private bool _hasCompleted = true;
 
+        public int CurrentFrame { get; set; } = 0;
+
         public NonRepeatingAnimatedImageSprite(string texturePath, int frameCount, int frameWidth, int frameHeight, float frameLength) 
             : base(texturePath, frameCount, frameWidth, frameHeight, frameLength)
         {
@@ -236,6 +238,7 @@ namespace GalagaFighter.Core2.Helpers
         public override void Update(float frameTime)
         {
             base.Update(frameTime);
+            CurrentFrame = _frameIndex;
 
             if (_frameIndex > 0)
             { 
@@ -249,6 +252,7 @@ namespace GalagaFighter.Core2.Helpers
                 _frameIndex = _frameCount - 1;
                 SetSource();
             }
+
         }
 
         public bool IsComplete()

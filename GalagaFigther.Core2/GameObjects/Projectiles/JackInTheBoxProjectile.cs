@@ -1,4 +1,5 @@
-﻿using GalagaFighter.Core2.Helpers;
+﻿using GalagaFighter.Core2.Handlers.Projectiles;
+using GalagaFighter.Core2.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         {
             Damage = 0;
             AngularVelocity = 1000f;
+            Behaviors.Add(typeof(JackInTheBoxBehavior));
+            EdgeCollisionHandler = typeof(JackInTheBoxEdgeCollisionBehavior);
         }
 
         private static SpriteBase GetSprite()

@@ -53,7 +53,7 @@ namespace GalagaFighter.Core2.Services
             var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f-95, 95), new(screenWidth- 95,screenHeight+95), ShipPalettes.VoidHunter);
 
             //AddTether(player1, player2);
-            //AddSpring(player1);
+            AddSpring(player1);
 
             _objectService.Add(player1);
             _objectService.Add(player2);
@@ -151,10 +151,10 @@ namespace GalagaFighter.Core2.Services
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
             effects.Add(new JackInTheBoxEffect());
-            effects.Add(new AddWeaponEffect());
-            effects.Add(new AddWeaponEffect());
-            effects.Add(new AddWeaponEffect());
-            effects.Add(new AddWeaponEffect());
+            //effects.Add(new AddWeaponEffect());
+            //effects.Add(new AddWeaponEffect());
+            //effects.Add(new AddWeaponEffect());
+            //effects.Add(new AddWeaponEffect());
             effects.RequireRerolling = true;
 
             // Create engine trail emitter

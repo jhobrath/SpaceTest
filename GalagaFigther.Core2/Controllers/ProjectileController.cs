@@ -23,12 +23,14 @@ namespace GalagaFighter.Core2.Controllers
     public class ProjectileController : IProjectileController 
     {
         private readonly IGameDataRegistry _gameDataRegistry;
+        private readonly IObjectService _objectService;
         private readonly Dictionary<Type, IProjectileBehavior> _behaviorInstances;
 
-        public ProjectileController(IEnumerable<IProjectileBehavior> behaviors, IGameDataRegistry gameDataRegistry)
+        public ProjectileController(IEnumerable<IProjectileBehavior> behaviors, IGameDataRegistry gameDataRegistry, IObjectService objectService)
         {
             _behaviorInstances = behaviors.ToDictionary(b => b.GetType());
             _gameDataRegistry = gameDataRegistry;
+            _objectService = objectService;
         }
 
         public void Draw(Projectile projectile, float frameTime)
@@ -61,6 +63,14 @@ namespace GalagaFighter.Core2.Controllers
                 {
                     behavior.Update(projectile, frameTime);
                 }
+            }
+
+            if(projectile.NeedsDeactivating)
+            {
+                projectile.IsActive = false;
+
+                var childEmitters = _objectService.GetChildren<ParticleEmitter>(projectile).ToList();
+                childEmitters.ForEach(x => x.IsActive = false);
             }
         }
     }

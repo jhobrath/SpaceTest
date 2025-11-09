@@ -92,11 +92,6 @@ namespace GalagaFighter.Core2.Helpers
 
     public class DrawnSprite : SpriteBase
     {
-        public DrawnSprite(Texture2D texture)
-        {
-            SetTextureFactory(() => texture);
-        }
-
         public DrawnSprite(Func<Color?, Texture2D> colorAwareTextureFactory)
         {
             SetTextureFactory(() => colorAwareTextureFactory(PaletteSwap?.TargetColor));

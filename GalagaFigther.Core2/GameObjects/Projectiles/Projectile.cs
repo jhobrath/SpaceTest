@@ -35,6 +35,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         public bool DestroyOnHit { get; set; } = false;
         public bool Collidable { get; set; } = true;
         public bool SticksToWall { get; set; } = false;
+        public bool NeedsDeactivating { get; set; } = false;
 
         public virtual List<PlayerEffect> CreateEffects(Player player) => [];
 

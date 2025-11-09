@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.PowerUps;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.GameObjects.Shields;
 using GalagaFighter.Core2.Handlers.Collisions;
 using GalagaFighter.Core2.Services.Static;
 using Raylib_cs;
@@ -26,11 +27,12 @@ namespace GalagaFighter.Core2.Services
         private readonly IProjectileProjectileCollisionHandler _projectileProjectileCollisionHandler;
         private readonly ISpringEdgeCollisionHandler _springEdgeCollisionHandler;
         private readonly IProjectileEdgeCollisionHandler _projectileEdgeCollisionHandler;
+        private readonly IProjectileShieldCollisionHandler _projectileShieldCollisionHandler;
 
         public CollisionService(IObjectService objectService, IProjectilePowerUpCollisionHandler projectilePowerUpCollisionHandler,
             IPlayerPowerUpCollisionHandler playerPowerUpCollisionHandler, IPlayerProjectileCollisionHandler playerProjectileCollisionHandler,
-            IProjectileProjectileCollisionHandler projectileProjectileCollisionHandler, ISpringEdgeCollisionHandler springEdgeCollisionHandler, 
-            IProjectileEdgeCollisionHandler projectileEdgeCollisionHandler)
+            IProjectileProjectileCollisionHandler projectileProjectileCollisionHandler, ISpringEdgeCollisionHandler springEdgeCollisionHandler,
+            IProjectileEdgeCollisionHandler projectileEdgeCollisionHandler, IProjectileShieldCollisionHandler projectileShieldCollisionHandler)
         {
             _objectService = objectService;
             _projectilePowerUpCollisionHandler = projectilePowerUpCollisionHandler;
@@ -39,6 +41,7 @@ namespace GalagaFighter.Core2.Services
             _projectileProjectileCollisionHandler = projectileProjectileCollisionHandler;
             _springEdgeCollisionHandler = springEdgeCollisionHandler;
             _projectileEdgeCollisionHandler = projectileEdgeCollisionHandler;
+            _projectileShieldCollisionHandler = projectileShieldCollisionHandler;
         }
 
         public void Update()
@@ -47,6 +50,7 @@ namespace GalagaFighter.Core2.Services
             CheckCollisions<Player, PowerUp>(_playerPowerUpCollisionHandler.Handle);
             CheckCollisions<Player, Projectile>(_playerProjectileCollisionHandler.Handle);
             CheckCollisions<Projectile, Projectile>(_projectileProjectileCollisionHandler.Handle);
+            CheckCollisions<Projectile, ShieldPixel>(_projectileShieldCollisionHandler.Handle);
 
             var springs = _objectService.GetAll<SpringAttachment>().Select(x => x.Spring).Distinct();
             foreach (var spring in springs)

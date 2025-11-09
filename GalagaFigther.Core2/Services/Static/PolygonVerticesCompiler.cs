@@ -18,13 +18,13 @@ namespace GalagaFighter.Core2.Services.Static
             vertices = vertices.Select(x => x + gameObject.WorldPosition - gameObject.Rect.Size/2).ToArray();
 
             var rotated = (gameObject is Projectile projectile && projectile.IsTransformChild)
-                ? ApplyRotation(vertices, gameObject.Center, gameObject.WorldRotation - 90f)
-                : ApplyRotation(vertices, gameObject.Center, gameObject.WorldRotation);
+                ? RotatePoints(vertices, gameObject.Center, gameObject.WorldRotation - 90f)
+                : RotatePoints(vertices, gameObject.Center, gameObject.WorldRotation);
 
             return rotated;
         }
 
-        private static Vector2[] ApplyRotation(Vector2[] vertices, Vector2 origin, float rotation)
+        public static Vector2[] RotatePoints(Vector2[] vertices, Vector2 origin, float rotation)
         {
             // Apply rotation if needed
             if (rotation == 0)
@@ -38,21 +38,43 @@ namespace GalagaFighter.Core2.Services.Static
 
             for (int i = 0; i < vertices.Length; i++)
             {
-                // Translate to make rotation origin the center (0,0)
-                float x = vertices[i].X - origin.X;
-                float y = vertices[i].Y - origin.Y;
-                    
-                // Apply rotation
-                vertices[i] = new Vector2(
-                    x * cos - y * sin,
-                    x * sin + y * cos
-                );
-                    
-                // Translate back
-                vertices[i] += origin;
+                vertices[i] = RotatePoint(vertices[i], origin, cos, sin);
             }
 
             return vertices;
+        }
+
+        public static Vector2 RotatePoint(Vector2 point, Vector2 origin, float rotation)
+        {
+            // Apply rotation if needed
+            if (rotation == 0)
+                return point;
+
+            // Convert degrees to radians
+            float rotationInRadians = rotation * MathF.PI / 180f;
+
+            float cos = MathF.Cos(rotationInRadians);
+            float sin = MathF.Sin(rotationInRadians);
+
+            return RotatePoint(point, origin, cos, sin);
+        }
+
+        public static Vector2 RotatePoint(Vector2 point, Vector2 origin, float cos, float sin)
+        {
+            // Translate to make rotation origin the center (0,0)
+            float x = point.X - origin.X;
+            float y = point.Y - origin.Y;
+
+            // Apply rotation
+            point = new Vector2(
+                x * cos - y * sin,
+                x * sin + y * cos
+            );
+
+            // Translate back
+            point += origin;
+
+            return point;
         }
     }
 }

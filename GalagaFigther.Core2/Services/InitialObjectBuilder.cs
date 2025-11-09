@@ -53,7 +53,7 @@ namespace GalagaFighter.Core2.Services
             var player2 = CreatePlayer(Game.Player2Id, screenWidth - 168, -90, new(screenWidth-550f-95, 95), new(screenWidth- 95,screenHeight+95), ShipPalettes.VoidHunter);
 
             //AddTether(player1, player2);
-            AddSpring(player1);
+            //AddSpring(player1);
 
             _objectService.Add(player1);
             _objectService.Add(player2);
@@ -105,7 +105,8 @@ namespace GalagaFighter.Core2.Services
                 KeyboardKey.D,    // Right
                 KeyboardKey.K,    // Shoot
                 KeyboardKey.J,    // Defend
-                KeyboardKey.U     // Deploy Turret
+                KeyboardKey.U,    // Deploy Turret
+                KeyboardKey.I     //Shield
             );
 
             var player2Mappings = new GamepadMappings(
@@ -115,7 +116,8 @@ namespace GalagaFighter.Core2.Services
                 GamepadButton.LeftFaceRight,   // Right (TODO: Update with different keys)
                 GamepadButton.RightTrigger2,   // Shoot (TODO: Update with different keys)
                 GamepadButton.LeftTrigger2,    // Defend (TODO: Update with different keys)
-                GamepadButton.RightFaceUp      // Deploy Turret (TODO: Update with different keys)
+                GamepadButton.RightFaceUp,     // Deploy Turret (TODO: Update with different keys)
+                GamepadButton.LeftTrigger1     // Shield (TODO: Update with different keys)
             );
 
             _inputService.AddPlayer(player1.Id, player1Mappings);

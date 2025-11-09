@@ -31,13 +31,14 @@ namespace GalagaFighter.Core2.Services
         private readonly ICollisionController _collisionController;
         private readonly IRopeAttachmentController _ropeAttachmentController;
         private readonly ISpringAttachmentController _springAttachmentController;
+        private readonly IShieldController _shieldController;
 
         public GameObjectUpdateService(IObjectService objectService, IPlayerController playerController,
             IProjectileController projectileController, IPowerUpController powerUpController,
             ITurretController turretController, IGunController gunController,
             IParticleEmitterController particleEmitterController, IParticleController particleController,
-            ICollisionController collisionController, IRopeAttachmentController ropeAttachmentController, 
-            ISpringAttachmentController springAttachmentController)
+            ICollisionController collisionController, IRopeAttachmentController ropeAttachmentController,
+            ISpringAttachmentController springAttachmentController, IShieldController shieldController)
         {
             _objectService = objectService;
             _playerController = playerController;
@@ -50,6 +51,7 @@ namespace GalagaFighter.Core2.Services
             _collisionController = collisionController;
             _ropeAttachmentController = ropeAttachmentController;
             _springAttachmentController = springAttachmentController;
+            _shieldController = shieldController;
         }
 
         public void Update(float frameTime)
@@ -64,6 +66,7 @@ namespace GalagaFighter.Core2.Services
             UpdateType(_particleController, frameTime);
             UpdateType(_collisionController, frameTime);
             UpdateType(_ropeAttachmentController, frameTime);
+            UpdateType(_shieldController, frameTime);
         }
 
         private void UpdateType<T>(IController<T> controller, float frameTime)
@@ -86,6 +89,7 @@ namespace GalagaFighter.Core2.Services
             DrawType(_collisionController, frameTime);
             DrawType(_ropeAttachmentController, frameTime);
             DrawType(_springAttachmentController, frameTime);
+            DrawType(_shieldController, frameTime);
         }
 
         private void DrawType<T>(IController<T> controller, float frameTime)

@@ -1,5 +1,5 @@
 ﻿using GalagaFighter.Core2.GameObjects;
-using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.GameObjects.Shields;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
 using GalagaFighter.Core2.Services.Static;
@@ -16,10 +16,11 @@ namespace GalagaFighter.Core2.Handlers.Players
     {
         void Shield(Player player, float frameTime);
     }
+
     public class PlayerShielder : IPlayerShielder
     {
-        private readonly IObjectService _objectService;
         private readonly IGameDataRegistry _gameDataRegistry;
+        private readonly IObjectService _objectService;
 
         public PlayerShielder(IGameDataRegistry gameDataRegistry, IObjectService objectService)
         {
@@ -29,50 +30,67 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         public void Shield(Player player, float frameTime)
         {
-            var projectiles = _objectService.GetAll<Projectile>();
-            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+            var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
+            var shieldData = _gameDataRegistry.Get<PlayerShieldState>(player);
 
-            foreach(var projectile in projectiles)
+            if(!inputData.Shield.IsDown)
             {
-                if (projectile.Owner == player.Id)
-                    continue;
+                CenterPanels(shieldData.JustDrawn);
+                shieldData.JustDrawn = [];
+                shieldData.Start = null;
+                return;
+            }
 
-                Repulse(player, projectile, modifiers.Polarity);
+            var playerTip = GetPlayerTip(player);
+
+            if (!shieldData.Start.HasValue)
+            {
+                shieldData.Start = playerTip;
+                return;
+            }
+
+            if(Vector2.Distance(playerTip, shieldData.Start.Value) > 30)
+            {
+                var shieldPixel = CreateShieldPixel(player, shieldData.Start.Value);
+                shieldData.JustDrawn.Add(shieldPixel);
+                shieldData.Start = playerTip;
             }
         }
 
-        private void Repulse(Player player, Projectile projectile, float polarity)
+        private void CenterPanels(List<ShieldPixel> justDrawn)
         {
-            var distance = Vector2.Distance(player.Center, projectile.Center);
-            if (distance > 250f)
-                return;
+            for(var i = 0;i < justDrawn.Count;i++)
+            {
 
-            var xDist = player.Center.X - projectile.Center.X;
-            var yDist = player.Center.Y - projectile.Center.Y;
+            }
+        }
 
-            // Calculate the normalized direction vector from player to projectile
-            var repulseDir = new Vector2(-xDist, -yDist);
-            if (repulseDir.LengthSquared() > 0)
-                repulseDir = Vector2.Normalize(repulseDir);
-            else
-                repulseDir = new Vector2(1, 0);
+        private ShieldPixel CreateShieldPixel(Player player, Vector2 start)
+        {
+            var centerPoint = (player.WorldPosition + start) / 2f;
+            var direction = GetPlayerTip(player) - start;
+            var angleRadians = MathF.Atan2(direction.Y, direction.X);
+            var angleDegrees = angleRadians * 180f / MathF.PI; // Negate for Raylib, +90 to align
 
-            var currentSpeed = projectile.Speed;
-            var originalSpeed = currentSpeed.Length();
 
-            // Add a scaled nudge in the repulsion direction
-            float repulseScale = 547f; // This scale factor makes 1/-1 match your desired effect
-            var newVelocity = currentSpeed + repulseDir * -polarity * repulseScale;
-            if (newVelocity.LengthSquared() > 0)
-                newVelocity = Vector2.Normalize(newVelocity) * originalSpeed;
-            else
-                newVelocity = currentSpeed;
 
-            // Ownership logic (optional, as before)
-            if ((newVelocity.X < 0 && projectile.Speed.X > 0) || (newVelocity.X > 0 && projectile.Speed.X < 0))
-                projectile.Owner = player.Id;
+            var shieldPixel = new ShieldPixel(player.Id, centerPoint);
 
-            projectile.HurryTo(x: newVelocity.X, y: newVelocity.Y);
+            var actualDistance = direction.Length();
+            shieldPixel.ScaleTo(x: actualDistance);
+            shieldPixel.WorldPosition = centerPoint;
+            shieldPixel.Rotation = angleDegrees;
+            shieldPixel.Palette = player.Palette;
+
+            _objectService.Add(shieldPixel);
+            return shieldPixel;
+        }
+
+        private Vector2 GetPlayerTip(Player player)
+        {
+            var offsetAtZeroDegrees = new Vector2(0, -200); // Tip is 50 units "up" in local space
+            var point = PolygonVerticesCompiler.RotatePoint(player.WorldPosition + offsetAtZeroDegrees, player.WorldPosition, player.WorldRotation);
+            return point;
         }
     }
 }

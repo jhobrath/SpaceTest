@@ -1,5 +1,7 @@
 ﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models.Projectiles;
 using GalagaFighter.Core2.Services.Sprites;
 using System.Numerics;
 
@@ -15,6 +17,8 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         {
             Acceleration = new(500f,0);
             Damage = 3f;
+            Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
+            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
         }
 
         private static SpriteBase GetSprite()

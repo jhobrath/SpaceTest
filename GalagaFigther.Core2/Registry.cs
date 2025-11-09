@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GalagaFighter.Core2.GameObjects.Projectiles;
 
 namespace GalagaFighter.Core2
 {
@@ -48,7 +49,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IParticleEmissionShepherd, ParticleUpdateHandler>();
             services.AddSingleton<IParticleController, ParticleController>();
             services.AddSingleton<IParticleEmitterController, ParticleEmitterController>();
-            
+
             services.AddSingleton<IGameObjectUpdateService, GameObjectUpdateService>();
             services.AddSingleton<IPersistentValueHandler, PersistentValueHandler>();
             services.AddSingleton<IInitialObjectBuilder, InitialObjectBuilder>();
@@ -91,7 +92,30 @@ namespace GalagaFighter.Core2
                 return new ClearableServiceClearer(clearableServices);
             });
 
-            _provider = services.BuildServiceProvider();
+            // Register all IProjectileBehavior implementations as singletons (as self and as interface)
+            // Only register concrete, non-abstract, non-generic, non-base behaviors
+            var projBehaviors = typeof(IProjectileBehavior).Assembly.GetTypes()
+                .Where(t =>
+                    typeof(IProjectileBehavior).IsAssignableFrom(t)
+                    && !t.IsInterface
+                    && !t.IsAbstract
+                    && !t.IsGenericTypeDefinition
+                    && t != typeof(ProjectileBehaviorBase)
+                )
+                .ToList();
+
+            foreach (var type in projBehaviors)
+            {
+                services.AddSingleton(type);
+                services.AddSingleton(typeof(IProjectileBehavior), provider => provider.GetRequiredService(type));
+            }
+
+            // Register collision behaviors if you have any (e.g., DefaultPlayerCollisionBehavior, etc.)
+            // Example:
+            // services.AddSingleton<DefaultPlayerCollisionBehavior>();
+            // services.AddSingleton<IProjectileBehavior, DefaultPlayerCollisionBehavior>();
+
+            var _provider = services.BuildServiceProvider();
             return _provider;
         }
 

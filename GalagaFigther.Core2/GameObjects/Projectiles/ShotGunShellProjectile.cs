@@ -10,6 +10,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Raylib_cs;
+using GalagaFighter.Core2.Handlers.Projectiles;
 
 namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
@@ -25,7 +26,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         public ShotGunShellProjectile(Guid owner)
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
-            Lifetime = .4f;
+            Lifetime = .8f;
             Bounds = [
                 new(0f,.5f),
                 new(1f,0f),
@@ -56,11 +57,13 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 
             Color = Color.White.ApplyAlpha(.5f);//.AdjustLightness(1.5f);
 
+            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
+
         }
 
         private static SpriteBase GetSprite()
         {
-            return new NonRepeatingAnimatedDrawnSprite(new(600f,100f), 7, .4f/7, ShotGunShellProjectileSpriteGenerator.CreateAnimatedShotGunShellProjectile);
+            return new NonRepeatingAnimatedDrawnSprite(new(600f,100f), 7, .8f/7, ShotGunShellProjectileSpriteGenerator.CreateAnimatedShotGunShellProjectile);
         }
 
         public override List<PlayerEffect> CreateEffects(Player player) => [];

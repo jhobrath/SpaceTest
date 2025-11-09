@@ -1,5 +1,7 @@
 ﻿using GalagaFighter.Core2.Effects;
+using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Helpers;
+using GalagaFighter.Core2.Models.Projectiles;
 using GalagaFighter.Core2.Services.Sprites;
 using System.Numerics;
 
@@ -14,7 +16,10 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             : base(owner, Vector2.Zero, _baseSize, _baseSpeed, GetSprite())
         {
             Damage = 1;
-            Homing = 1;
+            Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
+            Behaviors.Add(typeof(HomingBehavior));
+            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
+            StateModels.Add(new HomingState { Homing = 1f });
         }
 
         private static SpriteBase GetSprite()

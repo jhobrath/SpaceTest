@@ -1,7 +1,9 @@
 ﻿using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Effects.Statuses;
+using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Helpers;
 using GalagaFighter.Core2.Models.Particles;
+using GalagaFighter.Core2.Models.Projectiles;
 using GalagaFighter.Core2.Services;
 using System;
 using System.Collections.Generic;
@@ -22,7 +24,10 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         {
             AngularVelocity = 1000f;
             Damage = 1f;
-            Veer = 1000f;
+            Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
+            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
+            Behaviors.Add(typeof(VeerBehavior));
+            StateModels.Add(new VeerState { Veer = 1000f });
         }
 
         private static SpriteBase GetSprite()

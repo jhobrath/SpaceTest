@@ -107,6 +107,11 @@ namespace GalagaFighter.Core2.Services
 
         private void Rotate(GameObject gameObject, float frameTime)
         {
+            if(gameObject is JackInTheBoxProjectile)
+            {
+                var s = "";
+            }
+
             if(gameObject.AngularVelocity != 0f)
             {
                 gameObject.Rotation += gameObject.AngularVelocity * frameTime;

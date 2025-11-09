@@ -25,7 +25,6 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             AngularVelocity = 1000f;
             Damage = 1f;
             Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
-            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
             Behaviors.Add(typeof(VeerBehavior));
             StateModels.Add(new VeerState { Veer = 1000f });
         }

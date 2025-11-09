@@ -43,8 +43,8 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         public List<IGameObjectData<Projectile>> StateModels { get; } = new();
 
         // New properties for explicit collision response assignment
-        public Type? PlayerCollisionHandler { get; set; }
-        public Type? EdgeCollisionHandler { get; set; }
+        public Type? PlayerCollisionHandler { get; set; } = typeof(DefaultProjectilePlayerCollisionBehavior);
+        public Type? EdgeCollisionHandler { get; set; } = typeof(DefaultProjectileEdgeCollisionBehavior);
     }
 
     public interface IProjectileBehavior

@@ -66,6 +66,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IPlayerProjectileCollisionHandler, PlayerProjectileCollisionHandler>();
             services.AddSingleton<IProjectileProjectileCollisionHandler, ProjectileProjectileCollisionHandler>();
             services.AddSingleton<ISpringEdgeCollisionHandler, SpringEdgeCollisionHandler>();
+            services.AddSingleton<IProjectileEdgeCollisionHandler, ProjectileEdgeCollisionHandler>();
             services.AddSingleton<IGame, Game>();
 
             services.AddSingleton<IGunRecoiler, GunRecoiler>();
@@ -93,7 +94,6 @@ namespace GalagaFighter.Core2
             });
 
             // Register all IProjectileBehavior implementations as singletons (as self and as interface)
-            // Only register concrete, non-abstract, non-generic, non-base behaviors
             var projBehaviors = typeof(IProjectileBehavior).Assembly.GetTypes()
                 .Where(t =>
                     typeof(IProjectileBehavior).IsAssignableFrom(t)
@@ -106,14 +106,22 @@ namespace GalagaFighter.Core2
 
             foreach (var type in projBehaviors)
             {
-                services.AddSingleton(type);
-                services.AddSingleton(typeof(IProjectileBehavior), provider => provider.GetRequiredService(type));
+                services.AddSingleton(typeof(IProjectileBehavior), type);
             }
 
-            // Register collision behaviors if you have any (e.g., DefaultPlayerCollisionBehavior, etc.)
-            // Example:
-            // services.AddSingleton<DefaultPlayerCollisionBehavior>();
-            // services.AddSingleton<IProjectileBehavior, DefaultPlayerCollisionBehavior>();
+            // Register all IProjectilePlayerCollisionBehavior implementations as singletons (like IClearable)
+            var playerCollisionBehaviors = typeof(IProjectilePlayerCollisionBehavior).Assembly.GetTypes()
+                .Where(t =>
+                    typeof(IProjectilePlayerCollisionBehavior).IsAssignableFrom(t)
+                    && !t.IsInterface
+                    && !t.IsAbstract
+                    && !t.IsGenericTypeDefinition)
+                .ToList();
+
+            foreach (var type in playerCollisionBehaviors)
+            {
+                services.AddSingleton(typeof(IProjectilePlayerCollisionBehavior), type);
+            }
 
             var _provider = services.BuildServiceProvider();
             return _provider;

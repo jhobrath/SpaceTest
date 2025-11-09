@@ -25,10 +25,12 @@ namespace GalagaFighter.Core2.Services
         private readonly IPlayerProjectileCollisionHandler _playerProjectileCollisionHandler;
         private readonly IProjectileProjectileCollisionHandler _projectileProjectileCollisionHandler;
         private readonly ISpringEdgeCollisionHandler _springEdgeCollisionHandler;
+        private readonly IProjectileEdgeCollisionHandler _projectileEdgeCollisionHandler;
 
         public CollisionService(IObjectService objectService, IProjectilePowerUpCollisionHandler projectilePowerUpCollisionHandler,
             IPlayerPowerUpCollisionHandler playerPowerUpCollisionHandler, IPlayerProjectileCollisionHandler playerProjectileCollisionHandler,
-            IProjectileProjectileCollisionHandler projectileProjectileCollisionHandler, ISpringEdgeCollisionHandler springEdgeCollisionHandler)
+            IProjectileProjectileCollisionHandler projectileProjectileCollisionHandler, ISpringEdgeCollisionHandler springEdgeCollisionHandler, 
+            IProjectileEdgeCollisionHandler projectileEdgeCollisionHandler)
         {
             _objectService = objectService;
             _projectilePowerUpCollisionHandler = projectilePowerUpCollisionHandler;
@@ -36,6 +38,7 @@ namespace GalagaFighter.Core2.Services
             _playerProjectileCollisionHandler = playerProjectileCollisionHandler;
             _projectileProjectileCollisionHandler = projectileProjectileCollisionHandler;
             _springEdgeCollisionHandler = springEdgeCollisionHandler;
+            _projectileEdgeCollisionHandler = projectileEdgeCollisionHandler;
         }
 
         public void Update()
@@ -51,6 +54,12 @@ namespace GalagaFighter.Core2.Services
                 if (spring == null) continue;
 
                 _springEdgeCollisionHandler.Handle(spring);
+            }
+
+            var projectiles = _objectService.GetAll<Projectile>();
+            foreach(var projectile in projectiles)
+            {
+                _projectileEdgeCollisionHandler.Handle(projectile);
             }
         }
 

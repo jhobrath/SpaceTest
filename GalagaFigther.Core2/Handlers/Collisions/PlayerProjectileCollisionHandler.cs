@@ -1,6 +1,7 @@
 ﻿using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Collisions;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.Handlers.Projectiles;
 using GalagaFighter.Core2.Models.Particles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
@@ -23,75 +24,22 @@ namespace GalagaFighter.Core2.Handlers.Collisions
     {
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IObjectService _objectService;
+        private readonly Dictionary<Type, IProjectilePlayerCollisionBehavior> _collisionBehaviors;
 
-        public PlayerProjectileCollisionHandler(IGameDataRegistry gameDataRegistry, IObjectService objectService)
+        public PlayerProjectileCollisionHandler(IGameDataRegistry gameDataRegistry, IObjectService objectService, IEnumerable<IProjectilePlayerCollisionBehavior> collisionBehaviors)
         {
             _gameDataRegistry = gameDataRegistry;
             _objectService = objectService;
+            _collisionBehaviors = collisionBehaviors.ToDictionary(b => b.GetType());
         }
 
         public void Handle(Player player, Projectile projectile)
         {
-            if (player.Id == projectile.Owner)
-                return;
-
-            if (!projectile.Collidable)
-                return;
-
-            UpdateHealth(player, projectile);
-            UpdateEffects(player, projectile);
-            CreateCollision(projectile);
-            DeactivateProjectile(projectile);
-            AddDamageRenderEffect(player);
-        }
-
-        private void AddDamageRenderEffect(Player player)
-        {
-            var renderEffects = _gameDataRegistry.Get<PlayerRenderEffects>(player);
-            renderEffects.Add(new PlayerRenderEffect(RenderEffectActions.Flash(Color.Red), .25f, 1));
-            renderEffects.Add(new PlayerRenderEffect(RenderEffectActions.Heartbeat, .125f, -.0625f));
-        }
-
-        private void DeactivateProjectile(Projectile projectile)
-        {
-            if (projectile.DestroyOnHit)
-                projectile.IsActive = false;
-            else
-                projectile.Collidable = false;
-            
-            var emitters = _objectService.GetChildren<ParticleEmitter>(projectile).ToList();
-            emitters.ForEach(x => x.IsActive = false);
-        }
-
-        private void CreateCollision(Projectile projectile)
-        {
-            var collisionPoint = new Vector2(projectile.Speed.X < 0 ? projectile.WorldPosition.X : projectile.WorldPosition.X + projectile.Width,
-                            projectile.WorldPosition.Y + projectile.Height / 2f);
-
-            var collision = new DefaultCollision(collisionPoint, 55f);
-            _objectService.Add(collision);
-        }
-
-        private void UpdateEffects(Player player, Projectile projectile)
-        {
-            var currentEffects = _gameDataRegistry.Get<PlayerEffects>(player);
-            var effects = projectile.CreateEffects(player);
-            currentEffects.AddRange(effects);
-        }
-
-        private void UpdateHealth(Player player, Projectile projectile)
-        {
-            var opponent = _objectService.GetOpponent(player);
-            var opponentStats = _gameDataRegistry.Get<PlayerBaseStats>(opponent);
-            var opponentModifiers = _gameDataRegistry.Get<PlayerModifiers>(opponent);
-            var shooterDamageMultiplier = opponentStats.Damage * opponentModifiers.Stats.DamageMultiplier;
-
-            var baseStats = _gameDataRegistry.Get<PlayerBaseStats>(player);
-            var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
-            var shieldMultiplier = baseStats.Shield * modifiers.Stats.ShieldMultiplier;
-
-            var damage = projectile.Damage * shooterDamageMultiplier * (1 / shieldMultiplier);
-            player.Health -= damage;
+            if (projectile.PlayerCollisionHandler != null &&
+                _collisionBehaviors.TryGetValue(projectile.PlayerCollisionHandler, out var behavior))
+            {
+                behavior.OnPlayerCollision(projectile, player, _gameDataRegistry, _objectService);
+            }
         }
     }
 }

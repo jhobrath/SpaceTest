@@ -55,10 +55,9 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             _emitterConfig.Drag = 1700f;
             _emitterConfig.HasVerticalInertia = true;
 
-            Color = Color.White.ApplyAlpha(.5f);//.AdjustLightness(1.5f);
+            Behaviors.Add(typeof(LifetimeDeactivationBehavior));
 
-            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
-
+            Color = Color.White.ApplyAlpha(.5f);
         }
 
         private static SpriteBase GetSprite()

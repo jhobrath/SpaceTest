@@ -42,7 +42,6 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             Damage = 0;
 
             Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
-            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
         }
 
         private static SpriteBase GetSprite()

@@ -18,7 +18,6 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             Damage = 1;
             Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
             Behaviors.Add(typeof(HomingBehavior));
-            Behaviors.Add(typeof(EdgeDeactivatesBehavior));
             StateModels.Add(new HomingState { Homing = 1f });
         }
 

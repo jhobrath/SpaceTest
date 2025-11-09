@@ -65,7 +65,7 @@ namespace GalagaFighter.Core2.Handlers.Players
             var xIsNaN = !(player.Y <= 0) && !(player.Y > 0);
             if (player.X > bounds.Max.X || xIsNaN)
             {
-                player.MoveTo(bounds.LastLegalPosition.X, bounds.LastLegalPosition.Y);
+                player.MoveTo(bounds.LastLegalPosition.X);
                 player.WorldPosition = bounds.LastLegalWorldPosition;
                 return false;
             }
@@ -73,7 +73,7 @@ namespace GalagaFighter.Core2.Handlers.Players
             var yIsNaN = !(player.Y <= 0) && !(player.Y > 0);
             if (player.Y < bounds.Min.Y || yIsNaN)
             {
-                player.MoveTo(bounds.LastLegalPosition.X, bounds.LastLegalPosition.Y);
+                player.MoveTo(y: bounds.LastLegalPosition.Y);
                 player.WorldPosition = bounds.LastLegalWorldPosition;
                 return false;
             }
@@ -93,15 +93,15 @@ namespace GalagaFighter.Core2.Handlers.Players
             var xIsNaN = !(player.X <= 0) && !(player.X > 0);
             if (player.X < bounds.Min.X || xIsNaN)
             {
-                player.MoveTo(bounds.LastLegalPosition.X, bounds.LastLegalPosition.Y);
+                player.MoveTo(bounds.LastLegalPosition.X);
                 player.WorldPosition = bounds.LastLegalWorldPosition;
                 return false;
             }
 
             var yIsNaN = !(player.Y <= 0) && !(player.Y > 0);
-            if(player.Y < bounds.Min.Y || yIsNaN)
+            if (player.Y < bounds.Min.Y || yIsNaN)
             {
-                player.MoveTo(bounds.LastLegalPosition.X, bounds.LastLegalPosition.Y);
+                player.MoveTo(y: bounds.LastLegalPosition.Y);
                 player.WorldPosition = bounds.LastLegalWorldPosition;
                 return false;
             }

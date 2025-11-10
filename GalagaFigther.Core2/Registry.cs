@@ -77,7 +77,10 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGunRotator, GunRotator>();
             services.AddSingleton<IGunShooter, GunShooter>();
             services.AddSingleton<IHudService, HudService>();
+            
+            // CPU AI System
             services.AddSingleton<ICpuInputService, CpuInputService>();
+            services.AddSingleton<ICpuDecisionEngine, CpuDecisionEngine>();
 
             // This will automatically find all registered services that implement IClearable
             services.AddSingleton<IClearableServiceClearer>(provider =>

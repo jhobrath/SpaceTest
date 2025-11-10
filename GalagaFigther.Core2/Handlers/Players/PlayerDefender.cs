@@ -1,4 +1,6 @@
-﻿using GalagaFighter.Core2.GameObjects;
+﻿using GalagaFighter.Core2.Effects.Defensives;
+using GalagaFighter.Core2.Effects.Statuses;
+using GalagaFighter.Core2.GameObjects;
 using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.Models.Players;
 using GalagaFighter.Core2.Services;
@@ -32,12 +34,28 @@ namespace GalagaFighter.Core2.Handlers.Players
             var projectiles = _objectService.GetAll<Projectile>();
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
 
+            if (modifiers.Polarity == 0)
+            {
+                AddShield(player);
+                return;
+            }
+
             foreach(var projectile in projectiles)
             {
                 if (projectile.Owner == player.Id)
                     continue;
 
                 Repulse(player, projectile, modifiers.Polarity);
+            }
+        }
+
+        private void AddShield(Player player)
+        {
+            var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
+            if(inputData.Defend.IsPressed)
+            {
+                var effects = _gameDataRegistry.Get<PlayerEffects>(player);
+                effects.Add(new RepulseEffect());
             }
         }
 

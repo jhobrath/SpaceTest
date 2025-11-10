@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.Controllers;
+using GalagaFighter.Core2.CPU;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Services;
 using GalagaFighter.Core2.Services.Static;
@@ -24,6 +25,7 @@ namespace GalagaFighter.Core2
         private readonly IGameObjectPositionService _gameObjectPositionService;
         private readonly IClearableServiceClearer _clearableServiceClearer;
         private readonly IHudService _hudService;
+        private readonly ICpuInputService _cpuInputService;
 
         private static Guid _id = Guid.NewGuid();
         public static Guid Id => _id;
@@ -39,7 +41,8 @@ namespace GalagaFighter.Core2
             IInputService inputService, IPersistentValueHandler persistentValueHandler,
             IGameObjectUpdateService gameObjectUpdateService, IPowerUpCreationService powerUpCreationService,
             ICollisionService collisionService, IGameObjectPositionService gameObjectPositionService,
-            IGameDataRegistry gameDataRegistry, IClearableServiceClearer clearableServiceClearer, IHudService hudService)
+            IGameDataRegistry gameDataRegistry, IClearableServiceClearer clearableServiceClearer, IHudService hudService, 
+            ICpuInputService cpuInputService)
         {
             _objectService = objectService;
             _initialObjectBuilder = initialObjectBuilder;
@@ -52,6 +55,7 @@ namespace GalagaFighter.Core2
             _gameDataRegistry = gameDataRegistry;
             _clearableServiceClearer = clearableServiceClearer;
             _hudService = hudService;
+            _cpuInputService = cpuInputService;
         }
 
         public void Run()
@@ -101,6 +105,7 @@ namespace GalagaFighter.Core2
         private void UpdateServices(float frameTime)
         {
             _inputService.Update(frameTime);
+            _cpuInputService.Update(frameTime);
             _powerUpCreationService.Update(frameTime);
             _persistentValueHandler.Update(frameTime);
             _hudService.Update();

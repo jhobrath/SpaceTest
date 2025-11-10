@@ -21,7 +21,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         public bool ShootBoth { get; set; }
 
         public override List<GunBarrel> Barrels => _barrels;
-        public override float FireRate => ShootBoth ? .6f : .3f;
+        public override float FireRate => ShootBoth ? .5f : .3f;
 
         public DefaultGun(GameObject owner, bool shootBoth) 
             : base(owner, new StillImageSprite("Sprites/Ships/MainShipGuns.png"))

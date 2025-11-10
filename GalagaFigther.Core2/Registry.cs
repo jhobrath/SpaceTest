@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GalagaFighter.Core2.GameObjects.Projectiles;
+using GalagaFighter.Core2.CPU;
 
 namespace GalagaFighter.Core2
 {
@@ -76,6 +77,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGunRotator, GunRotator>();
             services.AddSingleton<IGunShooter, GunShooter>();
             services.AddSingleton<IHudService, HudService>();
+            services.AddSingleton<ICpuInputService, CpuInputService>();
 
             // This will automatically find all registered services that implement IClearable
             services.AddSingleton<IClearableServiceClearer>(provider =>

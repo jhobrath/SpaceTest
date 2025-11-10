@@ -127,7 +127,7 @@ namespace GalagaFighter.Core2.Services
         public GamepadButton Shoot { get; set; } = GamepadButton.RightTrigger1;
         public GamepadButton Defend { get; set; } = GamepadButton.LeftTrigger1;
         public GamepadButton DeployTurret { get; set; } = GamepadButton.RightFaceUp;
-        public GamepadButton Shield { get; set; } = GamepadButton.LeftTrigger2;
+        public GamepadButton Shield { get; set; } = GamepadButton.RightFaceDown;
 
         public GamepadMappings(GamepadButton up, GamepadButton down, GamepadButton left, GamepadButton right,
             GamepadButton shoot, GamepadButton defend, GamepadButton deployTurret, GamepadButton shield)

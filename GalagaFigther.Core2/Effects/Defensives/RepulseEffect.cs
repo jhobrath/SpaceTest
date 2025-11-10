@@ -19,7 +19,7 @@ namespace GalagaFighter.Core2.Effects.Defensives
         {
             _sprite = new SpriteDecoration(
                 new AnimatedDrawnSprite(new(300, 35), 24, .015f, RepulseShieldSpriteGenerator.CreateAnimatedMagnetShieldSprite),
-                new Vector2(0, -90),
+                new Vector2(90, 0),
                 new Vector2(300, 35))
             { 
                 CollectedFrom = Id,
@@ -27,7 +27,7 @@ namespace GalagaFighter.Core2.Effects.Defensives
             };
         }
 
-        protected override float Duration => 1000f;
+        protected override float Duration => .25f;
 
         public override void Apply(PlayerModifiers modifiers)
         {

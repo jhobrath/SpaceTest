@@ -39,6 +39,9 @@ namespace GalagaFighter.Core2.Services
         private readonly IGameDataRegistry _gameDataRegistry;
         private readonly IObjectService _objectService;
 
+        private float _dropLimitFactor = 5f;
+        private int _maxOnScreenAtOnce = 2;
+
         public PowerUpCreationService(IGameDataRegistry gameDataRegistry, IObjectService objectService)
         {
             _gameDataRegistry = gameDataRegistry;
@@ -49,13 +52,14 @@ namespace GalagaFighter.Core2.Services
         {
             _ellapsedTime += frameTime;
 
-            var chanceOfDropPerSecond = (_ellapsedTime);///5;
+
+            var chanceOfDropPerSecond = (_ellapsedTime)/ _dropLimitFactor;
             var chanceOfDrop = chanceOfDropPerSecond * frameTime;
 
             if (_random.NextDouble() < chanceOfDrop)
             {
                 var existingPowerUps = _objectService.GetAll<PowerUp>();
-                if (existingPowerUps.Count() >= 12)
+                if (existingPowerUps.Count() >= _maxOnScreenAtOnce)
                     return;
 
                 var powerUp = CreatePowerUp();

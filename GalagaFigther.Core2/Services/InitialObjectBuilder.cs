@@ -1,4 +1,5 @@
 ﻿using GalagaFighter.Core2.Controllers;
+using GalagaFighter.Core2.CPU;
 using GalagaFighter.Core2.Effects;
 using GalagaFighter.Core2.Effects.Defensives;
 using GalagaFighter.Core2.Effects.Projectiles;
@@ -27,15 +28,17 @@ namespace GalagaFighter.Core2.Services
         private IGameDataRegistry _gameDataRegistry;
         private IInputService _inputService;
         private IGameObjectPositionService _gameObjectPositionService;
+        private ICpuInputService _cpuInputService;
 
-        public InitialObjectBuilder(IObjectService objectService, IPersistentValueHandler persistentValueHandler, 
-            IGameDataRegistry gameDataRegistry, IInputService inputService, IGameObjectPositionService gameObjectPositionService)
+        public InitialObjectBuilder(IObjectService objectService, IPersistentValueHandler persistentValueHandler,
+            IGameDataRegistry gameDataRegistry, IInputService inputService, IGameObjectPositionService gameObjectPositionService, ICpuInputService cpuInputService)
         {
             _objectService = objectService;
             _persistentValueHandler = persistentValueHandler;
             _gameDataRegistry = gameDataRegistry;
             _inputService = inputService;
             _gameObjectPositionService = gameObjectPositionService;
+            _cpuInputService = cpuInputService;
         }
 
         public void Build()
@@ -114,14 +117,16 @@ namespace GalagaFighter.Core2.Services
                 GamepadButton.LeftFaceDown,
                 GamepadButton.LeftFaceLeft,    // Left (TODO: Update with different keys)
                 GamepadButton.LeftFaceRight,   // Right (TODO: Update with different keys)
-                GamepadButton.RightTrigger2,   // Shoot (TODO: Update with different keys)
-                GamepadButton.LeftTrigger2,    // Defend (TODO: Update with different keys)
+                GamepadButton.RightTrigger1,   // Shoot (TODO: Update with different keys)
+                GamepadButton.LeftTrigger1,    // Defend (TODO: Update with different keys)
                 GamepadButton.RightFaceUp,     // Deploy Turret (TODO: Update with different keys)
-                GamepadButton.LeftTrigger1     // Shield (TODO: Update with different keys)
+                GamepadButton.RightFaceDown // Shield (TODO: Update with different keys)
             );
 
+            _cpuInputService.SetPlayer(player2);
+
             _inputService.AddPlayer(player1.Id, player1Mappings);
-            _inputService.AddPlayer(player2.Id, player2Mappings);
+            _inputService.AddPlayer(player2.Id, (IInputMappings)_cpuInputService);
         }
 
         private Player CreatePlayer(Guid playerId, int x, float rotation, Vector2 min, Vector2 max, Color palette)
@@ -152,7 +157,7 @@ namespace GalagaFighter.Core2.Services
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
-            effects.Add(new JackInTheBoxEffect());
+            //effects.Add(new JackInTheBoxEffect());
             //effects.Add(new AddWeaponEffect());
             //effects.Add(new AddWeaponEffect());
             //effects.Add(new AddWeaponEffect());

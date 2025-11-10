@@ -30,6 +30,10 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         public void Shield(Player player, float frameTime)
         {
+            var shieldCount = _objectService.GetAll<ShieldPixel>().Count(x => x.Owner == player.Id);
+            if (shieldCount >= 10)
+                return;
+
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
             var shieldData = _gameDataRegistry.Get<PlayerShieldState>(player);
 

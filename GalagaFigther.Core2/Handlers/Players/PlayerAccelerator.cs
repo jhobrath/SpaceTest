@@ -31,29 +31,37 @@ namespace GalagaFighter.Core2.Handlers.Players
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
             var baseStats = _gameDataRegistry.Get<PlayerBaseStats>(player);
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
+            var shootData = _gameDataRegistry.Get<PlayerShootData>(player);
+
+            if (shootData.RecoveryTime > 0)
+                return;
+
                     
             if (inputData.Left && !inputData.Right)
-                accelX = -baseStats.Speed/ .2f;
+                accelX = -baseStats.Acceleration.X;
             if (inputData.Right && !inputData.Left)
-                accelX = baseStats.Speed / .2f;
+                accelX = baseStats.Acceleration.X;
 
             if (inputData.Up.IsDown && !inputData.Down.IsDown)
-                accelY = -(baseStats.Speed *300f/500f)/ .18f;
+                accelY = -baseStats.Acceleration.Y;
 
             if (inputData.Down.IsDown && !inputData.Up.IsDown)
-                accelY = (baseStats.Speed * 300f/500f)/.18f;
+                accelY = baseStats.Acceleration.Y;
 
             player.AccelTo(accelX, accelY);
 
-            if(accelX > 0)
-                player.HurryTo(Math.Max(player.Speed.X, modifiers.Stats.SpeedMultiplier * 200f));
-            else if(accelX < 0)
-                player.HurryTo(Math.Min(player.Speed.X, modifiers.Stats.SpeedMultiplier * -200f));
+            if(player.Id == Game.Player1Id)
+            DebugWriter.Write($"      {accelX:0.0}|{accelY:0.0}");
 
-            if (accelY > 0)
-                player.HurryTo(y: Math.Max(player.Speed.Y, modifiers.Stats.SpeedMultiplier * 400f));
-            else if (accelY < 0)
-                player.HurryTo(y: Math.Min(player.Speed.Y, modifiers.Stats.SpeedMultiplier * -400f));
+           // if(accelX > 0)
+           //     player.HurryTo(Math.Max(player.Speed.X, modifiers.Stats.SpeedMultiplier * 200f));
+           // else if(accelX < 0)
+           //     player.HurryTo(Math.Min(player.Speed.X, modifiers.Stats.SpeedMultiplier * -200f));
+           //
+           // if (accelY > 0)
+           //     player.HurryTo(y: Math.Max(player.Speed.Y, modifiers.Stats.SpeedMultiplier * 400f));
+           // else if (accelY < 0)
+           //     player.HurryTo(y: Math.Min(player.Speed.Y, modifiers.Stats.SpeedMultiplier * -400f));
 
         }
     }

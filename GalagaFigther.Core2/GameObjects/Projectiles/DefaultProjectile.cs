@@ -8,7 +8,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
 {
     public class DefaultProjectile : Projectile
     {
-        private static Vector2 _baseSpeed => new(0f, 1750f);
+        private static Vector2 _baseSpeed => new(0f, 2000f);
         private static Vector2 _baseSize => new(30f, 10f);
 
         public DefaultProjectile(Guid owner)
@@ -16,6 +16,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
         {
             Damage = 1f;
             Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
+            Behaviors.Add(typeof(DamageByDistanceBehavior));
         }
 
         private static SpriteBase GetSprite()

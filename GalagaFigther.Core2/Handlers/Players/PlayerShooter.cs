@@ -31,12 +31,21 @@ namespace GalagaFighter.Core2.Handlers.Players
 
         public void Shoot(Player player, float frameTime)
         {
+            var shootData = _gameDataRegistry.Get<PlayerShootData>(player);
+            if (shootData.RecoveryTime > 0f)
+            {
+                shootData.RecoveryTime -= frameTime;
+                return;
+            }
+
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
             if (inputData?.Shoot == null || !inputData.Shoot.IsDown)
                 return;
 
             foreach (var gun in player.Guns)
+            { 
                 gun.ShotRequested = true;
+            }
         }
     }
 }

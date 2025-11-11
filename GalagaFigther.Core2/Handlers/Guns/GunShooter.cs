@@ -53,9 +53,18 @@ namespace GalagaFighter.Core2.Handlers.Guns
             gun.CountDown = 0f;
             gun.ShotRequested = false;
 
+
+            var shootData = _gameDataRegistry.Get<PlayerShootData>(player);
             foreach (var barrel in gun.Shoot(player))
             {
-                _projectileShooter.Shoot(gun, barrel.Value, barrel.Key);
+                var proj = _projectileShooter.Shoot(gun, barrel.Value, barrel.Key);
+
+                if (gun.IsPlayerGun && gun.RecoveryTime > 0f && shootData.RecoveryTime < .02f)
+                {
+                    shootData.RecoveryTime += gun.RecoveryTime;
+                    var projVector = Vector2.Normalize(proj.Speed) * -600f;
+                    player.Hurry(projVector.X, projVector.Y);
+                }
             }
 
             if (gun.Barrels.Count == 1)

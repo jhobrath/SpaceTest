@@ -18,6 +18,7 @@ namespace GalagaFighter.Core2.GameObjects.Projectiles
             Acceleration = new(500f,0);
             Damage = 3f;
             Behaviors.Add(typeof(RotationFollowsSpeedBehavior));
+            Behaviors.Add(typeof(DamageByDistanceBehavior));
         }
 
         private static SpriteBase GetSprite()

@@ -42,6 +42,7 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
             AngularVelocity = 40f;
             MinRotation = -45f;
             MaxRotation = +45f;
+            IsPlayerGun = false;
         }
 
         public override Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter)

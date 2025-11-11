@@ -10,6 +10,6 @@ namespace GalagaFighter.Core2.Models.Players
     public class PlayerShootData : IGameObjectData<Player>
     {
         public float ShotCountdown { get; set; }
-        public bool LastShotLeft { get; set; }
+        public float RecoveryTime { get; set; }
     }
 }

@@ -39,6 +39,7 @@ namespace GalagaFighter.Core2.GameObjects.Turrets
         {
             Palette = turret.Palette;
             AngularVelocity = 180f;
+            IsPlayerGun = false;
         }
 
         public override Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter)

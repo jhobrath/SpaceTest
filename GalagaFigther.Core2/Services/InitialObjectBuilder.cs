@@ -126,7 +126,7 @@ namespace GalagaFighter.Core2.Services
             _cpuInputService.SetPlayer(player2);
 
             _inputService.AddPlayer(player1.Id, player1Mappings);
-            _inputService.AddPlayer(player2.Id, (IInputMappings)_cpuInputService);
+            _inputService.AddPlayer(player2.Id, player2Mappings);
         }
 
         private Player CreatePlayer(Guid playerId, int x, float rotation, Vector2 min, Vector2 max, Color palette)

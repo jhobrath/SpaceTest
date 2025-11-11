@@ -4,6 +4,7 @@ using GalagaFighter.Core2.GameObjects.Projectiles;
 using GalagaFighter.Core2.GameObjects.Turrets;
 using GalagaFighter.Core2.Models.Game;
 using GalagaFighter.Core2.Models.Particles;
+using GalagaFighter.Core2.Models.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace GalagaFighter.Core2.Services
             foreach(var gameObject in gameObjects)
             {
                 Hurry(gameObject, frameTime);
+                Drag(gameObject, frameTime);
                 Move(gameObject, frameTime);
                 Rotate(gameObject, frameTime);
 
@@ -80,6 +82,27 @@ namespace GalagaFighter.Core2.Services
             inactiveKeys.ForEach(x => _transformHierarchy.Remove(x));
         }
 
+        private void Drag(GameObject gameObject, float frameTime)
+        {
+            var decelX = gameObject.Drag.X * frameTime;
+            var decelY = gameObject.Drag.Y * frameTime;
+            var vx = gameObject.Speed.X;
+            var vy = gameObject.Speed.Y;
+
+
+            if (vx > 0)
+                vx = MathF.Max(0, vx - decelX);
+            else if (vx < 0)
+                vx = MathF.Min(0, vx + decelX);
+
+            if (vy > 0)
+                vy = MathF.Max(0, vy - decelY);
+            else if (vy < 0)
+                vy = MathF.Min(0, vy + decelY);
+
+            gameObject.HurryTo(vx, vy);
+        }
+
         private void ApplyParentTransform(GameObject parent, GameObject child)
         {
             // Apply rotation: parent's world rotation + child's current rotation
@@ -120,28 +143,12 @@ namespace GalagaFighter.Core2.Services
 
         private static void Hurry(GameObject gameObject, float frameTime)
         {
-            if (gameObject is BarProjectile)
-            {
-                var s = "";
-            }
+            if (gameObject.Acceleration == Vector2.Zero)
+                return;
 
             var speedDeltaX = gameObject.Acceleration.X * frameTime;
             var speedDeltaY = gameObject.Acceleration.Y * frameTime;
-
-            // Different air resistance when accelerating vs coasting
-            var isAcceleratingX = Math.Abs(gameObject.Acceleration.X) > 0.1f;
-            var isAcceleratingY = Math.Abs(gameObject.Acceleration.Y) > 0.1f;
-
-            // Lower resistance when accelerating, higher when coasting
-            var airResistanceCoefficientX = isAcceleratingX ? (gameObject.Drag.X != 0 ? 1f : 0) : gameObject.Drag.X;
-            var airResistanceCoefficientY = isAcceleratingY ? (gameObject.Drag.Y != 0 ? 1f : 0) : gameObject.Drag.Y;
-            var airResistanceX = -airResistanceCoefficientX * gameObject.Speed.X * frameTime;
-            var airResistanceY = -airResistanceCoefficientY * gameObject.Speed.Y * frameTime;
-
-            var newSpeedX = gameObject.Speed.X + speedDeltaX + airResistanceX;
-            var newSpeedY = gameObject.Speed.Y + speedDeltaY + airResistanceY;
-
-            gameObject.HurryTo(newSpeedX, newSpeedY);
+            gameObject.Hurry(speedDeltaX, speedDeltaY);
         }
 
         private static void Move(GameObject gameObject, float frameTime)

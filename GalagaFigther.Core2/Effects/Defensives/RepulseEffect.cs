@@ -33,6 +33,7 @@ namespace GalagaFighter.Core2.Effects.Defensives
         {
             modifiers.Polarity -= 1f;
             modifiers.Decorations.Create[this] = (p,m) => [_sprite];
+            modifiers.Stats.SpeedMultiplier *= 0f;
         }
     }
 }

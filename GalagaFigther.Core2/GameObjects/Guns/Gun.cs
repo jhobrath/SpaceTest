@@ -24,6 +24,9 @@ namespace GalagaFighter.Core2.GameObjects.Guns
         public float RotationHoming { get; set; } = 0;
         public float RecoveryTime { get; set; } = 0f;
         public bool IsPlayerGun { get; set; } = true;
+        public virtual bool IsBuildUp => false;
+
+        public bool ShotInitiated { get; set; }
     }
 
     public struct GunBarrel

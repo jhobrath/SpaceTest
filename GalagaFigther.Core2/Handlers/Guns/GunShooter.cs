@@ -62,8 +62,17 @@ namespace GalagaFighter.Core2.Handlers.Guns
                 if (gun.IsPlayerGun && gun.RecoveryTime > 0f && shootData.RecoveryTime < .02f)
                 {
                     shootData.RecoveryTime += gun.RecoveryTime;
+                    shootData.RecoveryWindow += gun.RecoveryTime;
                     var projVector = Vector2.Normalize(proj.Speed) * -600f;
                     player.Hurry(projVector.X, projVector.Y);
+                }
+
+                if(gun.IsBuildUp)
+                {
+                    var buildUpData = _gameDataRegistry.Get<GunBuildUpData>(gun);
+                    var speedIncrease = (float)Math.Clamp((buildUpData.BuildUpTimer / 1.5f),0,1) * 5f * proj.Speed;
+                    buildUpData.BuildUpTimer = 0f;
+                    proj.Hurry(speedIncrease.X, speedIncrease.Y);
                 }
             }
 

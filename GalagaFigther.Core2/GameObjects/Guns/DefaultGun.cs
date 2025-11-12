@@ -27,7 +27,7 @@ namespace GalagaFighter.Core2.GameObjects.Guns
             : base(owner, new StillImageSprite("Sprites/Ships/MainShipGuns.png"))
         {
             ShootBoth = shootBoth;
-            RecoveryTime = .15f;
+            RecoveryTime = .25f;
         }
 
         public override Dictionary<GunBarrel, Projectile> Shoot(GameObject shooter)

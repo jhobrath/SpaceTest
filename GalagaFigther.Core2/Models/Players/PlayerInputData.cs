@@ -18,5 +18,6 @@ namespace GalagaFighter.Core2.Models.Players
         public ButtonData Defend { get; set; } = new();
         public ButtonData DeployTurret { get; set; } = new();
         public ButtonData Shield { get; set; } = new();
+        public ButtonData PowerShot { get; set; } = new();
     }
 }

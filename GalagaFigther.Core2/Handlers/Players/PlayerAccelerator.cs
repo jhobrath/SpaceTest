@@ -33,10 +33,7 @@ namespace GalagaFighter.Core2.Handlers.Players
             var modifiers = _gameDataRegistry.Get<PlayerModifiers>(player);
             var shootData = _gameDataRegistry.Get<PlayerShootData>(player);
 
-            if (shootData.RecoveryTime > 0)
-                return;
 
-                    
             if (inputData.Left && !inputData.Right)
                 accelX = -baseStats.Acceleration.X;
             if (inputData.Right && !inputData.Left)
@@ -48,21 +45,16 @@ namespace GalagaFighter.Core2.Handlers.Players
             if (inputData.Down.IsDown && !inputData.Up.IsDown)
                 accelY = baseStats.Acceleration.Y;
 
-            player.AccelTo(accelX, accelY);
+            if (shootData.RecoveryTime > 0)
+            {
+                var pct = shootData.RecoveryTime / shootData.RecoveryWindow;
+                player.AccelTo(accelX * pct, accelY * pct);
+                return;
+            }
+            else
+                shootData.RecoveryWindow = 0f;
 
-            if(player.Id == Game.Player1Id)
-            DebugWriter.Write($"      {accelX:0.0}|{accelY:0.0}");
-
-           // if(accelX > 0)
-           //     player.HurryTo(Math.Max(player.Speed.X, modifiers.Stats.SpeedMultiplier * 200f));
-           // else if(accelX < 0)
-           //     player.HurryTo(Math.Min(player.Speed.X, modifiers.Stats.SpeedMultiplier * -200f));
-           //
-           // if (accelY > 0)
-           //     player.HurryTo(y: Math.Max(player.Speed.Y, modifiers.Stats.SpeedMultiplier * 400f));
-           // else if (accelY < 0)
-           //     player.HurryTo(y: Math.Min(player.Speed.Y, modifiers.Stats.SpeedMultiplier * -400f));
-
+                player.AccelTo(accelX, accelY);
         }
     }
 }

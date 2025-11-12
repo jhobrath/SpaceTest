@@ -39,12 +39,12 @@ namespace GalagaFighter.Core2.Handlers.Players
             }
 
             var inputData = _gameDataRegistry.Get<PlayerInputData>(player);
-            if (inputData?.Shoot == null || !inputData.Shoot.IsDown)
-                return;
-
-            foreach (var gun in player.Guns)
-            { 
-                gun.ShotRequested = true;
+            
+            if (inputData?.Shoot != null && inputData.Shoot.IsDown)
+            {
+               foreach (var gun in player.Guns)
+                    if(!gun.IsBuildUp)
+                        gun.ShotRequested = true;
             }
         }
     }

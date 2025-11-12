@@ -33,9 +33,6 @@ namespace GalagaFighter.Core2.Controllers
             SolveContraints(rope, 10);
             Tense(rope);
 
-
-            DebugWriter.Write($"        {rope.Tension:0000}|{Vector2.Distance(rope.Start.WorldPosition, rope.Points[0].CurrentPosition)}");
-
             rope.Initialized = true;
         }
 

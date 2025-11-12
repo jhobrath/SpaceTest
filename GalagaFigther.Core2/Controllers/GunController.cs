@@ -33,10 +33,11 @@ namespace GalagaFighter.Core2.Controllers
         private readonly IGunRotator _gunRotator;
         private readonly IGunShooter _gunShooter;
         private readonly IGunRecoiler _gunRecoiler;
+        private readonly IGunInitiator _gunInitiator;
 
         public GunController(IObjectService objectService, IGameDataRegistry gameDataRegistry,
-            IProjectileShooter projectileShooter, IGunRotator gunRotator, IGunShooter gunShooter, 
-            IGunRecoiler gunRecoiler)
+            IProjectileShooter projectileShooter, IGunRotator gunRotator, IGunShooter gunShooter,
+            IGunRecoiler gunRecoiler, IGunInitiator gunInitiator)
         {
             _objectService = objectService;
             _gameDataRegistry = gameDataRegistry;
@@ -44,6 +45,7 @@ namespace GalagaFighter.Core2.Controllers
             _gunRotator = gunRotator;
             _gunShooter = gunShooter;
             _gunRecoiler = gunRecoiler;
+            _gunInitiator = gunInitiator;
         }
 
         public void Update(Gun gun, float frameTime)
@@ -52,6 +54,7 @@ namespace GalagaFighter.Core2.Controllers
 
             var player = _objectService.GetPlayer(gun);
             _gunRotator.Rotate(gun, player);
+            _gunInitiator.Initiate(gun, player, frameTime);
             _gunShooter.Shoot(gun);
             _gunRecoiler.Recoil(gun, frameTime);
 

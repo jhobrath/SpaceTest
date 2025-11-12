@@ -34,7 +34,8 @@ namespace GalagaFighter.Core2.CPU
         private bool _down = false;
         private bool _deploy = false;
         private bool _defend = false;
-        
+        private bool _powerShot = false;
+
         private Player? _player;
         private Player? _opponent;
 
@@ -59,6 +60,7 @@ namespace GalagaFighter.Core2.CPU
         public bool IsShieldDown() => _shield;
         public bool IsShootDown() => _shoot;
         public bool IsUpDown() => _up;
+        public bool IsPowerShotDown() => _powerShot;
 
         private readonly IObjectService _objectService;
         private readonly IGameDataRegistry _gameDataRegistry;

@@ -55,6 +55,7 @@ namespace GalagaFighter.Core2.Services
                 inputData.Defend.Update(mappings.IsDefendDown(), frameTime, _gameTime);
                 inputData.DeployTurret.Update(mappings.IsDeployTurretDown(), frameTime, _gameTime);
                 inputData.Shield.Update(mappings.IsShieldDown(), frameTime, _gameTime);
+                inputData.PowerShot.Update(mappings.IsPowerShotDown(), frameTime, _gameTime);
             }
         }
     }
@@ -82,6 +83,7 @@ namespace GalagaFighter.Core2.Services
         bool IsDefendDown();
         bool IsDeployTurretDown();
         bool IsShieldDown();
+        bool IsPowerShotDown();
     }
 
     public class KeyMappings : IInputMappings
@@ -94,9 +96,10 @@ namespace GalagaFighter.Core2.Services
         public KeyboardKey Defend { get; set; } = KeyboardKey.J;
         public KeyboardKey DeployTurret { get; set; } = KeyboardKey.U;
         public KeyboardKey Shield { get; set; } = KeyboardKey.I;
+        public KeyboardKey PowerShot { get; set; } = KeyboardKey.L;
 
         public KeyMappings(KeyboardKey up, KeyboardKey down, KeyboardKey left, KeyboardKey right, 
-            KeyboardKey shoot, KeyboardKey defend, KeyboardKey deployTurret, KeyboardKey shield)
+            KeyboardKey shoot, KeyboardKey defend, KeyboardKey deployTurret, KeyboardKey shield, KeyboardKey powerShot)
         {
             Up = up;
             Down = down;
@@ -106,6 +109,7 @@ namespace GalagaFighter.Core2.Services
             Defend = defend;
             DeployTurret = deployTurret;
             Shield = shield;
+            PowerShot = powerShot;
         }
             
         public bool IsUpDown() => Raylib.IsKeyDown(Up);
@@ -116,6 +120,7 @@ namespace GalagaFighter.Core2.Services
         public bool IsDefendDown() => Raylib.IsKeyDown(Defend);
         public bool IsDeployTurretDown() => Raylib.IsKeyDown(DeployTurret);
         public bool IsShieldDown() => Raylib.IsKeyDown(Shield);
+        public bool IsPowerShotDown() => Raylib.IsKeyDown(PowerShot);
     }
 
     public class GamepadMappings : IInputMappings
@@ -128,9 +133,10 @@ namespace GalagaFighter.Core2.Services
         public GamepadButton Defend { get; set; } = GamepadButton.LeftTrigger1;
         public GamepadButton DeployTurret { get; set; } = GamepadButton.RightFaceUp;
         public GamepadButton Shield { get; set; } = GamepadButton.RightFaceDown;
+        public GamepadButton PowerShot { get; set; } = GamepadButton.RightTrigger2;
 
         public GamepadMappings(GamepadButton up, GamepadButton down, GamepadButton left, GamepadButton right,
-            GamepadButton shoot, GamepadButton defend, GamepadButton deployTurret, GamepadButton shield)
+            GamepadButton shoot, GamepadButton defend, GamepadButton deployTurret, GamepadButton shield, GamepadButton powerShot)
         {
             Up = up;
             Down = down;
@@ -140,6 +146,7 @@ namespace GalagaFighter.Core2.Services
             Defend = defend;
             DeployTurret = deployTurret;
             Shield = shield;
+            PowerShot = powerShot;
         }
 
         public bool IsUpDown() => Raylib.IsGamepadButtonDown(0, Up);
@@ -150,6 +157,7 @@ namespace GalagaFighter.Core2.Services
         public bool IsDefendDown() => Raylib.IsGamepadButtonDown(0, Defend);
         public bool IsDeployTurretDown() => Raylib.IsGamepadButtonDown(0, DeployTurret);
         public bool IsShieldDown() => Raylib.IsGamepadButtonDown(0, Shield);
+        public bool IsPowerShotDown() => Raylib.IsGamepadButtonDown(0, PowerShot);
     }
 
     public class ButtonData

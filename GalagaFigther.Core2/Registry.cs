@@ -71,6 +71,7 @@ namespace GalagaFighter.Core2
             services.AddSingleton<IGame, Game>();
             services.AddSingleton<IShieldController, ShieldController>();
             services.AddSingleton<IPlayerShielder, PlayerShielder>();
+            services.AddSingleton<IGunInitiator, GunInitiator>();
             services.AddSingleton<IProjectileShieldCollisionHandler, ProjectileShieldCollisionHandler>();
 
             services.AddSingleton<IGunRecoiler, GunRecoiler>();

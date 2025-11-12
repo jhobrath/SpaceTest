@@ -109,7 +109,8 @@ namespace GalagaFighter.Core2.Services
                 KeyboardKey.K,    // Shoot
                 KeyboardKey.J,    // Defend
                 KeyboardKey.U,    // Deploy Turret
-                KeyboardKey.I     //Shield
+                KeyboardKey.I,     //Shield
+                KeyboardKey.L     //PowerShot
             );
 
             var player2Mappings = new GamepadMappings(
@@ -120,7 +121,8 @@ namespace GalagaFighter.Core2.Services
                 GamepadButton.RightTrigger1,   // Shoot (TODO: Update with different keys)
                 GamepadButton.LeftTrigger1,    // Defend (TODO: Update with different keys)
                 GamepadButton.RightFaceUp,     // Deploy Turret (TODO: Update with different keys)
-                GamepadButton.RightFaceDown // Shield (TODO: Update with different keys)
+                GamepadButton.RightFaceDown, // Shield (TODO: Update with different keys)
+                GamepadButton.RightTrigger2 // PowerShot (TODO: Update with different keys)
             );
 
             _cpuInputService.SetPlayer(player2);
@@ -157,6 +159,7 @@ namespace GalagaFighter.Core2.Services
 
             var effects = _gameDataRegistry.Get<PlayerEffects>(player);
             effects.Add(new DefaultShootEffect());
+            effects.Add(new PowerShotEffect());
             //effects.Add(new JackInTheBoxEffect());
             //effects.Add(new AddWeaponEffect());
             //effects.Add(new AddWeaponEffect());
